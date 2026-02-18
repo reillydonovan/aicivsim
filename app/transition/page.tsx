@@ -302,6 +302,7 @@ export default function Home() {
               </div>
             </div>
 
+            <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>Current State (today)</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               <Stat label="Occupations" value={`${occupations.length}`} color="var(--sky)" />
               <Stat label="Workers covered" value={fmtK(totalWorkers)} sub="across all occupations" color="var(--emerald)" />

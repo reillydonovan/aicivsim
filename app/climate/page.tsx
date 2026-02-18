@@ -573,12 +573,26 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              <Stat label="Species Threatened" value={fmtK(data.biodiversity.speciesThreatened)} sub={`of ${fmtK(data.biodiversity.speciesAssessed)} assessed`} color="var(--rose)" />
-              <Stat label="Extinction Rate" value={data.biodiversity.extinctionRate} color="var(--amber)" />
-              <Stat label="Protected Land" value={`${data.biodiversity.protectedLandPct}%`} sub={`target: ${data.biodiversity.targetProtectedPct}%`} color="var(--emerald)" />
-              <Stat label="Protected Ocean" value={`${data.biodiversity.protectedOceanPct}%`} sub={`target: ${data.biodiversity.targetProtectedPct}%`} color="var(--sky)" />
-            </div>
+            {(() => {
+              const bioStats: Record<string, { threatened: number; extinctionRate: string; protectedLand: number; protectedOcean: number }> = {
+                aggressive: { threatened: 28000, extinctionRate: "100x baseline", protectedLand: 37.5, protectedOcean: 32.0 },
+                moderate:   { threatened: 38000, extinctionRate: "400x baseline", protectedLand: 26.0, protectedOcean: 18.0 },
+                bau:        { threatened: 62000, extinctionRate: "2500x baseline", protectedLand: 14.0, protectedOcean: 7.5 },
+                worst:      { threatened: 95000, extinctionRate: "10000x baseline", protectedLand: 8.0, protectedOcean: 4.0 },
+              };
+              const bs = bioStats[s.id];
+              return (
+              <>
+                <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: s.color }}>2050 Projection: {s.name}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                  <Stat label="Species Threatened" value={fmtK(bs.threatened)} sub={`of ${fmtK(data.biodiversity.speciesAssessed)} assessed`} color="var(--rose)" />
+                  <Stat label="Extinction Rate" value={bs.extinctionRate} color="var(--amber)" />
+                  <Stat label="Protected Land" value={`${bs.protectedLand}%`} sub={`target: ${data.biodiversity.targetProtectedPct}%`} color="var(--emerald)" />
+                  <Stat label="Protected Ocean" value={`${bs.protectedOcean}%`} sub={`target: ${data.biodiversity.targetProtectedPct}%`} color="var(--sky)" />
+                </div>
+              </>
+              );
+            })()}
 
             {/* Key Ecosystems — scenario-aware */}
             {(() => {
@@ -814,12 +828,26 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              <Stat label="Annual Emissions" value={`${data.metrics.annualEmissions_gt} Gt`} sub="CO\u2082/year (2024)" color="var(--rose)" />
-              <Stat label="Renewable Capacity" value={`${fmtK(data.metrics.renewableCapacity_gw)} GW`} sub="installed (2024)" color="var(--emerald)" />
-              <Stat label="Arctic Ice Extent" value={`${data.metrics.arcticIceExtent_mkm2}M km\u00b2`} sub="summer minimum" color="var(--sky)" />
-              <Stat label="Ocean pH" value={`${data.metrics.oceanAcidity_ph}`} sub="acidifying" color="var(--cyan)" />
-            </div>
+            {(() => {
+              const energyStats: Record<string, { emissions: number; renewGW: number; arcticIce: number; oceanPH: number }> = {
+                aggressive: { emissions: 3.4,  renewGW: 28000, arcticIce: 3.8, oceanPH: 8.10 },
+                moderate:   { emissions: 17.8, renewGW: 18000, arcticIce: 2.9, oceanPH: 8.04 },
+                bau:        { emissions: 26.1, renewGW: 9500,  arcticIce: 1.2, oceanPH: 7.95 },
+                worst:      { emissions: 40.0, renewGW: 5200,  arcticIce: 0.0, oceanPH: 7.82 },
+              };
+              const es = energyStats[s.id];
+              return (
+              <>
+                <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: s.color }}>2050 Projection: {s.name}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                  <Stat label="Annual Emissions" value={`${es.emissions} Gt`} sub="CO\u2082/year by 2050" color="var(--rose)" />
+                  <Stat label="Renewable Capacity" value={`${fmtK(es.renewGW)} GW`} sub="installed by 2050" color="var(--emerald)" />
+                  <Stat label="Arctic Ice Extent" value={es.arcticIce > 0 ? `${es.arcticIce}M km\u00b2` : "Ice-free"} sub="summer minimum" color="var(--sky)" />
+                  <Stat label="Ocean pH" value={`${es.oceanPH}`} sub={es.oceanPH >= 8.07 ? "recovering" : "acidifying"} color="var(--cyan)" />
+                </div>
+              </>
+              );
+            })()}
 
             {/* Grid Mix — scenario-aware */}
             {(() => {
@@ -1044,19 +1072,32 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              <Stat label="Freshwater Available" value={`${fmtK(data.resources.freshwaterAvailable_km3)} km\u00b3`} sub="total renewable" color="var(--sky)" />
-              <Stat label="Freshwater Withdrawn" value={`${fmtK(data.resources.freshwaterWithdrawn_km3)} km\u00b3`} sub={`${data.resources.agricultureWaterUse_pct}% for agriculture`} color="var(--teal)" />
-              <Stat label="Arable Land" value={`${fmtK(data.resources.arableLand_mha)} Mha`} sub={`losing ${data.resources.arableLandLostPerYear_mha} Mha/yr`} color="var(--amber)" />
-              <Stat label="Fish Stocks Overfished" value={`${data.resources.fishStocksOverfished_pct}%`} color="var(--rose)" />
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              <Stat label="Food Waste" value={`${data.resources.foodWastePct}%`} sub="of production" color="var(--amber)" />
-              <Stat label="Hunger Affected" value={`${data.resources.hungerAffected_m}M`} sub="people globally" color="var(--rose)" />
-              <Stat label="Phosphorus Reserves" value={`~${data.resources.phosphorusReserves_yr} yrs`} sub="at current use" color="var(--violet)" />
-              <Stat label="Topsoil Loss" value={data.resources.topsoilLossRate} color="var(--amber)" />
-            </div>
+            {(() => {
+              const resStats: Record<string, { freshAvail: number; freshWith: number; agriPct: number; arable: number; arableLoss: number; fishOver: number; foodWaste: number; hunger: number; phosphorus: number; topsoil: string }> = {
+                aggressive: { freshAvail: 42000, freshWith: 3200, agriPct: 45, arable: 1450, arableLoss: 0, fishOver: 15, foodWaste: 10, hunger: 280, phosphorus: 450, topsoil: "Net gain via restoration" },
+                moderate:   { freshAvail: 39000, freshWith: 4200, agriPct: 58, arable: 1350, arableLoss: 5, fishOver: 25, foodWaste: 18, hunger: 500, phosphorus: 350, topsoil: "12B tonnes/year" },
+                bau:        { freshAvail: 34000, freshWith: 5800, agriPct: 72, arable: 1100, arableLoss: 15, fishOver: 50, foodWaste: 32, hunger: 1100, phosphorus: 200, topsoil: "36B tonnes/year" },
+                worst:      { freshAvail: 26000, freshWith: 7200, agriPct: 80, arable: 800, arableLoss: 25, fishOver: 70, foodWaste: 40, hunger: 2000, phosphorus: 120, topsoil: "50B+ tonnes/year" },
+              };
+              const rs = resStats[s.id];
+              return (
+              <>
+                <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: s.color }}>2050 Projection: {s.name}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                  <Stat label="Freshwater Available" value={`${fmtK(rs.freshAvail)} km\u00b3`} sub="total renewable" color="var(--sky)" />
+                  <Stat label="Freshwater Withdrawn" value={`${fmtK(rs.freshWith)} km\u00b3`} sub={`${rs.agriPct}% for agriculture`} color="var(--teal)" />
+                  <Stat label="Arable Land" value={`${fmtK(rs.arable)} Mha`} sub={rs.arableLoss === 0 ? "land restored" : `losing ${rs.arableLoss} Mha/yr`} color="var(--amber)" />
+                  <Stat label="Fish Stocks Overfished" value={`${rs.fishOver}%`} color="var(--rose)" />
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                  <Stat label="Food Waste" value={`${rs.foodWaste}%`} sub="of production" color="var(--amber)" />
+                  <Stat label="Hunger Affected" value={`${fmtK(rs.hunger)}M`} sub="people globally" color="var(--rose)" />
+                  <Stat label="Phosphorus Reserves" value={`~${rs.phosphorus} yrs`} sub="at projected use" color="var(--violet)" />
+                  <Stat label="Topsoil Loss" value={rs.topsoil} color="var(--amber)" />
+                </div>
+              </>
+              );
+            })()}
 
             {/* Crop Yield */}
             <div className="glass-card p-6 mb-8">
