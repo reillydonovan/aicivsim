@@ -11,7 +11,7 @@ Use AI to simulate, measure, and navigate civilization-scale challenges. Six int
 | Route | Dashboard | What it models |
 |-------|-----------|----------------|
 | `/climate` | **ClimateOS** | Temperature, emissions, biodiversity, energy mix, resources, and tipping points across 4 scenarios (Aggressive Action → Worst Case) with 2050 projections |
-| `/simulation` | **SimulationOS** | 12 branching 50-year futures generated from 3 policy levers (civic dividend rate, AI charter, climate capex share) with year-by-year GDP, emissions, trust, and governance trajectories |
+| `/simulation` | **SimulationOS** | 4 scenarios across a 50-year horizon varying 3 policy levers (civic dividend rate, AI charter, climate capex share). Year-by-year metrics with auto-generated narrative reports that evolve across four era phases. Scenario comparison overlays and lab notes |
 | `/transition` | **TransitionOS** | Workforce reskilling paths, automation risk scores per occupation, income bridge modeling, and cohort projections under 3 transition scenarios |
 | `/civilization` | **CivilizationOS** | Unified health index across 6 domains (climate, governance, economy, equity, technology, civic wellbeing), resident journey flows, civic dividend modeling |
 | `/governance` | **GovernanceOS** | Charter frameworks, citizen assemblies, governance modules, AI audit coverage tracking, participation KPIs |
@@ -68,10 +68,23 @@ Most dashboards present 2050 projections under multiple scenarios. When a user s
 | CivilizationOS | Aggressive Reform, Moderate Reform, Business as Usual, Worst Case | `aggressive`, `moderate`, `bau`, `worst` |
 | GovernanceOS | Full Framework, Moderate Reform, Minimal Tech, Institutional Regression | `full_framework`, `moderate_reform`, `minimal_tech`, `regression` |
 | TransitionOS | Baseline, Transition OS Only, Full Stack | `baseline`, `transition_os`, `full_stack` |
-| SimulationOS | 12 branches (cartesian product of 3 binary policy levers) | Numeric indices `0`–`11` |
+| SimulationOS | Aggressive Action, Moderate Reform, Business as Usual, Worst Case | `aggressive`, `moderate`, `bau`, `worst` |
 | StrategyOS | Aggressive Action, Moderate Reform, Minimal Effort, Worst Case | `aggressive`, `moderate`, `bau`, `worst` |
 
 Each scenario defines projected values for stat cards (labeled "2050 Projection: {name}") plus time-series arrays that drive every chart. Static baseline stats are labeled "Current State (today)" or "2024 Baseline (today)" to distinguish them from projections.
+
+### Simulation report system
+
+SimulationOS generates narrative reports for every year × scenario combination without any API calls. The `generateReport` function produces structured markdown (parsed by `SummaryBlock` into styled cards) that evolves across four **era phases**:
+
+| Era | Years | Narrative tone |
+|-----|-------|----------------|
+| **Dawn** | 1–5 (2027–2032) | Foundation-setting, administrative ramp-up, "too early to judge," early signals over early scores |
+| **Diverge** | 6–15 (2033–2042) | Paths visibly separate, compounding begins, inflection points, measurable divergence from alternatives |
+| **Mature** | 16–30 (2043–2057) | Second-generation effects, institutions tested by time, structural consequences manifest |
+| **Legacy** | 31–50 (2058–2076) | Generational retrospective, 50-year verdicts, civilizational outcomes, forward-looking |
+
+Each section (Summary, Baseline Comparison, Actions, Employment, Energy, Political Climate, AI Influence, Next Steps) has unique content per era × scenario. The 4 scenarios × 4 eras × 8 sections produce a narrative arc that evolves as users scrub the timeline, so 2028 reads very differently from 2050 or 2076 for the same scenario.
 
 ---
 
@@ -82,7 +95,7 @@ Five JSON files power the dashboards. Each is self-contained and loaded independ
 | File | Top-level keys | Size |
 |------|---------------|------|
 | `climate.json` | `scenarios[]`, `metrics`, `biodiversity`, `energy`, `resources`, `milestones[]`, `tippingPoints[]` | 4 scenarios × 8 time-series arrays (temperature, sea level, CO2, biodiversity index, renewable share, crop yield, water stress, forest cover) |
-| `simulation.json` | `scenario`, `runs[]` | 12 runs, each with policy branch config + year-by-year trajectory (population, economy, climate, governance) |
+| `simulation.json` | `scenarios[]` | 4 scenarios (aggressive/moderate/bau/worst), each with policy branch config + 50-year trajectory (population, economy, climate, governance). Reports generated client-side from metrics via era-phased templates — no API needed |
 | `governance.json` | `charter`, `assemblies[]`, `modules[]`, `auditTimeline[]`, `kpis[]` | Charter with pillars/enforcement, 6 assemblies, 5 modules, audit timeline, participation KPIs |
 | `civilization.json` | `journeys[]`, `dividendModel`, `benefits[]`, `kpis[]` | 5 resident journeys, dividend funding model, civic benefits catalog |
 | `transition.json` | `graph` (occupations + skills), `cohort[]` | Skills-based occupation graph with transferability scores, 3 scenario cohort projections |
@@ -119,12 +132,7 @@ The static export lands in `out/`. Upload its contents to any web server's docum
 
 ### Environment
 
-Copy `.env.example` to `.env.local` and add your OpenAI API key if you want AI-generated report summaries (used on the Simulation page). The static dashboards work without it.
-
-```
-OPENAI_API_KEY=your-key-here
-OPENAI_MODEL=gpt-4o-mini
-```
+Copy `.env.example` to `.env.local` if needed. The static site works fully without any API keys — all reports are generated client-side from simulation metrics.
 
 ---
 
@@ -136,7 +144,7 @@ OPENAI_MODEL=gpt-4o-mini
 | Styling | Tailwind CSS 3, custom CSS variables + glassmorphism |
 | Charts | Recharts 2.12 |
 | Blog | gray-matter (frontmatter), remark + remark-html (Markdown → HTML), next-mdx-remote |
-| AI | OpenAI SDK (optional, for simulation report generation) |
+| Reports | Era-phased template generation from simulation metrics (4 eras × 4 scenarios × 8 sections, no API needed) |
 | Hosting | Static files — currently on Hostinger at [aicivsim.com](https://aicivsim.com) |
 | Node | >=18.0.0 |
 
