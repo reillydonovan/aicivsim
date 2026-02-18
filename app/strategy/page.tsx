@@ -361,6 +361,16 @@ export default function StrategyOSDashboard() {
   const scores = strategyScores[activeScenario];
   const overallScore = Math.round(scores.reduce((a, c) => a + c.score, 0) / scores.length);
 
+  const todayScores = [
+    { domain: "Climate Action", score: 35, trend: "declining" as const, icon: "\u{1F30D}", color: "#10b981", note: "Emissions flat to rising, clean energy growing but insufficient pace" },
+    { domain: "Economic Transition", score: 32, trend: "declining" as const, icon: "\u{1F6E0}\uFE0F", color: "#38bdf8", note: "Reskilling fragmented, automation displacing faster than support arrives" },
+    { domain: "Governance Quality", score: 30, trend: "declining" as const, icon: "\u{1F3DB}\uFE0F", color: "#8b5cf6", note: "Minimal AI oversight, institutional trust eroding, corporate capture" },
+    { domain: "Social Equity", score: 28, trend: "declining" as const, icon: "\u2696\uFE0F", color: "#f59e0b", note: "Inequality widening, automation benefits concentrated, safety nets strained" },
+    { domain: "Individual Agency", score: 40, trend: "stable" as const, icon: "\u{1F464}", color: "#06b6d4", note: "Awareness growing but action feels futile without systemic support" },
+    { domain: "Systemic Readiness", score: 30, trend: "declining" as const, icon: "\u2699\uFE0F", color: "#a78bfa", note: "Institutions slow to adapt, infrastructure aging, resilience declining" },
+  ];
+  const todayOverall = Math.round(todayScores.reduce((a, c) => a + c.score, 0) / todayScores.length);
+
   const personalCategories = useMemo(() => ["all", ...Array.from(new Set(PERSONAL_ACTIONS.map(a => a.category)))], []);
   const orgCategories = useMemo(() => ["all", ...Array.from(new Set(ORG_ACTIONS.map(a => a.category)))], []);
   const policyCategories = useMemo(() => ["all", ...Array.from(new Set(POLICY_ACTIONS.map(a => a.category)))], []);
@@ -427,25 +437,25 @@ export default function StrategyOSDashboard() {
             <Heading icon={"\u{1F4CA}"} title="Strategy Dashboard" sub="Actionable strategy scores across all levels — personal, organizational, and systemic" />
 
             {/* Strategy Score */}
-            <div className="glass-card p-6 mb-8" style={{ borderTop: `3px solid ${gColor(overallScore)}` }}>
+            <div className="glass-card p-6 mb-8" style={{ borderTop: `3px solid ${gColor(todayOverall)}` }}>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-5">
                 <div className="relative w-24 h-24 flex-shrink-0 mx-auto sm:mx-0">
                   <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
                     <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                    <circle cx="50" cy="50" r="42" fill="none" stroke={gColor(overallScore)} strokeWidth="8" strokeLinecap="round" strokeDasharray={`${overallScore * 2.64} 264`} />
+                    <circle cx="50" cy="50" r="42" fill="none" stroke={gColor(todayOverall)} strokeWidth="8" strokeLinecap="round" strokeDasharray={`${todayOverall * 2.64} 264`} />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-xl font-bold" style={{ color: gColor(overallScore), fontFamily: "'Space Grotesk',sans-serif" }}>{letterGrade(overallScore)}</span>
-                    <span className="text-[10px]" style={{ color: "var(--text-faint)" }}>{overallScore}/100</span>
+                    <span className="text-xl font-bold" style={{ color: gColor(todayOverall), fontFamily: "'Space Grotesk',sans-serif" }}>{letterGrade(todayOverall)}</span>
+                    <span className="text-[10px]" style={{ color: "var(--text-faint)" }}>{todayOverall}/100</span>
                   </div>
                 </div>
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Strategy Readiness Score</h3>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>How prepared are we to execute the strategies that matter? Measured across climate action, economic transition, governance, equity, individual agency, and systemic readiness under the <strong style={{ color: scColor }}>{SC_NAMES[activeScenario]}</strong> scenario.</p>
+                  <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Today&apos;s Strategy Readiness Score</h3>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>How prepared are we to execute the strategies that matter? Measured across climate action, economic transition, governance, equity, individual agency, and systemic readiness. Use the scenario selector below to see projected futures.</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {scores.map(s => (
+                {todayScores.map(s => (
                   <div key={s.domain} className="glass-card p-3 text-center">
                     <span className="text-lg">{s.icon}</span>
                     <p className="text-[10px] font-semibold mt-1" style={{ color: "var(--text)" }}>{s.domain}</p>

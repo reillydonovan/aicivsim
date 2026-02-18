@@ -140,6 +140,15 @@ export default function Home() {
             { name: "Technology & AI", icon: "\u{1F916}", color: "#06b6d4", app: "Simulation", url: "/simulation" },
             { name: "Civic Wellbeing", icon: "\u{2764}\uFE0F", color: "#f43f5e", app: "CivilizationOS", url: "#" },
           ];
+          const todayScores = [
+            { score: 42, trend: "declining", note: "+1.3\u00b0C and rising, 30% renewables, biodiversity declining" },
+            { score: 40, trend: "declining", note: "12% AI audited, 38% participation, charter incomplete" },
+            { score: 43, trend: "declining", note: "Automation accelerating, reskilling underfunded, 8% poverty" },
+            { score: 38, trend: "declining", note: "GINI rising, benefits fragmented, housing under pressure" },
+            { score: 55, trend: "stable", note: "AI advancing rapidly, governance lagging behind deployment" },
+            { score: 45, trend: "stable", note: "Satisfaction 3.1/5, trust eroding, services strained" },
+          ];
+          const todayOverall = Math.round(todayScores.reduce((a, c) => a + c.score, 0) / todayScores.length);
           const scores = domainScores[activeScenario];
           const overall = Math.round(scores.reduce((a, c) => a + c.score, 0) / scores.length);
 
@@ -154,29 +163,29 @@ export default function Home() {
           <section>
             <Heading icon={"\u{1F4CA}"} title="Dashboard Overview" sub="Civilization health index, scenario projections, and resident metrics" />
 
-            {/* ── Civilization Health Index ── */}
-            <div className="glass-card p-6 mb-8" style={{ borderTop: `3px solid ${gColor(overall)}` }}>
+            {/* ── Today's Civilization Health Index ── */}
+            <div className="glass-card p-6 mb-8" style={{ borderTop: `3px solid ${gColor(todayOverall)}` }}>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
                 <div className="relative w-28 h-28 flex-shrink-0 mx-auto sm:mx-0">
                   <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
                     <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                    <circle cx="50" cy="50" r="42" fill="none" stroke={gColor(overall)} strokeWidth="8" strokeLinecap="round" strokeDasharray={`${overall * 2.64} 264`} />
+                    <circle cx="50" cy="50" r="42" fill="none" stroke={gColor(todayOverall)} strokeWidth="8" strokeLinecap="round" strokeDasharray={`${todayOverall * 2.64} 264`} />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-bold" style={{ color: gColor(overall), fontFamily: "'Space Grotesk',sans-serif" }}>{letterGrade(overall)}</span>
-                    <span className="text-[10px]" style={{ color: "var(--text-faint)" }}>{overall}/100</span>
+                    <span className="text-2xl font-bold" style={{ color: gColor(todayOverall), fontFamily: "'Space Grotesk',sans-serif" }}>{letterGrade(todayOverall)}</span>
+                    <span className="text-[10px]" style={{ color: "var(--text-faint)" }}>{todayOverall}/100</span>
                   </div>
                 </div>
                 <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Civilization Health Index</h3>
+                  <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Today&apos;s Civilization Score</h3>
                   <p className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>
-                    Projected 2035 score under <strong style={{ color: s.color }}>{s.name}</strong>. Aggregate across 6 domains: climate, governance, economy, equity, technology, and civic wellbeing.
+                    Current state of civilization across 6 domains: climate, governance, economy, equity, technology, and civic wellbeing. Use the scenario selector below to see projected futures.
                   </p>
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 {domainMeta.map((d, i) => {
-                  const ds = scores[i];
+                  const ds = todayScores[i];
                   return (
                     <a key={d.name} href={d.url} target={d.url.startsWith("/") || d.url === "#" ? undefined : "_blank"} rel={d.url.startsWith("/") || d.url === "#" ? undefined : "noopener"} className="glass-card p-3 text-center transition-all hover:border-white/20 block">
                       <span className="text-lg">{d.icon}</span>
