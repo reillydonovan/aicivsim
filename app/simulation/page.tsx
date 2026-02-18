@@ -282,7 +282,7 @@ export default function Home() {
 
   /* Fetch runs on mount */
   useEffect(() => {
-    fetch("/api/runs")
+    fetch("/data/simulation.json")
       .then((r) => r.json())
       .then((data) => setRuns(data.runs || []))
       .catch(() => setError("Failed to load simulation runs."))
@@ -402,26 +402,8 @@ export default function Home() {
     const inactionSnap = inactionRun?.trajectory[yearIndex] as SnapshotState | undefined;
     const intensity = interventionIntensity(selectedRun, runs);
     const tier = intensityLabel(intensity);
-    fetch("/api/summarize", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        year: selectedState.year, gini: selectedState.economy.gini, civic_trust: selectedState.economy.civic_trust,
-        emissions: selectedState.climate.annual_emissions, resilience: selectedState.climate.resilience_score,
-        ai_influence: selectedState.economy.ai_influence,
-        inaction_gini: inactionSnap?.economy.gini, inaction_civic_trust: inactionSnap?.economy.civic_trust,
-        inaction_emissions: inactionSnap?.climate.annual_emissions, inaction_resilience: inactionSnap?.climate.resilience_score,
-        inaction_ai_influence: inactionSnap?.economy.ai_influence,
-        branch_number: selectedBranch + 1,
-        branch_label: branchLabel(selectedRun),
-        branch_tier: tier.label,
-        branch_intensity: Math.round(intensity * 100),
-      }),
-      signal: controller.signal,
-    })
-      .then((r) => r.json())
-      .then((data) => setSummary(data.summary || ""))
-      .catch((err) => { if (err.name !== "AbortError") setSummary("Summary unavailable."); })
-      .finally(() => setSummaryLoading(false));
+    setSummary("AI-generated reports require a Node.js server with an OpenAI API key. Run the project locally with `npm run dev` to use this feature.");
+    setSummaryLoading(false);
   }, [selectedState, selectedRun, inactionRun, yearIndex, selectedBranch, runs]);
 
   const handleYearChange = (value: number) => {
