@@ -137,6 +137,19 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
+      <nav className="site-nav">
+        <div className="header-links">
+          <Link href="/" className="header-link header-link--gray active">Home</Link>
+          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
+          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
+          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
+          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
+          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
+          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
+          <Link href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</Link>
+          <Link href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</Link>
+        </div>
+      </nav>
 
       {/* ═══════════════════════════════════════════════════════════ */}
       {/*  HERO                                                      */}
@@ -147,7 +160,7 @@ export default function HomePage() {
       >
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <p className="text-xs uppercase tracking-[0.5em] mb-5" style={{ color: "var(--accent)" }}>
-            AI Civilization Simulator
+            <span className="font-semibold" style={{ letterSpacing: "0.15em" }}>aicivsim</span>{" "}&mdash;{" "}AI Civilization Simulator
           </p>
           <h1
             className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight"

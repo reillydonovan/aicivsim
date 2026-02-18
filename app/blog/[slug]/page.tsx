@@ -28,13 +28,22 @@ export default function PostPage({ params }: { params: { slug: string } }) {
           <div className="header-content">
             <p className="eyebrow">Blog</p>
             <h1>AI Civilization Simulator</h1>
-            <div className="header-links">
-              <Link href="/blog" className="header-link header-link--sky">&larr; All Posts</Link>
-              <Link href="/" className="header-link header-link--gray">Home</Link>
-            </div>
           </div>
         </div>
       </header>
+      <nav className="site-nav">
+        <div className="header-links">
+          <Link href="/" className="header-link header-link--gray">Home</Link>
+          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
+          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
+          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
+          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
+          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
+          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
+          <Link href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</Link>
+          <Link href="/blog" className="header-link header-link--gray active">{"\u{1F4DD}"} Blog</Link>
+        </div>
+      </nav>
 
       <main className="container" style={{ width: "min(1100px, 92vw)", paddingTop: "3rem", paddingBottom: "3rem" }}>
         <div className="post-body">

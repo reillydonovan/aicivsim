@@ -394,21 +394,25 @@ export default function StrategyOSDashboard() {
             What can we actually do? Personal, organizational, and policy strategies — ranked by real-world impact,
             connected to the metrics they move across the ecosystem.
           </p>
-          <div className="flex flex-wrap gap-3 mt-5">
-            <a href="https://github.com/reillyclawcode/strategyOS" target="_blank" rel="noopener" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "var(--amber)", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u{1F4BB}"} GitHub</a>
-            <a href="/climate" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.3)" }}>{"\u{1F30D}"} ClimateOS</a>
-            <a href="/transition" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(56,189,248,0.12)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.3)" }}>{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-            <a href="/governance" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(139,92,246,0.12)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }}>{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-            <a href="/civilization" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(6,182,212,0.12)", color: "#06b6d4", border: "1px solid rgba(6,182,212,0.3)" }}>{"\u{1F30D}"} CivilizationOS</a>
-            <a href="/simulation" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(244,63,94,0.12)", color: "#f43f5e", border: "1px solid rgba(244,63,94,0.3)" }}>{"\u{1F52C}"} Simulation</a>
-            <a href="/blog" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(100,116,139,0.12)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.3)" }}>{"\u{1F4DD}"} Blog</a>
-          </div>
         </div>
       </header>
+      <nav className="site-nav">
+        <div className="header-links">
+          <a href="/" className="header-link header-link--gray">Home</a>
+          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
+          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
+          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
+          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
+          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
+          <a href="/strategy" className="header-link header-link--amber active">{"\u2699\uFE0F"} StrategyOS</a>
+          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
+          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
+        </div>
+      </nav>
 
       {/* ═══ NAV ═══ */}
-      <nav className="sticky top-0 z-50 px-4 py-3" style={{ background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
-        <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">
+      <nav className="sticky z-50 px-4 py-3" style={{ top: "33px", background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
+        <div className="flex gap-2 overflow-x-auto justify-center">
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} className={`tab-btn whitespace-nowrap ${tab === t.id ? "tab-btn-active" : ""}`}>{t.icon} {t.label}</button>
           ))}
@@ -456,16 +460,21 @@ export default function StrategyOSDashboard() {
             </div>
 
             {/* Scenario Selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              {SCENARIOS.map(sc => (
-                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{sc.icon}</span>
-                    <h4 className="text-sm font-semibold" style={{ color: sc.color }}>{sc.name}</h4>
-                  </div>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>{sc.desc}</p>
-                </button>
-              ))}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a strategy scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see how it changes every chart, score, and projection below. The selected scenario is highlighted.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {SCENARIOS.map(sc => (
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl">{sc.icon}</span>
+                      <h4 className="text-sm font-semibold" style={{ color: sc.color }}>{sc.name}</h4>
+                    </div>
+                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{sc.desc}</p>
+                    {activeScenario === sc.id && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Aggregate Impact Charts */}

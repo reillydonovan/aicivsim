@@ -16,13 +16,22 @@ export default function ResearchClient({ toc, source }: { toc: TocItem[]; source
             <p className="eyebrow">Research Paper</p>
             <h1>Reclaiming the Future</h1>
             <p className="lede">AI Alignment, Societal Resilience, and Civilization Trajectories — a plain-language roadmap.</p>
-            <div className="header-links">
-              <Link href="/" className="header-link header-link--sky">Home</Link>
-              <Link href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</Link>
-            </div>
           </div>
         </div>
       </header>
+      <nav className="site-nav">
+        <div className="header-links">
+          <Link href="/" className="header-link header-link--gray">Home</Link>
+          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
+          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
+          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
+          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
+          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
+          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
+          <Link href="/research" className="header-link header-link--violet active">{"\u{1F4DC}"} Research</Link>
+          <Link href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</Link>
+        </div>
+      </nav>
 
       <button className="toc-mobile-toggle" onClick={() => setTocOpen(!tocOpen)}>
         {"\u{1F4D1}"} Table of Contents

@@ -203,22 +203,25 @@ export default function Home() {
             Explore career transitions, reskilling paths, and income bridges across {occupations.length} occupations.
             Compare three policy scenarios over a 10-year horizon.
           </p>
-          <div className="flex flex-wrap gap-3 mt-5">
-            <a href="https://github.com/reillyclawcode/transitionOS" target="_blank" rel="noopener" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(56,189,248,0.12)", color: "var(--sky)", border: "1px solid rgba(56,189,248,0.3)" }}>{"\u{1F4BB}"} GitHub</a>
-            <a href="/research" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(167,139,250,0.12)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.3)" }}>{"\u{1F4DC}"} Research Paper</a>
-            <a href="/simulation" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.3)" }}>{"\u{1F52C}"} Simulation</a>
-            <a href="/civilization" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u{1F30D}"} CivilizationOS</a>
-            <a href="/governance" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(167,139,250,0.12)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.3)" }}>{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-            <a href="/climate" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(20,184,166,0.12)", color: "#2dd4bf", border: "1px solid rgba(20,184,166,0.3)" }}>{"\u{1F331}"} ClimateOS</a>
-            <a href="/strategy" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u2699\uFE0F"} StrategyOS</a>
-            <a href="/blog" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.3)" }}>{"\u{1F4DD}"} Blog</a>
-          </div>
         </div>
       </header>
+      <nav className="site-nav">
+        <div className="header-links">
+          <a href="/" className="header-link header-link--gray">Home</a>
+          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
+          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
+          <a href="/transition" className="header-link header-link--sky active">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
+          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
+          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
+          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
+          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
+          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
+        </div>
+      </nav>
 
       {/* Tab bar */}
-      <nav className="sticky top-0 z-50 px-4 py-3" style={{ background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
-        <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">
+      <nav className="sticky z-50 px-4 py-3" style={{ top: "33px", background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
+        <div className="flex gap-2 overflow-x-auto justify-center">
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} className={`tab-btn whitespace-nowrap ${tab === t.id ? "tab-btn-active" : ""}`}>
               {t.icon} {t.label}
@@ -299,30 +302,35 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Scenario selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-              {data.cohort.map(c => (
-                <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
-                    <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
-                  </div>
-                  <p className="text-xs mb-3" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
-                  <div className="grid grid-cols-2 gap-2 text-[10px]">
-                    <div><span style={{ color: "var(--text-faint)" }}>Poverty:</span> <span className="font-mono">{c.final.poverty_rate}%</span></div>
-                    <div><span style={{ color: "var(--text-faint)" }}>Placement:</span> <span className="font-mono">{c.final.placement_rate}%</span></div>
-                    <div><span style={{ color: "var(--text-faint)" }}>Employment:</span> <span className="font-mono">{c.final.employment_rate}%</span></div>
-                    <div><span style={{ color: "var(--text-faint)" }}>Reskill:</span> <span className="font-mono">{c.final.median_reskill_months} mo</span></div>
-                  </div>
-                </button>
-              ))}
-            </div>
-
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               <Stat label="Occupations" value={`${occupations.length}`} color="var(--sky)" />
               <Stat label="Workers covered" value={fmtK(totalWorkers)} sub="across all occupations" color="var(--emerald)" />
               <Stat label="At-risk" value={`${atRiskCount}`} sub={`${growthCount} growth targets`} color="var(--rose)" />
               <Stat label="Avg automation risk" value={pct(avgRisk * 100)} color="var(--amber)" />
+            </div>
+
+            {/* Scenario selector */}
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a transition scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see how it changes every chart and projection below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {data.cohort.map(c => (
+                  <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
+                      <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
+                    </div>
+                    <p className="text-xs mb-3" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
+                    <div className="grid grid-cols-2 gap-2 text-[10px]">
+                      <div><span style={{ color: "var(--text-faint)" }}>Poverty:</span> <span className="font-mono">{c.final.poverty_rate}%</span></div>
+                      <div><span style={{ color: "var(--text-faint)" }}>Placement:</span> <span className="font-mono">{c.final.placement_rate}%</span></div>
+                      <div><span style={{ color: "var(--text-faint)" }}>Employment:</span> <span className="font-mono">{c.final.employment_rate}%</span></div>
+                      <div><span style={{ color: "var(--text-faint)" }}>Reskill:</span> <span className="font-mono">{c.final.median_reskill_months} mo</span></div>
+                    </div>
+                    {activeScenario === c.scenario && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: SC_COLORS[c.scenario] }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Poverty trajectory with scenario-aware description */}
@@ -574,16 +582,21 @@ export default function Home() {
             <Heading icon={"\u{1F4C8}"} title="Cohort Projections" sub="10-year KPI trajectories across three policy scenarios" />
 
             {/* Scenario selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              {data.cohort.map(c => (
-                <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
-                    <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
-                  </div>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
-                </button>
-              ))}
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a transition scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update the cohort projections below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {data.cohort.map(c => (
+                  <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
+                      <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
+                    </div>
+                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
+                    {activeScenario === c.scenario && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: SC_COLORS[c.scenario] }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-6">

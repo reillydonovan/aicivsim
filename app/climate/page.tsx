@@ -127,22 +127,25 @@ export default function Home() {
             Explore climate scenarios, biodiversity, emissions, sea level rise, agriculture, and resource projections across multiple possible futures.
             What we do now determines which branch of the future we inhabit.
           </p>
-          <div className="flex flex-wrap gap-3 mt-5">
-            <a href="https://github.com/reillyclawcode/ClimateOS" target="_blank" rel="noopener" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(20,184,166,0.12)", color: "var(--teal)", border: "1px solid rgba(20,184,166,0.3)" }}>{"\u{1F4BB}"} GitHub</a>
-            <a href="/research" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(139,92,246,0.12)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }}>{"\u{1F4DC}"} Research Paper</a>
-            <a href="/simulation" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(14,165,233,0.12)", color: "#38bdf8", border: "1px solid rgba(14,165,233,0.3)" }}>{"\u{1F52C}"} Simulation</a>
-            <a href="/transition" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.3)" }}>{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-            <a href="/civilization" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u{1F30D}"} CivilizationOS</a>
-            <a href="/governance" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(139,92,246,0.12)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }}>{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-            <a href="/strategy" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u2699\uFE0F"} StrategyOS</a>
-            <a href="/blog" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(100,116,139,0.12)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.3)" }}>{"\u{1F4DD}"} Blog</a>
-          </div>
         </div>
       </header>
+      <nav className="site-nav">
+        <div className="header-links">
+          <a href="/" className="header-link header-link--gray">Home</a>
+          <a href="/climate" className="header-link header-link--teal active">{"\u{1F331}"} ClimateOS</a>
+          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
+          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
+          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
+          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
+          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
+          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
+          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
+        </div>
+      </nav>
 
       {/* ── NAV ── */}
-      <nav className="sticky top-0 z-50 px-4 py-3" style={{ background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
-        <div className="max-w-6xl mx-auto flex gap-2 overflow-x-auto">
+      <nav className="sticky z-50 px-4 py-3" style={{ top: "33px", background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
+        <div className="flex gap-2 overflow-x-auto justify-center">
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} className={`tab-btn whitespace-nowrap ${tab === t.id ? "tab-btn-active" : ""}`}>{t.icon} {t.label}</button>
           ))}
@@ -270,16 +273,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Scenario selector */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              {data.scenarios.map(sc => (
-                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-3 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                  <div className="flex items-center gap-2"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                  <p className="text-[10px] mt-1" style={{ color: "var(--text-faint)" }}>{sc.desc.slice(0, 60)}...</p>
-                </button>
-              ))}
-            </div>
-
             {/* 2024 baseline stats */}
             <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>2024 Baseline (today)</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -287,6 +280,21 @@ export default function Home() {
               <Stat label="CO\u2082 Concentration" value={`${data.metrics.co2ppm2024} ppm`} sub="atmospheric" color="var(--amber)" />
               <Stat label="Annual Emissions" value={`${data.metrics.annualEmissions_gt} Gt`} sub="CO\u2082/year" color="var(--teal)" />
               <Stat label="Renewable Capacity" value={`${fmtK(data.metrics.renewableCapacity_gw)} GW`} sub="installed globally" color="var(--emerald)" />
+            </div>
+
+            {/* Scenario selector */}
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a climate scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update the 2050 projections and all charts below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {data.scenarios.map(sc => (
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                    <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                    {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* 2050 projected stats */}
@@ -367,7 +375,10 @@ export default function Home() {
             <Heading icon={"\u{1F52E}"} title="Climate Scenarios" sub="Four divergent futures depending on our collective response. Every chart shows 2026\u20132050 projections." />
 
             {/* Scenario selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a climate scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update all charts and projections below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {data.scenarios.map(s => (
                 <button key={s.id} onClick={() => setActiveScenario(s.id)}
                   className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === s.id ? "ring-2" : ""}`}
@@ -381,8 +392,10 @@ export default function Home() {
                     <span style={{ color: s.color }}>+{s.tempRise[24]}\u00b0C by 2050</span>
                     <span style={{ color: "var(--text-faint)" }}>{s.seaLevel[24]}mm rise</span>
                   </div>
+                  {activeScenario === s.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: s.color }}>Active</div>}
                 </button>
               ))}
+              </div>
             </div>
 
             {/* Comparison charts with scenario-aware descriptions */}
@@ -546,12 +559,18 @@ export default function Home() {
             <Heading icon={"\u{1F33F}"} title="Biodiversity & Ecosystems" sub="Species under threat, ecosystem health, and restoration efforts \u2014 viewed through four possible futures" />
 
             {/* Scenario selector */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a climate scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update all biodiversity charts and projections below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {data.scenarios.map(sc => (
-                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-3 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                  <div className="flex items-center gap-2"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                  <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                  <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                  {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
                 </button>
               ))}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -781,12 +800,18 @@ export default function Home() {
             <Heading icon={"\u{26A1}"} title="Energy & Emissions" sub="Grid mix, sectoral emissions, and future trajectories \u2014 viewed through four scenarios" />
 
             {/* Scenario selector */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              {data.scenarios.map(sc => (
-                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-3 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                  <div className="flex items-center gap-2"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                </button>
-              ))}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a climate scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update all energy and emissions projections below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {data.scenarios.map(sc => (
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                    <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                    {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -1005,12 +1030,18 @@ export default function Home() {
             <Heading icon={"\u{1F4A7}"} title="Resources & Agriculture" sub="Water, food, minerals, and the material basis of civilization \u2014 viewed through four scenarios" />
 
             {/* Scenario selector */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              {data.scenarios.map(sc => (
-                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-3 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                  <div className="flex items-center gap-2"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                </button>
-              ))}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a climate scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update all resource and agriculture projections below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {data.scenarios.map(sc => (
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                    <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                    {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -1190,12 +1221,18 @@ export default function Home() {
             <Heading icon={"\u{1F3AF}"} title="Climate Action Timeline" sub="Critical milestones and long-term trajectories \u2014 what the future looks like under each scenario" />
 
             {/* Scenario selector */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-              {data.scenarios.map(sc => (
-                <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-3 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                  <div className="flex items-center gap-2"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                </button>
-              ))}
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a climate scenario</h3>
+              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see its milestones and long-term trajectory below.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {data.scenarios.map(sc => (
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                    <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                    {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Milestones — scenario-aware */}

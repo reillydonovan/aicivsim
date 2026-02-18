@@ -560,20 +560,22 @@ export default function Home() {
             12 branching futures across a 50-year horizon. Each branch varies policy levers &mdash; civic dividends, governance charters, climate investment &mdash;
             and tracks five structural metrics to reveal which choices matter most.
           </p>
-          <div className="flex flex-wrap gap-3 mt-5">
-            <button onClick={() => setLabNotesOpen(true)} className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(56,189,248,0.12)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.3)" }}>{"\u{1F4DD}"} Lab Notes{labNotes.length > 0 ? ` (${labNotes.length})` : ""}</button>
-            <a href="/blog/2026-02-15-future-simulation" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(56,189,248,0.12)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.3)" }}>{"\u{1F4DC}"} Blog Post</a>
-            <a href="https://github.com/reillyclawcode/simulation" target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(56,189,248,0.12)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.3)" }}>{"\u{1F4BB}"} GitHub</a>
-            <a href="/climate" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(20,184,166,0.12)", color: "#2dd4bf", border: "1px solid rgba(20,184,166,0.3)" }}>{"\u{1F331}"} ClimateOS</a>
-            <a href="/transition" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.3)" }}>{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-            <a href="/civilization" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u{1F30D}"} CivilizationOS</a>
-            <a href="/governance" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(139,92,246,0.12)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }}>{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-            <a href="/strategy" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(245,158,11,0.12)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}>{"\u2699\uFE0F"} StrategyOS</a>
-            <a href="/research" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(139,92,246,0.12)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }}>{"\u{1F4DC}"} Research Paper</a>
-            <a href="/blog" className="text-xs px-3 py-1.5 rounded-full" style={{ background: "rgba(100,116,139,0.12)", color: "#94a3b8", border: "1px solid rgba(100,116,139,0.3)" }}>{"\u{1F4DD}"} Blog</a>
-          </div>
         </div>
       </header>
+      <nav className="site-nav">
+        <div className="header-links">
+          <a href="/" className="header-link header-link--gray">Home</a>
+          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
+          <a href="/simulation" className="header-link header-link--sky active">{"\u{1F52C}"} Simulation</a>
+          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
+          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
+          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
+          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
+          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
+          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
+          <button onClick={() => setLabNotesOpen(true)} className="header-link header-link--sky" style={{ cursor: "pointer" }}>{"\u{1F4DD}"} Lab Notes{labNotes.length > 0 ? ` (${labNotes.length})` : ""}</button>
+        </div>
+      </nav>
 
       <div className="max-w-6xl mx-auto px-4 mt-8">
 
