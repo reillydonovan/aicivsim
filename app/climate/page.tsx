@@ -4,6 +4,7 @@ import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, Legend, RadialBarChart, RadialBar,
 } from "recharts";
+import NavBar from "../components/NavBar";
 
 /* ── Types ── */
 interface Scenario {
@@ -119,8 +120,9 @@ export default function Home() {
   return (
     <main className="min-h-screen pb-20">
       {/* ── HEADER ── */}
-      <header className="pt-10 pb-8 px-4" style={{ background: "linear-gradient(180deg,rgba(20,184,166,0.06) 0%,transparent 100%)" }}>
-        <div className="max-w-6xl mx-auto">
+      <header className="relative pt-10 pb-8 px-4 overflow-hidden" style={{ background: "linear-gradient(180deg,rgba(20,184,166,0.06) 0%,transparent 100%)" }}>
+        <img src="/images/climate/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="relative z-10 max-w-6xl mx-auto">
           <p className="text-xs uppercase tracking-[0.4em] mb-2" style={{ color: "var(--teal)" }}>ClimateOS</p>
           <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Climate Futures Dashboard</h1>
           <p className="text-sm max-w-2xl" style={{ color: "var(--text-muted)" }}>
@@ -129,19 +131,7 @@ export default function Home() {
           </p>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <a href="/" className="header-link header-link--gray">Home</a>
-          <a href="/climate" className="header-link header-link--teal active">{"\u{1F331}"} ClimateOS</a>
-          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
-          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
-          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
-          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
-          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* ── NAV ── */}
       <nav className="sticky z-50 px-4 py-3" style={{ top: "33px", background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
@@ -227,6 +217,7 @@ export default function Home() {
           };
           return (
           <section>
+            <img src={`/images/climate/overview-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4CA}"} title="Climate Dashboard" sub="Planetary indicators, tipping points, and scenario projections \u2014 toggle to compare futures" />
 
             {/* ── Today's Climate Score ── */}
@@ -372,6 +363,7 @@ export default function Home() {
         {/* ════════════════════ SCENARIOS ════════════════════ */}
         {tab === "scenarios" && (
           <section>
+            <img src={`/images/climate/scenarios-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F52E}"} title="Climate Scenarios" sub="Four divergent futures depending on our collective response. Every chart shows 2026\u20132050 projections." />
 
             {/* Scenario selector */}
@@ -381,18 +373,21 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {data.scenarios.map(s => (
                 <button key={s.id} onClick={() => setActiveScenario(s.id)}
-                  className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === s.id ? "ring-2" : ""}`}
+                  className={`glass-card overflow-hidden text-left w-full transition-all hover:border-white/20 ${activeScenario === s.id ? "ring-2" : ""}`}
                   style={activeScenario === s.id ? { borderColor: `${s.color}55`, boxShadow: `0 0 20px ${s.color}11` } : {}}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-2xl">{s.icon}</span>
-                    <h4 className="text-sm font-semibold" style={{ color: s.color }}>{s.name}</h4>
+                  <img src={`/images/climate/scenario-${s.id}.webp`} alt="" className="w-full h-20 object-cover opacity-50" />
+                  <div className="p-5 pt-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-2xl">{s.icon}</span>
+                      <h4 className="text-sm font-semibold" style={{ color: s.color }}>{s.name}</h4>
+                    </div>
+                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{s.desc}</p>
+                    <div className="flex gap-3 mt-3 text-[10px]">
+                      <span style={{ color: s.color }}>+{s.tempRise[24]}\u00b0C by 2050</span>
+                      <span style={{ color: "var(--text-faint)" }}>{s.seaLevel[24]}mm rise</span>
+                    </div>
+                    {activeScenario === s.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: s.color }}>Active</div>}
                   </div>
-                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>{s.desc}</p>
-                  <div className="flex gap-3 mt-3 text-[10px]">
-                    <span style={{ color: s.color }}>+{s.tempRise[24]}\u00b0C by 2050</span>
-                    <span style={{ color: "var(--text-faint)" }}>{s.seaLevel[24]}mm rise</span>
-                  </div>
-                  {activeScenario === s.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: s.color }}>Active</div>}
                 </button>
               ))}
               </div>
@@ -556,6 +551,7 @@ export default function Home() {
           };
           return (
           <section>
+            <img src={`/images/climate/biodiversity-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F33F}"} title="Biodiversity & Ecosystems" sub="Species under threat, ecosystem health, and restoration efforts \u2014 viewed through four possible futures" />
 
             {/* Scenario selector */}
@@ -811,6 +807,7 @@ export default function Home() {
           };
           return (
           <section>
+            <img src={`/images/climate/energy-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{26A1}"} title="Energy & Emissions" sub="Grid mix, sectoral emissions, and future trajectories \u2014 viewed through four scenarios" />
 
             {/* Scenario selector */}
@@ -1055,6 +1052,7 @@ export default function Home() {
           };
           return (
           <section>
+            <img src={`/images/climate/resources-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4A7}"} title="Resources & Agriculture" sub="Water, food, minerals, and the material basis of civilization \u2014 viewed through four scenarios" />
 
             {/* Scenario selector */}
@@ -1259,6 +1257,7 @@ export default function Home() {
           };
           return (
           <section>
+            <img src={`/images/climate/timeline-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F3AF}"} title="Climate Action Timeline" sub="Critical milestones and long-term trajectories \u2014 what the future looks like under each scenario" />
 
             {/* Scenario selector */}

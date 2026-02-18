@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NavBar from "./components/NavBar";
 
 const DASHBOARDS = [
   {
@@ -14,6 +15,7 @@ const DASHBOARDS = [
     ],
     color: "#14b8a6",
     gradient: "from-teal-500/10 to-transparent",
+    img: "/images/home/dash-climate.webp",
   },
   {
     name: "SimulationOS",
@@ -28,6 +30,7 @@ const DASHBOARDS = [
     ],
     color: "#38bdf8",
     gradient: "from-sky-500/10 to-transparent",
+    img: "/images/home/dash-simulation.webp",
   },
   {
     name: "TransitionOS",
@@ -42,6 +45,7 @@ const DASHBOARDS = [
     ],
     color: "#0ea5e9",
     gradient: "from-sky-500/10 to-transparent",
+    img: "/images/home/dash-transition.webp",
   },
   {
     name: "CivilizationOS",
@@ -56,6 +60,7 @@ const DASHBOARDS = [
     ],
     color: "#f59e0b",
     gradient: "from-amber-500/10 to-transparent",
+    img: "/images/home/dash-civilization.webp",
   },
   {
     name: "GovernanceOS",
@@ -70,6 +75,7 @@ const DASHBOARDS = [
     ],
     color: "#8b5cf6",
     gradient: "from-violet-500/10 to-transparent",
+    img: "/images/home/dash-governance.webp",
   },
   {
     name: "StrategyOS",
@@ -84,6 +90,7 @@ const DASHBOARDS = [
     ],
     color: "#f59e0b",
     gradient: "from-amber-500/10 to-transparent",
+    img: "/images/home/dash-strategy.webp",
   },
 ];
 
@@ -93,30 +100,35 @@ const PILLARS = [
     title: "AI with measurable goals",
     desc: "Every deployment tied to specific metrics: human capability, economic participation, ecological health. Civic charters and public dashboards make progress trackable.",
     color: "#38bdf8",
+    img: "/images/home/pillar-ai-goals.webp",
   },
   {
     icon: "\u{1F4B0}",
     title: "Economic stability",
     desc: "Civic dividends funded by AI and compute productivity, reskilling infrastructure, cooperative ownership models, and guaranteed transition pathways for displaced workers.",
     color: "#10b981",
+    img: "/images/home/pillar-economic.webp",
   },
   {
     icon: "\u{1F30D}",
     title: "Climate and ecology",
     desc: "Virtual power plants, carbon removal, biodiversity credits, and blue-economy ventures \u2014 each with transparent measurement and community co-ownership built in.",
     color: "#14b8a6",
+    img: "/images/home/pillar-climate.webp",
   },
   {
     icon: "\u{1F3DB}\uFE0F",
     title: "Adaptive governance",
     desc: "Citizen assemblies, AI audit registries, quadratic voting, and composable governance modules that any city or organization can adopt and adapt.",
     color: "#8b5cf6",
+    img: "/images/home/pillar-governance.webp",
   },
   {
     icon: "\u{1F4CA}",
     title: "Aligned capital",
     desc: "Investment structures that reward sustainable outcomes: mission-driven syndicates, civic infrastructure ventures, and data commons with built-in accountability.",
     color: "#f59e0b",
+    img: "/images/home/pillar-capital.webp",
   },
 ];
 
@@ -137,19 +149,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
-      <nav className="site-nav">
-        <div className="header-links">
-          <Link href="/" className="header-link header-link--gray active">Home</Link>
-          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
-          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
-          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
-          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
-          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
-          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
-          <Link href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</Link>
-          <Link href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</Link>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* ═══════════════════════════════════════════════════════════ */}
       {/*  HERO                                                      */}
@@ -158,6 +158,7 @@ export default function HomePage() {
         className="relative pt-20 pb-16 px-4 overflow-hidden"
         style={{ background: "linear-gradient(180deg,rgba(56,189,248,0.07) 0%,rgba(139,92,246,0.04) 40%,transparent 100%)" }}
       >
+        <img src="/images/home/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <p className="text-xs uppercase tracking-[0.5em] mb-5" style={{ color: "var(--accent)" }}>
             <span className="font-semibold" style={{ letterSpacing: "0.15em" }}>aicivsim</span>{" "}&mdash;{" "}AI Civilization Simulator
@@ -325,14 +326,17 @@ export default function HomePage() {
             {PILLARS.map((p) => (
               <div
                 key={p.title}
-                className="glass-card rounded-xl p-5"
+                className="glass-card rounded-xl overflow-hidden"
                 style={{ borderLeft: `3px solid ${p.color}` }}
               >
-                <span className="text-2xl block mb-3">{p.icon}</span>
-                <h3 className="text-sm font-semibold mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif", color: p.color }}>
-                  {p.title}
-                </h3>
-                <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>{p.desc}</p>
+                <img src={p.img} alt="" className="w-full h-28 object-cover opacity-60" />
+                <div className="p-5 pt-3">
+                  <span className="text-2xl block mb-3">{p.icon}</span>
+                  <h3 className="text-sm font-semibold mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif", color: p.color }}>
+                    {p.title}
+                  </h3>
+                  <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>{p.desc}</p>
+                </div>
               </div>
             ))}
             <Link
@@ -371,37 +375,40 @@ export default function HomePage() {
               <Link
                 key={d.name}
                 href={d.href}
-                className="glass-card glass-card-interactive rounded-2xl p-6 block"
+                className="glass-card glass-card-interactive rounded-2xl overflow-hidden block relative"
                 style={{ borderLeft: `3px solid ${d.color}` }}
               >
-                <div className="flex flex-col sm:flex-row gap-5">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-2xl">{d.icon}</span>
-                      <h3
-                        className="text-base font-semibold"
-                        style={{ fontFamily: "'Space Grotesk',sans-serif", color: d.color }}
-                      >
-                        {d.name}
-                      </h3>
-                    </div>
-                    <p className="text-xs font-medium mb-2" style={{ color: "var(--text)" }}>{d.tagline}</p>
-                    <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>{d.desc}</p>
-                    <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium" style={{ color: d.color }}>
-                      Open dashboard &rarr;
-                    </span>
-                  </div>
-                  <div className="flex sm:flex-col gap-3 sm:gap-2 flex-shrink-0">
-                    {d.stats.map((s) => (
-                      <div
-                        key={s.label}
-                        className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-center"
-                        style={{ minWidth: "80px" }}
-                      >
-                        <p className="text-lg font-bold" style={{ color: d.color, fontFamily: "'Space Grotesk',sans-serif" }}>{s.value}</p>
-                        <p className="text-[10px] uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>{s.label}</p>
+                <img src={d.img} alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 pointer-events-none" />
+                <div className="relative p-6">
+                  <div className="flex flex-col sm:flex-row gap-5">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-2xl">{d.icon}</span>
+                        <h3
+                          className="text-base font-semibold"
+                          style={{ fontFamily: "'Space Grotesk',sans-serif", color: d.color }}
+                        >
+                          {d.name}
+                        </h3>
                       </div>
-                    ))}
+                      <p className="text-xs font-medium mb-2" style={{ color: "var(--text)" }}>{d.tagline}</p>
+                      <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>{d.desc}</p>
+                      <span className="inline-flex items-center gap-1 mt-3 text-xs font-medium" style={{ color: d.color }}>
+                        Open dashboard &rarr;
+                      </span>
+                    </div>
+                    <div className="flex sm:flex-col gap-3 sm:gap-2 flex-shrink-0">
+                      {d.stats.map((s) => (
+                        <div
+                          key={s.label}
+                          className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2 text-center"
+                          style={{ minWidth: "80px" }}
+                        >
+                          <p className="text-lg font-bold" style={{ color: d.color, fontFamily: "'Space Grotesk',sans-serif" }}>{s.value}</p>
+                          <p className="text-[10px] uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>{s.label}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </Link>
@@ -507,35 +514,44 @@ export default function HomePage() {
           <div className="grid gap-4 sm:grid-cols-3">
             <Link
               href="/blog"
-              className="glass-card glass-card-interactive rounded-xl p-6 text-center"
+              className="glass-card glass-card-interactive rounded-xl overflow-hidden text-center"
             >
-              <span className="text-3xl block mb-3">{"\u{1F4DD}"}</span>
-              <h3 className="text-sm font-semibold mb-1" style={{ color: "#94a3b8" }}>Blog</h3>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                9 posts covering build decisions, scenario design, scoring methodology, and the research framework.
-              </p>
+              <img src="/images/home/blog.webp" alt="" className="w-full h-28 object-cover opacity-50" />
+              <div className="p-6 pt-4">
+                <span className="text-3xl block mb-3">{"\u{1F4DD}"}</span>
+                <h3 className="text-sm font-semibold mb-1" style={{ color: "#94a3b8" }}>Blog</h3>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  9 posts covering build decisions, scenario design, scoring methodology, and the research framework.
+                </p>
+              </div>
             </Link>
             <Link
               href="/research"
-              className="glass-card glass-card-interactive rounded-xl p-6 text-center"
+              className="glass-card glass-card-interactive rounded-xl overflow-hidden text-center"
             >
-              <span className="text-3xl block mb-3">{"\u{1F4DC}"}</span>
-              <h3 className="text-sm font-semibold mb-1" style={{ color: "#a78bfa" }}>Research Paper</h3>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Full theory: AI alignment, income stability, climate repair, mission capital, transition phases, and feasibility analysis.
-              </p>
+              <img src="/images/home/research.webp" alt="" className="w-full h-28 object-cover opacity-50" />
+              <div className="p-6 pt-4">
+                <span className="text-3xl block mb-3">{"\u{1F4DC}"}</span>
+                <h3 className="text-sm font-semibold mb-1" style={{ color: "#a78bfa" }}>Research Paper</h3>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  Full theory: AI alignment, income stability, climate repair, mission capital, transition phases, and feasibility analysis.
+                </p>
+              </div>
             </Link>
             <a
               href="https://github.com/reillyclawcode/aicivsim"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card glass-card-interactive rounded-xl p-6 text-center"
+              className="glass-card glass-card-interactive rounded-xl overflow-hidden text-center"
             >
-              <span className="text-3xl block mb-3">{"\u{1F4BB}"}</span>
-              <h3 className="text-sm font-semibold mb-1" style={{ color: "#38bdf8" }}>GitHub</h3>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                Every dashboard, dataset, and line of code. Open for inspection, forking, and contribution.
-              </p>
+              <img src="/images/home/github.webp" alt="" className="w-full h-28 object-cover opacity-50" />
+              <div className="p-6 pt-4">
+                <span className="text-3xl block mb-3">{"\u{1F4BB}"}</span>
+                <h3 className="text-sm font-semibold mb-1" style={{ color: "#38bdf8" }}>GitHub</h3>
+                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                  Every dashboard, dataset, and line of code. Open for inspection, forking, and contribution.
+                </p>
+              </div>
             </a>
           </div>
         </section>

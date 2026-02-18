@@ -5,6 +5,7 @@ import {
   BarChart, Bar, AreaChart, Area, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell,
 } from "recharts";
+import NavBar from "../components/NavBar";
 
 /* ================================================================== */
 /*  Types & Data                                                       */
@@ -396,8 +397,9 @@ export default function StrategyOSDashboard() {
   return (
     <main className="min-h-screen pb-20">
       {/* ═══ HEADER ═══ */}
-      <header className="pt-10 pb-8 px-4" style={{ background: "linear-gradient(180deg,rgba(245,158,11,0.06) 0%,transparent 100%)" }}>
-        <div className="max-w-6xl mx-auto">
+      <header className="relative overflow-hidden pt-10 pb-8 px-4" style={{ background: "linear-gradient(180deg,rgba(245,158,11,0.06) 0%,transparent 100%)" }}>
+        <img src="/images/strategy/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="relative z-10 max-w-6xl mx-auto">
           <p className="text-xs uppercase tracking-[0.4em] mb-2" style={{ color: "var(--amber)" }}>StrategyOS</p>
           <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Actionable Strategies Dashboard</h1>
           <p className="text-sm max-w-2xl" style={{ color: "var(--text-muted)" }}>
@@ -406,19 +408,7 @@ export default function StrategyOSDashboard() {
           </p>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <a href="/" className="header-link header-link--gray">Home</a>
-          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
-          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
-          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
-          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-          <a href="/strategy" className="header-link header-link--amber active">{"\u2699\uFE0F"} StrategyOS</a>
-          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
-          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* ═══ NAV ═══ */}
       <nav className="sticky z-50 px-4 py-3" style={{ top: "33px", background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
@@ -434,6 +424,7 @@ export default function StrategyOSDashboard() {
         {/* ═══ OVERVIEW ═══ */}
         {tab === "overview" && (
           <section>
+            <img src={`/images/strategy/overview-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4CA}"} title="Strategy Dashboard" sub="Actionable strategy scores across all levels — personal, organizational, and systemic" />
 
             {/* Strategy Score */}
@@ -475,13 +466,16 @@ export default function StrategyOSDashboard() {
               <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see how it changes every chart, score, and projection below. The selected scenario is highlighted.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {SCENARIOS.map(sc => (
-                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl">{sc.icon}</span>
-                      <h4 className="text-sm font-semibold" style={{ color: sc.color }}>{sc.name}</h4>
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card overflow-hidden text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <img src={`/images/strategy/scenario-${sc.id}.webp`} alt="" className="w-full h-20 object-cover opacity-50" />
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">{sc.icon}</span>
+                        <h4 className="text-sm font-semibold" style={{ color: sc.color }}>{sc.name}</h4>
+                      </div>
+                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>{sc.desc}</p>
+                      {activeScenario === sc.id && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
                     </div>
-                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{sc.desc}</p>
-                    {activeScenario === sc.id && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
                   </button>
                 ))}
               </div>

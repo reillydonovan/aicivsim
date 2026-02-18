@@ -5,6 +5,7 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
+import NavBar from "../components/NavBar";
 
 /* ================================================================== */
 /*  Types                                                              */
@@ -195,8 +196,9 @@ export default function Home() {
   return (
     <main className="min-h-screen pb-20">
       {/* Header */}
-      <header className="pt-10 pb-8 px-4" style={{ background: "linear-gradient(180deg, rgba(14,165,233,0.06) 0%, transparent 100%)" }}>
-        <div className="max-w-6xl mx-auto">
+      <header className="pt-10 pb-8 px-4 relative overflow-hidden" style={{ background: "linear-gradient(180deg, rgba(14,165,233,0.06) 0%, transparent 100%)" }}>
+        <img src="/images/transition/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-xs uppercase tracking-[0.4em] mb-2" style={{ color: "var(--sky)" }}>TransitionOS</p>
           <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>Workforce Transition Dashboard</h1>
           <p className="text-sm max-w-2xl" style={{ color: "var(--text-muted)" }}>
@@ -205,19 +207,7 @@ export default function Home() {
           </p>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <a href="/" className="header-link header-link--gray">Home</a>
-          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
-          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
-          <a href="/transition" className="header-link header-link--sky active">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
-          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
-          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
-          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
-        </div>
-      </nav>
+      <NavBar />
 
       {/* Tab bar */}
       <nav className="sticky z-50 px-4 py-3" style={{ top: "33px", background: "rgba(3,7,18,0.85)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--card-border)" }}>
@@ -267,6 +257,7 @@ export default function Home() {
 
           return (
           <section>
+            <img src={`/images/transition/overview-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4CA}"} title="Dashboard Overview" sub="Workforce transition scores, scenario projections, and key metrics" />
 
             {/* ── Transition Score ── */}
@@ -316,19 +307,22 @@ export default function Home() {
               <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see how it changes every chart and projection below.</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {data.cohort.map(c => (
-                  <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
-                      <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
+                  <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card text-left w-full transition-all hover:border-white/20 overflow-hidden ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
+                    <img src={`/images/transition/scenario-${c.scenario}.webp`} alt="" className="w-full h-20 object-cover opacity-50" />
+                    <div className="p-5 pt-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
+                        <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
+                      </div>
+                      <p className="text-xs mb-3" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
+                      <div className="grid grid-cols-2 gap-2 text-[10px]">
+                        <div><span style={{ color: "var(--text-faint)" }}>Poverty:</span> <span className="font-mono">{c.final.poverty_rate}%</span></div>
+                        <div><span style={{ color: "var(--text-faint)" }}>Placement:</span> <span className="font-mono">{c.final.placement_rate}%</span></div>
+                        <div><span style={{ color: "var(--text-faint)" }}>Employment:</span> <span className="font-mono">{c.final.employment_rate}%</span></div>
+                        <div><span style={{ color: "var(--text-faint)" }}>Reskill:</span> <span className="font-mono">{c.final.median_reskill_months} mo</span></div>
+                      </div>
+                      {activeScenario === c.scenario && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: SC_COLORS[c.scenario] }}>Active</div>}
                     </div>
-                    <p className="text-xs mb-3" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
-                    <div className="grid grid-cols-2 gap-2 text-[10px]">
-                      <div><span style={{ color: "var(--text-faint)" }}>Poverty:</span> <span className="font-mono">{c.final.poverty_rate}%</span></div>
-                      <div><span style={{ color: "var(--text-faint)" }}>Placement:</span> <span className="font-mono">{c.final.placement_rate}%</span></div>
-                      <div><span style={{ color: "var(--text-faint)" }}>Employment:</span> <span className="font-mono">{c.final.employment_rate}%</span></div>
-                      <div><span style={{ color: "var(--text-faint)" }}>Reskill:</span> <span className="font-mono">{c.final.median_reskill_months} mo</span></div>
-                    </div>
-                    {activeScenario === c.scenario && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: SC_COLORS[c.scenario] }}>Active</div>}
                   </button>
                 ))}
               </div>
@@ -386,6 +380,7 @@ export default function Home() {
         {/* ═══ OCCUPATION EXPLORER ═══ */}
         {tab === "explorer" && (
           <section>
+            <img src={`/images/transition/occupations-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F50D}"} title="Occupation Explorer" sub="Browse occupations by automation risk, salary, and growth outlook" />
             <div className="flex gap-2 mb-6 flex-wrap">
               {["all", "At-Risk", "Transitioning", "Growth"].map(f => (
@@ -423,6 +418,7 @@ export default function Home() {
         {/* ═══ PATH PLANNER ═══ */}
         {tab === "paths" && (
           <section>
+            <img src={`/images/transition/planner-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F9ED}"} title="Reskilling Path Planner" sub="Select a source occupation to see ranked transition paths" />
             <div className="mb-6">
               <label className="text-xs block mb-2" style={{ color: "var(--text-muted)" }}>Current occupation ({occupations.length} available)</label>
@@ -497,6 +493,7 @@ export default function Home() {
         {/* ═══ INCOME BRIDGE ═══ */}
         {tab === "bridge" && (
           <section>
+            <img src={`/images/transition/bridge-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4B0}"} title="Income Bridge Calculator" sub="How Civic Dividends cover the income gap during reskilling" />
             <div className="glass-card p-5 mb-6" style={{ borderLeft: "3px solid var(--emerald)" }}>
               <p className="text-xs" style={{ color: "var(--text-muted)" }}>
@@ -580,6 +577,7 @@ export default function Home() {
 
           return (
           <section>
+            <img src={`/images/transition/cohort-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4C8}"} title="Cohort Projections" sub="10-year KPI trajectories across three policy scenarios" />
 
             {/* Scenario selector */}
@@ -588,13 +586,16 @@ export default function Home() {
               <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update the cohort projections below.</p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {data.cohort.map(c => (
-                  <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card p-5 text-left w-full transition-all hover:border-white/20 ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
-                      <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
+                  <button key={c.scenario} onClick={() => setActiveScenario(c.scenario)} className={`glass-card text-left w-full transition-all hover:border-white/20 overflow-hidden ${activeScenario === c.scenario ? "ring-2" : ""}`} style={activeScenario === c.scenario ? { borderColor: `${SC_COLORS[c.scenario]}55`, boxShadow: `0 0 20px ${SC_COLORS[c.scenario]}11` } : {}}>
+                    <img src={`/images/transition/scenario-${c.scenario}.webp`} alt="" className="w-full h-20 object-cover opacity-50" />
+                    <div className="p-5 pt-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-2xl">{SC_ICONS[c.scenario]}</span>
+                        <h4 className="text-sm font-semibold" style={{ color: SC_COLORS[c.scenario] }}>{SC_LABELS[c.scenario]}</h4>
+                      </div>
+                      <p className="text-xs" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
+                      {activeScenario === c.scenario && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: SC_COLORS[c.scenario] }}>Active</div>}
                     </div>
-                    <p className="text-xs" style={{ color: "var(--text-muted)" }}>{SC_DESCS[c.scenario]}</p>
-                    {activeScenario === c.scenario && <div className="mt-3 text-[9px] font-semibold uppercase tracking-widest" style={{ color: SC_COLORS[c.scenario] }}>Active</div>}
                   </button>
                 ))}
               </div>
@@ -660,6 +661,7 @@ export default function Home() {
         {/* ═══ PHASES ═══ */}
         {tab === "phases" && (
           <section>
+            <img src={`/images/transition/phases-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F5FA}\uFE0F"} title="Implementation Phases" sub="Seven-phase roadmap from discovery to global export" />
             <div className="space-y-4">
               {PHASES.map(p => (

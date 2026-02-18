@@ -1,6 +1,7 @@
 import { getAllPosts } from "@/lib/blog";
 import Link from "next/link";
 import type { Metadata } from "next";
+import NavBar from "../components/NavBar";
 
 export const metadata: Metadata = {
   title: "Blog | AI Civilization Simulator",
@@ -33,8 +34,9 @@ export default function BlogIndex() {
 
   return (
     <div className="site-shell">
-      <header className="site-header">
-        <div className="container">
+      <header className="site-header relative overflow-hidden">
+        <img src="/images/blog/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="container relative z-10">
           <div className="header-content">
             <p className="eyebrow">Blog</p>
             <h1>AI Civilization Simulator</h1>
@@ -45,19 +47,7 @@ export default function BlogIndex() {
           </div>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <Link href="/" className="header-link header-link--gray">Home</Link>
-          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
-          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
-          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
-          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
-          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
-          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
-          <Link href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</Link>
-          <Link href="/blog" className="header-link header-link--gray active">{"\u{1F4DD}"} Blog</Link>
-        </div>
-      </nav>
+      <NavBar />
 
       <main className="container" style={{ width: "min(1100px, 92vw)", paddingTop: "3rem", paddingBottom: "3rem" }}>
         <div className="section-badge">All Posts</div>
@@ -68,8 +58,10 @@ export default function BlogIndex() {
           {posts.map((post) => {
             const { icon, bg } = getPostIcon(post.meta.tags);
             const dateStr = post.meta.date ? new Date(post.meta.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "";
+            const imageSlug = post.meta.slug.replace(/^\d{4}-\d{2}-\d{2}-/, "");
             return (
-              <article key={post.meta.slug} className="post-card">
+              <article key={post.meta.slug} className="post-card overflow-hidden">
+                <img src={`/images/blog/${imageSlug}.webp`} alt="" className="w-full h-32 object-cover opacity-60" />
                 <div className={`post-card-icon ${bg}`}>{icon}</div>
                 {post.meta.tags[0] && <span className="post-card-tag">{post.meta.tags[0]}</span>}
                 <h3><Link href={`/blog/${post.meta.slug}`}>{post.meta.title}</Link></h3>

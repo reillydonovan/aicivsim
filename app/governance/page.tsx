@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import NavBar from "../components/NavBar";
 
 /* Types */
 interface Pillar { id:string; title:string; icon:string; color:string; desc:string; principles:string[] }
@@ -60,26 +61,15 @@ export default function Home() {
 
   return (
     <main className="min-h-screen pb-20">
-      <header className="pt-10 pb-8 px-4" style={{background:"linear-gradient(180deg,rgba(139,92,246,0.06) 0%,transparent 100%)"}}>
-        <div className="max-w-6xl mx-auto">
+      <header className="pt-10 pb-8 px-4 relative overflow-hidden" style={{background:"linear-gradient(180deg,rgba(139,92,246,0.06) 0%,transparent 100%)"}}>
+        <img src="/images/governance/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-xs uppercase tracking-[0.4em] mb-2" style={{color:"var(--violet)"}}>GovernanceOS</p>
           <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{fontFamily:"'Space Grotesk',sans-serif"}}>Civic Governance Dashboard</h1>
           <p className="text-sm max-w-2xl" style={{color:"var(--text-muted)"}}>Charter frameworks, citizen assemblies, governance modules, audit tracking, and participatory tools. The institutional backbone of the AI Civilization framework.</p>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <a href="/" className="header-link header-link--gray">Home</a>
-          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
-          <a href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</a>
-          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
-          <a href="/governance" className="header-link header-link--violet active">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
-          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
-          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
-        </div>
-      </nav>
+      <NavBar />
 
       <nav className="sticky z-50 px-4 py-3" style={{top:"33px",background:"rgba(3,7,18,0.85)",backdropFilter:"blur(12px)",borderBottom:"1px solid var(--card-border)"}}>
         <div className="flex gap-2 overflow-x-auto justify-center">
@@ -156,6 +146,7 @@ export default function Home() {
 
           return (
           <section>
+            <img src={`/images/governance/overview-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
             <Heading icon={"\u{1F4CA}"} title="Governance Overview" sub="Institutional health, scenario projections, and key governance metrics" />
 
             {/* Governance Score */}
@@ -205,10 +196,13 @@ export default function Home() {
               <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see how it changes every chart and projection below.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {GOV_SCENARIOS.map(sc => (
-                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                    <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                    <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
-                    {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-0 text-left w-full transition-all overflow-hidden hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                    <img src={'/images/governance/scenario-' + sc.id + '.webp'} alt="" className="w-full h-20 object-cover opacity-50" />
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                      <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                      {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -284,6 +278,7 @@ export default function Home() {
 
         {/* CHARTER */}
         {tab==="charter" && (<section>
+          <img src={`/images/governance/charter-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
           <Heading icon={"\u{1F4DC}"} title={data.charter.title} sub={data.charter.purpose} />
           <div className="space-y-6 mb-8">
             {data.charter.pillars.map(p => (
@@ -308,6 +303,7 @@ export default function Home() {
 
         {/* ASSEMBLIES */}
         {tab==="assemblies" && (<section>
+          <img src={`/images/governance/assemblies-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
           <Heading icon={"\u{1F5F3}\uFE0F"} title="Citizen Assemblies" sub="Randomly stratified assemblies mirroring local demographics. Stipends, childcare, transit passes, and language access remove participation barriers." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {data.assemblies.map(a => (
@@ -379,6 +375,7 @@ export default function Home() {
 
         {/* AUDIT TRACKER */}
         {tab==="audits" && (<section>
+          <img src={`/images/governance/audit-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
           <Heading icon={"\u{1F50D}"} title="AI Audit Tracker" sub="Tracking coverage of high-risk AI systems from 10% (2026) to 100% (2035). Threshold breaches trigger automatic policy reviews." />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <Stat label="Current coverage" value={`${latestAudit?.audited ?? 0}%`} color="var(--violet)" />
@@ -413,6 +410,7 @@ export default function Home() {
 
         {/* PARTICIPATION */}
         {tab==="participation" && (<section>
+          <img src={`/images/governance/participation-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
           <Heading icon={"\u{1F465}"} title="Participation & Equity" sub="Measuring who participates, demographic equity, accessibility, and satisfaction" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             <Stat label="Registered" value={fmtK(data.participation.registered)} sub={`of ${fmtK(data.participation.totalResidents)}`} color="var(--violet)" />

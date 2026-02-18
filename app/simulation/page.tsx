@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import NavBar from "../components/NavBar";
 import {
   ResponsiveContainer,
   LineChart,
@@ -558,8 +559,9 @@ export default function Home() {
       )}
 
       {/* ── HEADER ── */}
-      <header className="pt-10 pb-8 px-4" style={{ background: "linear-gradient(180deg,rgba(56,189,248,0.06) 0%,transparent 100%)" }}>
-        <div className="max-w-6xl mx-auto">
+      <header className="relative overflow-hidden pt-10 pb-8 px-4" style={{ background: "linear-gradient(180deg,rgba(56,189,248,0.06) 0%,transparent 100%)" }}>
+        <img src="/images/simulation/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="relative z-10 max-w-6xl mx-auto">
           <p className="text-xs uppercase tracking-[0.4em] mb-2" style={{ color: "var(--sky)" }}>Simulation</p>
           <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{ fontFamily: "'Space Grotesk',sans-serif" }}>Future Simulation Toolkit</h1>
           <p className="text-sm max-w-2xl" style={{ color: "var(--text-muted)" }}>
@@ -568,20 +570,9 @@ export default function Home() {
           </p>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <a href="/" className="header-link header-link--gray">Home</a>
-          <a href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</a>
-          <a href="/simulation" className="header-link header-link--sky active">{"\u{1F52C}"} Simulation</a>
-          <a href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</a>
-          <a href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</a>
-          <a href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
-          <a href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</a>
-          <a href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</a>
-          <a href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</a>
-          <button onClick={() => setLabNotesOpen(true)} className="header-link header-link--sky" style={{ cursor: "pointer" }}>{"\u{1F4DD}"} Lab Notes{labNotes.length > 0 ? ` (${labNotes.length})` : ""}</button>
-        </div>
-      </nav>
+      <NavBar extra={
+        <button onClick={() => setLabNotesOpen(true)} className="header-link header-link--sky" style={{ cursor: "pointer" }}>{"\u{1F4DD}"} Lab Notes{labNotes.length > 0 ? ` (${labNotes.length})` : ""}</button>
+      } />
 
       <div className="max-w-6xl mx-auto px-4 mt-8">
 
@@ -710,15 +701,18 @@ export default function Home() {
                 <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to update all charts, metrics, and reports below.</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   {data.scenarios.map(sc => (
-                    <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card p-4 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                      <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                      <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
-                      <div className="mt-2 flex flex-wrap gap-x-2 gap-y-0.5 text-[10px]" style={{ color: "var(--text-muted)" }}>
-                        <span>Div {(sc.branch.civic_dividend_rate * 100).toFixed(0)}%</span>
-                        <span>Charter {sc.branch.ai_charter ? "ON" : "OFF"}</span>
-                        <span>Climate {(sc.branch.climate_capex_share * 100).toFixed(0)}%</span>
+                    <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card overflow-hidden p-0 text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
+                      <img src={'/images/simulation/scenario-' + sc.id + '.webp'} alt="" className="w-full h-20 object-cover opacity-50" />
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
+                        <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
+                        <div className="mt-2 flex flex-wrap gap-x-2 gap-y-0.5 text-[10px]" style={{ color: "var(--text-muted)" }}>
+                          <span>Div {(sc.branch.civic_dividend_rate * 100).toFixed(0)}%</span>
+                          <span>Charter {sc.branch.ai_charter ? "ON" : "OFF"}</span>
+                          <span>Climate {(sc.branch.climate_capex_share * 100).toFixed(0)}%</span>
+                        </div>
+                        {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
                       </div>
-                      {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
                     </button>
                   ))}
                 </div>
@@ -769,8 +763,13 @@ export default function Home() {
               </div>
 
               {/* Report */}
-              {summary && s && (
+              {summary && s && selectedState && baselineState && (
                 <div className="mt-6 glass-card rounded-2xl p-6">
+                  {(() => {
+                    const elapsed = selectedState.year - (baselineState as SnapshotState).year;
+                    const era: "dawn" | "diverge" | "mature" | "legacy" = elapsed <= 5 ? "dawn" : elapsed <= 15 ? "diverge" : elapsed <= 30 ? "mature" : "legacy";
+                    return <img src={`/images/simulation/${activeScenario}-${era}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />;
+                  })()}
                   <div className="mb-4 flex flex-wrap items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3">
                     <span className="text-lg">{s.icon}</span>
                     <span className="text-xs font-bold text-white">{s.name}</span>

@@ -2,6 +2,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import NavBar from "../../components/NavBar";
 
 export async function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.meta.slug }));
@@ -31,25 +32,14 @@ export default function PostPage({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <Link href="/" className="header-link header-link--gray">Home</Link>
-          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
-          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
-          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
-          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
-          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
-          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
-          <Link href="/research" className="header-link header-link--violet">{"\u{1F4DC}"} Research</Link>
-          <Link href="/blog" className="header-link header-link--gray active">{"\u{1F4DD}"} Blog</Link>
-        </div>
-      </nav>
+      <NavBar />
 
       <main className="container" style={{ width: "min(1100px, 92vw)", paddingTop: "3rem", paddingBottom: "3rem" }}>
         <div className="post-body">
           <div className="post-return">
             <Link href="/blog">&larr; All posts</Link>
           </div>
+          <img src={`/images/blog/${params.slug.replace(/^\d{4}-\d{2}-\d{2}-/, "")}.webp`} alt="" className="w-full h-48 object-cover rounded-xl mb-6 opacity-60" />
           <div className="post-header">
             {post.meta.tags[0] && <span className="post-tag">{post.meta.tags[0]}</span>}
             <h1>{post.meta.title}</h1>

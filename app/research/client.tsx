@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import NavBar from "../components/NavBar";
 
 interface TocItem { id: string; label: string; sub?: boolean }
 
@@ -10,8 +11,9 @@ export default function ResearchClient({ toc, source }: { toc: TocItem[]; source
 
   return (
     <div className="site-shell">
-      <header className="site-header">
-        <div className="container">
+      <header className="site-header relative overflow-hidden">
+        <img src="/images/research/hero.webp" alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none" />
+        <div className="container relative z-10">
           <div className="header-content">
             <p className="eyebrow">Research Paper</p>
             <h1>Reclaiming the Future</h1>
@@ -19,19 +21,7 @@ export default function ResearchClient({ toc, source }: { toc: TocItem[]; source
           </div>
         </div>
       </header>
-      <nav className="site-nav">
-        <div className="header-links">
-          <Link href="/" className="header-link header-link--gray">Home</Link>
-          <Link href="/climate" className="header-link header-link--teal">{"\u{1F331}"} ClimateOS</Link>
-          <Link href="/simulation" className="header-link header-link--sky">{"\u{1F52C}"} Simulation</Link>
-          <Link href="/transition" className="header-link header-link--sky">{"\u{1F6E0}\uFE0F"} TransitionOS</Link>
-          <Link href="/civilization" className="header-link header-link--amber">{"\u{1F30D}"} CivilizationOS</Link>
-          <Link href="/governance" className="header-link header-link--violet">{"\u{1F3DB}\uFE0F"} GovernanceOS</Link>
-          <Link href="/strategy" className="header-link header-link--amber">{"\u2699\uFE0F"} StrategyOS</Link>
-          <Link href="/research" className="header-link header-link--violet active">{"\u{1F4DC}"} Research</Link>
-          <Link href="/blog" className="header-link header-link--gray">{"\u{1F4DD}"} Blog</Link>
-        </div>
-      </nav>
+      <NavBar />
 
       <button className="toc-mobile-toggle" onClick={() => setTocOpen(!tocOpen)}>
         {"\u{1F4D1}"} Table of Contents

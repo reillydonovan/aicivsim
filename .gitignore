@@ -11,3 +11,8 @@ next-env.d.ts
 
 .DS_Store
 Thumbs.db
+
+.flux-env/
+_test_flux.py
+_test_output.webp
+_generate_images.py
