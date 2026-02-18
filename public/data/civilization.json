@@ -1,0 +1,58 @@
+{
+  "journeys": [
+    {"id":"join","title":"Join","icon":"\ud83c\udf1f","desc":"Invitation, identity verification, consent packages, profile creation","steps":["Receive invitation or self-register","Verify identity (W3C DID-based, no PII leakage)","Review & sign consent packages","Select communication preferences","Create resident profile","Receive welcome kit + first Civic Dividend"],"touchpoints":["Web portal","SMS onboarding","In-person community hub","IVR phone flow"],"avgDays":7,"completionRate":0.89,"satisfactionScore":4.2},
+    {"id":"vote","title":"Vote","icon":"\ud83d\uddf3\ufe0f","desc":"Agenda digest, decision packets, accessible ballots, quadratic voting","steps":["Receive agenda digest (7 days before)","Review decision packets with evidence summaries","Attend optional deliberation session","Cast ballot (ranked choice or quadratic)","Receive outcome notification + minority report"],"touchpoints":["Mobile app","Web portal","Paper ballot fallback","Community assembly hall"],"avgDays":14,"completionRate":0.72,"satisfactionScore":3.9},
+    {"id":"support","title":"Request Support","icon":"\ud83e\udd1d","desc":"Intake, triage, direct support, follow-up","steps":["Submit request (web, SMS, phone, or walk-in)","Automated triage + urgency classification","Matched to case worker within 24h","Receive support plan with timeline","Regular check-ins until resolution","Satisfaction survey + feedback loop"],"touchpoints":["Help desk","SMS triage bot","Community hub walk-in","Phone hotline"],"avgDays":5,"completionRate":0.94,"satisfactionScore":4.1},
+    {"id":"earn","title":"Earn & Contribute","icon":"\ud83d\udcaa","desc":"Work opportunities, stipends, civic quests, cooperative ownership","steps":["Browse available opportunities (care, climate, civic)","Apply or auto-match via skills graph","Complete onboarding + safety training","Perform work with milestone tracking","Receive stipend via digital wallet","Earn credentials + portfolio updates"],"touchpoints":["Transition OS portal","Employer dashboard","Digital wallet","Credential registry"],"avgDays":30,"completionRate":0.81,"satisfactionScore":4.0},
+    {"id":"graduate","title":"Graduate","icon":"\ud83c\udf93","desc":"Exit survey, credentialing, alumni network, continuous engagement","steps":["Complete program milestones","Take exit survey + skills assessment","Receive verified credentials (blockchain-attested)","Join alumni network","Access ongoing mentorship + opportunities","Contribute back as mentor or civic lead"],"touchpoints":["Credential portal","Alumni community platform","Mentorship matching","Civic leadership pipeline"],"avgDays":3,"completionRate":0.96,"satisfactionScore":4.5}
+  ],
+  "dividendModel": {
+    "fundingSources": [
+      {"source":"AI compute rents","pctOfPool":35,"annual_m":875,"desc":"Levied on data center operators using local grid and land resources"},
+      {"source":"Green tariffs","pctOfPool":25,"annual_m":625,"desc":"Carbon-adjusted import tariffs recycled into the dividend pool"},
+      {"source":"Data commons licensing","pctOfPool":20,"annual_m":500,"desc":"Revenue from anonymized public data access licensed to researchers and firms"},
+      {"source":"Philanthropy + federal match","pctOfPool":15,"annual_m":375,"desc":"Matched grants from mission-aligned foundations and federal programs"},
+      {"source":"Cooperative revenue share","pctOfPool":5,"annual_m":125,"desc":"Surplus from publicly-owned cooperative AI agents and automation platforms"}
+    ],
+    "poolSize_m":2500,
+    "populationServed":10000000,
+    "biweeklyPerResident":192,
+    "annualPerResident":4992,
+    "povertyReduction":{"baseline":13,"target":5,"timelineYears":10},
+    "escrowMonths":24,
+    "disbursementMethod":"Digital wallet (ACH fallback)"
+  },
+  "kpis": [
+    {"id":"poverty","label":"Regional Poverty Rate","unit":"%","baseline":13,"target":5,"current":9.2,"year":2028,"color":"#f43f5e","better":"lower","trajectory":[13,12.4,11.5,10.2,9.2,8.1,7.0,6.1,5.4,5.0]},
+    {"id":"reskill","label":"Median Reskill Time","unit":" months","baseline":18,"target":6,"current":11,"year":2028,"color":"#f59e0b","better":"lower","trajectory":[18,16.5,14.8,12.8,11.0,9.5,8.2,7.2,6.5,6.0]},
+    {"id":"emissions","label":"Peak-Load Emissions","unit":" kg CO\u2082/kWh","baseline":0.65,"target":0.25,"current":0.48,"year":2028,"color":"#10b981","better":"lower","trajectory":[0.65,0.60,0.55,0.50,0.48,0.42,0.37,0.32,0.28,0.25]},
+    {"id":"biodiversity","label":"Corridors Monitored","unit":"%","baseline":22,"target":75,"current":38,"year":2028,"color":"#06b6d4","better":"higher","trajectory":[22,26,30,34,38,45,52,60,68,75]},
+    {"id":"charter","label":"High-Risk AI Audited","unit":"%","baseline":10,"target":100,"current":45,"year":2028,"color":"#8b5cf6","better":"higher","trajectory":[10,18,28,36,45,58,72,84,93,100]}
+  ],
+  "milestones": [
+    {"year":2026,"title":"Discovery & pilot launch","items":["State-of-the-System atlas published","Two pilot cities sign MOUs","10K residents in Transition OS sandbox","Phase 0 geospatial dashboard live"]},
+    {"year":2027,"title":"Scale enrollment","items":["50K residents enrolled","Median reskilling down to 12 months","40% of high-risk AI deployments audited","First Civic Dividend disbursements"]},
+    {"year":"2028\u20132029","title":"Codify & federate","items":["Assemblies codify AI + climate compacts","Data Commons & Governance OS GA","90% agency data feeds connected","$2B deployed through Mission Investment Syndicate"]},
+    {"year":"2030\u20132032","title":"Regional expansion","items":["6 additional regions onboard","Poverty below 9%","VPP shaves 20 GW peak load","45% biodiversity corridors instrumented"]},
+    {"year":"2033\u20132034","title":"Continental scale","items":["$5B+ deployed with <1% default rates","Playbooks localized for 3 continents","15 MtCO\u2082/year avoided","Credential portability across all regions"]},
+    {"year":2035,"title":"All targets met","items":["Poverty <5%, reskill <6 months","100% high-risk AI audited","75% corridors monitored","Export packages adopted by 12+ cities/countries"]}
+  ],
+  "benefits": [
+    {"id":"dividend","title":"Civic Dividend","desc":"Biweekly stipend disbursed via digital wallet with ACH fallback","amount":"$192/biweekly","icon":"\ud83d\udcb0","status":"active","recipients":10000000},
+    {"id":"healthcare","title":"Health Access","desc":"Primary care, mental health, dental through community health hubs","amount":"Covered","icon":"\ud83c\udfe5","status":"active","recipients":8500000},
+    {"id":"housing","title":"Housing Stability","desc":"Rent stabilization, emergency housing fund, co-op buy-in assistance","amount":"Up to $1,200/mo","icon":"\ud83c\udfe0","status":"active","recipients":3200000},
+    {"id":"childcare","title":"Childcare & Family","desc":"Universal pre-K, after-school programs, assembly participation childcare","amount":"Covered","icon":"\ud83d\udc76","status":"active","recipients":2100000},
+    {"id":"transit","title":"Transit Pass","desc":"Unlimited local transit for all enrolled residents","amount":"$0 fare","icon":"\ud83d\ude8c","status":"active","recipients":7800000},
+    {"id":"connectivity","title":"Digital Access","desc":"Broadband, device lending, digital literacy training","amount":"Covered","icon":"\ud83d\udcf6","status":"expanding","recipients":6200000},
+    {"id":"legal","title":"Legal Aid","desc":"Free legal support for housing, employment, immigration, and family matters","amount":"Pro bono","icon":"\u2696\ufe0f","status":"active","recipients":1800000},
+    {"id":"credential","title":"Credential Recognition","desc":"Blockchain-attested skills and work history portable across regions","amount":"Free","icon":"\ud83c\udf93","status":"active","recipients":5400000}
+  ],
+  "serviceProviders": [
+    {"name":"Community Health Hubs","type":"Healthcare","capacity":850000,"coverage":"Metro + rural satellite clinics"},
+    {"name":"Transition OS Centers","type":"Workforce","capacity":200000,"coverage":"15 physical locations + virtual"},
+    {"name":"Housing Cooperative Network","type":"Housing","capacity":120000,"coverage":"12 co-op developments"},
+    {"name":"Digital Access Points","type":"Connectivity","capacity":500000,"coverage":"Libraries, community centers, mobile units"},
+    {"name":"Legal Aid Clinics","type":"Legal","capacity":50000,"coverage":"8 clinics + virtual intake"},
+    {"name":"Childcare Collective","type":"Family","capacity":85000,"coverage":"Universal pre-K + after-school"}
+  ]
+}

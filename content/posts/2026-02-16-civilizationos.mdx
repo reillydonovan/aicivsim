@@ -1,0 +1,169 @@
+---
+layout: post
+title: "CivilizationOS: building the resident experience layer"
+description: "A walkthrough of CivilizationOS — the civic infrastructure dashboard that models resident journeys, civic dividends, benefits, and 10-year KPI projections."
+date: "2026-02-16T18:00:00.000Z"
+tags:
+  - tooling
+  - civic-infrastructure
+  - economics
+---
+
+<div class="hero-banner hero-banner--amber">
+  <div class="hero-banner-icon">&#x1F30D;</div>
+  <h3>What does daily life look like inside the civilization we're designing?</h3>
+  <p>The research paper describes institutions and policies. CivilizationOS answers the follow-up question: what does a resident actually experience when they interact with these systems?</p>
+</div>
+
+## What CivilizationOS models
+
+If the <a href="{{ site.basePath }}research/ai-civilization/">research paper</a> is the blueprint, CivilizationOS is the service design layer. It takes every place where a resident touches civic infrastructure — onboarding, voting, requesting support, earning a living, graduating to new roles — and models the full journey with steps, touchpoints, satisfaction scores, and completion rates.
+
+<div class="feature-grid">
+  <div class="feature-card feature-card--amber">
+    <div class="feature-card-icon">&#x1F5FA;&#xFE0F;</div>
+    <h4>Five civic journeys</h4>
+    <p>Join, Vote, Request Support, Earn & Contribute, Graduate. Each journey is mapped with numbered steps, multi-channel touchpoints (web, SMS, phone, walk-in), and measured outcomes.</p>
+  </div>
+  <div class="feature-card feature-card--emerald">
+    <div class="feature-card-icon">&#x1F4B0;</div>
+    <h4>Civic Dividend modeling</h4>
+    <p>A $2.5B/year pool funded by AI compute rents, green tariffs, data commons licensing, philanthropy, and cooperative revenue. Every resident receives $192 biweekly — enough to push poverty below 5% within a decade.</p>
+  </div>
+  <div class="feature-card feature-card--sky">
+    <div class="feature-card-icon">&#x1F91D;</div>
+    <h4>Benefits & support network</h4>
+    <p>Eight benefit programs — healthcare, housing, childcare, transit, digital access, legal aid, credentials — plus the service provider network that delivers them.</p>
+  </div>
+  <div class="feature-card feature-card--violet">
+    <div class="feature-card-icon">&#x1F4C8;</div>
+    <h4>KPI dashboard</h4>
+    <p>Five key indicators (poverty rate, reskill time, emissions, biodiversity corridors, AI audit coverage) with 10-year trajectories from 2026 baseline to 2035 target.</p>
+  </div>
+  <div class="feature-card feature-card--rose">
+    <div class="feature-card-icon">&#x1F3AF;</div>
+    <h4>10-year milestones</h4>
+    <p>Six phases from discovery sprint (2026) through continental scale (2033–34) to global export (2035), each with concrete deliverables.</p>
+  </div>
+</div>
+
+## The Civic Dividend at a glance
+
+<div class="stat-row">
+  <div class="stat-item">
+    <div class="stat-number">$2.5B</div>
+    <div class="stat-label">annual pool</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">$192</div>
+    <div class="stat-label">biweekly / resident</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">10M</div>
+    <div class="stat-label">residents served</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">&lt;5%</div>
+    <div class="stat-label">poverty target</div>
+  </div>
+</div>
+
+The dividend is funded by five streams, modeled after Alaska's Permanent Fund but powered by digital infrastructure:
+
+<div class="steps">
+  <div class="step">
+    <h4>AI compute rents (35%)</h4>
+    <p>Levied on data center operators using local grid and land resources. $875M/year.</p>
+  </div>
+  <div class="step">
+    <h4>Green tariffs (25%)</h4>
+    <p>Carbon-adjusted import tariffs recycled into the dividend pool. $625M/year.</p>
+  </div>
+  <div class="step">
+    <h4>Data commons licensing (20%)</h4>
+    <p>Revenue from anonymized public data access licensed to researchers and firms. $500M/year.</p>
+  </div>
+  <div class="step">
+    <h4>Philanthropy + federal match (15%)</h4>
+    <p>Matched grants from mission-aligned foundations and federal programs. $375M/year.</p>
+  </div>
+  <div class="step">
+    <h4>Cooperative revenue share (5%)</h4>
+    <p>Surplus from publicly-owned cooperative AI agents and automation platforms. $125M/year.</p>
+  </div>
+</div>
+
+## Resident journeys: how it works
+
+<div class="callout callout--tip">
+  <p>Each journey in CivilizationOS is designed to survive offline and low-connectivity environments. Context follows the resident across every touchpoint via W3C DID-based identity — no PII leakage.</p>
+</div>
+
+Take the **Join** journey as an example. A new resident:
+
+<div class="steps">
+  <div class="step">
+    <h4>Receives invitation or self-registers</h4>
+    <p>Via web portal, SMS, community hub walk-in, or IVR phone flow.</p>
+  </div>
+  <div class="step">
+    <h4>Verifies identity</h4>
+    <p>W3C DID-based — proves residency without leaking personal information.</p>
+  </div>
+  <div class="step">
+    <h4>Signs consent packages</h4>
+    <p>Reviews what data is collected, how it's used, and selects communication preferences.</p>
+  </div>
+  <div class="step">
+    <h4>Creates resident profile</h4>
+    <p>Skills, interests, household info. This feeds into Transition OS matching and benefit eligibility.</p>
+  </div>
+  <div class="step">
+    <h4>Receives welcome kit + first Civic Dividend</h4>
+    <p>Disbursed via digital wallet with ACH fallback. Average onboarding: 7 days. 89% completion rate.</p>
+  </div>
+</div>
+
+## How CivilizationOS connects to the ecosystem
+
+<div class="callout callout--info">
+  <p>CivilizationOS is the <strong>resident-facing layer</strong>. It sits between the institutional governance (<a href="/governance">GovernanceOS</a>) and the workforce transition engine (<a href="/transition">TransitionOS</a>). The <a href="/simulation">simulation toolkit</a> projects all of these forward across 50 years and 12 policy branches.</p>
+</div>
+
+<div class="hero-banner hero-banner--amber">
+  <div class="hero-banner-icon">&#x1F30D;</div>
+  <h3>Explore the CivilizationOS dashboard</h3>
+  <p>Browse all five civic journeys, model the Civic Dividend, explore benefits and support services, track KPIs with interactive charts, and walk through the 10-year milestone roadmap.</p>
+  <a href="/civilization" class="cta-link">&#x1F680; Open CivilizationOS dashboard &rarr;</a>
+  <a href="https://github.com/reillyclawcode/CivilizationOS" target="_blank" rel="noopener" class="cta-link">&#x1F4BB; CivilizationOS on GitHub &rarr;</a>
+</div>
+
+<div class="hero-banner hero-banner--violet">
+  <div class="hero-banner-icon">&#x1F3DB;&#xFE0F;</div>
+  <h3>See the governance layer</h3>
+  <p>GovernanceOS models the institutional backbone — charter frameworks, citizen assemblies, governance modules, AI audit tracking, and participatory equity metrics.</p>
+  <a href="/governance" class="cta-link">&#x1F680; Open GovernanceOS dashboard &rarr;</a>
+  <a href="https://github.com/reillyclawcode/GovernanceOS" target="_blank" rel="noopener" class="cta-link">&#x1F3DB;&#xFE0F; GovernanceOS on GitHub &rarr;</a>
+</div>
+
+<div class="hero-banner hero-banner--emerald">
+  <div class="hero-banner-icon">&#x1F6E0;&#xFE0F;</div>
+  <h3>Explore the Transition OS dashboard</h3>
+  <p>The reskilling engine that CivilizationOS residents use for career transitions. Browse 20 occupations, explore reskilling paths, and see how Civic Dividends bridge income gaps.</p>
+  <a href="https://github.com/reillyclawcode/transitionOS" target="_blank" rel="noopener" class="cta-link">&#x1F4BB; TransitionOS on GitHub &rarr;</a>
+</div>
+
+<div class="hero-banner hero-banner--emerald">
+  <div class="hero-banner-icon">🌱</div>
+  <h3>Explore the ClimateOS dashboard</h3>
+  <p>Four climate futures from now to 2050 — toggle between aggressive action and worst case to see how temperature, biodiversity, energy, water, food, and forests respond. Scenario-aware analysis beneath every chart.</p>
+  <a href="/climate" class="cta-link">🌱 Open ClimateOS dashboard &rarr;</a>
+  <a href="https://github.com/reillyclawcode/ClimateOS" target="_blank" rel="noopener" class="cta-link">💻 ClimateOS on GitHub &rarr;</a>
+</div>
+
+<div class="hero-banner hero-banner--sky">
+  <div class="hero-banner-icon">&#x1F52C;</div>
+  <h3>Run the simulation yourself</h3>
+  <p>All of these systems are projected across 50 years in the simulation toolkit — 12 policy branches, 5 structural metrics, interactive charts, and AI-generated narrative reports.</p>
+  <a href="https://github.com/reillyclawcode/simulation" target="_blank" rel="noopener" class="cta-link">&#x1F47E; Simulation Toolkit on GitHub &rarr;</a>
+</div>

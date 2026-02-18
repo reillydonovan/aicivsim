@@ -1,0 +1,56 @@
+{
+  "charter": {
+    "title":"Civic AI Charter",
+    "purpose":"Tie every AI deployment to human flourishing metrics: jobs sustained, education and health access, emissions avoided. Based on UNESCO Recommendation on the Ethics of AI, adapted locally with citizen participation.",
+    "pillars":[
+      {"id":"representation","title":"Representation","icon":"\ud83c\udfdb\ufe0f","color":"#8b5cf6","desc":"Delegate graph, participation quotas, recall tooling, sortition-based assemblies","principles":["One person, one voice — weighted by nothing except residency","Randomly stratified assemblies mirror local demographics","Recall mechanisms for any delegate within 90 days","Progressive disclosure: simple ballots for routine, deep packets for complex"]},
+      {"id":"finance","title":"Finance","icon":"\ud83d\udcb0","color":"#10b981","desc":"Treasury accounting, programmatic disbursements, on-chain attestations","principles":["All flows auditable in real-time via public ledger","Programmatic disbursements reduce discretionary gatekeeping","Escrow two years of Civic Dividend payouts as stability reserve","Mission Investment Syndicate with impact covenants"]},
+      {"id":"transparency","title":"Transparency","icon":"\ud83d\udd0d","color":"#0ea5e9","desc":"Bias tests, red-team exercises, incident reports, public dashboards","principles":["Every high-risk AI system gets participatory safety review before deployment","Quarterly AI + Climate Impact hearings with public testimony","Threshold breaches trigger automatic policy reviews","All audit data feeds public dashboards within 48 hours"]}
+    ],
+    "enforcement":"Citizen assemblies issue go/no-go recommendations that procurement must honor. Legal teams convert outputs into ordinances within 45 days. Majority and minority reports published."
+  },
+  "assemblies":[
+    {"id":"a1","name":"AI Safety Assembly","domain":"AI Oversight","members":150,"demographics":{"age18_34":28,"age35_54":38,"age55plus":34,"female":52,"male":46,"nonbinary":2},"meetingsHeld":12,"decisionsIssued":8,"bindingRate":0.88,"avgTurnout":0.91,"stipendPerSession":250,"nextSession":"2026-03-15"},
+    {"id":"a2","name":"Climate & Energy Assembly","domain":"Climate Policy","members":120,"demographics":{"age18_34":32,"age35_54":35,"age55plus":33,"female":50,"male":47,"nonbinary":3},"meetingsHeld":10,"decisionsIssued":6,"bindingRate":0.83,"avgTurnout":0.88,"stipendPerSession":250,"nextSession":"2026-03-22"},
+    {"id":"a3","name":"Housing & Land Use Assembly","domain":"Housing","members":100,"demographics":{"age18_34":35,"age35_54":33,"age55plus":32,"female":54,"male":44,"nonbinary":2},"meetingsHeld":8,"decisionsIssued":5,"bindingRate":0.80,"avgTurnout":0.85,"stipendPerSession":250,"nextSession":"2026-04-01"},
+    {"id":"a4","name":"Digital Rights Assembly","domain":"Data & Privacy","members":80,"demographics":{"age18_34":40,"age35_54":35,"age55plus":25,"female":48,"male":49,"nonbinary":3},"meetingsHeld":6,"decisionsIssued":4,"bindingRate":0.75,"avgTurnout":0.82,"stipendPerSession":250,"nextSession":"2026-04-10"},
+    {"id":"a5","name":"Budget & Finance Assembly","domain":"Fiscal Policy","members":100,"demographics":{"age18_34":25,"age35_54":40,"age55plus":35,"female":50,"male":48,"nonbinary":2},"meetingsHeld":9,"decisionsIssued":7,"bindingRate":0.86,"avgTurnout":0.90,"stipendPerSession":250,"nextSession":"2026-03-29"}
+  ],
+  "modules":[
+    {"id":"representation","title":"Representation Module","status":"GA","version":"1.2.0","desc":"Delegate graph with sortition engine, participation quotas, recall tooling, and progressive ballot disclosure.","features":["Sortition engine — cryptographically random, demographically stratified","Delegate graph — tracks chains of delegation and recall history","Participation quotas — ensures minimum representation from underrepresented groups","Ballot engine — ranked choice, quadratic, and approval voting modes","Accessibility — screen reader, large print, multi-language, IVR phone voting"],"techStack":"Go/Rust backend, Next.js frontend, W3C DID identity","metrics":{"activeVoters":78000,"delegatesRegistered":1200,"recallsInitiated":3,"avgVoteTime":"4.2 min"}},
+    {"id":"finance","title":"Finance Module","status":"GA","version":"1.1.0","desc":"Treasury accounting with real-time public ledger, programmatic disbursements, impact attestations, and escrow management.","features":["Real-time treasury dashboard — all inflows/outflows visible","Programmatic disbursement engine — rules-based payments, no discretionary gates","On-chain attestation — proof of disbursement for audit trails","Escrow management — 24-month Civic Dividend reserve","Mission Investment Syndicate portal — deal room, due diligence, impact tracking"],"techStack":"Rust smart contracts, PostgreSQL, Kafka event stream","metrics":{"totalDisbursed_m":1250,"transactionsProcessed":8400000,"avgSettlementTime":"12 sec","auditsClear":0.998}},
+    {"id":"transparency","title":"Transparency Module","status":"GA","version":"1.0.3","desc":"AI audit pipeline with bias testing, red-team exercises, incident reporting, and auto-published public dashboards.","features":["Bias test suite — demographic parity, equalized odds, calibration metrics","Red-team scheduler — automated + manual adversarial testing","Incident report pipeline — intake, triage, root cause, remediation tracking","Public dashboard auto-publish — all audit data within 48 hours","Threshold alerts — automatic policy review triggers on metric breaches"],"techStack":"Python ML pipeline, DuckDB analytics, Next.js dashboards, SOC 2 controls","metrics":{"systemsAudited":142,"incidentsReported":23,"incidentsResolved":21,"avgResolutionDays":8.5,"dashboardViews_k":340}},
+    {"id":"identity","title":"Identity Module","status":"Beta","version":"0.8.0","desc":"W3C DID-based civic identity for residency proof without leaking personal information. Progressive disclosure of attributes.","features":["Zero-knowledge residency proof","Selective attribute disclosure","Cross-region credential portability","Biometric fallback (optional, consent-gated)","Offline verification via QR + NFC"],"techStack":"W3C DID, Verifiable Credentials, Rust verifier","metrics":{"idsIssued":92000,"verificationsPerDay":15000,"privacyIncidents":0,"crossRegionPortability":0.85}},
+    {"id":"measurement","title":"Measurement Module","status":"GA","version":"1.3.0","desc":"Unified instrumentation pipeline tracking AI safety incidents, job transitions, emissions avoided, habitats restored.","features":["Kafka/Snowplow event collection","DuckDB + Iceberg analytical tables","Auto-generated weekly public briefs","Rolling 90-day impact reports","Quarterly hearing data packages"],"techStack":"Kafka, Snowplow, DuckDB, Iceberg, Superset/Metabase","metrics":{"eventsPerDay_m":12,"dataSources":45,"reportsGenerated":156,"publicBriefsPublished":48,"hearingPackagesDelivered":8}}
+  ],
+  "auditTimeline":[
+    {"year":2026,"audited":10,"total":100,"incidents":5,"resolved":4},
+    {"year":2027,"audited":28,"total":115,"incidents":8,"resolved":7},
+    {"year":2028,"audited":45,"total":130,"incidents":12,"resolved":11},
+    {"year":2029,"audited":62,"total":142,"incidents":15,"resolved":14},
+    {"year":2030,"audited":78,"total":155,"incidents":11,"resolved":11},
+    {"year":2031,"audited":88,"total":165,"incidents":8,"resolved":8},
+    {"year":2032,"audited":95,"total":172,"incidents":6,"resolved":6},
+    {"year":2033,"audited":98,"total":178,"incidents":4,"resolved":4},
+    {"year":2034,"audited":99,"total":182,"incidents":3,"resolved":3},
+    {"year":2035,"audited":100,"total":185,"incidents":2,"resolved":2}
+  ],
+  "participation":{
+    "totalResidents":10000000,
+    "registered":4200000,
+    "activeVoters":2800000,
+    "assemblyParticipants":550,
+    "avgTurnoutRate":0.67,
+    "quadraticVotesLastQuarter":1200000,
+    "demographicEquity":{"age18_34":0.92,"age35_54":0.95,"age55plus":0.88,"female":0.97,"male":0.98,"nonbinary":0.85,"rural":0.78,"urban":0.96},
+    "satisfactionIndex":3.8,
+    "accessibilityScore":0.91
+  },
+  "fundingStack":[
+    {"label":"Civic Dividend Pool","value":"$500M\u2013$3B/yr","sub":"1\u20136.5% regional GDP","color":"#10b981"},
+    {"label":"Transition OS Build","value":"$60M CAPEX","sub":"+ $40M/yr OPEX","color":"#0ea5e9"},
+    {"label":"Climate Portfolio","value":"$250M/yr","sub":"Blended mission capital","color":"#f59e0b"},
+    {"label":"Governance & Audit","value":"$25M/yr","sub":"Data commons + oversight","color":"#8b5cf6"},
+    {"label":"Community Participation","value":"$15M/yr","sub":"Stipends, childcare, outreach","color":"#f43f5e"}
+  ]
+}

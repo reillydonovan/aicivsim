@@ -1,0 +1,3553 @@
+{
+  "graph": {
+    "skills": [
+      {
+        "id": "vehicle_operation",
+        "name": "Vehicle Operation",
+        "category": "Physical",
+        "transferability": 0.35
+      },
+      {
+        "id": "physical_endurance",
+        "name": "Physical Endurance",
+        "category": "Physical",
+        "transferability": 0.5
+      },
+      {
+        "id": "manual_dexterity",
+        "name": "Manual Dexterity",
+        "category": "Physical",
+        "transferability": 0.55
+      },
+      {
+        "id": "equipment_operation",
+        "name": "Equipment Operation",
+        "category": "Physical",
+        "transferability": 0.5
+      },
+      {
+        "id": "construction",
+        "name": "Construction Skills",
+        "category": "Physical",
+        "transferability": 0.45
+      },
+      {
+        "id": "electrical_work",
+        "name": "Electrical Work",
+        "category": "Physical",
+        "transferability": 0.6
+      },
+      {
+        "id": "programming",
+        "name": "Programming",
+        "category": "Technical",
+        "transferability": 0.9
+      },
+      {
+        "id": "data_analysis",
+        "name": "Data Analysis",
+        "category": "Technical",
+        "transferability": 0.88
+      },
+      {
+        "id": "machine_learning",
+        "name": "Machine Learning",
+        "category": "Technical",
+        "transferability": 0.8
+      },
+      {
+        "id": "network_security",
+        "name": "Network Security",
+        "category": "Technical",
+        "transferability": 0.78
+      },
+      {
+        "id": "database_mgmt",
+        "name": "Database Management",
+        "category": "Technical",
+        "transferability": 0.82
+      },
+      {
+        "id": "cloud_computing",
+        "name": "Cloud Computing",
+        "category": "Technical",
+        "transferability": 0.85
+      },
+      {
+        "id": "computer_literacy",
+        "name": "Computer Literacy",
+        "category": "Digital",
+        "transferability": 0.95
+      },
+      {
+        "id": "spreadsheets",
+        "name": "Spreadsheet Proficiency",
+        "category": "Digital",
+        "transferability": 0.8
+      },
+      {
+        "id": "digital_comms",
+        "name": "Digital Communication",
+        "category": "Digital",
+        "transferability": 0.9
+      },
+      {
+        "id": "software_nav",
+        "name": "Software Navigation",
+        "category": "Digital",
+        "transferability": 0.85
+      },
+      {
+        "id": "customer_interaction",
+        "name": "Customer Interaction",
+        "category": "Communication",
+        "transferability": 0.8
+      },
+      {
+        "id": "written_comms",
+        "name": "Written Communication",
+        "category": "Communication",
+        "transferability": 0.9
+      },
+      {
+        "id": "public_speaking",
+        "name": "Public Speaking",
+        "category": "Communication",
+        "transferability": 0.75
+      },
+      {
+        "id": "conflict_resolution",
+        "name": "Conflict Resolution",
+        "category": "Communication",
+        "transferability": 0.8
+      },
+      {
+        "id": "empathy_care",
+        "name": "Empathy & Care",
+        "category": "Communication",
+        "transferability": 0.7
+      },
+      {
+        "id": "problem_solving",
+        "name": "Problem Solving",
+        "category": "Analytical",
+        "transferability": 0.95
+      },
+      {
+        "id": "critical_thinking",
+        "name": "Critical Thinking",
+        "category": "Analytical",
+        "transferability": 0.92
+      },
+      {
+        "id": "project_mgmt",
+        "name": "Project Management",
+        "category": "Analytical",
+        "transferability": 0.85
+      },
+      {
+        "id": "financial_analysis",
+        "name": "Financial Analysis",
+        "category": "Analytical",
+        "transferability": 0.78
+      },
+      {
+        "id": "research_methods",
+        "name": "Research Methods",
+        "category": "Analytical",
+        "transferability": 0.82
+      },
+      {
+        "id": "solar_installation",
+        "name": "Solar Installation",
+        "category": "Green",
+        "transferability": 0.4
+      },
+      {
+        "id": "wind_systems",
+        "name": "Wind Turbine Systems",
+        "category": "Green",
+        "transferability": 0.38
+      },
+      {
+        "id": "energy_auditing",
+        "name": "Energy Auditing",
+        "category": "Green",
+        "transferability": 0.55
+      },
+      {
+        "id": "hvac_systems",
+        "name": "HVAC Systems",
+        "category": "Green",
+        "transferability": 0.5
+      },
+      {
+        "id": "patient_care",
+        "name": "Patient Care",
+        "category": "Green",
+        "transferability": 0.45
+      },
+      {
+        "id": "ux_design",
+        "name": "UX/UI Design",
+        "category": "Technical",
+        "transferability": 0.75
+      }
+    ],
+    "occupations": [
+      {
+        "id": "truck_driver",
+        "title": "Truck Driver",
+        "category": "At-Risk",
+        "sector": "Transportation",
+        "median_salary": 48310,
+        "automation_risk": 0.79,
+        "growth_outlook": -15,
+        "workers_estimate": 1900000,
+        "skills": [
+          "vehicle_operation",
+          "physical_endurance",
+          "equipment_operation",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "retail_cashier",
+        "title": "Retail Cashier",
+        "category": "At-Risk",
+        "sector": "Retail",
+        "median_salary": 28920,
+        "automation_risk": 0.97,
+        "growth_outlook": -22,
+        "workers_estimate": 3300000,
+        "skills": [
+          "customer_interaction",
+          "computer_literacy",
+          "conflict_resolution"
+        ]
+      },
+      {
+        "id": "data_entry",
+        "title": "Data Entry Clerk",
+        "category": "At-Risk",
+        "sector": "Administrative",
+        "median_salary": 36190,
+        "automation_risk": 0.99,
+        "growth_outlook": -30,
+        "workers_estimate": 155000,
+        "skills": [
+          "computer_literacy",
+          "spreadsheets",
+          "software_nav"
+        ]
+      },
+      {
+        "id": "assembly_worker",
+        "title": "Assembly Line Worker",
+        "category": "At-Risk",
+        "sector": "Manufacturing",
+        "median_salary": 38200,
+        "automation_risk": 0.82,
+        "growth_outlook": -12,
+        "workers_estimate": 1500000,
+        "skills": [
+          "manual_dexterity",
+          "equipment_operation",
+          "physical_endurance",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "telemarketer",
+        "title": "Telemarketer",
+        "category": "At-Risk",
+        "sector": "Sales",
+        "median_salary": 31200,
+        "automation_risk": 0.99,
+        "growth_outlook": -25,
+        "workers_estimate": 98000,
+        "skills": [
+          "customer_interaction",
+          "digital_comms",
+          "conflict_resolution"
+        ]
+      },
+      {
+        "id": "bookkeeper",
+        "title": "Bookkeeper",
+        "category": "At-Risk",
+        "sector": "Finance",
+        "median_salary": 45560,
+        "automation_risk": 0.98,
+        "growth_outlook": -18,
+        "workers_estimate": 1500000,
+        "skills": [
+          "spreadsheets",
+          "financial_analysis",
+          "software_nav",
+          "computer_literacy"
+        ]
+      },
+      {
+        "id": "fast_food",
+        "title": "Fast Food Cook",
+        "category": "At-Risk",
+        "sector": "Food Service",
+        "median_salary": 26080,
+        "automation_risk": 0.81,
+        "growth_outlook": -8,
+        "workers_estimate": 3600000,
+        "skills": [
+          "manual_dexterity",
+          "physical_endurance",
+          "customer_interaction"
+        ]
+      },
+      {
+        "id": "customer_svc",
+        "title": "Customer Service Rep",
+        "category": "Transitioning",
+        "sector": "Services",
+        "median_salary": 36920,
+        "automation_risk": 0.55,
+        "growth_outlook": -5,
+        "workers_estimate": 2900000,
+        "skills": [
+          "customer_interaction",
+          "digital_comms",
+          "conflict_resolution",
+          "computer_literacy",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "admin_assistant",
+        "title": "Administrative Assistant",
+        "category": "Transitioning",
+        "sector": "Administrative",
+        "median_salary": 42080,
+        "automation_risk": 0.46,
+        "growth_outlook": -8,
+        "workers_estimate": 3400000,
+        "skills": [
+          "computer_literacy",
+          "spreadsheets",
+          "written_comms",
+          "software_nav",
+          "project_mgmt"
+        ]
+      },
+      {
+        "id": "warehouse",
+        "title": "Warehouse Worker",
+        "category": "Transitioning",
+        "sector": "Logistics",
+        "median_salary": 34440,
+        "automation_risk": 0.64,
+        "growth_outlook": -10,
+        "workers_estimate": 1800000,
+        "skills": [
+          "physical_endurance",
+          "equipment_operation",
+          "manual_dexterity",
+          "computer_literacy"
+        ]
+      },
+      {
+        "id": "solar_installer",
+        "title": "Solar Panel Installer",
+        "category": "Growth",
+        "sector": "Green Energy",
+        "median_salary": 47670,
+        "automation_risk": 0.04,
+        "growth_outlook": 52,
+        "workers_estimate": 330000,
+        "skills": [
+          "solar_installation",
+          "electrical_work",
+          "construction",
+          "physical_endurance",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "wind_tech",
+        "title": "Wind Turbine Technician",
+        "category": "Growth",
+        "sector": "Green Energy",
+        "median_salary": 57320,
+        "automation_risk": 0.05,
+        "growth_outlook": 44,
+        "workers_estimate": 12000,
+        "skills": [
+          "wind_systems",
+          "electrical_work",
+          "equipment_operation",
+          "physical_endurance",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "cybersecurity",
+        "title": "Cybersecurity Analyst",
+        "category": "Growth",
+        "sector": "Technology",
+        "median_salary": 103590,
+        "automation_risk": 0.05,
+        "growth_outlook": 35,
+        "workers_estimate": 168000,
+        "skills": [
+          "network_security",
+          "programming",
+          "critical_thinking",
+          "research_methods",
+          "cloud_computing"
+        ]
+      },
+      {
+        "id": "data_analyst",
+        "title": "Data Analyst",
+        "category": "Growth",
+        "sector": "Technology",
+        "median_salary": 82360,
+        "automation_risk": 0.12,
+        "growth_outlook": 26,
+        "workers_estimate": 105000,
+        "skills": [
+          "data_analysis",
+          "programming",
+          "spreadsheets",
+          "critical_thinking",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "ux_designer",
+        "title": "UX Designer",
+        "category": "Growth",
+        "sector": "Technology",
+        "median_salary": 85280,
+        "automation_risk": 0.08,
+        "growth_outlook": 16,
+        "workers_estimate": 109000,
+        "skills": [
+          "ux_design",
+          "research_methods",
+          "written_comms",
+          "critical_thinking",
+          "digital_comms"
+        ]
+      },
+      {
+        "id": "healthcare_tech",
+        "title": "Healthcare Technician",
+        "category": "Growth",
+        "sector": "Healthcare",
+        "median_salary": 56420,
+        "automation_risk": 0.09,
+        "growth_outlook": 18,
+        "workers_estimate": 430000,
+        "skills": [
+          "patient_care",
+          "computer_literacy",
+          "empathy_care",
+          "problem_solving",
+          "manual_dexterity"
+        ]
+      },
+      {
+        "id": "retrofit_spec",
+        "title": "Building Retrofit Spec.",
+        "category": "Growth",
+        "sector": "Green Energy",
+        "median_salary": 52100,
+        "automation_risk": 0.04,
+        "growth_outlook": 38,
+        "workers_estimate": 85000,
+        "skills": [
+          "construction",
+          "energy_auditing",
+          "hvac_systems",
+          "electrical_work",
+          "problem_solving"
+        ]
+      },
+      {
+        "id": "ev_technician",
+        "title": "EV Technician",
+        "category": "Growth",
+        "sector": "Automotive",
+        "median_salary": 52460,
+        "automation_risk": 0.08,
+        "growth_outlook": 30,
+        "workers_estimate": 75000,
+        "skills": [
+          "electrical_work",
+          "equipment_operation",
+          "problem_solving",
+          "manual_dexterity",
+          "computer_literacy"
+        ]
+      },
+      {
+        "id": "comm_health",
+        "title": "Community Health Worker",
+        "category": "Growth",
+        "sector": "Healthcare",
+        "median_salary": 42000,
+        "automation_risk": 0.04,
+        "growth_outlook": 14,
+        "workers_estimate": 61000,
+        "skills": [
+          "empathy_care",
+          "customer_interaction",
+          "public_speaking",
+          "conflict_resolution",
+          "written_comms"
+        ]
+      },
+      {
+        "id": "logistics_coord",
+        "title": "Logistics Coordinator",
+        "category": "Growth",
+        "sector": "Logistics",
+        "median_salary": 55230,
+        "automation_risk": 0.18,
+        "growth_outlook": 12,
+        "workers_estimate": 190000,
+        "skills": [
+          "project_mgmt",
+          "spreadsheets",
+          "digital_comms",
+          "problem_solving",
+          "software_nav"
+        ]
+      }
+    ],
+    "transitions": [
+      {
+        "from_id": "truck_driver",
+        "to_id": "logistics_coord",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 4,
+        "training_cost": 3200,
+        "success_rate": 0.88,
+        "credential": "Logistics Management Certificate"
+      },
+      {
+        "from_id": "truck_driver",
+        "to_id": "wind_tech",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 8,
+        "training_cost": 8500,
+        "success_rate": 0.78,
+        "credential": "Wind Energy Technician Certificate"
+      },
+      {
+        "from_id": "truck_driver",
+        "to_id": "ev_technician",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 6800,
+        "success_rate": 0.82,
+        "credential": "EV Service Certification"
+      },
+      {
+        "from_id": "truck_driver",
+        "to_id": "solar_installer",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.85,
+        "credential": "NABCEP PV Associate"
+      },
+      {
+        "from_id": "retail_cashier",
+        "to_id": "customer_svc",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 2,
+        "training_cost": 1200,
+        "success_rate": 0.92,
+        "credential": "Customer Experience Certificate"
+      },
+      {
+        "from_id": "retail_cashier",
+        "to_id": "comm_health",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 4800,
+        "success_rate": 0.8,
+        "credential": "CHW State Certification"
+      },
+      {
+        "from_id": "retail_cashier",
+        "to_id": "admin_assistant",
+        "shared_skills": 1,
+        "new_skills_needed": 3,
+        "training_months": 3,
+        "training_cost": 2400,
+        "success_rate": 0.85,
+        "credential": "Administrative Professional Certificate"
+      },
+      {
+        "from_id": "retail_cashier",
+        "to_id": "healthcare_tech",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 10,
+        "training_cost": 9500,
+        "success_rate": 0.72,
+        "credential": "Medical Assistant Certificate"
+      },
+      {
+        "from_id": "data_entry",
+        "to_id": "data_analyst",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 8,
+        "training_cost": 7200,
+        "success_rate": 0.75,
+        "credential": "Google Data Analytics Certificate"
+      },
+      {
+        "from_id": "data_entry",
+        "to_id": "admin_assistant",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 2,
+        "training_cost": 1500,
+        "success_rate": 0.95,
+        "credential": "Office Administration Certificate"
+      },
+      {
+        "from_id": "data_entry",
+        "to_id": "logistics_coord",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 3600,
+        "success_rate": 0.85,
+        "credential": "Supply Chain Fundamentals"
+      },
+      {
+        "from_id": "data_entry",
+        "to_id": "ux_designer",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 10,
+        "training_cost": 8800,
+        "success_rate": 0.68,
+        "credential": "Google UX Design Certificate"
+      },
+      {
+        "from_id": "assembly_worker",
+        "to_id": "solar_installer",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.85,
+        "credential": "NABCEP PV Associate"
+      },
+      {
+        "from_id": "assembly_worker",
+        "to_id": "ev_technician",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 5,
+        "training_cost": 5200,
+        "success_rate": 0.84,
+        "credential": "EV Service Certification"
+      },
+      {
+        "from_id": "assembly_worker",
+        "to_id": "wind_tech",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 8,
+        "training_cost": 8500,
+        "success_rate": 0.76,
+        "credential": "Wind Energy Technician Certificate"
+      },
+      {
+        "from_id": "assembly_worker",
+        "to_id": "retrofit_spec",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 5800,
+        "success_rate": 0.8,
+        "credential": "BPI Building Analyst"
+      },
+      {
+        "from_id": "telemarketer",
+        "to_id": "customer_svc",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 1,
+        "training_cost": 800,
+        "success_rate": 0.94,
+        "credential": "Customer Experience Certificate"
+      },
+      {
+        "from_id": "telemarketer",
+        "to_id": "comm_health",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 4800,
+        "success_rate": 0.78,
+        "credential": "CHW State Certification"
+      },
+      {
+        "from_id": "telemarketer",
+        "to_id": "admin_assistant",
+        "shared_skills": 1,
+        "new_skills_needed": 3,
+        "training_months": 3,
+        "training_cost": 2400,
+        "success_rate": 0.82,
+        "credential": "Administrative Professional Certificate"
+      },
+      {
+        "from_id": "bookkeeper",
+        "to_id": "data_analyst",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 5400,
+        "success_rate": 0.82,
+        "credential": "Google Data Analytics Certificate"
+      },
+      {
+        "from_id": "bookkeeper",
+        "to_id": "logistics_coord",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 3,
+        "training_cost": 2800,
+        "success_rate": 0.9,
+        "credential": "Supply Chain Fundamentals"
+      },
+      {
+        "from_id": "bookkeeper",
+        "to_id": "cybersecurity",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 12,
+        "training_cost": 14200,
+        "success_rate": 0.6,
+        "credential": "CompTIA Security+"
+      },
+      {
+        "from_id": "bookkeeper",
+        "to_id": "admin_assistant",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 1,
+        "training_cost": 600,
+        "success_rate": 0.97,
+        "credential": "Office Administration Certificate"
+      },
+      {
+        "from_id": "fast_food",
+        "to_id": "retail_cashier",
+        "shared_skills": 2,
+        "new_skills_needed": 0,
+        "training_months": 0,
+        "training_cost": 0,
+        "success_rate": 0.98,
+        "credential": "No additional credential"
+      },
+      {
+        "from_id": "fast_food",
+        "to_id": "warehouse",
+        "shared_skills": 2,
+        "new_skills_needed": 1,
+        "training_months": 1,
+        "training_cost": 500,
+        "success_rate": 0.92,
+        "credential": "Forklift Operator Certificate"
+      },
+      {
+        "from_id": "fast_food",
+        "to_id": "comm_health",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 8,
+        "training_cost": 5200,
+        "success_rate": 0.72,
+        "credential": "CHW State Certification"
+      },
+      {
+        "from_id": "fast_food",
+        "to_id": "healthcare_tech",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 10,
+        "training_cost": 9500,
+        "success_rate": 0.65,
+        "credential": "Medical Assistant Certificate"
+      },
+      {
+        "from_id": "customer_svc",
+        "to_id": "admin_assistant",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 2,
+        "training_cost": 1200,
+        "success_rate": 0.93,
+        "credential": "Administrative Professional Certificate"
+      },
+      {
+        "from_id": "customer_svc",
+        "to_id": "logistics_coord",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 3200,
+        "success_rate": 0.86,
+        "credential": "Supply Chain Fundamentals"
+      },
+      {
+        "from_id": "customer_svc",
+        "to_id": "comm_health",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 3800,
+        "success_rate": 0.84,
+        "credential": "CHW State Certification"
+      },
+      {
+        "from_id": "customer_svc",
+        "to_id": "ux_designer",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 10,
+        "training_cost": 8800,
+        "success_rate": 0.62,
+        "credential": "Google UX Design Certificate"
+      },
+      {
+        "from_id": "admin_assistant",
+        "to_id": "data_analyst",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 8,
+        "training_cost": 6400,
+        "success_rate": 0.78,
+        "credential": "Google Data Analytics Certificate"
+      },
+      {
+        "from_id": "admin_assistant",
+        "to_id": "logistics_coord",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 3,
+        "training_cost": 2200,
+        "success_rate": 0.9,
+        "credential": "Supply Chain Fundamentals"
+      },
+      {
+        "from_id": "admin_assistant",
+        "to_id": "ux_designer",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 8,
+        "training_cost": 7600,
+        "success_rate": 0.72,
+        "credential": "Google UX Design Certificate"
+      },
+      {
+        "from_id": "admin_assistant",
+        "to_id": "cybersecurity",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 12,
+        "training_cost": 14200,
+        "success_rate": 0.55,
+        "credential": "CompTIA Security+"
+      },
+      {
+        "from_id": "warehouse",
+        "to_id": "solar_installer",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.83,
+        "credential": "NABCEP PV Associate"
+      },
+      {
+        "from_id": "warehouse",
+        "to_id": "ev_technician",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 6000,
+        "success_rate": 0.8,
+        "credential": "EV Service Certification"
+      },
+      {
+        "from_id": "warehouse",
+        "to_id": "logistics_coord",
+        "shared_skills": 1,
+        "new_skills_needed": 3,
+        "training_months": 5,
+        "training_cost": 3800,
+        "success_rate": 0.82,
+        "credential": "Logistics Management Certificate"
+      },
+      {
+        "from_id": "warehouse",
+        "to_id": "retrofit_spec",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 7,
+        "training_cost": 6200,
+        "success_rate": 0.76,
+        "credential": "BPI Building Analyst"
+      },
+      {
+        "from_id": "solar_installer",
+        "to_id": "wind_tech",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 4800,
+        "success_rate": 0.88,
+        "credential": "Wind Energy Technician Certificate"
+      },
+      {
+        "from_id": "solar_installer",
+        "to_id": "ev_technician",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 3,
+        "training_cost": 3200,
+        "success_rate": 0.9,
+        "credential": "EV Service Certification"
+      },
+      {
+        "from_id": "solar_installer",
+        "to_id": "retrofit_spec",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 4000,
+        "success_rate": 0.87,
+        "credential": "BPI Building Analyst"
+      },
+      {
+        "from_id": "wind_tech",
+        "to_id": "solar_installer",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 3,
+        "training_cost": 3000,
+        "success_rate": 0.9,
+        "credential": "NABCEP PV Associate"
+      },
+      {
+        "from_id": "wind_tech",
+        "to_id": "ev_technician",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 3,
+        "training_cost": 3400,
+        "success_rate": 0.88,
+        "credential": "EV Service Certification"
+      },
+      {
+        "from_id": "wind_tech",
+        "to_id": "retrofit_spec",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 5,
+        "training_cost": 5200,
+        "success_rate": 0.82,
+        "credential": "BPI Building Analyst"
+      },
+      {
+        "from_id": "cybersecurity",
+        "to_id": "data_analyst",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 2,
+        "training_cost": 1800,
+        "success_rate": 0.92,
+        "credential": "Data Analytics Specialization"
+      },
+      {
+        "from_id": "cybersecurity",
+        "to_id": "ux_designer",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 5400,
+        "success_rate": 0.72,
+        "credential": "Google UX Design Certificate"
+      },
+      {
+        "from_id": "cybersecurity",
+        "to_id": "logistics_coord",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 3,
+        "training_cost": 2600,
+        "success_rate": 0.85,
+        "credential": "IT Supply Chain Management"
+      },
+      {
+        "from_id": "data_analyst",
+        "to_id": "cybersecurity",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 8,
+        "training_cost": 10200,
+        "success_rate": 0.75,
+        "credential": "CompTIA Security+"
+      },
+      {
+        "from_id": "data_analyst",
+        "to_id": "ux_designer",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.8,
+        "credential": "Google UX Design Certificate"
+      },
+      {
+        "from_id": "data_analyst",
+        "to_id": "logistics_coord",
+        "shared_skills": 2,
+        "new_skills_needed": 1,
+        "training_months": 2,
+        "training_cost": 1600,
+        "success_rate": 0.92,
+        "credential": "Supply Chain Analytics Certificate"
+      },
+      {
+        "from_id": "ux_designer",
+        "to_id": "data_analyst",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 3600,
+        "success_rate": 0.82,
+        "credential": "Data Analytics Specialization"
+      },
+      {
+        "from_id": "ux_designer",
+        "to_id": "comm_health",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 4800,
+        "success_rate": 0.74,
+        "credential": "CHW State Certification"
+      },
+      {
+        "from_id": "ux_designer",
+        "to_id": "cybersecurity",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 10,
+        "training_cost": 12800,
+        "success_rate": 0.6,
+        "credential": "CompTIA Security+"
+      },
+      {
+        "from_id": "healthcare_tech",
+        "to_id": "comm_health",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 3,
+        "training_cost": 2200,
+        "success_rate": 0.9,
+        "credential": "CHW State Certification"
+      },
+      {
+        "from_id": "healthcare_tech",
+        "to_id": "retrofit_spec",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 8,
+        "training_cost": 7200,
+        "success_rate": 0.68,
+        "credential": "BPI Building Analyst"
+      },
+      {
+        "from_id": "healthcare_tech",
+        "to_id": "data_analyst",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 10,
+        "training_cost": 8400,
+        "success_rate": 0.62,
+        "credential": "Google Data Analytics Certificate"
+      },
+      {
+        "from_id": "retrofit_spec",
+        "to_id": "solar_installer",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 2,
+        "training_cost": 2000,
+        "success_rate": 0.92,
+        "credential": "NABCEP PV Associate"
+      },
+      {
+        "from_id": "retrofit_spec",
+        "to_id": "wind_tech",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 5,
+        "training_cost": 5600,
+        "success_rate": 0.8,
+        "credential": "Wind Energy Technician Certificate"
+      },
+      {
+        "from_id": "retrofit_spec",
+        "to_id": "ev_technician",
+        "shared_skills": 2,
+        "new_skills_needed": 2,
+        "training_months": 4,
+        "training_cost": 4200,
+        "success_rate": 0.84,
+        "credential": "EV Service Certification"
+      },
+      {
+        "from_id": "ev_technician",
+        "to_id": "solar_installer",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 3,
+        "training_cost": 3000,
+        "success_rate": 0.88,
+        "credential": "NABCEP PV Associate"
+      },
+      {
+        "from_id": "ev_technician",
+        "to_id": "wind_tech",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 6800,
+        "success_rate": 0.78,
+        "credential": "Wind Energy Technician Certificate"
+      },
+      {
+        "from_id": "ev_technician",
+        "to_id": "retrofit_spec",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 5,
+        "training_cost": 5200,
+        "success_rate": 0.82,
+        "credential": "BPI Building Analyst"
+      },
+      {
+        "from_id": "comm_health",
+        "to_id": "healthcare_tech",
+        "shared_skills": 3,
+        "new_skills_needed": 2,
+        "training_months": 6,
+        "training_cost": 6400,
+        "success_rate": 0.8,
+        "credential": "Medical Assistant Certificate"
+      },
+      {
+        "from_id": "comm_health",
+        "to_id": "customer_svc",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 1,
+        "training_cost": 600,
+        "success_rate": 0.95,
+        "credential": "Customer Experience Certificate"
+      },
+      {
+        "from_id": "comm_health",
+        "to_id": "admin_assistant",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 4,
+        "training_cost": 3200,
+        "success_rate": 0.82,
+        "credential": "Administrative Professional Certificate"
+      },
+      {
+        "from_id": "logistics_coord",
+        "to_id": "data_analyst",
+        "shared_skills": 2,
+        "new_skills_needed": 3,
+        "training_months": 6,
+        "training_cost": 5800,
+        "success_rate": 0.78,
+        "credential": "Data Analytics Specialization"
+      },
+      {
+        "from_id": "logistics_coord",
+        "to_id": "cybersecurity",
+        "shared_skills": 1,
+        "new_skills_needed": 4,
+        "training_months": 12,
+        "training_cost": 14200,
+        "success_rate": 0.55,
+        "credential": "CompTIA Security+"
+      },
+      {
+        "from_id": "logistics_coord",
+        "to_id": "admin_assistant",
+        "shared_skills": 3,
+        "new_skills_needed": 1,
+        "training_months": 1,
+        "training_cost": 800,
+        "success_rate": 0.95,
+        "credential": "Office Administration Certificate"
+      }
+    ]
+  },
+  "paths": {
+    "truck_driver": [
+      {
+        "from_id": "truck_driver",
+        "from_title": "Truck Driver",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 48310,
+        "salary_target": 55230,
+        "salary_uplift": 6920,
+        "salary_uplift_pct": 14.3,
+        "training_months": 4,
+        "training_cost": 3200,
+        "success_rate": 0.88,
+        "credential": "Logistics Management Certificate",
+        "shared_skills": [
+          "Problem Solving"
+        ],
+        "new_skills": [
+          "Project Management",
+          "Spreadsheet Proficiency",
+          "Digital Communication",
+          "Software Navigation"
+        ],
+        "automation_risk_reduction": 0.61,
+        "growth_outlook_target": 12,
+        "roi_score": 54.9
+      },
+      {
+        "from_id": "truck_driver",
+        "from_title": "Truck Driver",
+        "to_id": "solar_installer",
+        "to_title": "Solar Panel Installer",
+        "salary_current": 48310,
+        "salary_target": 47670,
+        "salary_uplift": -640,
+        "salary_uplift_pct": -1.3,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.85,
+        "credential": "NABCEP PV Associate",
+        "shared_skills": [
+          "Problem Solving",
+          "Physical Endurance"
+        ],
+        "new_skills": [
+          "Solar Installation",
+          "Electrical Work",
+          "Construction Skills"
+        ],
+        "automation_risk_reduction": 0.75,
+        "growth_outlook_target": 52,
+        "roi_score": 51.3
+      },
+      {
+        "from_id": "truck_driver",
+        "from_title": "Truck Driver",
+        "to_id": "ev_technician",
+        "to_title": "EV Technician",
+        "salary_current": 48310,
+        "salary_target": 52460,
+        "salary_uplift": 4150,
+        "salary_uplift_pct": 8.6,
+        "training_months": 6,
+        "training_cost": 6800,
+        "success_rate": 0.82,
+        "credential": "EV Service Certification",
+        "shared_skills": [
+          "Problem Solving",
+          "Equipment Operation"
+        ],
+        "new_skills": [
+          "Electrical Work",
+          "Manual Dexterity",
+          "Computer Literacy"
+        ],
+        "automation_risk_reduction": 0.71,
+        "growth_outlook_target": 30,
+        "roi_score": 50.8
+      },
+      {
+        "from_id": "truck_driver",
+        "from_title": "Truck Driver",
+        "to_id": "wind_tech",
+        "to_title": "Wind Turbine Technician",
+        "salary_current": 48310,
+        "salary_target": 57320,
+        "salary_uplift": 9010,
+        "salary_uplift_pct": 18.7,
+        "training_months": 8,
+        "training_cost": 8500,
+        "success_rate": 0.78,
+        "credential": "Wind Energy Technician Certificate",
+        "shared_skills": [
+          "Problem Solving",
+          "Physical Endurance",
+          "Equipment Operation"
+        ],
+        "new_skills": [
+          "Wind Turbine Systems",
+          "Electrical Work"
+        ],
+        "automation_risk_reduction": 0.74,
+        "growth_outlook_target": 44,
+        "roi_score": 50.3
+      }
+    ],
+    "retail_cashier": [
+      {
+        "from_id": "retail_cashier",
+        "from_title": "Retail Cashier",
+        "to_id": "healthcare_tech",
+        "to_title": "Healthcare Technician",
+        "salary_current": 28920,
+        "salary_target": 56420,
+        "salary_uplift": 27500,
+        "salary_uplift_pct": 95.1,
+        "training_months": 10,
+        "training_cost": 9500,
+        "success_rate": 0.72,
+        "credential": "Medical Assistant Certificate",
+        "shared_skills": [
+          "Computer Literacy"
+        ],
+        "new_skills": [
+          "Patient Care",
+          "Empathy & Care",
+          "Problem Solving",
+          "Manual Dexterity"
+        ],
+        "automation_risk_reduction": 0.88,
+        "growth_outlook_target": 18,
+        "roi_score": 71.9
+      },
+      {
+        "from_id": "retail_cashier",
+        "from_title": "Retail Cashier",
+        "to_id": "comm_health",
+        "to_title": "Community Health Worker",
+        "salary_current": 28920,
+        "salary_target": 42000,
+        "salary_uplift": 13080,
+        "salary_uplift_pct": 45.2,
+        "training_months": 6,
+        "training_cost": 4800,
+        "success_rate": 0.8,
+        "credential": "CHW State Certification",
+        "shared_skills": [
+          "Customer Interaction",
+          "Conflict Resolution"
+        ],
+        "new_skills": [
+          "Empathy & Care",
+          "Public Speaking",
+          "Written Communication"
+        ],
+        "automation_risk_reduction": 0.93,
+        "growth_outlook_target": 14,
+        "roi_score": 66.8
+      },
+      {
+        "from_id": "retail_cashier",
+        "from_title": "Retail Cashier",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 28920,
+        "salary_target": 42080,
+        "salary_uplift": 13160,
+        "salary_uplift_pct": 45.5,
+        "training_months": 3,
+        "training_cost": 2400,
+        "success_rate": 0.85,
+        "credential": "Administrative Professional Certificate",
+        "shared_skills": [
+          "Computer Literacy"
+        ],
+        "new_skills": [
+          "Spreadsheet Proficiency",
+          "Written Communication",
+          "Software Navigation",
+          "Project Management"
+        ],
+        "automation_risk_reduction": 0.51,
+        "growth_outlook_target": -8,
+        "roi_score": 62.7
+      },
+      {
+        "from_id": "retail_cashier",
+        "from_title": "Retail Cashier",
+        "to_id": "customer_svc",
+        "to_title": "Customer Service Rep",
+        "salary_current": 28920,
+        "salary_target": 36920,
+        "salary_uplift": 8000,
+        "salary_uplift_pct": 27.7,
+        "training_months": 2,
+        "training_cost": 1200,
+        "success_rate": 0.92,
+        "credential": "Customer Experience Certificate",
+        "shared_skills": [
+          "Computer Literacy",
+          "Customer Interaction",
+          "Conflict Resolution"
+        ],
+        "new_skills": [
+          "Digital Communication",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.42,
+        "growth_outlook_target": -5,
+        "roi_score": 58.5
+      }
+    ],
+    "data_entry": [
+      {
+        "from_id": "data_entry",
+        "from_title": "Data Entry Clerk",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 36190,
+        "salary_target": 82360,
+        "salary_uplift": 46170,
+        "salary_uplift_pct": 127.6,
+        "training_months": 8,
+        "training_cost": 7200,
+        "success_rate": 0.75,
+        "credential": "Google Data Analytics Certificate",
+        "shared_skills": [
+          "Spreadsheet Proficiency"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Programming",
+          "Critical Thinking",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.87,
+        "growth_outlook_target": 26,
+        "roi_score": 85.4
+      },
+      {
+        "from_id": "data_entry",
+        "from_title": "Data Entry Clerk",
+        "to_id": "ux_designer",
+        "to_title": "UX Designer",
+        "salary_current": 36190,
+        "salary_target": 85280,
+        "salary_uplift": 49090,
+        "salary_uplift_pct": 135.6,
+        "training_months": 10,
+        "training_cost": 8800,
+        "success_rate": 0.68,
+        "credential": "Google UX Design Certificate",
+        "shared_skills": [],
+        "new_skills": [
+          "UX/UI Design",
+          "Research Methods",
+          "Written Communication",
+          "Critical Thinking",
+          "Digital Communication"
+        ],
+        "automation_risk_reduction": 0.91,
+        "growth_outlook_target": 16,
+        "roi_score": 83.8
+      },
+      {
+        "from_id": "data_entry",
+        "from_title": "Data Entry Clerk",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 36190,
+        "salary_target": 55230,
+        "salary_uplift": 19040,
+        "salary_uplift_pct": 52.6,
+        "training_months": 4,
+        "training_cost": 3600,
+        "success_rate": 0.85,
+        "credential": "Supply Chain Fundamentals",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Software Navigation"
+        ],
+        "new_skills": [
+          "Project Management",
+          "Digital Communication",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.81,
+        "growth_outlook_target": 12,
+        "roi_score": 70.6
+      },
+      {
+        "from_id": "data_entry",
+        "from_title": "Data Entry Clerk",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 36190,
+        "salary_target": 42080,
+        "salary_uplift": 5890,
+        "salary_uplift_pct": 16.3,
+        "training_months": 2,
+        "training_cost": 1500,
+        "success_rate": 0.95,
+        "credential": "Office Administration Certificate",
+        "shared_skills": [
+          "Computer Literacy",
+          "Spreadsheet Proficiency",
+          "Software Navigation"
+        ],
+        "new_skills": [
+          "Written Communication",
+          "Project Management"
+        ],
+        "automation_risk_reduction": 0.53,
+        "growth_outlook_target": -8,
+        "roi_score": 58.5
+      }
+    ],
+    "assembly_worker": [
+      {
+        "from_id": "assembly_worker",
+        "from_title": "Assembly Line Worker",
+        "to_id": "ev_technician",
+        "to_title": "EV Technician",
+        "salary_current": 38200,
+        "salary_target": 52460,
+        "salary_uplift": 14260,
+        "salary_uplift_pct": 37.3,
+        "training_months": 5,
+        "training_cost": 5200,
+        "success_rate": 0.84,
+        "credential": "EV Service Certification",
+        "shared_skills": [
+          "Problem Solving",
+          "Equipment Operation",
+          "Manual Dexterity"
+        ],
+        "new_skills": [
+          "Electrical Work",
+          "Computer Literacy"
+        ],
+        "automation_risk_reduction": 0.74,
+        "growth_outlook_target": 30,
+        "roi_score": 62.4
+      },
+      {
+        "from_id": "assembly_worker",
+        "from_title": "Assembly Line Worker",
+        "to_id": "retrofit_spec",
+        "to_title": "Building Retrofit Spec.",
+        "salary_current": 38200,
+        "salary_target": 52100,
+        "salary_uplift": 13900,
+        "salary_uplift_pct": 36.4,
+        "training_months": 6,
+        "training_cost": 5800,
+        "success_rate": 0.8,
+        "credential": "BPI Building Analyst",
+        "shared_skills": [
+          "Problem Solving"
+        ],
+        "new_skills": [
+          "Construction Skills",
+          "Energy Auditing",
+          "HVAC Systems",
+          "Electrical Work"
+        ],
+        "automation_risk_reduction": 0.78,
+        "growth_outlook_target": 38,
+        "roi_score": 60.4
+      },
+      {
+        "from_id": "assembly_worker",
+        "from_title": "Assembly Line Worker",
+        "to_id": "solar_installer",
+        "to_title": "Solar Panel Installer",
+        "salary_current": 38200,
+        "salary_target": 47670,
+        "salary_uplift": 9470,
+        "salary_uplift_pct": 24.8,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.85,
+        "credential": "NABCEP PV Associate",
+        "shared_skills": [
+          "Problem Solving",
+          "Physical Endurance"
+        ],
+        "new_skills": [
+          "Solar Installation",
+          "Electrical Work",
+          "Construction Skills"
+        ],
+        "automation_risk_reduction": 0.78,
+        "growth_outlook_target": 52,
+        "roi_score": 59.9
+      },
+      {
+        "from_id": "assembly_worker",
+        "from_title": "Assembly Line Worker",
+        "to_id": "wind_tech",
+        "to_title": "Wind Turbine Technician",
+        "salary_current": 38200,
+        "salary_target": 57320,
+        "salary_uplift": 19120,
+        "salary_uplift_pct": 50.1,
+        "training_months": 8,
+        "training_cost": 8500,
+        "success_rate": 0.76,
+        "credential": "Wind Energy Technician Certificate",
+        "shared_skills": [
+          "Problem Solving",
+          "Equipment Operation",
+          "Physical Endurance"
+        ],
+        "new_skills": [
+          "Wind Turbine Systems",
+          "Electrical Work"
+        ],
+        "automation_risk_reduction": 0.77,
+        "growth_outlook_target": 44,
+        "roi_score": 59.9
+      }
+    ],
+    "telemarketer": [
+      {
+        "from_id": "telemarketer",
+        "from_title": "Telemarketer",
+        "to_id": "comm_health",
+        "to_title": "Community Health Worker",
+        "salary_current": 31200,
+        "salary_target": 42000,
+        "salary_uplift": 10800,
+        "salary_uplift_pct": 34.6,
+        "training_months": 6,
+        "training_cost": 4800,
+        "success_rate": 0.78,
+        "credential": "CHW State Certification",
+        "shared_skills": [
+          "Customer Interaction",
+          "Conflict Resolution"
+        ],
+        "new_skills": [
+          "Empathy & Care",
+          "Public Speaking",
+          "Written Communication"
+        ],
+        "automation_risk_reduction": 0.95,
+        "growth_outlook_target": 14,
+        "roi_score": 63.6
+      },
+      {
+        "from_id": "telemarketer",
+        "from_title": "Telemarketer",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 31200,
+        "salary_target": 42080,
+        "salary_uplift": 10880,
+        "salary_uplift_pct": 34.9,
+        "training_months": 3,
+        "training_cost": 2400,
+        "success_rate": 0.82,
+        "credential": "Administrative Professional Certificate",
+        "shared_skills": [],
+        "new_skills": [
+          "Computer Literacy",
+          "Spreadsheet Proficiency",
+          "Written Communication",
+          "Software Navigation",
+          "Project Management"
+        ],
+        "automation_risk_reduction": 0.53,
+        "growth_outlook_target": -8,
+        "roi_score": 59.2
+      },
+      {
+        "from_id": "telemarketer",
+        "from_title": "Telemarketer",
+        "to_id": "customer_svc",
+        "to_title": "Customer Service Rep",
+        "salary_current": 31200,
+        "salary_target": 36920,
+        "salary_uplift": 5720,
+        "salary_uplift_pct": 18.3,
+        "training_months": 1,
+        "training_cost": 800,
+        "success_rate": 0.94,
+        "credential": "Customer Experience Certificate",
+        "shared_skills": [
+          "Customer Interaction",
+          "Conflict Resolution",
+          "Digital Communication"
+        ],
+        "new_skills": [
+          "Computer Literacy",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.44,
+        "growth_outlook_target": -5,
+        "roi_score": 58.3
+      }
+    ],
+    "bookkeeper": [
+      {
+        "from_id": "bookkeeper",
+        "from_title": "Bookkeeper",
+        "to_id": "cybersecurity",
+        "to_title": "Cybersecurity Analyst",
+        "salary_current": 45560,
+        "salary_target": 103590,
+        "salary_uplift": 58030,
+        "salary_uplift_pct": 127.4,
+        "training_months": 12,
+        "training_cost": 14200,
+        "success_rate": 0.6,
+        "credential": "CompTIA Security+",
+        "shared_skills": [],
+        "new_skills": [
+          "Network Security",
+          "Programming",
+          "Critical Thinking",
+          "Research Methods",
+          "Cloud Computing"
+        ],
+        "automation_risk_reduction": 0.93,
+        "growth_outlook_target": 35,
+        "roi_score": 76.5
+      },
+      {
+        "from_id": "bookkeeper",
+        "from_title": "Bookkeeper",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 45560,
+        "salary_target": 82360,
+        "salary_uplift": 36800,
+        "salary_uplift_pct": 80.8,
+        "training_months": 6,
+        "training_cost": 5400,
+        "success_rate": 0.82,
+        "credential": "Google Data Analytics Certificate",
+        "shared_skills": [
+          "Spreadsheet Proficiency"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Programming",
+          "Critical Thinking",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.86,
+        "growth_outlook_target": 26,
+        "roi_score": 76.2
+      },
+      {
+        "from_id": "bookkeeper",
+        "from_title": "Bookkeeper",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 45560,
+        "salary_target": 55230,
+        "salary_uplift": 9670,
+        "salary_uplift_pct": 21.2,
+        "training_months": 3,
+        "training_cost": 2800,
+        "success_rate": 0.9,
+        "credential": "Supply Chain Fundamentals",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Software Navigation"
+        ],
+        "new_skills": [
+          "Project Management",
+          "Digital Communication",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.8,
+        "growth_outlook_target": 12,
+        "roi_score": 63.9
+      },
+      {
+        "from_id": "bookkeeper",
+        "from_title": "Bookkeeper",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 45560,
+        "salary_target": 42080,
+        "salary_uplift": -3480,
+        "salary_uplift_pct": -7.6,
+        "training_months": 1,
+        "training_cost": 600,
+        "success_rate": 0.97,
+        "credential": "Office Administration Certificate",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Computer Literacy",
+          "Software Navigation"
+        ],
+        "new_skills": [
+          "Written Communication",
+          "Project Management"
+        ],
+        "automation_risk_reduction": 0.52,
+        "growth_outlook_target": -8,
+        "roi_score": 53.3
+      }
+    ],
+    "fast_food": [
+      {
+        "from_id": "fast_food",
+        "from_title": "Fast Food Cook",
+        "to_id": "healthcare_tech",
+        "to_title": "Healthcare Technician",
+        "salary_current": 26080,
+        "salary_target": 56420,
+        "salary_uplift": 30340,
+        "salary_uplift_pct": 116.3,
+        "training_months": 10,
+        "training_cost": 9500,
+        "success_rate": 0.65,
+        "credential": "Medical Assistant Certificate",
+        "shared_skills": [
+          "Manual Dexterity"
+        ],
+        "new_skills": [
+          "Patient Care",
+          "Computer Literacy",
+          "Empathy & Care",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.72,
+        "growth_outlook_target": 18,
+        "roi_score": 72.5
+      },
+      {
+        "from_id": "fast_food",
+        "from_title": "Fast Food Cook",
+        "to_id": "comm_health",
+        "to_title": "Community Health Worker",
+        "salary_current": 26080,
+        "salary_target": 42000,
+        "salary_uplift": 15920,
+        "salary_uplift_pct": 61.0,
+        "training_months": 8,
+        "training_cost": 5200,
+        "success_rate": 0.72,
+        "credential": "CHW State Certification",
+        "shared_skills": [
+          "Customer Interaction"
+        ],
+        "new_skills": [
+          "Empathy & Care",
+          "Public Speaking",
+          "Conflict Resolution",
+          "Written Communication"
+        ],
+        "automation_risk_reduction": 0.77,
+        "growth_outlook_target": 14,
+        "roi_score": 62.2
+      },
+      {
+        "from_id": "fast_food",
+        "from_title": "Fast Food Cook",
+        "to_id": "warehouse",
+        "to_title": "Warehouse Worker",
+        "salary_current": 26080,
+        "salary_target": 34440,
+        "salary_uplift": 8360,
+        "salary_uplift_pct": 32.1,
+        "training_months": 1,
+        "training_cost": 500,
+        "success_rate": 0.92,
+        "credential": "Forklift Operator Certificate",
+        "shared_skills": [
+          "Physical Endurance",
+          "Manual Dexterity"
+        ],
+        "new_skills": [
+          "Equipment Operation",
+          "Computer Literacy"
+        ],
+        "automation_risk_reduction": 0.17,
+        "growth_outlook_target": -10,
+        "roi_score": 55.2
+      },
+      {
+        "from_id": "fast_food",
+        "from_title": "Fast Food Cook",
+        "to_id": "retail_cashier",
+        "to_title": "Retail Cashier",
+        "salary_current": 26080,
+        "salary_target": 28920,
+        "salary_uplift": 2840,
+        "salary_uplift_pct": 10.9,
+        "training_months": 0,
+        "training_cost": 0,
+        "success_rate": 0.98,
+        "credential": "No additional credential",
+        "shared_skills": [
+          "Customer Interaction"
+        ],
+        "new_skills": [
+          "Computer Literacy",
+          "Conflict Resolution"
+        ],
+        "automation_risk_reduction": -0.16,
+        "growth_outlook_target": -22,
+        "roi_score": 43.8
+      }
+    ],
+    "customer_svc": [
+      {
+        "from_id": "customer_svc",
+        "from_title": "Customer Service Rep",
+        "to_id": "ux_designer",
+        "to_title": "UX Designer",
+        "salary_current": 36920,
+        "salary_target": 85280,
+        "salary_uplift": 48360,
+        "salary_uplift_pct": 131.0,
+        "training_months": 10,
+        "training_cost": 8800,
+        "success_rate": 0.62,
+        "credential": "Google UX Design Certificate",
+        "shared_skills": [
+          "Digital Communication"
+        ],
+        "new_skills": [
+          "UX/UI Design",
+          "Research Methods",
+          "Written Communication",
+          "Critical Thinking"
+        ],
+        "automation_risk_reduction": 0.47,
+        "growth_outlook_target": 16,
+        "roi_score": 69.9
+      },
+      {
+        "from_id": "customer_svc",
+        "from_title": "Customer Service Rep",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 36920,
+        "salary_target": 55230,
+        "salary_uplift": 18310,
+        "salary_uplift_pct": 49.6,
+        "training_months": 4,
+        "training_cost": 3200,
+        "success_rate": 0.86,
+        "credential": "Supply Chain Fundamentals",
+        "shared_skills": [
+          "Problem Solving",
+          "Digital Communication"
+        ],
+        "new_skills": [
+          "Project Management",
+          "Spreadsheet Proficiency",
+          "Software Navigation"
+        ],
+        "automation_risk_reduction": 0.37,
+        "growth_outlook_target": 12,
+        "roi_score": 59.0
+      },
+      {
+        "from_id": "customer_svc",
+        "from_title": "Customer Service Rep",
+        "to_id": "comm_health",
+        "to_title": "Community Health Worker",
+        "salary_current": 36920,
+        "salary_target": 42000,
+        "salary_uplift": 5080,
+        "salary_uplift_pct": 13.8,
+        "training_months": 4,
+        "training_cost": 3800,
+        "success_rate": 0.84,
+        "credential": "CHW State Certification",
+        "shared_skills": [
+          "Customer Interaction",
+          "Conflict Resolution"
+        ],
+        "new_skills": [
+          "Empathy & Care",
+          "Public Speaking",
+          "Written Communication"
+        ],
+        "automation_risk_reduction": 0.51,
+        "growth_outlook_target": 14,
+        "roi_score": 51.2
+      },
+      {
+        "from_id": "customer_svc",
+        "from_title": "Customer Service Rep",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 36920,
+        "salary_target": 42080,
+        "salary_uplift": 5160,
+        "salary_uplift_pct": 14.0,
+        "training_months": 2,
+        "training_cost": 1200,
+        "success_rate": 0.93,
+        "credential": "Administrative Professional Certificate",
+        "shared_skills": [
+          "Computer Literacy"
+        ],
+        "new_skills": [
+          "Spreadsheet Proficiency",
+          "Written Communication",
+          "Software Navigation",
+          "Project Management"
+        ],
+        "automation_risk_reduction": 0.09,
+        "growth_outlook_target": -8,
+        "roi_score": 46.4
+      }
+    ],
+    "admin_assistant": [
+      {
+        "from_id": "admin_assistant",
+        "from_title": "Administrative Assistant",
+        "to_id": "cybersecurity",
+        "to_title": "Cybersecurity Analyst",
+        "salary_current": 42080,
+        "salary_target": 103590,
+        "salary_uplift": 61510,
+        "salary_uplift_pct": 146.2,
+        "training_months": 12,
+        "training_cost": 14200,
+        "success_rate": 0.55,
+        "credential": "CompTIA Security+",
+        "shared_skills": [],
+        "new_skills": [
+          "Network Security",
+          "Programming",
+          "Critical Thinking",
+          "Research Methods",
+          "Cloud Computing"
+        ],
+        "automation_risk_reduction": 0.41,
+        "growth_outlook_target": 35,
+        "roi_score": 67.9
+      },
+      {
+        "from_id": "admin_assistant",
+        "from_title": "Administrative Assistant",
+        "to_id": "ux_designer",
+        "to_title": "UX Designer",
+        "salary_current": 42080,
+        "salary_target": 85280,
+        "salary_uplift": 43200,
+        "salary_uplift_pct": 102.7,
+        "training_months": 8,
+        "training_cost": 7600,
+        "success_rate": 0.72,
+        "credential": "Google UX Design Certificate",
+        "shared_skills": [
+          "Written Communication"
+        ],
+        "new_skills": [
+          "UX/UI Design",
+          "Research Methods",
+          "Critical Thinking",
+          "Digital Communication"
+        ],
+        "automation_risk_reduction": 0.38,
+        "growth_outlook_target": 16,
+        "roi_score": 65.0
+      },
+      {
+        "from_id": "admin_assistant",
+        "from_title": "Administrative Assistant",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 42080,
+        "salary_target": 82360,
+        "salary_uplift": 40280,
+        "salary_uplift_pct": 95.7,
+        "training_months": 8,
+        "training_cost": 6400,
+        "success_rate": 0.78,
+        "credential": "Google Data Analytics Certificate",
+        "shared_skills": [
+          "Spreadsheet Proficiency"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Programming",
+          "Critical Thinking",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.34,
+        "growth_outlook_target": 26,
+        "roi_score": 63.4
+      },
+      {
+        "from_id": "admin_assistant",
+        "from_title": "Administrative Assistant",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 42080,
+        "salary_target": 55230,
+        "salary_uplift": 13150,
+        "salary_uplift_pct": 31.2,
+        "training_months": 3,
+        "training_cost": 2200,
+        "success_rate": 0.9,
+        "credential": "Supply Chain Fundamentals",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Software Navigation",
+          "Project Management"
+        ],
+        "new_skills": [
+          "Digital Communication",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.28,
+        "growth_outlook_target": 12,
+        "roi_score": 53.9
+      }
+    ],
+    "warehouse": [
+      {
+        "from_id": "warehouse",
+        "from_title": "Warehouse Worker",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 34440,
+        "salary_target": 55230,
+        "salary_uplift": 20790,
+        "salary_uplift_pct": 60.4,
+        "training_months": 5,
+        "training_cost": 3800,
+        "success_rate": 0.82,
+        "credential": "Logistics Management Certificate",
+        "shared_skills": [],
+        "new_skills": [
+          "Project Management",
+          "Spreadsheet Proficiency",
+          "Digital Communication",
+          "Problem Solving",
+          "Software Navigation"
+        ],
+        "automation_risk_reduction": 0.46,
+        "growth_outlook_target": 12,
+        "roi_score": 61.8
+      },
+      {
+        "from_id": "warehouse",
+        "from_title": "Warehouse Worker",
+        "to_id": "ev_technician",
+        "to_title": "EV Technician",
+        "salary_current": 34440,
+        "salary_target": 52460,
+        "salary_uplift": 18020,
+        "salary_uplift_pct": 52.3,
+        "training_months": 6,
+        "training_cost": 6000,
+        "success_rate": 0.8,
+        "credential": "EV Service Certification",
+        "shared_skills": [
+          "Computer Literacy",
+          "Equipment Operation",
+          "Manual Dexterity"
+        ],
+        "new_skills": [
+          "Electrical Work",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.56,
+        "growth_outlook_target": 30,
+        "roi_score": 59.7
+      },
+      {
+        "from_id": "warehouse",
+        "from_title": "Warehouse Worker",
+        "to_id": "solar_installer",
+        "to_title": "Solar Panel Installer",
+        "salary_current": 34440,
+        "salary_target": 47670,
+        "salary_uplift": 13230,
+        "salary_uplift_pct": 38.4,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.83,
+        "credential": "NABCEP PV Associate",
+        "shared_skills": [
+          "Physical Endurance"
+        ],
+        "new_skills": [
+          "Solar Installation",
+          "Electrical Work",
+          "Construction Skills",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.6,
+        "growth_outlook_target": 52,
+        "roi_score": 58.9
+      },
+      {
+        "from_id": "warehouse",
+        "from_title": "Warehouse Worker",
+        "to_id": "retrofit_spec",
+        "to_title": "Building Retrofit Spec.",
+        "salary_current": 34440,
+        "salary_target": 52100,
+        "salary_uplift": 17660,
+        "salary_uplift_pct": 51.3,
+        "training_months": 7,
+        "training_cost": 6200,
+        "success_rate": 0.76,
+        "credential": "BPI Building Analyst",
+        "shared_skills": [],
+        "new_skills": [
+          "Construction Skills",
+          "Energy Auditing",
+          "HVAC Systems",
+          "Electrical Work",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": 0.6,
+        "growth_outlook_target": 38,
+        "roi_score": 57.7
+      }
+    ],
+    "solar_installer": [
+      {
+        "from_id": "solar_installer",
+        "from_title": "Solar Panel Installer",
+        "to_id": "wind_tech",
+        "to_title": "Wind Turbine Technician",
+        "salary_current": 47670,
+        "salary_target": 57320,
+        "salary_uplift": 9650,
+        "salary_uplift_pct": 20.2,
+        "training_months": 4,
+        "training_cost": 4800,
+        "success_rate": 0.88,
+        "credential": "Wind Energy Technician Certificate",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work",
+          "Physical Endurance"
+        ],
+        "new_skills": [
+          "Wind Turbine Systems",
+          "Equipment Operation"
+        ],
+        "automation_risk_reduction": -0.01,
+        "growth_outlook_target": 44,
+        "roi_score": 41.2
+      },
+      {
+        "from_id": "solar_installer",
+        "from_title": "Solar Panel Installer",
+        "to_id": "ev_technician",
+        "to_title": "EV Technician",
+        "salary_current": 47670,
+        "salary_target": 52460,
+        "salary_uplift": 4790,
+        "salary_uplift_pct": 10.0,
+        "training_months": 3,
+        "training_cost": 3200,
+        "success_rate": 0.9,
+        "credential": "EV Service Certification",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Equipment Operation",
+          "Manual Dexterity",
+          "Computer Literacy"
+        ],
+        "automation_risk_reduction": -0.04,
+        "growth_outlook_target": 30,
+        "roi_score": 39.5
+      },
+      {
+        "from_id": "solar_installer",
+        "from_title": "Solar Panel Installer",
+        "to_id": "retrofit_spec",
+        "to_title": "Building Retrofit Spec.",
+        "salary_current": 47670,
+        "salary_target": 52100,
+        "salary_uplift": 4430,
+        "salary_uplift_pct": 9.3,
+        "training_months": 4,
+        "training_cost": 4000,
+        "success_rate": 0.87,
+        "credential": "BPI Building Analyst",
+        "shared_skills": [
+          "Problem Solving",
+          "Construction Skills",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Energy Auditing",
+          "HVAC Systems"
+        ],
+        "automation_risk_reduction": 0.0,
+        "growth_outlook_target": 38,
+        "roi_score": 37.9
+      }
+    ],
+    "wind_tech": [
+      {
+        "from_id": "wind_tech",
+        "from_title": "Wind Turbine Technician",
+        "to_id": "ev_technician",
+        "to_title": "EV Technician",
+        "salary_current": 57320,
+        "salary_target": 52460,
+        "salary_uplift": -4860,
+        "salary_uplift_pct": -8.5,
+        "training_months": 3,
+        "training_cost": 3400,
+        "success_rate": 0.88,
+        "credential": "EV Service Certification",
+        "shared_skills": [
+          "Problem Solving",
+          "Equipment Operation",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Manual Dexterity",
+          "Computer Literacy"
+        ],
+        "automation_risk_reduction": -0.03,
+        "growth_outlook_target": 30,
+        "roi_score": 33.7
+      },
+      {
+        "from_id": "wind_tech",
+        "from_title": "Wind Turbine Technician",
+        "to_id": "solar_installer",
+        "to_title": "Solar Panel Installer",
+        "salary_current": 57320,
+        "salary_target": 47670,
+        "salary_uplift": -9650,
+        "salary_uplift_pct": -16.8,
+        "training_months": 3,
+        "training_cost": 3000,
+        "success_rate": 0.9,
+        "credential": "NABCEP PV Associate",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work",
+          "Physical Endurance"
+        ],
+        "new_skills": [
+          "Solar Installation",
+          "Construction Skills"
+        ],
+        "automation_risk_reduction": 0.01,
+        "growth_outlook_target": 52,
+        "roi_score": 32.7
+      },
+      {
+        "from_id": "wind_tech",
+        "from_title": "Wind Turbine Technician",
+        "to_id": "retrofit_spec",
+        "to_title": "Building Retrofit Spec.",
+        "salary_current": 57320,
+        "salary_target": 52100,
+        "salary_uplift": -5220,
+        "salary_uplift_pct": -9.1,
+        "training_months": 5,
+        "training_cost": 5200,
+        "success_rate": 0.82,
+        "credential": "BPI Building Analyst",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Construction Skills",
+          "Energy Auditing",
+          "HVAC Systems"
+        ],
+        "automation_risk_reduction": 0.01,
+        "growth_outlook_target": 38,
+        "roi_score": 29.7
+      }
+    ],
+    "cybersecurity": [
+      {
+        "from_id": "cybersecurity",
+        "from_title": "Cybersecurity Analyst",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 103590,
+        "salary_target": 82360,
+        "salary_uplift": -21230,
+        "salary_uplift_pct": -20.5,
+        "training_months": 2,
+        "training_cost": 1800,
+        "success_rate": 0.92,
+        "credential": "Data Analytics Specialization",
+        "shared_skills": [
+          "Programming",
+          "Critical Thinking"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Spreadsheet Proficiency",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": -0.07,
+        "growth_outlook_target": 26,
+        "roi_score": 31.8
+      },
+      {
+        "from_id": "cybersecurity",
+        "from_title": "Cybersecurity Analyst",
+        "to_id": "ux_designer",
+        "to_title": "UX Designer",
+        "salary_current": 103590,
+        "salary_target": 85280,
+        "salary_uplift": -18310,
+        "salary_uplift_pct": -17.7,
+        "training_months": 6,
+        "training_cost": 5400,
+        "success_rate": 0.72,
+        "credential": "Google UX Design Certificate",
+        "shared_skills": [
+          "Research Methods",
+          "Critical Thinking"
+        ],
+        "new_skills": [
+          "UX/UI Design",
+          "Written Communication",
+          "Digital Communication"
+        ],
+        "automation_risk_reduction": -0.03,
+        "growth_outlook_target": 16,
+        "roi_score": 21.9
+      },
+      {
+        "from_id": "cybersecurity",
+        "from_title": "Cybersecurity Analyst",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 103590,
+        "salary_target": 55230,
+        "salary_uplift": -48360,
+        "salary_uplift_pct": -46.7,
+        "training_months": 3,
+        "training_cost": 2600,
+        "success_rate": 0.85,
+        "credential": "IT Supply Chain Management",
+        "shared_skills": [],
+        "new_skills": [
+          "Project Management",
+          "Spreadsheet Proficiency",
+          "Digital Communication",
+          "Problem Solving",
+          "Software Navigation"
+        ],
+        "automation_risk_reduction": -0.13,
+        "growth_outlook_target": 12,
+        "roi_score": 19.0
+      }
+    ],
+    "data_analyst": [
+      {
+        "from_id": "data_analyst",
+        "from_title": "Data Analyst",
+        "to_id": "cybersecurity",
+        "to_title": "Cybersecurity Analyst",
+        "salary_current": 82360,
+        "salary_target": 103590,
+        "salary_uplift": 21230,
+        "salary_uplift_pct": 25.8,
+        "training_months": 8,
+        "training_cost": 10200,
+        "success_rate": 0.75,
+        "credential": "CompTIA Security+",
+        "shared_skills": [
+          "Programming",
+          "Critical Thinking"
+        ],
+        "new_skills": [
+          "Network Security",
+          "Research Methods",
+          "Cloud Computing"
+        ],
+        "automation_risk_reduction": 0.07,
+        "growth_outlook_target": 35,
+        "roi_score": 34.9
+      },
+      {
+        "from_id": "data_analyst",
+        "from_title": "Data Analyst",
+        "to_id": "ux_designer",
+        "to_title": "UX Designer",
+        "salary_current": 82360,
+        "salary_target": 85280,
+        "salary_uplift": 2920,
+        "salary_uplift_pct": 3.5,
+        "training_months": 5,
+        "training_cost": 4200,
+        "success_rate": 0.8,
+        "credential": "Google UX Design Certificate",
+        "shared_skills": [
+          "Critical Thinking"
+        ],
+        "new_skills": [
+          "UX/UI Design",
+          "Research Methods",
+          "Written Communication",
+          "Digital Communication"
+        ],
+        "automation_risk_reduction": 0.04,
+        "growth_outlook_target": 16,
+        "roi_score": 33.7
+      },
+      {
+        "from_id": "data_analyst",
+        "from_title": "Data Analyst",
+        "to_id": "logistics_coord",
+        "to_title": "Logistics Coordinator",
+        "salary_current": 82360,
+        "salary_target": 55230,
+        "salary_uplift": -27130,
+        "salary_uplift_pct": -32.9,
+        "training_months": 2,
+        "training_cost": 1600,
+        "success_rate": 0.92,
+        "credential": "Supply Chain Analytics Certificate",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Problem Solving"
+        ],
+        "new_skills": [
+          "Project Management",
+          "Digital Communication",
+          "Software Navigation"
+        ],
+        "automation_risk_reduction": -0.06,
+        "growth_outlook_target": 12,
+        "roi_score": 28.3
+      }
+    ],
+    "ux_designer": [
+      {
+        "from_id": "ux_designer",
+        "from_title": "UX Designer",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 85280,
+        "salary_target": 82360,
+        "salary_uplift": -2920,
+        "salary_uplift_pct": -3.4,
+        "training_months": 4,
+        "training_cost": 3600,
+        "success_rate": 0.82,
+        "credential": "Data Analytics Specialization",
+        "shared_skills": [
+          "Critical Thinking"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Programming",
+          "Spreadsheet Proficiency",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": -0.04,
+        "growth_outlook_target": 26,
+        "roi_score": 31.8
+      },
+      {
+        "from_id": "ux_designer",
+        "from_title": "UX Designer",
+        "to_id": "cybersecurity",
+        "to_title": "Cybersecurity Analyst",
+        "salary_current": 85280,
+        "salary_target": 103590,
+        "salary_uplift": 18310,
+        "salary_uplift_pct": 21.5,
+        "training_months": 10,
+        "training_cost": 12800,
+        "success_rate": 0.6,
+        "credential": "CompTIA Security+",
+        "shared_skills": [
+          "Research Methods",
+          "Critical Thinking"
+        ],
+        "new_skills": [
+          "Network Security",
+          "Programming",
+          "Cloud Computing"
+        ],
+        "automation_risk_reduction": 0.03,
+        "growth_outlook_target": 35,
+        "roi_score": 25.5
+      },
+      {
+        "from_id": "ux_designer",
+        "from_title": "UX Designer",
+        "to_id": "comm_health",
+        "to_title": "Community Health Worker",
+        "salary_current": 85280,
+        "salary_target": 42000,
+        "salary_uplift": -43280,
+        "salary_uplift_pct": -50.8,
+        "training_months": 6,
+        "training_cost": 4800,
+        "success_rate": 0.74,
+        "credential": "CHW State Certification",
+        "shared_skills": [
+          "Written Communication"
+        ],
+        "new_skills": [
+          "Empathy & Care",
+          "Customer Interaction",
+          "Public Speaking",
+          "Conflict Resolution"
+        ],
+        "automation_risk_reduction": 0.04,
+        "growth_outlook_target": 14,
+        "roi_score": 14.3
+      }
+    ],
+    "healthcare_tech": [
+      {
+        "from_id": "healthcare_tech",
+        "from_title": "Healthcare Technician",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 56420,
+        "salary_target": 82360,
+        "salary_uplift": 25940,
+        "salary_uplift_pct": 46.0,
+        "training_months": 10,
+        "training_cost": 8400,
+        "success_rate": 0.62,
+        "credential": "Google Data Analytics Certificate",
+        "shared_skills": [
+          "Problem Solving"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Programming",
+          "Spreadsheet Proficiency",
+          "Critical Thinking"
+        ],
+        "automation_risk_reduction": -0.03,
+        "growth_outlook_target": 26,
+        "roi_score": 31.9
+      },
+      {
+        "from_id": "healthcare_tech",
+        "from_title": "Healthcare Technician",
+        "to_id": "comm_health",
+        "to_title": "Community Health Worker",
+        "salary_current": 56420,
+        "salary_target": 42000,
+        "salary_uplift": -14420,
+        "salary_uplift_pct": -25.6,
+        "training_months": 3,
+        "training_cost": 2200,
+        "success_rate": 0.9,
+        "credential": "CHW State Certification",
+        "shared_skills": [
+          "Empathy & Care"
+        ],
+        "new_skills": [
+          "Customer Interaction",
+          "Public Speaking",
+          "Conflict Resolution",
+          "Written Communication"
+        ],
+        "automation_risk_reduction": 0.05,
+        "growth_outlook_target": 14,
+        "roi_score": 31.1
+      },
+      {
+        "from_id": "healthcare_tech",
+        "from_title": "Healthcare Technician",
+        "to_id": "retrofit_spec",
+        "to_title": "Building Retrofit Spec.",
+        "salary_current": 56420,
+        "salary_target": 52100,
+        "salary_uplift": -4320,
+        "salary_uplift_pct": -7.7,
+        "training_months": 8,
+        "training_cost": 7200,
+        "success_rate": 0.68,
+        "credential": "BPI Building Analyst",
+        "shared_skills": [
+          "Problem Solving"
+        ],
+        "new_skills": [
+          "Construction Skills",
+          "Energy Auditing",
+          "HVAC Systems",
+          "Electrical Work"
+        ],
+        "automation_risk_reduction": 0.05,
+        "growth_outlook_target": 38,
+        "roi_score": 22.6
+      }
+    ],
+    "retrofit_spec": [
+      {
+        "from_id": "retrofit_spec",
+        "from_title": "Building Retrofit Spec.",
+        "to_id": "solar_installer",
+        "to_title": "Solar Panel Installer",
+        "salary_current": 52100,
+        "salary_target": 47670,
+        "salary_uplift": -4430,
+        "salary_uplift_pct": -8.5,
+        "training_months": 2,
+        "training_cost": 2000,
+        "success_rate": 0.92,
+        "credential": "NABCEP PV Associate",
+        "shared_skills": [
+          "Problem Solving",
+          "Construction Skills",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Solar Installation",
+          "Physical Endurance"
+        ],
+        "automation_risk_reduction": 0.0,
+        "growth_outlook_target": 52,
+        "roi_score": 37.1
+      },
+      {
+        "from_id": "retrofit_spec",
+        "from_title": "Building Retrofit Spec.",
+        "to_id": "wind_tech",
+        "to_title": "Wind Turbine Technician",
+        "salary_current": 52100,
+        "salary_target": 57320,
+        "salary_uplift": 5220,
+        "salary_uplift_pct": 10.0,
+        "training_months": 5,
+        "training_cost": 5600,
+        "success_rate": 0.8,
+        "credential": "Wind Energy Technician Certificate",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Wind Turbine Systems",
+          "Equipment Operation",
+          "Physical Endurance"
+        ],
+        "automation_risk_reduction": -0.01,
+        "growth_outlook_target": 44,
+        "roi_score": 34.4
+      },
+      {
+        "from_id": "retrofit_spec",
+        "from_title": "Building Retrofit Spec.",
+        "to_id": "ev_technician",
+        "to_title": "EV Technician",
+        "salary_current": 52100,
+        "salary_target": 52460,
+        "salary_uplift": 360,
+        "salary_uplift_pct": 0.7,
+        "training_months": 4,
+        "training_cost": 4200,
+        "success_rate": 0.84,
+        "credential": "EV Service Certification",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Equipment Operation",
+          "Manual Dexterity",
+          "Computer Literacy"
+        ],
+        "automation_risk_reduction": -0.04,
+        "growth_outlook_target": 30,
+        "roi_score": 33.5
+      }
+    ],
+    "ev_technician": [
+      {
+        "from_id": "ev_technician",
+        "from_title": "EV Technician",
+        "to_id": "solar_installer",
+        "to_title": "Solar Panel Installer",
+        "salary_current": 52460,
+        "salary_target": 47670,
+        "salary_uplift": -4790,
+        "salary_uplift_pct": -9.1,
+        "training_months": 3,
+        "training_cost": 3000,
+        "success_rate": 0.88,
+        "credential": "NABCEP PV Associate",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Solar Installation",
+          "Construction Skills",
+          "Physical Endurance"
+        ],
+        "automation_risk_reduction": 0.04,
+        "growth_outlook_target": 52,
+        "roi_score": 35.3
+      },
+      {
+        "from_id": "ev_technician",
+        "from_title": "EV Technician",
+        "to_id": "wind_tech",
+        "to_title": "Wind Turbine Technician",
+        "salary_current": 52460,
+        "salary_target": 57320,
+        "salary_uplift": 4860,
+        "salary_uplift_pct": 9.3,
+        "training_months": 6,
+        "training_cost": 6800,
+        "success_rate": 0.78,
+        "credential": "Wind Energy Technician Certificate",
+        "shared_skills": [
+          "Problem Solving",
+          "Equipment Operation",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Wind Turbine Systems",
+          "Physical Endurance"
+        ],
+        "automation_risk_reduction": 0.03,
+        "growth_outlook_target": 44,
+        "roi_score": 33.0
+      },
+      {
+        "from_id": "ev_technician",
+        "from_title": "EV Technician",
+        "to_id": "retrofit_spec",
+        "to_title": "Building Retrofit Spec.",
+        "salary_current": 52460,
+        "salary_target": 52100,
+        "salary_uplift": -360,
+        "salary_uplift_pct": -0.7,
+        "training_months": 5,
+        "training_cost": 5200,
+        "success_rate": 0.82,
+        "credential": "BPI Building Analyst",
+        "shared_skills": [
+          "Problem Solving",
+          "Electrical Work"
+        ],
+        "new_skills": [
+          "Construction Skills",
+          "Energy Auditing",
+          "HVAC Systems"
+        ],
+        "automation_risk_reduction": 0.04,
+        "growth_outlook_target": 38,
+        "roi_score": 33.0
+      }
+    ],
+    "comm_health": [
+      {
+        "from_id": "comm_health",
+        "from_title": "Community Health Worker",
+        "to_id": "healthcare_tech",
+        "to_title": "Healthcare Technician",
+        "salary_current": 42000,
+        "salary_target": 56420,
+        "salary_uplift": 14420,
+        "salary_uplift_pct": 34.3,
+        "training_months": 6,
+        "training_cost": 6400,
+        "success_rate": 0.8,
+        "credential": "Medical Assistant Certificate",
+        "shared_skills": [
+          "Empathy & Care"
+        ],
+        "new_skills": [
+          "Patient Care",
+          "Computer Literacy",
+          "Problem Solving",
+          "Manual Dexterity"
+        ],
+        "automation_risk_reduction": -0.05,
+        "growth_outlook_target": 18,
+        "roi_score": 39.0
+      },
+      {
+        "from_id": "comm_health",
+        "from_title": "Community Health Worker",
+        "to_id": "customer_svc",
+        "to_title": "Customer Service Rep",
+        "salary_current": 42000,
+        "salary_target": 36920,
+        "salary_uplift": -5080,
+        "salary_uplift_pct": -12.1,
+        "training_months": 1,
+        "training_cost": 600,
+        "success_rate": 0.95,
+        "credential": "Customer Experience Certificate",
+        "shared_skills": [
+          "Customer Interaction",
+          "Conflict Resolution"
+        ],
+        "new_skills": [
+          "Digital Communication",
+          "Computer Literacy",
+          "Problem Solving"
+        ],
+        "automation_risk_reduction": -0.51,
+        "growth_outlook_target": -5,
+        "roi_score": 25.7
+      },
+      {
+        "from_id": "comm_health",
+        "from_title": "Community Health Worker",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 42000,
+        "salary_target": 42080,
+        "salary_uplift": 80,
+        "salary_uplift_pct": 0.2,
+        "training_months": 4,
+        "training_cost": 3200,
+        "success_rate": 0.82,
+        "credential": "Administrative Professional Certificate",
+        "shared_skills": [
+          "Written Communication"
+        ],
+        "new_skills": [
+          "Computer Literacy",
+          "Spreadsheet Proficiency",
+          "Software Navigation",
+          "Project Management"
+        ],
+        "automation_risk_reduction": -0.42,
+        "growth_outlook_target": -8,
+        "roi_score": 23.4
+      }
+    ],
+    "logistics_coord": [
+      {
+        "from_id": "logistics_coord",
+        "from_title": "Logistics Coordinator",
+        "to_id": "data_analyst",
+        "to_title": "Data Analyst",
+        "salary_current": 55230,
+        "salary_target": 82360,
+        "salary_uplift": 27130,
+        "salary_uplift_pct": 49.1,
+        "training_months": 6,
+        "training_cost": 5800,
+        "success_rate": 0.78,
+        "credential": "Data Analytics Specialization",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Problem Solving"
+        ],
+        "new_skills": [
+          "Data Analysis",
+          "Programming",
+          "Critical Thinking"
+        ],
+        "automation_risk_reduction": 0.06,
+        "growth_outlook_target": 26,
+        "roi_score": 45.7
+      },
+      {
+        "from_id": "logistics_coord",
+        "from_title": "Logistics Coordinator",
+        "to_id": "cybersecurity",
+        "to_title": "Cybersecurity Analyst",
+        "salary_current": 55230,
+        "salary_target": 103590,
+        "salary_uplift": 48360,
+        "salary_uplift_pct": 87.6,
+        "training_months": 12,
+        "training_cost": 14200,
+        "success_rate": 0.55,
+        "credential": "CompTIA Security+",
+        "shared_skills": [],
+        "new_skills": [
+          "Network Security",
+          "Programming",
+          "Critical Thinking",
+          "Research Methods",
+          "Cloud Computing"
+        ],
+        "automation_risk_reduction": 0.13,
+        "growth_outlook_target": 35,
+        "roi_score": 43.3
+      },
+      {
+        "from_id": "logistics_coord",
+        "from_title": "Logistics Coordinator",
+        "to_id": "admin_assistant",
+        "to_title": "Administrative Assistant",
+        "salary_current": 55230,
+        "salary_target": 42080,
+        "salary_uplift": -13150,
+        "salary_uplift_pct": -23.8,
+        "training_months": 1,
+        "training_cost": 800,
+        "success_rate": 0.95,
+        "credential": "Office Administration Certificate",
+        "shared_skills": [
+          "Spreadsheet Proficiency",
+          "Software Navigation",
+          "Project Management"
+        ],
+        "new_skills": [
+          "Computer Literacy",
+          "Written Communication"
+        ],
+        "automation_risk_reduction": -0.28,
+        "growth_outlook_target": -8,
+        "roi_score": 27.9
+      }
+    ]
+  },
+  "bridges": [
+    {
+      "label": "Truck Driver -> Logistics Coordinator",
+      "monthly_income_loss": 1800,
+      "training_months": 4,
+      "training_cost": 3200,
+      "total_gap": 10400,
+      "savings_coverage_months": 2,
+      "unemployment_benefit": 1400,
+      "civic_dividend_monthly": 1600,
+      "civic_dividend_total": 6400,
+      "out_of_pocket": 0,
+      "post_transition_salary": 55230,
+      "payback_months": 18,
+      "net_10yr_gain": 58840
+    },
+    {
+      "label": "Retail Cashier -> Community Health Worker",
+      "monthly_income_loss": 1800,
+      "training_months": 6,
+      "training_cost": 4800,
+      "total_gap": 15600,
+      "savings_coverage_months": 2,
+      "unemployment_benefit": 1400,
+      "civic_dividend_monthly": 1600,
+      "civic_dividend_total": 9600,
+      "out_of_pocket": 0,
+      "post_transition_salary": 42000,
+      "payback_months": 14,
+      "net_10yr_gain": 115200
+    },
+    {
+      "label": "Data Entry -> Data Analyst",
+      "monthly_income_loss": 1800,
+      "training_months": 8,
+      "training_cost": 7200,
+      "total_gap": 21600,
+      "savings_coverage_months": 2,
+      "unemployment_benefit": 1400,
+      "civic_dividend_monthly": 1600,
+      "civic_dividend_total": 12800,
+      "out_of_pocket": 0,
+      "post_transition_salary": 82360,
+      "payback_months": 6,
+      "net_10yr_gain": 440160
+    },
+    {
+      "label": "Assembly Worker -> Solar Installer",
+      "monthly_income_loss": 1800,
+      "training_months": 5,
+      "training_cost": 4200,
+      "total_gap": 13200,
+      "savings_coverage_months": 2,
+      "unemployment_benefit": 1400,
+      "civic_dividend_monthly": 1600,
+      "civic_dividend_total": 8000,
+      "out_of_pocket": 0,
+      "post_transition_salary": 47670,
+      "payback_months": 17,
+      "net_10yr_gain": 81480
+    },
+    {
+      "label": "Bookkeeper -> Data Analyst",
+      "monthly_income_loss": 1800,
+      "training_months": 6,
+      "training_cost": 5400,
+      "total_gap": 16200,
+      "savings_coverage_months": 2,
+      "unemployment_benefit": 1400,
+      "civic_dividend_monthly": 1600,
+      "civic_dividend_total": 9600,
+      "out_of_pocket": 0,
+      "post_transition_salary": 82360,
+      "payback_months": 5,
+      "net_10yr_gain": 351840
+    },
+    {
+      "label": "Fast Food -> Healthcare Tech",
+      "monthly_income_loss": 1800,
+      "training_months": 10,
+      "training_cost": 9500,
+      "total_gap": 27500,
+      "savings_coverage_months": 2,
+      "unemployment_benefit": 1400,
+      "civic_dividend_monthly": 1600,
+      "civic_dividend_total": 16000,
+      "out_of_pocket": 0,
+      "post_transition_salary": 56420,
+      "payback_months": 11,
+      "net_10yr_gain": 275860
+    }
+  ],
+  "cohort": [
+    {
+      "scenario": "baseline",
+      "years": [
+        2026,
+        2027,
+        2028,
+        2029,
+        2030,
+        2031,
+        2032,
+        2033,
+        2034,
+        2035
+      ],
+      "trajectory": [
+        {
+          "year": 2026,
+          "poverty_rate": 12.4,
+          "median_reskill_months": 14.0,
+          "placement_rate": 42.0,
+          "stipend_utilization": 0.0,
+          "household_liquidity": 1799,
+          "employment_rate": 93.5,
+          "emissions_intensity": 0.42,
+          "charter_audit_coverage": 5.0
+        },
+        {
+          "year": 2027,
+          "poverty_rate": 12.7,
+          "median_reskill_months": 13.8,
+          "placement_rate": 42.9,
+          "stipend_utilization": 0.5,
+          "household_liquidity": 1829,
+          "employment_rate": 93.3,
+          "emissions_intensity": 0.412,
+          "charter_audit_coverage": 6.5
+        },
+        {
+          "year": 2028,
+          "poverty_rate": 13.0,
+          "median_reskill_months": 13.6,
+          "placement_rate": 44.0,
+          "stipend_utilization": 1.0,
+          "household_liquidity": 1859,
+          "employment_rate": 93.2,
+          "emissions_intensity": 0.404,
+          "charter_audit_coverage": 8.0
+        },
+        {
+          "year": 2029,
+          "poverty_rate": 13.4,
+          "median_reskill_months": 13.4,
+          "placement_rate": 45.2,
+          "stipend_utilization": 1.6,
+          "household_liquidity": 1895,
+          "employment_rate": 93.1,
+          "emissions_intensity": 0.397,
+          "charter_audit_coverage": 9.6
+        },
+        {
+          "year": 2030,
+          "poverty_rate": 13.6,
+          "median_reskill_months": 13.2,
+          "placement_rate": 46.0,
+          "stipend_utilization": 2.0,
+          "household_liquidity": 1919,
+          "employment_rate": 92.9,
+          "emissions_intensity": 0.388,
+          "charter_audit_coverage": 11.0
+        },
+        {
+          "year": 2031,
+          "poverty_rate": 13.8,
+          "median_reskill_months": 12.9,
+          "placement_rate": 46.6,
+          "stipend_utilization": 2.3,
+          "household_liquidity": 1939,
+          "employment_rate": 92.7,
+          "emissions_intensity": 0.379,
+          "charter_audit_coverage": 12.3
+        },
+        {
+          "year": 2032,
+          "poverty_rate": 14.2,
+          "median_reskill_months": 12.8,
+          "placement_rate": 48.1,
+          "stipend_utilization": 3.0,
+          "household_liquidity": 1982,
+          "employment_rate": 92.6,
+          "emissions_intensity": 0.372,
+          "charter_audit_coverage": 14.0
+        },
+        {
+          "year": 2033,
+          "poverty_rate": 14.5,
+          "median_reskill_months": 12.6,
+          "placement_rate": 48.9,
+          "stipend_utilization": 3.5,
+          "household_liquidity": 2008,
+          "employment_rate": 92.4,
+          "emissions_intensity": 0.364,
+          "charter_audit_coverage": 15.5
+        },
+        {
+          "year": 2034,
+          "poverty_rate": 14.8,
+          "median_reskill_months": 12.4,
+          "placement_rate": 49.9,
+          "stipend_utilization": 4.0,
+          "household_liquidity": 2038,
+          "employment_rate": 92.3,
+          "emissions_intensity": 0.356,
+          "charter_audit_coverage": 17.0
+        },
+        {
+          "year": 2035,
+          "poverty_rate": 15.1,
+          "median_reskill_months": 12.2,
+          "placement_rate": 51.0,
+          "stipend_utilization": 4.5,
+          "household_liquidity": 2071,
+          "employment_rate": 92.2,
+          "emissions_intensity": 0.348,
+          "charter_audit_coverage": 18.5
+        }
+      ],
+      "final": {
+        "year": 2035,
+        "poverty_rate": 15.1,
+        "median_reskill_months": 12.2,
+        "placement_rate": 51.0,
+        "stipend_utilization": 4.5,
+        "household_liquidity": 2071,
+        "employment_rate": 92.2,
+        "emissions_intensity": 0.348,
+        "charter_audit_coverage": 18.5
+      }
+    },
+    {
+      "scenario": "transition_os",
+      "years": [
+        2026,
+        2027,
+        2028,
+        2029,
+        2030,
+        2031,
+        2032,
+        2033,
+        2034,
+        2035
+      ],
+      "trajectory": [
+        {
+          "year": 2026,
+          "poverty_rate": 12.4,
+          "median_reskill_months": 14.0,
+          "placement_rate": 42.0,
+          "stipend_utilization": 15.0,
+          "household_liquidity": 1799,
+          "employment_rate": 93.5,
+          "emissions_intensity": 0.42,
+          "charter_audit_coverage": 12.0
+        },
+        {
+          "year": 2027,
+          "poverty_rate": 11.8,
+          "median_reskill_months": 13.2,
+          "placement_rate": 45.4,
+          "stipend_utilization": 20.0,
+          "household_liquidity": 1879,
+          "employment_rate": 93.6,
+          "emissions_intensity": 0.405,
+          "charter_audit_coverage": 17.0
+        },
+        {
+          "year": 2028,
+          "poverty_rate": 11.2,
+          "median_reskill_months": 12.4,
+          "placement_rate": 49.0,
+          "stipend_utilization": 25.0,
+          "household_liquidity": 1959,
+          "employment_rate": 93.7,
+          "emissions_intensity": 0.39,
+          "charter_audit_coverage": 22.0
+        },
+        {
+          "year": 2029,
+          "poverty_rate": 10.7,
+          "median_reskill_months": 11.6,
+          "placement_rate": 52.7,
+          "stipend_utilization": 30.1,
+          "household_liquidity": 2045,
+          "employment_rate": 93.8,
+          "emissions_intensity": 0.376,
+          "charter_audit_coverage": 27.1
+        },
+        {
+          "year": 2030,
+          "poverty_rate": 10.0,
+          "median_reskill_months": 10.8,
+          "placement_rate": 56.0,
+          "stipend_utilization": 35.0,
+          "household_liquidity": 2119,
+          "employment_rate": 93.9,
+          "emissions_intensity": 0.36,
+          "charter_audit_coverage": 32.0
+        },
+        {
+          "year": 2031,
+          "poverty_rate": 9.3,
+          "median_reskill_months": 9.9,
+          "placement_rate": 59.1,
+          "stipend_utilization": 39.8,
+          "household_liquidity": 2189,
+          "employment_rate": 94.0,
+          "emissions_intensity": 0.344,
+          "charter_audit_coverage": 36.8
+        },
+        {
+          "year": 2032,
+          "poverty_rate": 8.8,
+          "median_reskill_months": 9.2,
+          "placement_rate": 63.1,
+          "stipend_utilization": 45.0,
+          "household_liquidity": 2282,
+          "employment_rate": 94.1,
+          "emissions_intensity": 0.33,
+          "charter_audit_coverage": 42.0
+        },
+        {
+          "year": 2033,
+          "poverty_rate": 8.2,
+          "median_reskill_months": 8.4,
+          "placement_rate": 66.4,
+          "stipend_utilization": 50.0,
+          "household_liquidity": 2358,
+          "employment_rate": 94.2,
+          "emissions_intensity": 0.315,
+          "charter_audit_coverage": 47.0
+        },
+        {
+          "year": 2034,
+          "poverty_rate": 7.6,
+          "median_reskill_months": 7.6,
+          "placement_rate": 69.9,
+          "stipend_utilization": 55.0,
+          "household_liquidity": 2438,
+          "employment_rate": 94.3,
+          "emissions_intensity": 0.3,
+          "charter_audit_coverage": 52.0
+        },
+        {
+          "year": 2035,
+          "poverty_rate": 7.0,
+          "median_reskill_months": 6.8,
+          "placement_rate": 73.5,
+          "stipend_utilization": 60.0,
+          "household_liquidity": 2521,
+          "employment_rate": 94.4,
+          "emissions_intensity": 0.285,
+          "charter_audit_coverage": 57.0
+        }
+      ],
+      "final": {
+        "year": 2035,
+        "poverty_rate": 7.0,
+        "median_reskill_months": 6.8,
+        "placement_rate": 73.5,
+        "stipend_utilization": 60.0,
+        "household_liquidity": 2521,
+        "employment_rate": 94.4,
+        "emissions_intensity": 0.285,
+        "charter_audit_coverage": 57.0
+      }
+    },
+    {
+      "scenario": "full_stack",
+      "years": [
+        2026,
+        2027,
+        2028,
+        2029,
+        2030,
+        2031,
+        2032,
+        2033,
+        2034,
+        2035
+      ],
+      "trajectory": [
+        {
+          "year": 2026,
+          "poverty_rate": 12.4,
+          "median_reskill_months": 14.0,
+          "placement_rate": 42.0,
+          "stipend_utilization": 25.0,
+          "household_liquidity": 1799,
+          "employment_rate": 93.5,
+          "emissions_intensity": 0.42,
+          "charter_audit_coverage": 18.0
+        },
+        {
+          "year": 2027,
+          "poverty_rate": 11.4,
+          "median_reskill_months": 12.9,
+          "placement_rate": 46.9,
+          "stipend_utilization": 31.5,
+          "household_liquidity": 1949,
+          "employment_rate": 93.7,
+          "emissions_intensity": 0.398,
+          "charter_audit_coverage": 25.0
+        },
+        {
+          "year": 2028,
+          "poverty_rate": 10.4,
+          "median_reskill_months": 11.8,
+          "placement_rate": 52.0,
+          "stipend_utilization": 38.0,
+          "household_liquidity": 2099,
+          "employment_rate": 94.0,
+          "emissions_intensity": 0.376,
+          "charter_audit_coverage": 32.0
+        },
+        {
+          "year": 2029,
+          "poverty_rate": 9.5,
+          "median_reskill_months": 10.7,
+          "placement_rate": 57.2,
+          "stipend_utilization": 44.6,
+          "household_liquidity": 2255,
+          "employment_rate": 94.3,
+          "emissions_intensity": 0.355,
+          "charter_audit_coverage": 39.1
+        },
+        {
+          "year": 2030,
+          "poverty_rate": 8.4,
+          "median_reskill_months": 9.6,
+          "placement_rate": 62.0,
+          "stipend_utilization": 51.0,
+          "household_liquidity": 2399,
+          "employment_rate": 94.5,
+          "emissions_intensity": 0.332,
+          "charter_audit_coverage": 46.0
+        },
+        {
+          "year": 2031,
+          "poverty_rate": 7.3,
+          "median_reskill_months": 8.4,
+          "placement_rate": 66.6,
+          "stipend_utilization": 57.3,
+          "household_liquidity": 2539,
+          "employment_rate": 94.7,
+          "emissions_intensity": 0.309,
+          "charter_audit_coverage": 52.8
+        },
+        {
+          "year": 2032,
+          "poverty_rate": 6.4,
+          "median_reskill_months": 7.4,
+          "placement_rate": 72.1,
+          "stipend_utilization": 64.0,
+          "household_liquidity": 2702,
+          "employment_rate": 95.0,
+          "emissions_intensity": 0.288,
+          "charter_audit_coverage": 60.0
+        },
+        {
+          "year": 2033,
+          "poverty_rate": 5.4,
+          "median_reskill_months": 6.3,
+          "placement_rate": 76.9,
+          "stipend_utilization": 70.5,
+          "household_liquidity": 2848,
+          "employment_rate": 95.2,
+          "emissions_intensity": 0.266,
+          "charter_audit_coverage": 67.0
+        },
+        {
+          "year": 2034,
+          "poverty_rate": 4.4,
+          "median_reskill_months": 5.2,
+          "placement_rate": 81.9,
+          "stipend_utilization": 77.0,
+          "household_liquidity": 2998,
+          "employment_rate": 95.5,
+          "emissions_intensity": 0.244,
+          "charter_audit_coverage": 74.0
+        },
+        {
+          "year": 2035,
+          "poverty_rate": 3.4,
+          "median_reskill_months": 4.1,
+          "placement_rate": 87.0,
+          "stipend_utilization": 83.5,
+          "household_liquidity": 3151,
+          "employment_rate": 95.8,
+          "emissions_intensity": 0.222,
+          "charter_audit_coverage": 81.0
+        }
+      ],
+      "final": {
+        "year": 2035,
+        "poverty_rate": 3.4,
+        "median_reskill_months": 4.1,
+        "placement_rate": 87.0,
+        "stipend_utilization": 83.5,
+        "household_liquidity": 3151,
+        "employment_rate": 95.8,
+        "emissions_intensity": 0.222,
+        "charter_audit_coverage": 81.0
+      }
+    }
+  ]
+}

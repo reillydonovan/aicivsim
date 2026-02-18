@@ -1,0 +1,170 @@
+{
+  "scenarios": [
+    {
+      "id": "aggressive",
+      "name": "Aggressive Action",
+      "icon": "\ud83c\udf1f",
+      "desc": "Immediate global cooperation: net-zero by 2040, massive reforestation, ocean restoration, circular economy at scale. Aligns with 1.5\u00b0C pathway.",
+      "color": "#10b981",
+      "tempRise": [1.1, 1.12, 1.14, 1.15, 1.16, 1.17, 1.18, 1.18, 1.19, 1.19, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.19, 1.19, 1.18, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13],
+      "seaLevel": [0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 35, 37, 39, 41, 43, 44, 45, 46, 47, 48, 48, 49, 49],
+      "co2ppm": [421, 422, 422, 421, 420, 418, 416, 414, 411, 408, 405, 402, 399, 396, 393, 390, 387, 384, 381, 378, 375, 372, 370, 368, 366],
+      "biodiversity": [100, 99, 98, 97, 97, 97, 97, 98, 98, 99, 100, 101, 102, 103, 105, 107, 109, 111, 113, 115, 117, 119, 121, 123, 125],
+      "renewableShare": [30, 35, 41, 48, 55, 62, 69, 75, 80, 84, 87, 89, 91, 93, 94, 95, 96, 96, 97, 97, 97, 98, 98, 98, 99],
+      "cropYield": [100, 100, 100, 101, 101, 102, 102, 103, 104, 105, 106, 107, 108, 110, 111, 113, 114, 116, 117, 118, 119, 120, 121, 122, 123],
+      "waterStress": [26, 26, 25, 25, 24, 24, 23, 23, 22, 22, 21, 21, 20, 20, 19, 19, 18, 18, 17, 17, 16, 16, 15, 15, 15],
+      "forestCover": [31, 31.2, 31.5, 31.9, 32.3, 32.8, 33.3, 33.9, 34.5, 35.1, 35.7, 36.3, 37, 37.6, 38.2, 38.8, 39.3, 39.8, 40.3, 40.7, 41.1, 41.5, 41.8, 42.1, 42.3]
+    },
+    {
+      "id": "moderate",
+      "name": "Moderate Transition",
+      "icon": "\u26a1",
+      "desc": "Paris Agreement targets mostly met. Gradual phase-out of fossil fuels by 2060. Significant investment in adaptation. Aligns with ~2\u00b0C pathway.",
+      "color": "#0ea5e9",
+      "tempRise": [1.1, 1.14, 1.18, 1.22, 1.26, 1.3, 1.34, 1.38, 1.42, 1.45, 1.48, 1.51, 1.54, 1.57, 1.59, 1.61, 1.63, 1.65, 1.67, 1.69, 1.71, 1.73, 1.75, 1.77, 1.79],
+      "seaLevel": [0, 4, 8, 13, 18, 23, 28, 34, 40, 46, 52, 58, 64, 70, 76, 82, 88, 94, 100, 106, 112, 118, 124, 130, 136],
+      "co2ppm": [421, 424, 427, 429, 431, 433, 434, 435, 435, 434, 433, 431, 429, 426, 423, 420, 417, 414, 411, 408, 405, 402, 399, 397, 395],
+      "biodiversity": [100, 98, 96, 94, 92, 90, 88, 87, 86, 85, 84, 84, 84, 84, 85, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94],
+      "renewableShare": [30, 33, 36, 39, 43, 47, 51, 55, 58, 62, 65, 68, 71, 73, 75, 77, 79, 80, 82, 83, 84, 85, 86, 87, 88],
+      "cropYield": [100, 100, 99, 99, 98, 98, 97, 97, 96, 96, 96, 96, 96, 97, 97, 97, 98, 98, 99, 99, 100, 100, 101, 101, 102],
+      "waterStress": [26, 26, 27, 27, 28, 28, 29, 29, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 28, 28, 27, 27, 26, 26, 25],
+      "forestCover": [31, 30.9, 30.8, 30.7, 30.7, 30.7, 30.8, 30.9, 31, 31.1, 31.3, 31.5, 31.7, 32, 32.3, 32.6, 33, 33.3, 33.7, 34, 34.3, 34.6, 34.9, 35.1, 35.3]
+    },
+    {
+      "id": "bau",
+      "name": "Business as Usual",
+      "icon": "\ud83c\udfed",
+      "desc": "Current policies continue. Slow emissions decline. Fossil fuel dependence persists through 2050s. ~3\u00b0C pathway by 2100.",
+      "color": "#f59e0b",
+      "tempRise": [1.1, 1.16, 1.22, 1.29, 1.36, 1.43, 1.51, 1.59, 1.67, 1.75, 1.83, 1.91, 1.99, 2.07, 2.15, 2.23, 2.31, 2.39, 2.47, 2.55, 2.63, 2.71, 2.79, 2.87, 2.95],
+      "seaLevel": [0, 5, 11, 18, 26, 35, 44, 54, 65, 77, 89, 102, 116, 130, 145, 161, 177, 194, 212, 230, 249, 269, 289, 310, 332],
+      "co2ppm": [421, 425, 430, 435, 440, 446, 451, 457, 462, 468, 474, 480, 486, 492, 498, 504, 510, 516, 522, 527, 532, 537, 542, 547, 551],
+      "biodiversity": [100, 97, 94, 91, 88, 85, 82, 79, 76, 73, 71, 69, 67, 65, 63, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52],
+      "renewableShare": [30, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 54, 56, 57, 58, 59, 60, 61, 62, 63, 63, 64, 64],
+      "cropYield": [100, 99, 98, 97, 95, 94, 92, 91, 89, 87, 86, 84, 83, 81, 80, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69],
+      "waterStress": [26, 27, 28, 29, 30, 31, 33, 34, 36, 37, 39, 40, 42, 43, 45, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56],
+      "forestCover": [31, 30.7, 30.3, 29.9, 29.5, 29, 28.5, 28, 27.5, 27, 26.5, 26, 25.5, 25, 24.5, 24, 23.6, 23.2, 22.8, 22.5, 22.2, 21.9, 21.7, 21.5, 21.3]
+    },
+    {
+      "id": "worst",
+      "name": "Worst Case",
+      "icon": "\ud83d\udd25",
+      "desc": "Feedback loops triggered: permafrost thaw, Amazon dieback, ice sheet collapse. Policy paralysis. >4\u00b0C pathway.",
+      "color": "#f43f5e",
+      "tempRise": [1.1, 1.18, 1.27, 1.37, 1.48, 1.6, 1.73, 1.87, 2.02, 2.18, 2.35, 2.53, 2.72, 2.92, 3.12, 3.33, 3.54, 3.76, 3.98, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6],
+      "seaLevel": [0, 7, 16, 27, 40, 56, 74, 95, 119, 146, 176, 210, 248, 290, 336, 387, 442, 502, 567, 637, 712, 793, 880, 973, 1072],
+      "co2ppm": [421, 428, 436, 445, 455, 466, 478, 491, 505, 520, 536, 553, 571, 590, 610, 631, 653, 676, 700, 720, 738, 754, 768, 780, 790],
+      "biodiversity": [100, 96, 91, 86, 81, 76, 71, 66, 61, 56, 51, 47, 43, 39, 36, 33, 30, 28, 26, 24, 23, 22, 21, 20, 19],
+      "renewableShare": [30, 30, 31, 31, 32, 32, 33, 33, 34, 34, 35, 35, 36, 36, 37, 37, 38, 38, 39, 39, 40, 40, 41, 41, 42],
+      "cropYield": [100, 98, 95, 92, 88, 84, 80, 76, 72, 68, 64, 60, 56, 52, 48, 45, 42, 40, 38, 36, 34, 33, 32, 31, 30],
+      "waterStress": [26, 28, 30, 33, 36, 39, 43, 47, 51, 55, 59, 63, 67, 71, 74, 77, 79, 81, 83, 84, 85, 86, 87, 88, 88],
+      "forestCover": [31, 30.2, 29.3, 28.3, 27.2, 26, 24.7, 23.4, 22, 20.6, 19.2, 17.8, 16.5, 15.3, 14.2, 13.2, 12.3, 11.5, 10.8, 10.2, 9.7, 9.3, 9, 8.7, 8.5]
+    }
+  ],
+  "metrics": {
+    "globalTemp2024": 1.1,
+    "co2ppm2024": 421,
+    "seaLevelBaseline": "2026 baseline",
+    "biodiversityIndex2024": 100,
+    "arcticIceExtent_mkm2": 4.2,
+    "glacierMassBalance_gt": -267,
+    "oceanAcidity_ph": 8.07,
+    "annualEmissions_gt": 36.8,
+    "renewableCapacity_gw": 3870,
+    "forestCoverPct": 31,
+    "waterStressPct": 26,
+    "cropYieldIndex": 100,
+    "extremeWeatherEvents2024": 387,
+    "climateDisplaced_m": 21.5,
+    "greenFinance_t": 1.3
+  },
+  "biodiversity": {
+    "speciesThreatened": 44088,
+    "speciesAssessed": 157190,
+    "extinctionRate": "1000x baseline",
+    "protectedLandPct": 16.6,
+    "protectedOceanPct": 8.3,
+    "targetProtectedPct": 30,
+    "coralReefHealth": 50,
+    "insectDecline30yr": 27,
+    "mammalsEndangered": 1340,
+    "birdsEndangered": 1481,
+    "keyEcosystems": [
+      { "name": "Amazon Rainforest", "status": "critical", "tippingPoint": "20-25% deforestation", "current": "17%", "icon": "\ud83c\udf33", "color": "#10b981" },
+      { "name": "Coral Reefs", "status": "severe", "tippingPoint": "+1.5\u00b0C sustained", "current": "50% bleached", "icon": "\ud83e\udeb8", "color": "#f43f5e" },
+      { "name": "Arctic Sea Ice", "status": "declining", "tippingPoint": "Ice-free summers by 2050", "current": "4.2M km\u00b2 min", "icon": "\u2744\ufe0f", "color": "#0ea5e9" },
+      { "name": "Boreal Forests", "status": "stressed", "tippingPoint": "Permafrost thaw + wildfire", "current": "30% stressed", "icon": "\ud83c\udf32", "color": "#14b8a6" },
+      { "name": "Wetlands", "status": "declining", "tippingPoint": "35% lost since 1970", "current": "12.1M km\u00b2 remaining", "icon": "\ud83c\udf3e", "color": "#8b5cf6" },
+      { "name": "Mangroves", "status": "recovering", "tippingPoint": "1% lost/year if unprotected", "current": "Restoration gaining pace", "icon": "\ud83c\udf0a", "color": "#06b6d4" }
+    ],
+    "restorationProjects": [
+      { "name": "Great Green Wall (Sahel)", "target": "8000 km restored dryland", "progress": 18, "investment_m": 8000 },
+      { "name": "Trillion Tree Initiative", "target": "1T trees by 2030", "progress": 35, "investment_m": 12000 },
+      { "name": "Ocean Cleanup", "target": "90% ocean plastic removed", "progress": 8, "investment_m": 600 },
+      { "name": "Coral Reef Restoration", "target": "30% reef recovery", "progress": 12, "investment_m": 3000 },
+      { "name": "Rewilding Europe", "target": "1M hectares rewilded", "progress": 22, "investment_m": 1500 },
+      { "name": "Mangrove Alliance", "target": "50% mangrove restoration", "progress": 15, "investment_m": 4000 }
+    ]
+  },
+  "energy": {
+    "gridMix2024": [
+      { "source": "Coal", "pct": 35.2, "color": "#64748b" },
+      { "source": "Natural Gas", "pct": 22.5, "color": "#94a3b8" },
+      { "source": "Oil", "pct": 2.8, "color": "#475569" },
+      { "source": "Nuclear", "pct": 9.5, "color": "#8b5cf6" },
+      { "source": "Hydro", "pct": 14.8, "color": "#0ea5e9" },
+      { "source": "Wind", "pct": 7.8, "color": "#06b6d4" },
+      { "source": "Solar", "pct": 5.5, "color": "#f59e0b" },
+      { "source": "Other Renewables", "pct": 1.9, "color": "#10b981" }
+    ],
+    "emissionsBreakdown": [
+      { "sector": "Energy & Heat", "pct": 31, "gt": 11.4, "color": "#f43f5e" },
+      { "sector": "Transport", "pct": 16, "gt": 5.9, "color": "#f59e0b" },
+      { "sector": "Industry", "pct": 21, "gt": 7.7, "color": "#64748b" },
+      { "sector": "Buildings", "pct": 6, "gt": 2.2, "color": "#8b5cf6" },
+      { "sector": "Agriculture & Land Use", "pct": 18, "gt": 6.6, "color": "#10b981" },
+      { "sector": "Waste & Other", "pct": 8, "gt": 3.0, "color": "#06b6d4" }
+    ],
+    "annualEmissionsHistory": [
+      { "year": 2015, "gt": 35.2 }, { "year": 2016, "gt": 35.5 }, { "year": 2017, "gt": 36.0 },
+      { "year": 2018, "gt": 36.6 }, { "year": 2019, "gt": 36.7 }, { "year": 2020, "gt": 34.8 },
+      { "year": 2021, "gt": 36.3 }, { "year": 2022, "gt": 36.8 }, { "year": 2023, "gt": 36.8 },
+      { "year": 2024, "gt": 36.8 }, { "year": 2025, "gt": 36.6 }
+    ]
+  },
+  "resources": {
+    "freshwaterAvailable_km3": 43000,
+    "freshwaterWithdrawn_km3": 4600,
+    "agricultureWaterUse_pct": 70,
+    "arableLand_mha": 1380,
+    "arableLandLostPerYear_mha": 12,
+    "foodWastePct": 30,
+    "hungerAffected_m": 735,
+    "phosphorusReserves_yr": 300,
+    "topsoilLossRate": "24B tonnes/year",
+    "fishStocksOverfished_pct": 35.4,
+    "criticalMinerals": [
+      { "mineral": "Lithium", "demand2024_kt": 130, "demand2040_kt": 800, "reserves_mt": 98, "recyclingRate": 5, "color": "#14b8a6" },
+      { "mineral": "Cobalt", "demand2024_kt": 190, "demand2040_kt": 450, "reserves_mt": 8.3, "recyclingRate": 10, "color": "#8b5cf6" },
+      { "mineral": "Copper", "demand2024_kt": 25000, "demand2040_kt": 40000, "reserves_mt": 890, "recyclingRate": 30, "color": "#f59e0b" },
+      { "mineral": "Rare Earths", "demand2024_kt": 300, "demand2040_kt": 600, "reserves_mt": 130, "recyclingRate": 1, "color": "#0ea5e9" },
+      { "mineral": "Nickel", "demand2024_kt": 3300, "demand2040_kt": 6000, "reserves_mt": 300, "recyclingRate": 15, "color": "#10b981" }
+    ]
+  },
+  "milestones": [
+    { "year": 2026, "title": "Baseline Assessment & Early Action", "items": ["ClimateOS dashboard launched for scenario planning", "COP31 targets formalized", "Methane pledge enforcement begins", "5 GW new offshore wind committed", "Initial municipal climate budgets adopted"] },
+    { "year": 2028, "title": "Scaling Renewables & Adaptation", "items": ["50% of new vehicles electric globally", "First commercial-scale DAC plant operational", "Nature-based solutions portfolio reaches $50B", "Urban heat resilience plans in 200 cities", "Climate-displaced persons framework adopted by 40 nations"] },
+    { "year": 2030, "title": "Critical Checkpoint", "items": ["Global emissions 45% below 2019 peak (target)", "30x30 biodiversity target assessed", "Renewable energy crosses 50% of global electricity", "Green hydrogen production reaches 10Mt/year", "Universal climate literacy curriculum in 100+ countries"] },
+    { "year": "2032\u20132035", "title": "Acceleration Phase", "items": ["Coal phase-out complete in OECD nations", "50% reduction in food waste achieved", "Circular economy mandates in 60+ countries", "Ocean carbon sinks actively managed", "First climate reparations fund disbursements"] },
+    { "year": "2036\u20132040", "title": "Net-Zero Horizon", "items": ["Leading economies achieve net-zero", "1 trillion trees milestone reached", "Grid-scale storage exceeds 2 TWh globally", "Climate migration corridors formalized", "Antarctic ice sheet monitoring network complete"] },
+    { "year": "2041\u20132050", "title": "Stabilization & Recovery", "items": ["Global average temp stabilizes below 2\u00b0C (moderate path)", "Biodiversity index begins recovery", "90% renewable energy grid achieved", "Regenerative agriculture covers 40% of farmland", "Climate-resilient infrastructure standard globally adopted"] }
+  ],
+  "tippingPoints": [
+    { "name": "Amazon Rainforest Dieback", "threshold": "+2.5\u00b0C or 25% deforestation", "risk": "high", "impact": "+0.2\u00b0C feedback, 90Gt CO\u2082 release", "icon": "\ud83c\udf33", "color": "#10b981" },
+    { "name": "West Antarctic Ice Sheet Collapse", "threshold": "+1.5\u201d2\u00b0C sustained", "risk": "critical", "impact": "3\u20135m sea level rise over centuries", "icon": "\ud83e\uddca", "color": "#0ea5e9" },
+    { "name": "Permafrost Thaw", "threshold": "+1.5\u00b0C sustained", "risk": "critical", "impact": "1400 Gt CO\u2082 equivalent locked in permafrost", "icon": "\u2744\ufe0f", "color": "#06b6d4" },
+    { "name": "Atlantic Meridional Overturning", "threshold": "Freshwater influx from Greenland", "risk": "high", "impact": "European cooling, shifted monsoons", "icon": "\ud83c\udf0a", "color": "#8b5cf6" },
+    { "name": "Boreal Forest Shift", "threshold": "+3\u00b0C regional warming", "risk": "moderate", "impact": "Carbon source flip, wildfire acceleration", "icon": "\ud83c\udf32", "color": "#f59e0b" },
+    { "name": "Coral Reef Die-Off", "threshold": "+1.5\u00b0C sustained", "risk": "critical", "impact": "Loss of 25% marine biodiversity", "icon": "\ud83e\udeb8", "color": "#f43f5e" }
+  ]
+}
