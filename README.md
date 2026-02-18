@@ -35,7 +35,7 @@ npm install
 npm run build
 ```
 
-Upload the contents of `out/` to your web server's `public_html` (or equivalent document root).
+Upload the contents of `out/` to your web server's `public_html` (or equivalent document root). The build uses `trailingSlash: true` so every route generates as `folder/index.html`, ensuring links work on standard shared hosting without server-side rewrites.
 
 ## Local development
 
