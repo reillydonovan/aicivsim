@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Civilization Simulator — 2026 Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   RESET
+   ================================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+body{background:#111;color:#c8c4ba;font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+
+/* ================================================================
+   PALETTE
+   ================================================================ */
+:root{
+  --bg:#111;
+  --bg-raised:#171717;
+  --bg-module:#151515;
+  --border:rgba(255,255,255,0.06);
+  --border-strong:rgba(255,255,255,0.10);
+  --text-primary:#d4d0c6;
+  --text-secondary:#908c82;
+  --text-muted:#5e5b54;
+  --text-faint:#3a3834;
+  --accent:#d4622a;
+  --climate:#4ecdc4;
+  --governance:#9b87f5;
+  --workforce:#5da5da;
+  --equity:#e8a838;
+  --technology:#45b7d1;
+  --wellbeing:#d4622a;
+  --green:#4ecdc4;
+  --red:#d4622a;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+
+/* ================================================================
+   GRID SYSTEM — 12 columns
+   ================================================================ */
+.grid{display:grid;gap:1px;background:var(--border)}
+.grid>*{background:var(--bg)}
+.grid-12{grid-template-columns:repeat(12,1fr)}
+.grid-6{grid-template-columns:repeat(6,1fr)}
+.grid-5{grid-template-columns:repeat(5,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.span-2{grid-column:span 2}
+.span-3{grid-column:span 3}
+.span-4{grid-column:span 4}
+.span-6{grid-column:span 6}
+.span-8{grid-column:span 8}
+.span-12{grid-column:span 12}
+
+/* ================================================================
+   CONTAINER
+   ================================================================ */
+.page{max-width:1080px;margin:0 auto;padding:0 40px}
+
+/* ================================================================
+   TYPOGRAPHY — 4 tiers
+   ================================================================ */
+
+/* T1: Headline numerals */
+.t1{
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:72px;
+  line-height:1;
+  letter-spacing:-0.04em;
+  color:var(--text-primary);
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.t1-sm{font-size:48px}
+.t1-xs{font-size:36px}
+
+/* T2: Section titles */
+.t2{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--text-secondary);
+  line-height:1.3;
+}
+.t2-lg{font-size:20px;letter-spacing:-0.01em;text-transform:none;color:var(--text-primary)}
+
+/* T3: Chart labels */
+.t3{
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:10px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  line-height:1.4;
+}
+
+/* T4: Annotations / footnotes */
+.t4{
+  font-family:var(--font-body);
+  font-weight:400;
+  font-size:11px;
+  color:var(--text-muted);
+  line-height:1.55;
+}
+
+/* Numeric inline */
+.num{
+  font-family:var(--font-mono);
+  font-weight:600;
+  font-variant-numeric:tabular-nums lining-nums;
+  letter-spacing:-0.03em;
+}
+.num-lg{font-size:24px}
+.num-md{font-size:18px}
+.num-sm{font-size:13px}
+.num-xs{font-size:11px}
+
+/* Body text */
+.body{
+  font-family:var(--font-body);
+  font-size:13px;
+  line-height:1.75;
+  color:var(--text-secondary);
+  max-width:540px;
+}
+
+/* ================================================================
+   SECTION + MODULE PRIMITIVES
+   ================================================================ */
+.section{padding:48px 0;border-top:1px solid var(--border)}
+.section:first-child{border-top:none}
+.section-num{
+  font-family:var(--font-mono);
+  font-size:10px;
+  font-weight:400;
+  color:var(--text-faint);
+  letter-spacing:0.08em;
+  display:block;
+  margin-bottom:12px;
+}
+.rule{width:32px;height:1px;background:var(--border-strong);border:none;margin:20px 0}
+.rule-long{width:100%;background:var(--border)}
+.cell{padding:20px 16px;transition:background 0.15s}
+.cell:hover{background:var(--bg-raised)}
+.tag{
+  font-family:var(--font-mono);
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:3px 8px;
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  display:inline-block;
+}
+.bar-track{height:2px;background:rgba(255,255,255,0.03);margin-top:8px}
+.bar-fill{height:100%;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.pullquote{
+  font-family:var(--font-display);
+  font-size:17px;
+  font-weight:400;
+  line-height:1.7;
+  color:var(--text-secondary);
+  letter-spacing:-0.005em;
+  border-left:2px solid var(--border-strong);
+  padding-left:24px;
+  max-width:520px;
+}
+.delta{font-family:var(--font-mono);font-size:10px;font-weight:500}
+.delta-up{color:var(--green)}
+.delta-down{color:var(--red)}
+.delta-flat{color:var(--text-muted)}
+.dot{width:5px;height:5px;border-radius:50%;display:inline-block;vertical-align:middle}
+.spine{position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border)}
+
+/* ================================================================
+   SCENARIO SELECTOR
+   ================================================================ */
+.scenario-bar{display:flex;align-items:center;gap:0;padding:10px 0;border-bottom:1px solid var(--border)}
+.scenario-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;
+  font-family:var(--font-body);
+  font-size:10px;font-weight:600;
+  letter-spacing:0.06em;
+  transition:color 0.15s;
+  white-space:nowrap;
+}
+.scenario-btn .dot{transition:background 0.15s}
+
+/* ================================================================
+   NAV TABS
+   ================================================================ */
+.nav-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  padding:12px 20px;
+  font-family:var(--font-body);
+  font-size:10px;font-weight:600;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text-faint);
+  border-bottom:1.5px solid transparent;
+  transition:color 0.15s,border-color 0.15s;
+  white-space:nowrap;
+}
+.nav-tab:hover{color:var(--text-muted)}
+.nav-tab.active{color:var(--text-primary);border-bottom-color:var(--text-primary)}
+
+/* ================================================================
+   SPARKLINE CONTAINERS
+   ================================================================ */
+.spark{display:block;width:100%;overflow:visible}
+
+/* ================================================================
+   STICKY CONTROL BAR
+   ================================================================ */
+.control-bar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(17,17,17,0.94);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+
+/* ================================================================
+   CHAPTER DIVIDER
+   ================================================================ */
+.chapter-divider{
+  padding:80px 0 16px;
+  border-top:1px solid var(--border-strong);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media(max-width:900px){
+  .grid-6{grid-template-columns:repeat(3,1fr)}
+  .grid-5{grid-template-columns:repeat(2,1fr)}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .t1{font-size:48px}
+  .t1-sm{font-size:36px}
+  .t1-xs{font-size:28px}
+  .page{padding:0 20px}
+}
+@media(max-width:600px){
+  .grid-6{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(1,1fr)}
+  .grid-2{grid-template-columns:1fr}
+  .t1{font-size:40px}
+  .pullquote{font-size:15px}
+  .hero-split{grid-template-columns:1fr!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MASTHEAD
+     ════════════════════════════════════════════════════════════════ -->
+<header style="background:#0d0d0d;border-bottom:1px solid var(--border)">
+  <div class="page" style="padding-top:64px;padding-bottom:48px">
+    <p class="t3" style="color:var(--accent);margin-bottom:16px;letter-spacing:0.3em">AICIVSIM &mdash; 2026</p>
+    <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;color:var(--text-primary);line-height:1.2;max-width:440px;letter-spacing:-0.02em">
+      AI&nbsp;Civilization<br>Simulator
+    </h1>
+    <hr class="rule">
+    <p class="body" style="max-width:420px">
+      Six interconnected systems model climate, governance, workforce,
+      equity, technology, and civic wellbeing across four scenarios and
+      fifty years of branching futures. This is the data.
+    </p>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CONTROL BAR (Sticky)
+     ════════════════════════════════════════════════════════════════ -->
+<div class="control-bar">
+  <div class="page" style="display:flex;align-items:stretch">
+    <nav class="nav-tabs" style="flex:1;border-bottom:none" id="nav">
+      <button class="nav-tab active" data-section="overview">Overview</button>
+      <button class="nav-tab" data-section="domains">Domains</button>
+      <button class="nav-tab" data-section="trajectories">Trajectories</button>
+      <button class="nav-tab" data-section="funding">Funding</button>
+      <button class="nav-tab" data-section="systems">Systems</button>
+      <button class="nav-tab" data-section="timeline">Timeline</button>
+    </nav>
+    <div style="border-left:1px solid var(--border);display:flex;align-items:center;padding-left:8px;flex-shrink:0" id="scenario-bar">
+      <button class="scenario-btn active" data-sc="aggressive" style="color:var(--green)"><span class="dot" style="background:var(--green)"></span>Aggressive</button>
+      <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:rgba(255,255,255,0.1)"></span>Moderate</button>
+      <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:rgba(255,255,255,0.1)"></span>BAU</button>
+      <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:rgba(255,255,255,0.1)"></span>Worst</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════════════════════════════
+     01 — OVERVIEW: Hero Score
+     ════════════════════════════════════════════════════════════════ -->
+<div id="sec-overview">
+  <section class="section" style="padding-top:56px;padding-bottom:48px">
+    <div class="hero-split" style="display:grid;grid-template-columns:1fr 1px 1fr;gap:0;align-items:end">
+      <!-- Today -->
+      <div>
+        <span class="section-num">01</span>
+        <p class="t3" style="margin-bottom:20px">Civilization Health Index &mdash; Today</p>
+        <div style="display:flex;align-items:end;gap:12px">
+          <span class="t1" id="score-today" style="color:var(--equity)">44</span>
+          <div style="padding-bottom:8px">
+            <span class="num-lg" id="grade-today" style="color:var(--equity);opacity:0.6">D+</span>
+            <p class="t4" style="margin-top:4px">/100 &middot; 6 domains</p>
+          </div>
+        </div>
+        <p class="t4" style="margin-top:16px;max-width:320px">Aggregate score across climate, governance, workforce, equity, technology, and civic wellbeing. All domains declining or stagnant.</p>
+      </div>
+      <!-- Divider -->
+      <div style="background:var(--border);align-self:stretch"></div>
+      <!-- Projected -->
+      <div style="padding-left:40px">
+        <p class="t3" style="margin-bottom:20px">Projected 2035 &mdash; <span id="proj-scenario-name" style="color:var(--green)">Aggressive Action</span></p>
+        <div style="display:flex;align-items:end;gap:12px">
+          <span class="t1" id="score-proj" style="color:var(--green)">81</span>
+          <div style="padding-bottom:8px">
+            <span class="num-lg" id="grade-proj" style="color:var(--green);opacity:0.6">B+</span>
+            <span class="delta delta-up" id="score-delta" style="margin-left:12px">+37</span>
+          </div>
+        </div>
+        <p class="t4" id="proj-tag" style="margin-top:16px;max-width:320px">Full deployment. Recovery trajectory across every domain.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Domain Score Matrix ── -->
+  <section class="section" style="padding-top:12px">
+    <span class="section-num">02</span>
+    <p class="t3" style="margin-bottom:16px">Domain Scores &mdash; Today vs. <span id="domain-scenario-label" style="color:var(--green)">2035 Aggressive</span></p>
+    <div class="grid grid-6" id="domain-grid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+
+  <!-- ── Narrative ── -->
+  <section class="section" style="padding-bottom:56px">
+    <span class="section-num">03</span>
+    <p class="t3" style="margin-bottom:20px">Assessment &mdash; <span id="narr-label" style="color:var(--green)">Aggressive Action</span></p>
+    <blockquote class="pullquote" id="narr-pull" style="margin-bottom:24px">
+      Climate is stabilizing at +1.2&deg;C. Governance institutions are strong. The workforce transition is complete.
+    </blockquote>
+    <p class="body" id="narr-body">Under Aggressive Action, civilization in 2035 is on a recovery trajectory across every domain. 100% AI audit coverage with 95% civic participation. Dividends bridge income gaps, reskilling pathways are universal, poverty approaches its floor.</p>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     02 — DOMAINS: Systems Index
+     ════════════════════════════════════════════════════════════════ -->
+<div id="sec-domains" style="display:none">
+  <div class="chapter-divider">
+    <span class="section-num">04</span>
+    <p class="t2">Systems Index</p>
+    <p class="t4" style="margin-top:6px;max-width:400px">Six interconnected operating systems. Each models a dimension of civilizational health with scenario-aware projections.</p>
+  </div>
+  <div class="grid grid-3" id="systems-grid" style="margin-top:24px">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     03 — TRAJECTORIES: KPI Small Multiples
+     ════════════════════════════════════════════════════════════════ -->
+<div id="sec-trajectories" style="display:none">
+  <div class="chapter-divider">
+    <span class="section-num">05</span>
+    <p class="t2">10-Year Trajectories</p>
+    <p class="t4" style="margin-top:6px;max-width:400px">Five key performance indicators tracked across four scenarios. Active scenario emphasized.</p>
+  </div>
+  <div class="grid grid-5" id="kpi-grid" style="margin-top:24px">
+    <!-- populated by JS -->
+  </div>
+  <section class="section">
+    <span class="section-num">06</span>
+    <p class="t3" style="margin-bottom:20px">Comparison &mdash; All Scenarios</p>
+    <div class="grid grid-2" id="comparison-grid" style="margin-top:12px">
+      <!-- populated by JS: larger charts -->
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     04 — FUNDING: Civic Dividend Model
+     ════════════════════════════════════════════════════════════════ -->
+<div id="sec-funding" style="display:none">
+  <div class="chapter-divider">
+    <span class="section-num">07</span>
+    <p class="t2">Civic Dividend</p>
+    <p class="t4" style="margin-top:6px;max-width:400px">Locally controlled dividend funded by AI compute rents, green tariffs, and data commons licensing. Modeled after Alaska's Permanent Fund.</p>
+  </div>
+  <div class="grid grid-4" id="funding-stats" style="margin-top:24px">
+    <!-- populated by JS -->
+  </div>
+  <section class="section" style="padding-top:16px">
+    <span class="section-num">08</span>
+    <p class="t3" style="margin-bottom:20px">Allocation Sources</p>
+    <div id="funding-sources">
+      <!-- populated by JS -->
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     05 — SYSTEMS: Dashboard Catalog
+     ════════════════════════════════════════════════════════════════ -->
+<div id="sec-systems" style="display:none">
+  <div class="chapter-divider">
+    <span class="section-num">09</span>
+    <p class="t2">Dashboard Catalog</p>
+    <p class="t4" style="margin-top:6px;max-width:400px">Each operating system addresses a specific civilizational dimension. Together they form the AI Civilization framework.</p>
+  </div>
+  <div id="dashboard-list" style="margin-top:24px">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     06 — TIMELINE: 10-Year Milestones
+     ════════════════════════════════════════════════════════════════ -->
+<div id="sec-timeline" style="display:none">
+  <div class="chapter-divider">
+    <span class="section-num">10</span>
+    <p class="t2">10-Year Milestones</p>
+    <p class="t4" style="margin-top:6px;max-width:400px">Discovery sprint to global export. 2026&ndash;2035.</p>
+  </div>
+  <div id="timeline-list" style="margin-top:24px">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+</div><!-- .page -->
+
+<!-- ════════════════════════════════════════════════════════════════
+     COLOPHON
+     ════════════════════════════════════════════════════════════════ -->
+<footer style="margin-top:80px;border-top:1px solid var(--border);padding:40px 0">
+  <div class="page" style="text-align:center">
+    <p class="t4">AI Civilization Simulator &middot; Clawcode Research &middot; 2026</p>
+    <p class="t4" style="margin-top:8px;color:var(--text-faint)">
+      Data: simulated projections across six domains. Methodology: scenario modeling with policy lever inputs.
+      <br>Typography: Space Grotesk, Inter, JetBrains Mono. Layout: 12-column editorial grid.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   DATA
+   ================================================================ */
+const SCENARIOS = {
+  aggressive: { name:'Aggressive Action', color:'#4ecdc4', tag:'Full deployment. Recovery trajectory across every domain.' },
+  moderate:   { name:'Moderate Reform',   color:'#5da5da', tag:'Partial adoption. Functional but stressed.' },
+  bau:        { name:'Business as Usual', color:'#e8a838', tag:'Current trajectory continues. Compounding decline.' },
+  worst:      { name:'Worst Case',        color:'#d4622a', tag:'Institutional failure. Systemic crisis.' },
+};
+
+const DOMAINS = [
+  { key:'climate',    label:'Climate',    color:'#4ecdc4' },
+  { key:'governance', label:'Governance', color:'#9b87f5' },
+  { key:'workforce',  label:'Workforce',  color:'#5da5da' },
+  { key:'equity',     label:'Equity',     color:'#e8a838' },
+  { key:'technology', label:'Technology', color:'#45b7d1' },
+  { key:'wellbeing',  label:'Wellbeing',  color:'#d4622a' },
+];
+const D_TODAY = [42,40,43,38,55,45];
+const D_PROJ = {
+  aggressive:[88,85,82,75,80,78],
+  moderate:[62,65,63,55,62,58],
+  bau:[28,30,35,22,40,25],
+  worst:[12,10,15,8,20,10],
+};
+
+const KPIS = [
+  { id:'poverty', label:'Regional Poverty', unit:'%', better:'lower' },
+  { id:'reskill', label:'Median Reskill', unit:' mo', better:'lower' },
+  { id:'emissions', label:'Peak Emissions', unit:' kg', better:'lower' },
+  { id:'biodiversity', label:'Corridors', unit:'%', better:'higher' },
+  { id:'charter', label:'AI Audited', unit:'%', better:'higher' },
+];
+const TRAJ = {
+  poverty:    { aggressive:[13,12.4,11.5,10.2,9.2,8.1,7,6.1,5.4,5], moderate:[13,12.8,12.3,11.6,10.8,10.1,9.5,9,8.6,8.2], bau:[13,13.2,13.5,13.9,14.4,15,15.8,16.5,17.2,18], worst:[13,14,15.5,17.5,19.8,22,24.5,27,29.5,32] },
+  reskill:    { aggressive:[18,16.5,14.8,12.8,11,9.5,8.2,7.2,6.5,6], moderate:[18,17.2,16.5,15.5,14.5,13.6,12.8,12,11.2,10.5], bau:[18,18.2,18.5,19,19.5,20,20.8,21.5,22.2,23], worst:[18,19.5,21,23,25,27.5,30,32.5,35,38] },
+  emissions:  { aggressive:[.65,.6,.55,.5,.48,.42,.37,.32,.28,.25], moderate:[.65,.63,.6,.57,.54,.51,.48,.45,.42,.4], bau:[.65,.65,.66,.67,.68,.69,.7,.71,.72,.73], worst:[.65,.68,.72,.76,.8,.84,.88,.92,.96,1] },
+  biodiversity:{ aggressive:[22,26,30,34,38,45,52,60,68,75], moderate:[22,24,27,30,33,36,39,42,45,48], bau:[22,21,20,19,18,17,16,15,14,13], worst:[22,20,18,15,12,10,8,6,5,4] },
+  charter:    { aggressive:[10,18,28,36,45,58,72,84,93,100], moderate:[10,14,19,25,31,37,43,50,57,65], bau:[10,11,12,13,14,15,15,16,16,16], worst:[10,9,8,6,5,4,3,3,2,2] },
+};
+
+const FUND = {
+  aggressive:{pool:2500,bw:192,yr:4992,pop:10000000,esc:24,m:[1,1,1,1,1]},
+  moderate:{pool:1500,bw:115,yr:2990,pop:6500000,esc:24,m:[.6,.6,.6,.6,.6]},
+  bau:{pool:400,bw:31,yr:806,pop:1200000,esc:6,m:[.16,.16,.16,.16,.16]},
+  worst:{pool:80,bw:6,yr:156,pop:300000,esc:0,m:[.03,.03,.03,.03,.03]},
+};
+const FUND_SOURCES = [
+  {name:'AI compute rents', pct:35, base:875, desc:'Levied on data center operators using local grid and land resources'},
+  {name:'Green tariffs', pct:25, base:625, desc:'Carbon-adjusted import tariffs recycled into the dividend pool'},
+  {name:'Data commons licensing', pct:20, base:500, desc:'Revenue from anonymized public data licensed to researchers and firms'},
+  {name:'Philanthropy + federal match', pct:15, base:375, desc:'Matched grants from mission-aligned foundations and federal programs'},
+  {name:'Cooperative revenue share', pct:5, base:125, desc:'Surplus from publicly-owned cooperative AI agents'},
+];
+
+const NARRATIVES = {
+  aggressive:{ pull:'Climate is stabilizing at +1.2\u00b0C. Governance institutions are strong. The workforce transition is complete.', body:'Under Aggressive Action, civilization in 2035 is on a recovery trajectory across every domain. 100% AI audit coverage with 95% civic participation. Dividends bridge income gaps, reskilling pathways are universal, poverty approaches its floor. AI is governed through open-weight systems with civic oversight. Resident satisfaction reaches 4.6/5.' },
+  moderate:{ pull:'Climate approaches +1.8\u00b0C \u2014 manageable but tight. This is the \u201cgood enough\u201d scenario.', body:'Moderate Reform delivers a functional but stressed civilization by 2035. Governance is partially deployed with 80% AI audit coverage. Reskilling helps most workers but income gaps persist for the most vulnerable. It avoids catastrophe but doesn\u2019t build the resilience needed for the shocks still coming.' },
+  bau:{ pull:'Every metric is declining and accelerating \u2014 the cost of action in 2035 is orders of magnitude higher than 2026.', body:'Business as Usual produces compounding crises by 2035. Climate at +3\u00b0C triggers cascading failures. Only 40% of AI systems audited. Automation outpaces reskilling, pushing 12% into poverty. Resident satisfaction drops to 2.3/5 as services deteriorate.' },
+  worst:{ pull:'Every system that holds society together is under existential stress simultaneously.', body:'The Worst Case is civilizational crisis across every domain. Climate at +4.6\u00b0C with ecosystem collapse. 1% AI audit coverage. 30% poverty with no safety net. Civic trust has collapsed, satisfaction at 1.2/5.' },
+};
+
+const DASHBOARDS = [
+  { name:'ClimateOS', desc:'Four climate futures across eight metrics: temperature, emissions, biodiversity, sea level, energy, agriculture, water, resources.', stats:'4 scenarios \u00b7 8 metrics \u00b7 D+ today', color:'#4ecdc4' },
+  { name:'SimulationOS', desc:'Twelve branching futures across 50 years. Three policy levers: dividends, AI charters, climate investment. Five structural metrics.', stats:'12 branches \u00b7 50yr horizon \u00b7 5 metrics', color:'#5da5da' },
+  { name:'TransitionOS', desc:'Workforce reskilling for the automation wave. Career paths, income bridges, poverty projections over 10 years.', stats:'3 scenarios \u00b7 10yr projection', color:'#45b7d1' },
+  { name:'CivilizationOS', desc:'Meta-scorecard for civilizational health. Aggregates all domains. Resident journeys, dividend modeling, KPI projections.', stats:'6 domains \u00b7 4 scenarios \u00b7 47/100', color:'#e8a838' },
+  { name:'GovernanceOS', desc:'Democratic infrastructure for the age of AI. Citizen assemblies, composable governance modules, audit registries.', stats:'4 scenarios \u00b7 6 modules \u00b7 D today', color:'#9b87f5' },
+  { name:'StrategyOS', desc:'Actionable strategies across three levels: personal, organizational, and policy. Each scored by cost, difficulty, and CO\u2082 impact.', stats:'3 levels \u00b7 50+ strategies \u00b7 4 scenarios', color:'#e8a838' },
+];
+
+const MILESTONES = [
+  { year:'2026', title:'Discovery & pilot launch', items:['State-of-the-System atlas published','Two pilot cities sign MOUs','10K residents in sandbox','Phase 0 dashboard live'] },
+  { year:'2027', title:'Scale enrollment', items:['50K residents enrolled','Reskilling down to 12 months','40% high-risk AI audited','First dividend disbursements'] },
+  { year:'2028\u201329', title:'Codify & federate', items:['Assemblies codify AI + climate compacts','Governance OS GA','90% data feeds connected','$2B deployed'] },
+  { year:'2030\u201332', title:'Regional expansion', items:['6 additional regions','Poverty below 9%','20 GW peak load shaved','45% corridors instrumented'] },
+  { year:'2033\u201334', title:'Continental scale', items:['$5B+ deployed, <1% default','Playbooks for 3 continents','15 MtCO\u2082/yr avoided','Credential portability'] },
+  { year:'2035', title:'All targets met', items:['Poverty <5%, reskill <6mo','100% high-risk AI audited','75% corridors monitored','Export adopted by 12+ cities'] },
+];
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+let activeSc = 'aggressive';
+let activeSection = 'overview';
+
+const avg = arr => Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
+const grade = s => s>=93?'A':s>=85?'A\u2212':s>=80?'B+':s>=73?'B':s>=68?'B\u2212':s>=63?'C+':s>=58?'C':s>=53?'C\u2212':s>=48?'D+':s>=43?'D':s>=38?'D\u2212':'F';
+const gClr = s => s>=73?'#4ecdc4':s>=53?'#e8a838':s>=38?'#c48a3f':'#d4622a';
+const fmtK = n => n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(0)}K`:String(n);
+
+function sparkSVG(data, color, w=120, h=36, fill=true) {
+  const mn = Math.min(...data), mx = Math.max(...data), range = mx-mn||1;
+  const pts = data.map((v,i) => `${(i/(data.length-1))*w},${h - ((v-mn)/range)*h}`).join(' ');
+  const fillPath = fill ? `<polygon points="0,${h} ${pts} ${w},${h}" fill="${color}" opacity="0.1"/>` : '';
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px">${fillPath}<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+function comparisonSVG(kpiId, w=260, h=120) {
+  const allData = TRAJ[kpiId];
+  const allVals = Object.values(allData).flat();
+  const mn = Math.min(...allVals), mx = Math.max(...allVals), range = mx-mn||1;
+  let svg = `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px">`;
+  for (const [sc, data] of Object.entries(allData)) {
+    const pts = data.map((v,i) => `${(i/9)*w},${h-4-((v-mn)/range)*(h-8)}`).join(' ');
+    const scInfo = SCENARIOS[sc];
+    const isActive = sc === activeSc;
+    svg += `<polyline points="${pts}" fill="none" stroke="${scInfo.color}" stroke-width="${isActive?2:0.7}" opacity="${isActive?1:0.2}" vector-effect="non-scaling-stroke"/>`;
+  }
+  // Year labels
+  svg += `<text x="0" y="${h}" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)">2026</text>`;
+  svg += `<text x="${w}" y="${h}" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)" text-anchor="end">2035</text>`;
+  svg += '</svg>';
+  return svg;
+}
+
+/* ================================================================
+   RENDER FUNCTIONS
+   ================================================================ */
+function renderOverview() {
+  const sc = SCENARIOS[activeSc];
+  const proj = D_PROJ[activeSc];
+  const todayAvg = avg(D_TODAY);
+  const projAvg = avg(proj);
+  const delta = projAvg - todayAvg;
+
+  document.getElementById('score-today').textContent = todayAvg;
+  document.getElementById('score-today').style.color = gClr(todayAvg);
+  document.getElementById('grade-today').textContent = grade(todayAvg);
+  document.getElementById('grade-today').style.color = gClr(todayAvg);
+
+  document.getElementById('score-proj').textContent = projAvg;
+  document.getElementById('score-proj').style.color = gClr(projAvg);
+  document.getElementById('grade-proj').textContent = grade(projAvg);
+  document.getElementById('grade-proj').style.color = gClr(projAvg);
+  document.getElementById('proj-scenario-name').textContent = sc.name;
+  document.getElementById('proj-scenario-name').style.color = sc.color;
+
+  const dEl = document.getElementById('score-delta');
+  dEl.textContent = (delta>=0?'+':'')+delta;
+  dEl.className = `delta ${delta>0?'delta-up':delta<0?'delta-down':'delta-flat'}`;
+
+  document.getElementById('proj-tag').textContent = sc.tag;
+
+  // Domain grid
+  const grid = document.getElementById('domain-grid');
+  grid.innerHTML = DOMAINS.map((d,i) => {
+    const today = D_TODAY[i], p = proj[i], dd = p - today;
+    return `<div class="cell">
+      <p class="t3" style="color:${d.color};margin-bottom:10px;font-size:9px">${d.label}</p>
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span class="num-lg" style="color:${gClr(p)}">${p}</span>
+        <span class="delta ${dd>0?'delta-up':dd<0?'delta-down':'delta-flat'}">${dd>0?'+':''}${dd}</span>
+      </div>
+      <p class="t4" style="margin-top:4px;font-size:10px">today: ${today}</p>
+      <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${gClr(p)};opacity:0.4"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('domain-scenario-label').textContent = `2035 ${sc.name.split(' ')[0]}`;
+  document.getElementById('domain-scenario-label').style.color = sc.color;
+
+  // Narrative
+  const narr = NARRATIVES[activeSc];
+  document.getElementById('narr-label').textContent = sc.name;
+  document.getElementById('narr-label').style.color = sc.color;
+  document.getElementById('narr-pull').textContent = narr.pull;
+  document.getElementById('narr-body').textContent = narr.body;
+}
+
+function renderDomains() {
+  const grid = document.getElementById('systems-grid');
+  grid.innerHTML = DOMAINS.map((d,i) => {
+    const today = D_TODAY[i];
+    const proj = D_PROJ[activeSc][i];
+    const dd = proj - today;
+    const sparkData = [];
+    for (let y=0; y<10; y++) sparkData.push(today + (proj-today)*(y/9));
+    return `<div class="cell" style="padding:24px 20px">
+      <p class="t3" style="color:${d.color};margin-bottom:12px;font-size:9px">${d.label}</p>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+        <span class="t1-xs" style="color:${gClr(proj)};font-family:var(--font-mono);font-weight:700;letter-spacing:-0.04em">${proj}</span>
+        <span class="delta ${dd>0?'delta-up':dd<0?'delta-down':'delta-flat'}" style="font-size:11px">${dd>0?'+':''}${dd} from ${today}</span>
+      </div>
+      <p class="t4" style="margin-bottom:8px">${grade(proj)} &middot; ${proj>70?'On track':'Needs intervention'}</p>
+      ${sparkSVG(sparkData, d.color, 160, 32)}
+    </div>`;
+  }).join('');
+}
+
+function renderTrajectories() {
+  const sc = SCENARIOS[activeSc];
+  // Small multiple sparklines
+  const kpiGrid = document.getElementById('kpi-grid');
+  kpiGrid.innerHTML = KPIS.map(k => {
+    const data = TRAJ[k.id][activeSc];
+    const cur = data[4], end = data[9];
+    const up = k.better==='lower' ? end<data[0] : end>data[0];
+    const clr = up ? sc.color : '#d4622a';
+    return `<div class="cell">
+      <p class="t3" style="margin-bottom:8px;font-size:9px">${k.label}</p>
+      <span class="num-md" style="color:${clr}">${cur}${k.unit}</span>
+      <p class="t4" style="margin-top:2px;font-size:9px">end: ${end}${k.unit}</p>
+      <div style="margin-top:10px">${sparkSVG(data, clr, 140, 32)}</div>
+    </div>`;
+  }).join('');
+
+  // Comparison charts
+  const cmpGrid = document.getElementById('comparison-grid');
+  cmpGrid.innerHTML = KPIS.map(k => {
+    return `<div class="cell" style="padding:24px 20px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+        <p class="t3" style="font-size:9px">${k.label}</p>
+        <span class="t4">${k.unit.trim()}</span>
+      </div>
+      ${comparisonSVG(k.id)}
+      <div style="display:flex;gap:12px;margin-top:10px">
+        ${Object.entries(SCENARIOS).map(([id,s]) => `<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-family:var(--font-body);color:${id===activeSc?s.color:'rgba(255,255,255,0.15)'}"><span style="width:10px;height:1.5px;background:${s.color};opacity:${id===activeSc?1:0.25};display:inline-block"></span>${s.name.split(' ')[0]}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  if (KPIS.length % 2 !== 0) cmpGrid.innerHTML += '<div class="cell"></div>';
+}
+
+function renderFunding() {
+  const sc = SCENARIOS[activeSc];
+  const sf = FUND[activeSc];
+  const stats = document.getElementById('funding-stats');
+  const items = [
+    { l:'Pool Size', v:`$${(sf.pool/1000).toFixed(1)}B`, s:'/year' },
+    { l:'Per Resident', v:`$${sf.yr.toLocaleString()}`, s:`$${sf.bw} biweekly` },
+    { l:'Enrolled', v:fmtK(sf.pop), s:'residents' },
+    { l:'Escrow', v:sf.esc, s:'months reserve' },
+  ];
+  stats.innerHTML = items.map(x => `<div class="cell">
+    <p class="t3" style="margin-bottom:8px;font-size:9px">${x.l}</p>
+    <span class="num-lg" style="color:${sc.color}">${x.v}</span>
+    <p class="t4" style="margin-top:4px">${x.s}</p>
+  </div>`).join('');
+
+  const sources = document.getElementById('funding-sources');
+  sources.innerHTML = FUND_SOURCES.map((fs,i) => {
+    const scaled = Math.round(fs.base * (sf.m[i]||1));
+    return `<div style="display:flex;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)">
+      <span class="num-sm" style="color:${sc.color};width:36px;text-align:right;flex-shrink:0">${fs.pct}%</span>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <span style="font-size:12px;font-weight:500;color:var(--text-secondary)">${fs.name}</span>
+          <span class="num-xs" style="color:var(--text-muted)">$${fmtK(scaled*1e6)}/yr</span>
+        </div>
+        <div class="bar-track" style="max-width:240px;margin-top:0"><div class="bar-fill" style="width:${fs.pct*2.5}%;background:${sc.color};opacity:0.3"></div></div>
+        <p class="t4" style="margin-top:4px;font-size:10px">${fs.desc}</p>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSystems() {
+  const list = document.getElementById('dashboard-list');
+  list.innerHTML = DASHBOARDS.map((d,i) => `<div style="display:flex;gap:24px;padding:28px 0;border-bottom:1px solid var(--border)">
+    <div style="width:48px;flex-shrink:0;text-align:right">
+      <span class="num-sm" style="color:var(--text-faint)">${String(i+1).padStart(2,'0')}</span>
+    </div>
+    <div style="flex:1">
+      <p style="font-family:var(--font-display);font-size:15px;font-weight:600;color:${d.color};margin-bottom:4px">${d.name}</p>
+      <p class="t4" style="margin-bottom:8px;max-width:420px">${d.desc}</p>
+      <span class="tag">${d.stats}</span>
+    </div>
+  </div>`).join('');
+}
+
+function renderTimeline() {
+  const list = document.getElementById('timeline-list');
+  list.innerHTML = MILESTONES.map((m,i) => {
+    const last = i === MILESTONES.length-1;
+    return `<div style="display:flex;gap:24px;padding:28px 0;border-bottom:1px solid var(--border)">
+      <div style="width:64px;flex-shrink:0;text-align:right">
+        <span class="num-md" style="color:${last?'var(--green)':'var(--text-faint)'}">${m.year}</span>
+      </div>
+      <div style="flex:1">
+        <p style="font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:8px">${m.title}</p>
+        ${m.items.map(item => `<p class="t4" style="padding:2px 0;color:var(--text-muted)"><span style="color:${last?'rgba(78,205,196,0.4)':'var(--text-faint)'};margin-right:8px">&mdash;</span>${item}</p>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ================================================================
+   FULL RENDER
+   ================================================================ */
+function render() {
+  updateScenarioBar();
+  renderOverview();
+  renderDomains();
+  renderTrajectories();
+  renderFunding();
+  renderSystems();
+  renderTimeline();
+}
+
+function updateScenarioBar() {
+  document.querySelectorAll('#scenario-bar .scenario-btn').forEach(btn => {
+    const sc = btn.dataset.sc;
+    const info = SCENARIOS[sc];
+    const isActive = sc === activeSc;
+    btn.style.color = isActive ? info.color : 'var(--text-faint)';
+    btn.querySelector('.dot').style.background = isActive ? info.color : 'rgba(255,255,255,0.1)';
+  });
+}
+
+function showSection(id) {
+  activeSection = id;
+  ['overview','domains','trajectories','funding','systems','timeline'].forEach(s => {
+    document.getElementById('sec-'+s).style.display = s===id ? 'block' : 'none';
+  });
+  document.querySelectorAll('#nav .nav-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.section === id);
+  });
+}
+
+/* ================================================================
+   EVENT BINDING
+   ================================================================ */
+document.querySelectorAll('#nav .nav-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    showSection(btn.dataset.section);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+document.querySelectorAll('#scenario-bar .scenario-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeSc = btn.dataset.sc;
+    render();
+  });
+});
+
+/* ================================================================
+   INIT
+   ================================================================ */
+render();
+</script>
+</body>
+</html>

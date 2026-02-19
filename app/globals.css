@@ -962,6 +962,199 @@ pre { background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); paddin
 main.container { flex: 1; width: min(1100px, 92vw); padding-top: 3rem; padding-bottom: 3rem; }
 
 /* ================================================================== */
+/*  Feltron Design System                                              */
+/*  Data-first, editorial, information-dense layouts                   */
+/* ================================================================== */
+
+.f-page { max-width: 1120px; margin: 0 auto; padding: 0 2rem; }
+
+.f-section { padding: 3rem 0; border-top: 1px solid rgba(255,255,255,0.05); }
+.f-section:first-child { border-top: none; }
+
+.f-section-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.55rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.12);
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.f-label {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  line-height: 1.4;
+}
+
+.f-heading {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.f-heading-xl { font-size: 2rem; }
+.f-heading-lg { font-size: 1.15rem; }
+.f-heading-md { font-size: 0.9rem; }
+
+.f-metric {
+  font-family: "JetBrains Mono", "SF Mono", monospace;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(255,255,255,0.92);
+}
+.f-metric-hero { font-size: 5.5rem; }
+.f-metric-xl   { font-size: 3rem; }
+.f-metric-lg   { font-size: 1.75rem; }
+.f-metric-md   { font-size: 1.2rem; }
+.f-metric-sm   { font-size: 0.85rem; }
+.f-metric-xs   { font-size: 0.72rem; }
+
+.f-annotation {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.32);
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+}
+
+.f-body {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.5);
+  max-width: 640px;
+}
+
+.f-module {
+  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.012);
+}
+
+.f-grid {
+  display: grid;
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+}
+.f-grid > * { background: #030712; padding: 1.25rem; }
+
+.f-divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin: 0;
+}
+
+.f-rule {
+  width: 32px;
+  height: 1px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  margin: 1.5rem 0;
+}
+
+.f-index {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.f-index::-webkit-scrollbar { display: none; }
+
+.f-index-item {
+  padding: 1rem 1.5rem;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  position: relative;
+}
+.f-index-item:hover { color: rgba(255,255,255,0.5); }
+.f-index-item--active {
+  color: rgba(255,255,255,0.88);
+  border-bottom-color: rgba(255,255,255,0.88);
+}
+
+.f-scenario-pill {
+  padding: 0.5rem 1rem;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.f-bar-track { height: 2px; background: rgba(255,255,255,0.03); }
+.f-bar-fill { height: 100%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+.f-pullquote {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: -0.01em;
+  border-left: 2px solid rgba(255,255,255,0.08);
+  padding-left: 1.5rem;
+  max-width: 560px;
+}
+
+.f-delta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.f-delta--up { color: #10b981; }
+.f-delta--down { color: #f43f5e; }
+.f-delta--flat { color: rgba(255,255,255,0.25); }
+
+.f-cell:hover { background: rgba(255,255,255,0.02) !important; }
+
+.f-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.4);
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .f-page { padding: 0 1rem; }
+  .f-metric-hero { font-size: 3.5rem; }
+  .f-metric-xl { font-size: 2rem; }
+  .f-metric-lg { font-size: 1.35rem; }
+  .f-heading-xl { font-size: 1.5rem; }
+  .f-pullquote { font-size: 0.9rem; }
+  .f-index-item { padding: 0.85rem 1rem; }
+}
+
+/* ================================================================== */
 /*  Print / PDF                                                        */
 /* ================================================================== */
 

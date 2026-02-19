@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
-import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import NavBar from "../components/NavBar";
 
-/* Types */
+/* ── Types ── */
 interface Journey { id:string; title:string; icon:string; desc:string; steps:string[]; touchpoints:string[]; avgDays:number; completionRate:number; satisfactionScore:number }
 interface FundingSource { source:string; pctOfPool:number; annual_m:number; desc:string }
 interface DividendModel { fundingSources:FundingSource[]; poolSize_m:number; populationServed:number; biweeklyPerResident:number; annualPerResident:number; povertyReduction:{baseline:number;target:number;timelineYears:number}; escrowMonths:number; disbursementMethod:string }
@@ -13,638 +13,637 @@ interface Benefit { id:string; title:string; desc:string; amount:string; icon:st
 interface ServiceProvider { name:string; type:string; capacity:number; coverage:string }
 interface SeedData { journeys:Journey[]; dividendModel:DividendModel; kpis:KPI[]; milestones:Milestone[]; benefits:Benefit[]; serviceProviders:ServiceProvider[] }
 
-type Tab = "overview" | "journeys" | "dividend" | "benefits" | "kpis" | "milestones";
+type Section = "overview" | "journeys" | "funding" | "services" | "trajectories" | "timeline";
 
-const fmtK = (n:number) => n >= 1_000_000 ? `${(n/1_000_000).toFixed(1)}M` : n >= 1_000 ? `${(n/1_000).toFixed(0)}K` : n.toString();
-
-function Heading({ icon, title, sub }: { icon:string; title:string; sub?:string }) {
-  return (<div className="mb-6"><h2 className="text-xl font-semibold flex items-center gap-2" style={{fontFamily:"'Space Grotesk',sans-serif"}}><span className="text-2xl">{icon}</span> {title}</h2>{sub && <p className="text-sm mt-1" style={{color:"var(--text-muted)"}}>{sub}</p>}</div>);
-}
-function Stat({ label, value, sub, color }: { label:string; value:string; sub?:string; color?:string }) {
-  return (<div className="glass-card p-4"><p className="text-xs uppercase tracking-wider mb-1" style={{color:"var(--text-faint)"}}>{label}</p><p className="text-2xl font-bold" style={{color:color||"var(--amber)",fontFamily:"'Space Grotesk',sans-serif"}}>{value}</p>{sub && <p className="text-xs mt-1" style={{color:"var(--text-muted)"}}>{sub}</p>}</div>);
-}
-
+/* ── Scenarios ── */
 type CivScenario = "aggressive" | "moderate" | "bau" | "worst";
-const CIV_SCENARIOS: { id: CivScenario; name: string; icon: string; color: string; desc: string }[] = [
-  { id: "aggressive", name: "Aggressive Action", icon: "\u{1F31F}", color: "#10b981", desc: "Full deployment of civic infrastructure, dividends, AI governance, climate action, and workforce transition programs." },
-  { id: "moderate", name: "Moderate Reform", icon: "\u{1F6E0}\uFE0F", color: "#38bdf8", desc: "Partial adoption of civic programs. Dividends in pilot regions, selective governance reforms, gradual climate response." },
-  { id: "bau", name: "Business as Usual", icon: "\u{1F4C9}", color: "#f59e0b", desc: "Current trajectory continues. No new civic infrastructure, minimal coordination, piecemeal responses to systemic crises." },
-  { id: "worst", name: "Worst Case", icon: "\u{1F6A8}", color: "#f43f5e", desc: "Institutional failure, democratic backsliding, civic disengagement, unchecked AI, and compounding social crises." },
+const SCENARIOS: { id: CivScenario; name: string; color: string; tag: string }[] = [
+  { id: "aggressive", name: "Aggressive Action", color: "#10b981", tag: "Full deployment" },
+  { id: "moderate", name: "Moderate Reform", color: "#38bdf8", tag: "Partial adoption" },
+  { id: "bau", name: "Business as Usual", color: "#f59e0b", tag: "Current trajectory" },
+  { id: "worst", name: "Worst Case", color: "#f43f5e", tag: "Institutional failure" },
 ];
 
-const SCENARIO_TRAJECTORIES: Record<string, Record<CivScenario, { trajectory: number[]; current: number; target: number }>> = {
+/* ── Trajectory data per scenario ── */
+const TRAJ: Record<string, Record<CivScenario, { t: number[]; cur: number; tgt: number }>> = {
   poverty: {
-    aggressive: { trajectory: [13,12.4,11.5,10.2,9.2,8.1,7.0,6.1,5.4,5.0], current: 9.2, target: 5 },
-    moderate:   { trajectory: [13,12.8,12.3,11.6,10.8,10.1,9.5,9.0,8.6,8.2], current: 10.8, target: 8 },
-    bau:        { trajectory: [13,13.2,13.5,13.9,14.4,15.0,15.8,16.5,17.2,18.0], current: 14.4, target: 18 },
-    worst:      { trajectory: [13,14.0,15.5,17.5,19.8,22.0,24.5,27.0,29.5,32.0], current: 19.8, target: 32 },
+    aggressive: { t:[13,12.4,11.5,10.2,9.2,8.1,7.0,6.1,5.4,5.0], cur:9.2, tgt:5 },
+    moderate:   { t:[13,12.8,12.3,11.6,10.8,10.1,9.5,9.0,8.6,8.2], cur:10.8, tgt:8 },
+    bau:        { t:[13,13.2,13.5,13.9,14.4,15.0,15.8,16.5,17.2,18.0], cur:14.4, tgt:18 },
+    worst:      { t:[13,14.0,15.5,17.5,19.8,22.0,24.5,27.0,29.5,32.0], cur:19.8, tgt:32 },
   },
   reskill: {
-    aggressive: { trajectory: [18,16.5,14.8,12.8,11.0,9.5,8.2,7.2,6.5,6.0], current: 11, target: 6 },
-    moderate:   { trajectory: [18,17.2,16.5,15.5,14.5,13.6,12.8,12.0,11.2,10.5], current: 14.5, target: 10 },
-    bau:        { trajectory: [18,18.2,18.5,19.0,19.5,20.0,20.8,21.5,22.2,23.0], current: 19.5, target: 23 },
-    worst:      { trajectory: [18,19.5,21.0,23.0,25.0,27.5,30.0,32.5,35.0,38.0], current: 25.0, target: 38 },
+    aggressive: { t:[18,16.5,14.8,12.8,11.0,9.5,8.2,7.2,6.5,6.0], cur:11, tgt:6 },
+    moderate:   { t:[18,17.2,16.5,15.5,14.5,13.6,12.8,12.0,11.2,10.5], cur:14.5, tgt:10 },
+    bau:        { t:[18,18.2,18.5,19.0,19.5,20.0,20.8,21.5,22.2,23.0], cur:19.5, tgt:23 },
+    worst:      { t:[18,19.5,21.0,23.0,25.0,27.5,30.0,32.5,35.0,38.0], cur:25.0, tgt:38 },
   },
   emissions: {
-    aggressive: { trajectory: [0.65,0.60,0.55,0.50,0.48,0.42,0.37,0.32,0.28,0.25], current: 0.48, target: 0.25 },
-    moderate:   { trajectory: [0.65,0.63,0.60,0.57,0.54,0.51,0.48,0.45,0.42,0.40], current: 0.54, target: 0.40 },
-    bau:        { trajectory: [0.65,0.65,0.66,0.67,0.68,0.69,0.70,0.71,0.72,0.73], current: 0.68, target: 0.73 },
-    worst:      { trajectory: [0.65,0.68,0.72,0.76,0.80,0.84,0.88,0.92,0.96,1.00], current: 0.80, target: 1.00 },
+    aggressive: { t:[0.65,0.60,0.55,0.50,0.48,0.42,0.37,0.32,0.28,0.25], cur:0.48, tgt:0.25 },
+    moderate:   { t:[0.65,0.63,0.60,0.57,0.54,0.51,0.48,0.45,0.42,0.40], cur:0.54, tgt:0.40 },
+    bau:        { t:[0.65,0.65,0.66,0.67,0.68,0.69,0.70,0.71,0.72,0.73], cur:0.68, tgt:0.73 },
+    worst:      { t:[0.65,0.68,0.72,0.76,0.80,0.84,0.88,0.92,0.96,1.00], cur:0.80, tgt:1.00 },
   },
   biodiversity: {
-    aggressive: { trajectory: [22,26,30,34,38,45,52,60,68,75], current: 38, target: 75 },
-    moderate:   { trajectory: [22,24,27,30,33,36,39,42,45,48], current: 33, target: 48 },
-    bau:        { trajectory: [22,21,20,19,18,17,16,15,14,13], current: 18, target: 13 },
-    worst:      { trajectory: [22,20,18,15,12,10,8,6,5,4], current: 12, target: 4 },
+    aggressive: { t:[22,26,30,34,38,45,52,60,68,75], cur:38, tgt:75 },
+    moderate:   { t:[22,24,27,30,33,36,39,42,45,48], cur:33, tgt:48 },
+    bau:        { t:[22,21,20,19,18,17,16,15,14,13], cur:18, tgt:13 },
+    worst:      { t:[22,20,18,15,12,10,8,6,5,4], cur:12, tgt:4 },
   },
   charter: {
-    aggressive: { trajectory: [10,18,28,36,45,58,72,84,93,100], current: 45, target: 100 },
-    moderate:   { trajectory: [10,14,19,25,31,37,43,50,57,65], current: 31, target: 65 },
-    bau:        { trajectory: [10,11,12,13,14,15,15,16,16,16], current: 14, target: 16 },
-    worst:      { trajectory: [10,9,8,6,5,4,3,3,2,2], current: 5, target: 2 },
+    aggressive: { t:[10,18,28,36,45,58,72,84,93,100], cur:45, tgt:100 },
+    moderate:   { t:[10,14,19,25,31,37,43,50,57,65], cur:31, tgt:65 },
+    bau:        { t:[10,11,12,13,14,15,15,16,16,16], cur:14, tgt:16 },
+    worst:      { t:[10,9,8,6,5,4,3,3,2,2], cur:5, tgt:2 },
   },
 };
 
-const SCENARIO_FUNDING: Record<CivScenario, { poolSize_m: number; biweekly: number; annual: number; multipliers: number[] }> = {
-  aggressive: { poolSize_m: 2500, biweekly: 192, annual: 4992, multipliers: [1.0, 1.0, 1.0, 1.0, 1.0] },
-  moderate:   { poolSize_m: 1500, biweekly: 115, annual: 2990, multipliers: [0.6, 0.6, 0.6, 0.6, 0.6] },
-  bau:        { poolSize_m: 400,  biweekly: 31,  annual: 806,  multipliers: [0.16, 0.16, 0.16, 0.16, 0.16] },
-  worst:      { poolSize_m: 80,   biweekly: 6,   annual: 156,  multipliers: [0.03, 0.03, 0.03, 0.03, 0.03] },
+const FUND: Record<CivScenario, { pool: number; bw: number; yr: number; pop: number; esc: number; m: number[] }> = {
+  aggressive: { pool:2500, bw:192, yr:4992, pop:10_000_000, esc:24, m:[1,1,1,1,1] },
+  moderate:   { pool:1500, bw:115, yr:2990, pop:6_500_000,  esc:24, m:[.6,.6,.6,.6,.6] },
+  bau:        { pool:400,  bw:31,  yr:806,  pop:1_200_000,  esc:6,  m:[.16,.16,.16,.16,.16] },
+  worst:      { pool:80,   bw:6,   yr:156,  pop:300_000,    esc:0,  m:[.03,.03,.03,.03,.03] },
 };
 
-export default function Home() {
-  const [data, setData] = useState<SeedData|null>(null);
-  const [tab, setTab] = useState<Tab>("overview");
-  const [selectedJourney, setSelectedJourney] = useState<string|null>(null);
-  const [activeScenario, setActiveScenario] = useState<CivScenario>("aggressive");
+/* ── Domain data ── */
+const DOMAINS = [
+  { key: "climate", label: "Climate", color: "#10b981" },
+  { key: "governance", label: "Governance", color: "#8b5cf6" },
+  { key: "workforce", label: "Workforce", color: "#38bdf8" },
+  { key: "equity", label: "Equity", color: "#f59e0b" },
+  { key: "technology", label: "Technology", color: "#06b6d4" },
+  { key: "wellbeing", label: "Wellbeing", color: "#f43f5e" },
+];
 
-  useEffect(() => { fetch("/data/civilization.json").then(r=>r.json()).then(setData).catch(console.error); }, []);
+const D_SCORES: Record<CivScenario, number[]> = {
+  aggressive: [88,85,82,75,80,78],
+  moderate:   [62,65,63,55,62,58],
+  bau:        [28,30,35,22,40,25],
+  worst:      [12,10,15,8,20,10],
+};
+const D_TODAY = [42,40,43,38,55,45];
 
-  const kpiChartData = useMemo(() => {
-    if (!data) return [];
-    const years = Array.from({length:10}, (_,i) => 2026+i);
-    return years.map((yr,i) => {
-      const row: any = { year: yr };
-      for (const k of data.kpis) {
-        const st = SCENARIO_TRAJECTORIES[k.id]?.[activeScenario];
-        row[k.id] = st ? st.trajectory[i] : k.trajectory[i];
-      }
-      return row;
-    });
-  }, [data, activeScenario]);
+const NARRATIVE: Record<CivScenario, { pullquote: string; body: string }> = {
+  aggressive: {
+    pullquote: "Climate is stabilizing at +1.2\u00b0C. Governance institutions are strong. The workforce transition is complete.",
+    body: "Under Aggressive Action, civilization in 2035 is on a recovery trajectory across every domain. 100% AI audit coverage with 95% civic participation. Dividends bridge income gaps, reskilling pathways are universal, poverty approaches its floor. Social equity is improving as universal benefits and housing programs take effect. AI is governed through open-weight systems with civic oversight. Resident satisfaction reaches 4.6/5. This requires unprecedented coordination but is achievable with current technology and realistic funding.",
+  },
+  moderate: {
+    pullquote: "Climate approaches +1.8\u00b0C \u2014 manageable but tight. This is the \u201cgood enough\u201d scenario.",
+    body: "Moderate Reform delivers a functional but stressed civilization by 2035. Governance is partially deployed with 80% AI audit coverage. The workforce transition is working but unevenly \u2014 reskilling helps most workers but income gaps persist for the most vulnerable. Social equity is stable but not improving. AI governance is building but gaps in emerging technology domains create risk. It avoids catastrophe but doesn\u2019t build the resilience needed for the shocks still coming.",
+  },
+  bau: {
+    pullquote: "Every metric is declining and accelerating \u2014 the cost of action in 2035 is orders of magnitude higher than 2026.",
+    body: "Business as Usual produces compounding crises by 2035. Climate at +3\u00b0C triggers cascading failures. Only 40% of AI systems are audited. Automation outpaces reskilling, pushing 12% into poverty. Social safety nets strain under the weight of displacement. AI concentration without oversight deepens inequality. Resident satisfaction drops to 2.3/5 as services deteriorate.",
+  },
+  worst: {
+    pullquote: "Every system that holds society together is under existential stress simultaneously.",
+    body: "The Worst Case is civilizational crisis across every domain. Climate at +4.6\u00b0C with ecosystem collapse. 1% AI audit coverage means technology operates without any democratic check. 30% poverty with no safety net. Extreme inequality with displacement-driven migration. Civic trust has collapsed, satisfaction at 1.2/5.",
+  },
+};
 
-  const comparisonChartData = useMemo(() => {
-    if (!data) return {};
-    const result: Record<string, any[]> = {};
+/* ── Helpers ── */
+const fmtK = (n: number) => n >= 1e6 ? `${(n/1e6).toFixed(1)}M` : n >= 1e3 ? `${(n/1e3).toFixed(0)}K` : String(n);
+const grade = (s: number) => s >= 93 ? "A" : s >= 85 ? "A\u2212" : s >= 80 ? "B+" : s >= 73 ? "B" : s >= 68 ? "B\u2212" : s >= 63 ? "C+" : s >= 58 ? "C" : s >= 53 ? "C\u2212" : s >= 48 ? "D+" : s >= 43 ? "D" : s >= 38 ? "D\u2212" : "F";
+const gClr = (s: number) => s >= 73 ? "#10b981" : s >= 53 ? "#f59e0b" : s >= 38 ? "#fb923c" : "#f43f5e";
+
+const TT: React.CSSProperties = { background: "#050a14", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 0, color: "rgba(255,255,255,0.7)", fontSize: "10px", fontFamily: "'JetBrains Mono',monospace", padding: "8px 12px" };
+const AX = { fill: "rgba(255,255,255,0.18)", fontSize: 9, fontFamily: "'JetBrains Mono',monospace" };
+
+/* ════════════════════════════════════════════════════════════════════ */
+export default function CivilizationPage() {
+  const [data, setData] = useState<SeedData | null>(null);
+  const [section, setSection] = useState<Section>("overview");
+  const [scenario, setScenario] = useState<CivScenario>("aggressive");
+  const [journey, setJourney] = useState<string | null>(null);
+
+  useEffect(() => { fetch("/data/civilization.json").then(r => r.json()).then(setData).catch(console.error); }, []);
+
+  const cmpData = useMemo(() => {
+    if (!data) return {} as Record<string, any[]>;
+    const out: Record<string, any[]> = {};
     for (const k of data.kpis) {
-      const years = Array.from({length:10}, (_,i) => 2026+i);
-      result[k.id] = years.map((yr,i) => {
-        const row: any = { year: yr };
-        for (const sc of CIV_SCENARIOS) {
-          const st = SCENARIO_TRAJECTORIES[k.id]?.[sc.id];
-          row[sc.id] = st ? st.trajectory[i] : k.trajectory[i];
-        }
+      out[k.id] = Array.from({ length: 10 }, (_, i) => {
+        const row: any = { year: 2026 + i };
+        for (const s of SCENARIOS) row[s.id] = TRAJ[k.id]?.[s.id]?.t[i] ?? k.trajectory[i];
         return row;
       });
     }
-    return result;
+    return out;
   }, [data]);
 
-  if (!data) return (<main className="min-h-screen flex items-center justify-center"><div className="text-center space-y-3"><div className="text-4xl animate-pulse">{"\u{1F30D}"}</div><p className="text-sm" style={{color:"var(--text-muted)"}}>Loading CivilizationOS&hellip;</p></div></main>);
+  if (!data) return (
+    <main className="min-h-screen flex items-center justify-center">
+      <p className="f-label" style={{ letterSpacing: "0.4em", animationName: "pulse", animationDuration: "2s", animationIterationCount: "infinite" }}>CivilizationOS</p>
+    </main>
+  );
 
-  const TABS: {id:Tab;label:string;icon:string}[] = [
-    {id:"overview",label:"Overview",icon:"\u{1F4CA}"},{id:"journeys",label:"Journey Map",icon:"\u{1F5FA}\uFE0F"},
-    {id:"dividend",label:"Civic Dividend",icon:"\u{1F4B0}"},{id:"benefits",label:"Benefits & Support",icon:"\u{1F91D}"},
-    {id:"kpis",label:"KPI Dashboard",icon:"\u{1F4C8}"},{id:"milestones",label:"Milestones",icon:"\u{1F3AF}"},
+  const sc = SCENARIOS.find(x => x.id === scenario)!;
+  const todayAvg = Math.round(D_TODAY.reduce((a, b) => a + b, 0) / D_TODAY.length);
+  const projAvg = Math.round(D_SCORES[scenario].reduce((a, b) => a + b, 0) / D_SCORES[scenario].length);
+  const sf = FUND[scenario];
+  const activeJ = data.journeys.find(j => j.id === journey);
+  const SECTS: { id: Section; label: string }[] = [
+    { id: "overview", label: "Overview" }, { id: "trajectories", label: "Trajectories" },
+    { id: "funding", label: "Funding" }, { id: "journeys", label: "Journeys" },
+    { id: "services", label: "Services" }, { id: "timeline", label: "Timeline" },
   ];
 
-  const activeJourney = data.journeys.find(j=>j.id===selectedJourney);
+  /* ── Render helpers ── */
+  const Dot = ({ color, active }: { color: string; active: boolean }) => (
+    <span style={{ width: 5, height: 5, borderRadius: "50%", background: active ? color : "rgba(255,255,255,0.1)", display: "inline-block", flexShrink: 0, transition: "background 0.2s" }} />
+  );
+
+  const Legend = () => (
+    <div className="flex flex-wrap gap-x-5 gap-y-1 mt-4">
+      {SCENARIOS.map(s => (
+        <button key={s.id} onClick={() => setScenario(s.id)} className="flex items-center gap-1.5" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+          <span style={{ width: 12, height: 1.5, background: s.color, opacity: s.id === scenario ? 1 : 0.25, display: "inline-block" }} />
+          <span style={{ fontSize: "0.52rem", fontWeight: 600, letterSpacing: "0.06em", color: s.id === scenario ? s.color : "rgba(255,255,255,0.2)", fontFamily: "'Inter',sans-serif" }}>{s.name}</span>
+        </button>
+      ))}
+    </div>
+  );
 
   return (
-    <main className="min-h-screen pb-20">
-      <header className="pt-10 pb-8 px-4" style={{background:"linear-gradient(180deg,rgba(245,158,11,0.06) 0%,transparent 100%)"}}>
-        <div className="max-w-6xl mx-auto">
-          <p className="text-xs uppercase tracking-[0.4em] mb-2" style={{color:"var(--amber)"}}>CivilizationOS</p>
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{fontFamily:"'Space Grotesk',sans-serif"}}>Resident Experience Dashboard</h1>
-          <p className="text-sm max-w-2xl" style={{color:"var(--text-muted)"}}>Explore civic journeys, dividend modeling, benefits, and 10-year KPI projections. The resident-facing layer of the AI Civilization framework.</p>
-        </div>
-      </header>
+    <main className="min-h-screen">
+
+      {/* ── Masthead ── */}
+      <div style={{ background: "#030712", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+        <header className="f-page" style={{ paddingTop: "3.5rem", paddingBottom: "2rem" }}>
+          <p className="f-label" style={{ color: "rgba(245,158,11,0.6)", marginBottom: "1rem" }}>CivilizationOS &mdash; 2026</p>
+          <h1 className="f-heading f-heading-xl" style={{ maxWidth: 480 }}>
+            Resident Experience<br />Dashboard
+          </h1>
+          <hr className="f-rule" />
+          <p className="f-body" style={{ maxWidth: 440 }}>
+            Civic journeys, dividend modeling, and 10-year projections.
+            Six domains. Four scenarios. One framework.
+          </p>
+        </header>
+      </div>
+
       <NavBar />
 
-      <nav className="sticky z-50 px-4 py-3" style={{top:"33px",background:"rgba(3,7,18,0.85)",backdropFilter:"blur(12px)",borderBottom:"1px solid var(--card-border)"}}>
-        <div className="flex gap-2 overflow-x-auto justify-center">
-          {TABS.map(t=>(<button key={t.id} onClick={()=>setTab(t.id)} className={`tab-btn whitespace-nowrap ${tab===t.id?"tab-btn-active":""}`}>{t.icon} {t.label}</button>))}
+      {/* ── Section Index + Scenario bar ── */}
+      <div style={{ position: "sticky", top: 33, zIndex: 40, background: "rgba(3,7,18,0.95)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
+        <div className="f-page">
+          <div className="flex items-stretch" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            <div className="f-index flex-1" style={{ borderBottom: "none" }}>
+              {SECTS.map(s => (
+                <button key={s.id} onClick={() => setSection(s.id)} className={`f-index-item ${section === s.id ? "f-index-item--active" : ""}`}>{s.label}</button>
+              ))}
+            </div>
+            <div className="flex items-center gap-0 flex-shrink-0 pl-4" style={{ borderLeft: "1px solid rgba(255,255,255,0.04)" }}>
+              {SCENARIOS.map(s => (
+                <button key={s.id} onClick={() => setScenario(s.id)} className="f-scenario-pill" style={{ color: scenario === s.id ? s.color : "rgba(255,255,255,0.18)" }}>
+                  <Dot color={s.color} active={scenario === s.id} />
+                  <span className="hidden sm:inline">{s.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </nav>
+      </div>
 
-      <div className="max-w-6xl mx-auto px-4 mt-8">
+      <div className="f-page">
 
-        {/* OVERVIEW */}
-        {tab==="overview" && (() => {
-          const s = CIV_SCENARIOS.find(sc => sc.id === activeScenario)!;
-          const letterGrade = (sc: number) => sc >= 93 ? "A" : sc >= 85 ? "A-" : sc >= 80 ? "B+" : sc >= 73 ? "B" : sc >= 68 ? "B-" : sc >= 63 ? "C+" : sc >= 58 ? "C" : sc >= 53 ? "C-" : sc >= 48 ? "D+" : sc >= 43 ? "D" : sc >= 38 ? "D-" : "F";
-          const gColor = (sc: number) => sc >= 73 ? "#10b981" : sc >= 53 ? "#f59e0b" : sc >= 38 ? "#fb923c" : "#f43f5e";
-          const trendIcon = (t: string) => t === "improving" ? "\u2191" : t === "declining" ? "\u2193" : "\u2192";
-          const trendClr = (t: string) => t === "improving" ? "#10b981" : t === "declining" ? "#f43f5e" : "#f59e0b";
+        {/* ═══ OVERVIEW ═══ */}
+        {section === "overview" && (<>
 
-          const domainScores: Record<string, { score: number; trend: string; note: string }[]> = {
-            aggressive: [
-              { score: 88, trend: "improving", note: "+1.2\u00b0C stabilized, 99% renewables, forests expanding" },
-              { score: 85, trend: "improving", note: "100% AI audited, 95% participation, charter enforced" },
-              { score: 82, trend: "improving", note: "Full reskilling + dividends, 2% poverty, full employment" },
-              { score: 75, trend: "improving", note: "GINI declining, universal benefits, housing secured" },
-              { score: 80, trend: "improving", note: "AI governed, open-weight, civic oversight strong" },
-              { score: 78, trend: "improving", note: "Satisfaction 4.6/5, trust restored, services excellent" },
-            ],
-            moderate: [
-              { score: 62, trend: "mixed", note: "+1.8\u00b0C, 88% renewables, biodiversity stabilizing" },
-              { score: 65, trend: "improving", note: "80% AI audited, 76% participation, partial charter" },
-              { score: 63, trend: "improving", note: "Reskilling working, 5% poverty, moderate placement" },
-              { score: 55, trend: "stable", note: "GINI stable, partial benefits, some housing pressure" },
-              { score: 62, trend: "mixed", note: "AI governance building, gaps in emerging tech" },
-              { score: 58, trend: "stable", note: "Satisfaction 3.8/5, trust rebuilding slowly" },
-            ],
-            bau: [
-              { score: 28, trend: "declining", note: "+3\u00b0C, 64% renewables, biodiversity halved" },
-              { score: 30, trend: "declining", note: "40% AI audited, 42% participation, weak enforcement" },
-              { score: 35, trend: "declining", note: "Automation outpacing reskilling, 12% poverty" },
-              { score: 22, trend: "declining", note: "GINI rising, safety nets collapsing, housing crisis" },
-              { score: 40, trend: "declining", note: "AI unchecked, proprietary, minimal oversight" },
-              { score: 25, trend: "declining", note: "Satisfaction 2.3/5, trust eroded, services failing" },
-            ],
-            worst: [
-              { score: 12, trend: "declining", note: "+4.6\u00b0C, 42% renewables, ecosystem collapse" },
-              { score: 10, trend: "declining", note: "1% AI audited, 15% participation, no enforcement" },
-              { score: 15, trend: "declining", note: "Mass unemployment, 30% poverty, no safety net" },
-              { score: 8, trend: "declining", note: "Extreme inequality, no benefits, displacement crisis" },
-              { score: 20, trend: "declining", note: "AI concentration, surveillance, no civic override" },
-              { score: 10, trend: "declining", note: "Satisfaction 1.2/5, trust collapsed, services absent" },
-            ],
-          };
-          const domainMeta = [
-            { name: "Climate & Environment", icon: "\u{1F30D}", color: "#10b981", app: "ClimateOS", url: "/climate" },
-            { name: "Governance & Institutions", icon: "\u{1F3DB}\uFE0F", color: "#8b5cf6", app: "GovernanceOS", url: "/governance" },
-            { name: "Workforce & Economy", icon: "\u{1F6E0}\uFE0F", color: "#38bdf8", app: "TransitionOS", url: "/transition" },
-            { name: "Social Equity", icon: "\u{1F91D}", color: "#f59e0b", app: "CivilizationOS", url: "#" },
-            { name: "Technology & AI", icon: "\u{1F916}", color: "#06b6d4", app: "Simulation", url: "/simulation" },
-            { name: "Civic Wellbeing", icon: "\u{2764}\uFE0F", color: "#f43f5e", app: "CivilizationOS", url: "#" },
-          ];
-          const todayScores = [
-            { score: 42, trend: "declining", note: "+1.3\u00b0C and rising, 30% renewables, biodiversity declining" },
-            { score: 40, trend: "declining", note: "12% AI audited, 38% participation, charter incomplete" },
-            { score: 43, trend: "declining", note: "Automation accelerating, reskilling underfunded, 8% poverty" },
-            { score: 38, trend: "declining", note: "GINI rising, benefits fragmented, housing under pressure" },
-            { score: 55, trend: "stable", note: "AI advancing rapidly, governance lagging behind deployment" },
-            { score: 45, trend: "stable", note: "Satisfaction 3.1/5, trust eroding, services strained" },
-          ];
-          const todayOverall = Math.round(todayScores.reduce((a, c) => a + c.score, 0) / todayScores.length);
-          const scores = domainScores[activeScenario];
-          const overall = Math.round(scores.reduce((a, c) => a + c.score, 0) / scores.length);
-
-          const civSummary: Record<string, string> = {
-            aggressive: "Under Aggressive Action, civilization in 2035 is on a recovery trajectory across every domain. Climate is stabilizing at +1.2\u00b0C. Governance institutions are strong, with 100% AI audit coverage and 95% civic participation. The workforce transition is complete \u2014 dividends bridge income gaps, reskilling pathways are universal, and poverty approaches its floor. Social equity is improving as universal benefits and housing programs take effect. AI is governed through open-weight systems with civic oversight. Resident satisfaction reaches 4.6/5. This requires unprecedented coordination but is achievable with current technology and realistic funding.",
-            moderate: "Moderate Reform delivers a functional but stressed civilization by 2035. Climate approaches +1.8\u00b0C \u2014 manageable but tight. Governance is partially deployed, with 80% AI audit coverage. The workforce transition is working but unevenly \u2014 reskilling helps most workers but income gaps persist for the most vulnerable. Social equity is stable but not improving. AI governance is building but gaps in emerging technology domains create risk. This is the \u201cgood enough\u201d scenario \u2014 it avoids catastrophe but doesn\u2019t build the resilience needed for the shocks still coming.",
-            bau: "Business as Usual produces compounding crises by 2035. Climate at +3\u00b0C triggers cascading failures. Only 40% of AI systems are audited. Automation outpaces reskilling, pushing 12% into poverty. Social safety nets strain under the weight of displacement. AI concentration without oversight deepens inequality. Resident satisfaction drops to 2.3/5 as services deteriorate. Every metric is declining and accelerating \u2014 the cost of action in 2035 is orders of magnitude higher than it would have been in 2026.",
-            worst: "The Worst Case is civilizational crisis across every domain. Climate at +4.6\u00b0C with ecosystem collapse. 1% AI audit coverage means technology operates without any democratic check. 30% poverty with no safety net. Extreme inequality with displacement-driven migration. Civic trust has collapsed, satisfaction at 1.2/5. Every system that holds society together \u2014 food, water, governance, economy, technology \u2014 is under existential stress simultaneously. This is what we risk if coordination fails.",
-          };
-
-          return (
-          <section>
-            <img src={`/images/civilization/overview-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
-            <Heading icon={"\u{1F4CA}"} title="Dashboard Overview" sub="Civilization health index, scenario projections, and resident metrics" />
-
-            {/* ── Today's Civilization Health Index ── */}
-            <div className="glass-card p-6 mb-8" style={{ borderTop: `3px solid ${gColor(todayOverall)}` }}>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
-                <div className="relative w-28 h-28 flex-shrink-0 mx-auto sm:mx-0">
-                  <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
-                    <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                    <circle cx="50" cy="50" r="42" fill="none" stroke={gColor(todayOverall)} strokeWidth="8" strokeLinecap="round" strokeDasharray={`${todayOverall * 2.64} 264`} />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-bold" style={{ color: gColor(todayOverall), fontFamily: "'Space Grotesk',sans-serif" }}>{letterGrade(todayOverall)}</span>
-                    <span className="text-[10px]" style={{ color: "var(--text-faint)" }}>{todayOverall}/100</span>
+          {/* Hero score block */}
+          <section className="f-section" style={{ paddingTop: "3.5rem", paddingBottom: "3rem" }}>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1px_1fr] gap-0 items-end">
+              <div>
+                <span className="f-section-num">01</span>
+                <p className="f-label" style={{ marginBottom: "1.5rem" }}>Civilization Health Index &mdash; Today</p>
+                <div className="flex items-end gap-3">
+                  <span className="f-metric f-metric-hero" style={{ color: gClr(todayAvg) }}>{todayAvg}</span>
+                  <div style={{ paddingBottom: "0.6rem" }}>
+                    <span className="f-metric f-metric-xl" style={{ color: gClr(todayAvg), opacity: 0.6 }}>{grade(todayAvg)}</span>
+                    <p className="f-annotation mt-1">/100 &middot; 6 domains</p>
                   </div>
                 </div>
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Today&apos;s Civilization Score</h3>
-                  <p className="text-xs mb-2" style={{ color: "var(--text-muted)" }}>
-                    Current state of civilization across 6 domains: climate, governance, economy, equity, technology, and civic wellbeing. Use the scenario selector below to see projected futures.
-                  </p>
+                <p className="f-annotation" style={{ marginTop: "1rem" }}>Aggregate score across climate, governance, workforce, equity, technology, and civic wellbeing. All domains declining or stagnant.</p>
+              </div>
+              <div style={{ background: "rgba(255,255,255,0.05)", width: 1, alignSelf: "stretch" }} className="hidden md:block" />
+              <div className="pt-8 md:pt-0 md:pl-10">
+                <p className="f-label" style={{ marginBottom: "1.5rem" }}>Projected 2035 &mdash; <span style={{ color: sc.color }}>{sc.name}</span></p>
+                <div className="flex items-end gap-3">
+                  <span className="f-metric f-metric-hero" style={{ color: gClr(projAvg) }}>{projAvg}</span>
+                  <div style={{ paddingBottom: "0.6rem" }}>
+                    <span className="f-metric f-metric-xl" style={{ color: gClr(projAvg), opacity: 0.6 }}>{grade(projAvg)}</span>
+                    <span className={`f-delta ml-3 ${projAvg >= todayAvg ? "f-delta--up" : "f-delta--down"}`}>
+                      {projAvg >= todayAvg ? "+" : ""}{projAvg - todayAvg}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {domainMeta.map((d, i) => {
-                  const ds = todayScores[i];
-                  return (
-                    <a key={d.name} href={d.url} target={d.url.startsWith("/") || d.url === "#" ? undefined : "_blank"} rel={d.url.startsWith("/") || d.url === "#" ? undefined : "noopener"} className="glass-card p-3 text-center transition-all hover:border-white/20 block">
-                      <span className="text-lg">{d.icon}</span>
-                      <p className="text-[10px] font-semibold mt-1" style={{ color: "var(--text)" }}>{d.name}</p>
-                      <div className="flex items-center justify-center gap-1.5 mt-1">
-                        <span className="text-lg font-bold" style={{ color: gColor(ds.score), fontFamily: "'Space Grotesk',sans-serif" }}>{letterGrade(ds.score)}</span>
-                        <span className="text-sm font-bold" style={{ color: trendClr(ds.trend) }}>{trendIcon(ds.trend)}</span>
-                      </div>
-                      <p className="text-[10px] mt-0.5" style={{ color: "var(--text-faint)" }}>{ds.score}/100</p>
-                      <p className="text-[9px] mt-1 leading-tight" style={{ color: "var(--text-muted)" }}>{ds.note}</p>
-                      {d.url !== "#" && <p className="text-[8px] mt-1" style={{ color: d.color }}>{d.app} &rarr;</p>}
-                    </a>
-                  );
-                })}
+                <p className="f-annotation" style={{ marginTop: "1rem" }}>{sc.tag}. {projAvg > 70 ? "Recovery trajectory." : projAvg > 50 ? "Partial improvement." : projAvg > 35 ? "Compounding decline." : "Systemic crisis."}</p>
               </div>
             </div>
+          </section>
 
-            <p className="text-xs font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--text-faint)" }}>Projected State &mdash; <span style={{color: s.color}}>{s.name}</span></p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              <Stat label="Residents served" value={fmtK(activeScenario === "aggressive" ? data.dividendModel.populationServed : activeScenario === "moderate" ? 6500000 : activeScenario === "bau" ? 1200000 : 300000)} color={s.color} />
-              <Stat label="Biweekly dividend" value={`$${SCENARIO_FUNDING[activeScenario].biweekly}`} sub="per resident" color="var(--emerald)" />
-              <Stat label="Annual per resident" value={`$${SCENARIO_FUNDING[activeScenario].annual}`} sub={`pool: $${(SCENARIO_FUNDING[activeScenario].poolSize_m/1000).toFixed(1)}B`} color="var(--sky)" />
-              <Stat label="Benefits active" value={activeScenario === "aggressive" ? `${data.benefits.length}` : activeScenario === "moderate" ? `${data.benefits.filter(b=>b.status==="active").length}` : activeScenario === "bau" ? "3" : "1"} sub={`of ${data.benefits.length} total`} color="var(--violet)" />
+          {/* Domain matrix: today vs projected */}
+          <section className="f-section" style={{ paddingTop: "1rem" }}>
+            <span className="f-section-num">02</span>
+            <p className="f-label" style={{ marginBottom: "1.25rem" }}>Domain Scores &mdash; Today vs. <span style={{ color: sc.color }}>2035 {sc.name}</span></p>
+            <div className="f-grid" style={{ gridTemplateColumns: "repeat(6, 1fr)" }}>
+              {DOMAINS.map((d, i) => {
+                const today = D_TODAY[i];
+                const proj = D_SCORES[scenario][i];
+                const delta = proj - today;
+                return (
+                  <div key={d.key} className="f-cell" style={{ padding: "1.25rem 1rem" }}>
+                    <p className="f-label" style={{ color: d.color, fontSize: "0.5rem", marginBottom: "0.75rem" }}>{d.label}</p>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="f-metric f-metric-lg" style={{ color: gClr(proj) }}>{proj}</span>
+                      <span className={`f-delta ${delta > 0 ? "f-delta--up" : delta < 0 ? "f-delta--down" : "f-delta--flat"}`}>
+                        {delta > 0 ? "+" : ""}{delta}
+                      </span>
+                    </div>
+                    <p className="f-annotation" style={{ marginTop: "0.35rem", fontSize: "0.58rem" }}>today: {today}</p>
+                    <div className="mt-2" style={{ height: 2, background: "rgba(255,255,255,0.03)" }}>
+                      <div style={{ height: "100%", width: `${proj}%`, background: gClr(proj), opacity: 0.5, transition: "width 0.5s" }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+          </section>
 
-            {/* Scenario selector */}
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold mb-1" style={{ color: "var(--text)" }}>Select a civilization scenario</h3>
-              <p className="text-xs mb-4" style={{ color: "var(--text-muted)" }}>Choose a scenario to see how it changes every chart and projection below.</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {CIV_SCENARIOS.map(sc => (
-                  <button key={sc.id} onClick={() => setActiveScenario(sc.id)} className={`glass-card overflow-hidden text-left w-full transition-all hover:border-white/20 ${activeScenario === sc.id ? "ring-2" : ""}`} style={activeScenario === sc.id ? { borderColor: `${sc.color}55`, boxShadow: `0 0 20px ${sc.color}11` } : {}}>
-                    <img src={'/images/civilization/scenario-' + sc.id + '.webp'} alt="" className="w-full h-20 object-cover opacity-50" />
-                    <div className="p-4">
-                      <div className="flex items-center gap-2 mb-1"><span className="text-lg">{sc.icon}</span><span className="text-xs font-semibold" style={{ color: sc.color }}>{sc.name}</span></div>
-                      <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-faint)" }}>{sc.desc}</p>
-                      {activeScenario === sc.id && <div className="mt-2 text-[9px] font-semibold uppercase tracking-widest" style={{ color: sc.color }}>Active</div>}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="glass-card p-6 mb-8">
-              <h3 className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>10-Year KPI Trajectories</h3>
-              <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>Projected under <span style={{color:s.color}}>{s.name}</span> scenario</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {data.kpis.map(k => {
-                  const st = SCENARIO_TRAJECTORIES[k.id]?.[activeScenario];
-                  const traj = st ? st.trajectory : k.trajectory;
-                  const cur = st ? st.current : k.current;
-                  const tgt = st ? st.target : k.target;
-                  const improving = k.better === "lower" ? traj[traj.length-1] < traj[0] : traj[traj.length-1] > traj[0];
-                  return (
-                  <div key={k.id} className="glass-card p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-semibold uppercase tracking-widest" style={{color:"var(--text-muted)"}}>{k.label}</p>
-                      <span className="inline-block h-2 w-2 rounded-full" style={{backgroundColor:improving ? "#10b981" : "#f43f5e"}} />
-                    </div>
-                    <div className="flex items-end gap-3 mb-2">
-                      <p className="text-2xl font-bold" style={{color:improving ? k.color : "#f43f5e",fontFamily:"'Space Grotesk',sans-serif"}}>{cur}{k.unit}</p>
-                      <p className="text-[10px] mb-1" style={{color:"var(--text-faint)"}}>Target: {tgt}{k.unit}</p>
-                    </div>
-                    <div className="h-20">
+          {/* KPI sparkline matrix */}
+          <section className="f-section">
+            <span className="f-section-num">03</span>
+            <p className="f-label" style={{ marginBottom: "1.25rem" }}>10-Year Trajectories &mdash; <span style={{ color: sc.color }}>{sc.name}</span></p>
+            <div className="f-grid" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
+              {data.kpis.map(k => {
+                const st = TRAJ[k.id]?.[scenario];
+                const t = st ? st.t : k.trajectory;
+                const cur = st ? st.cur : k.current;
+                const tgt = st ? st.tgt : k.target;
+                const up = k.better === "lower" ? t[9] < t[0] : t[9] > t[0];
+                const clr = up ? sc.color : "#f43f5e";
+                return (
+                  <div key={k.id} className="f-cell" style={{ padding: "1.25rem 1rem" }}>
+                    <p className="f-label" style={{ fontSize: "0.48rem", marginBottom: "0.6rem" }}>{k.label}</p>
+                    <p className="f-metric f-metric-md" style={{ color: clr }}>{cur}<span className="f-annotation ml-1" style={{ fontWeight: 400, letterSpacing: 0 }}>{k.unit.trim()}</span></p>
+                    <p className="f-annotation" style={{ fontSize: "0.52rem", marginTop: "0.15rem" }}>tgt {tgt}{k.unit} &middot; end {t[9]}{k.unit}</p>
+                    <div style={{ height: 40, marginTop: 10 }}>
                       <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={traj.map((v,i)=>({year:2026+i,value:v}))} margin={{top:2,right:2,bottom:0,left:-20}}>
-                          <defs><linearGradient id={`og-${k.id}-${activeScenario}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={improving ? k.color : "#f43f5e"} stopOpacity={0.3}/><stop offset="100%" stopColor={improving ? k.color : "#f43f5e"} stopOpacity={0}/></linearGradient></defs>
-                          <Area type="monotone" dataKey="value" stroke={improving ? k.color : "#f43f5e"} fill={`url(#og-${k.id}-${activeScenario})`} strokeWidth={2} dot={false} />
-                          <XAxis dataKey="year" tick={{fill:"#64748b",fontSize:8}} axisLine={false} tickLine={false} />
+                        <AreaChart data={t.map((v, i) => ({ y: 2026+i, v }))} margin={{ top: 1, right: 0, bottom: 0, left: 0 }}>
+                          <defs><linearGradient id={`sp-${k.id}-${scenario}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={clr} stopOpacity={0.15} /><stop offset="100%" stopColor={clr} stopOpacity={0} /></linearGradient></defs>
+                          <Area type="monotone" dataKey="v" stroke={clr} fill={`url(#sp-${k.id}-${scenario})`} strokeWidth={1.2} dot={false} />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
                   </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Scenario comparison graph */}
-            <div className="glass-card p-6 mb-8">
-              <h3 className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>Scenario Comparison</h3>
-              <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>All four scenarios overlaid for each KPI &mdash; active scenario highlighted</p>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {data.kpis.map(k => (
-                  <div key={k.id} className="glass-card p-4">
-                    <p className="text-xs font-semibold mb-3" style={{color:k.color}}>{k.label} <span style={{color:"var(--text-faint)"}}>({k.unit.trim()})</span></p>
-                    <ResponsiveContainer width="100%" height={180}>
-                      <LineChart data={comparisonChartData[k.id] || []} margin={{top:4,right:8,bottom:0,left:-10}}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(51,65,85,0.3)" />
-                        <XAxis dataKey="year" tick={{fill:"#64748b",fontSize:10}} axisLine={false} tickLine={false} />
-                        <YAxis tick={{fill:"#64748b",fontSize:10}} axisLine={false} tickLine={false} />
-                        <Tooltip contentStyle={{background:"rgba(15,23,42,0.95)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",color:"#e2e8f0",fontSize:"11px"}} />
-                        {CIV_SCENARIOS.map(sc => (
-                          <Line key={sc.id} type="monotone" dataKey={sc.id} stroke={sc.color} strokeWidth={sc.id === activeScenario ? 3 : 1} strokeOpacity={sc.id === activeScenario ? 1 : 0.35} dot={false} name={sc.name} />
-                        ))}
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="glass-card p-6 mb-8">
-              <h3 className="text-sm font-semibold mb-3" style={{color:"var(--text)"}}>Funding Pool Breakdown</h3>
-              <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>Total pool under <span style={{color:s.color}}>{s.name}</span>: <strong>${fmtK(SCENARIO_FUNDING[activeScenario].poolSize_m * 1_000_000)}/year</strong></p>
-              <div className="space-y-3">
-                {data.dividendModel.fundingSources.map((fs, idx) => {
-                  const mult = SCENARIO_FUNDING[activeScenario].multipliers[idx] ?? 1;
-                  const scaledAnnual = Math.round(fs.annual_m * mult);
-                  return (
-                  <div key={fs.source} className="flex items-center gap-4">
-                    <div className="w-20 text-right text-xs font-bold" style={{color:s.color}}>{fs.pctOfPool}%</div>
-                    <div className="flex-1"><div className="h-2 rounded-full overflow-hidden" style={{background:"rgba(255,255,255,0.05)"}}><div className="h-full rounded-full" style={{width:`${fs.pctOfPool}%`,background:s.color,opacity:0.7}} /></div></div>
-                    <div className="flex-1"><p className="text-xs font-semibold" style={{color:"var(--text)"}}>{fs.source}</p><p className="text-[10px]" style={{color:"var(--text-faint)"}}>${fmtK(scaledAnnual * 1_000_000)}/yr</p></div>
-                  </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Summary */}
-            <div className="glass-card p-6" style={{ borderLeft: `3px solid ${s.color}` }}>
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: s.color, fontFamily: "'Space Grotesk',sans-serif" }}>
-                <span className="text-lg">{s.icon}</span> Civilization in 2035: {s.name}
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>{civSummary[activeScenario]}</p>
-            </div>
-          </section>
-          );
-        })()}
-
-        {/* JOURNEYS */}
-        {tab==="journeys" && (<section>
-          <img src={`/images/civilization/journey-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
-          <Heading icon={"\u{1F5FA}\uFE0F"} title="Resident Journey Map" sub="Five core civic journeys from onboarding to graduation" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {data.journeys.map(j => (
-              <button key={j.id} onClick={()=>setSelectedJourney(j.id===selectedJourney?null:j.id)} className={`glass-card p-5 text-left w-full transition-all ${selectedJourney===j.id?"ring-2 ring-amber-400/50 border-amber-400/30":""} hover:border-white/20`}>
-                <div className="flex items-center gap-3 mb-2"><span className="text-2xl">{j.icon}</span><h4 className="text-sm font-semibold" style={{color:"var(--text)"}}>{j.title}</h4></div>
-                <p className="text-xs mb-3" style={{color:"var(--text-muted)"}}>{j.desc}</p>
-                <div className="flex gap-4 text-[10px]">
-                  <span style={{color:"var(--emerald)"}}>{(j.completionRate*100).toFixed(0)}% completion</span>
-                  <span style={{color:"var(--amber)"}}>{j.avgDays} days avg</span>
-                  <span style={{color:"var(--sky)"}}>{j.satisfactionScore}/5 sat.</span>
-                </div>
-              </button>
-            ))}
-          </div>
-          {activeJourney && (
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-3 mb-4"><span className="text-3xl">{activeJourney.icon}</span><div><h3 className="text-lg font-semibold" style={{color:"var(--text)"}}>{activeJourney.title} Journey</h3><p className="text-xs" style={{color:"var(--text-muted)"}}>{activeJourney.desc}</p></div></div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{color:"var(--amber)"}}>Steps</p>
-                  <div className="space-y-2">
-                    {activeJourney.steps.map((s,i) => (
-                      <div key={i} className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/[0.02] p-3">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style={{background:"rgba(245,158,11,0.15)",color:"var(--amber)"}}>{i+1}</span>
-                        <p className="text-xs leading-relaxed" style={{color:"var(--text-muted)"}}>{s}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{color:"var(--sky)"}}>Touchpoints</p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {activeJourney.touchpoints.map(tp => (<span key={tp} className="text-[10px] px-3 py-1 rounded-full" style={{background:"rgba(14,165,233,0.12)",color:"var(--sky)"}}>{tp}</span>))}
-                  </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="glass-card p-3 text-center"><p className="text-lg font-bold" style={{color:"var(--emerald)"}}>{(activeJourney.completionRate*100).toFixed(0)}%</p><p className="text-[10px]" style={{color:"var(--text-faint)"}}>Completion</p></div>
-                    <div className="glass-card p-3 text-center"><p className="text-lg font-bold" style={{color:"var(--amber)"}}>{activeJourney.avgDays}d</p><p className="text-[10px]" style={{color:"var(--text-faint)"}}>Avg duration</p></div>
-                    <div className="glass-card p-3 text-center"><p className="text-lg font-bold" style={{color:"var(--sky)"}}>{activeJourney.satisfactionScore}</p><p className="text-[10px]" style={{color:"var(--text-faint)"}}>Satisfaction</p></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {!activeJourney && <div className="glass-card p-8 text-center"><p className="text-3xl mb-3">{"\u{1F5FA}\uFE0F"}</p><p className="text-sm" style={{color:"var(--text-muted)"}}>Select a journey above to explore its steps and touchpoints.</p></div>}
-        </section>)}
-
-        {/* CIVIC DIVIDEND */}
-        {tab==="dividend" && (() => {
-          const sc = CIV_SCENARIOS.find(x => x.id === activeScenario)!;
-          const sf = SCENARIO_FUNDING[activeScenario];
-          const povTraj = SCENARIO_TRAJECTORIES.poverty[activeScenario].trajectory;
-          const povTarget = SCENARIO_TRAJECTORIES.poverty[activeScenario].target;
-          const yMax = Math.max(15, ...povTraj) + 2;
-          return (<section>
-          <img src={`/images/civilization/dividend-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
-          <Heading icon={"\u{1F4B0}"} title="Civic Dividend Model" sub="Locally controlled dividend funded by AI compute rents, green tariffs, and data commons licensing. Modeled after Alaska's Permanent Fund." />
-
-          {/* Scenario selector */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            {CIV_SCENARIOS.map(s => (
-              <button key={s.id} onClick={() => setActiveScenario(s.id)} className={`glass-card p-3 text-center transition-all hover:border-white/20 ${activeScenario === s.id ? "ring-2" : ""}`} style={activeScenario === s.id ? { borderColor: `${s.color}55`, boxShadow: `0 0 20px ${s.color}11` } : {}}>
-                <span className="text-lg">{s.icon}</span>
-                <p className="text-[10px] font-semibold mt-1" style={{color: s.color}}>{s.name}</p>
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <Stat label="Pool size" value={`$${(sf.poolSize_m/1000).toFixed(1)}B/yr`} color={sc.color} />
-            <Stat label="Per resident" value={`$${sf.annual}/yr`} sub={`$${sf.biweekly} biweekly`} color="var(--emerald)" />
-            <Stat label="Escrow reserve" value={activeScenario === "worst" ? "0 months" : activeScenario === "bau" ? "6 months" : `${data.dividendModel.escrowMonths} months`} sub="stability buffer" color="var(--sky)" />
-            <Stat label="Poverty projection" value={`${povTarget}%`} sub={`from ${data.dividendModel.povertyReduction.baseline}%`} color={povTarget < 13 ? "var(--emerald)" : "var(--rose)"} />
-          </div>
-          <div className="glass-card p-6 mb-6" style={{borderLeft:`3px solid ${sc.color}`}}>
-            <p className="text-xs" style={{color:"var(--text-muted)"}}>
-              {activeScenario === "aggressive" && <><strong style={{color:"var(--emerald)"}}>Full deployment:</strong> 1&ndash;6.5% of regional GDP flows into the dividend pool. Every enrolled resident receives biweekly payments via digital wallet. Escrow covers 24 months of payouts as a stability reserve.</>}
-              {activeScenario === "moderate" && <><strong style={{color:"#38bdf8"}}>Partial rollout:</strong> Pilot regions adopt the dividend model at 60% of target pool. Coverage is uneven &mdash; urban areas first, rural communities phased in over 5 years. Escrow covers 24 months but smaller pool limits impact.</>}
-              {activeScenario === "bau" && <><strong style={{color:"#f59e0b"}}>Minimal funding:</strong> No coordinated dividend program. Fragmented social safety nets continue. Only 16% of the target pool materializes through ad hoc programs. Escrow is 6 months and shrinking.</>}
-              {activeScenario === "worst" && <><strong style={{color:"#f43f5e"}}>Collapsed:</strong> Institutional failure prevents any coordinated dividend. Remaining social programs are defunded. Only 3% of the target pool exists. No escrow. Poverty accelerates as safety nets disintegrate.</>}
-            </p>
-          </div>
-          <div className="glass-card p-6 mb-6">
-            <h3 className="text-sm font-semibold mb-4" style={{color:"var(--text)"}}>Funding Sources <span className="font-normal text-[10px]" style={{color:"var(--text-faint)"}}>&mdash; under {sc.name}</span></h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.dividendModel.fundingSources.map((fs, idx) => {
-                const mult = sf.multipliers[idx] ?? 1;
-                const scaledAnnual = Math.round(fs.annual_m * mult);
-                return (
-                <div key={fs.source} className="glass-card p-4" style={{borderTop:`3px solid ${sc.color}`}}>
-                  <p className="text-lg font-bold" style={{color:sc.color,fontFamily:"'Space Grotesk',sans-serif"}}>{fs.pctOfPool}%</p>
-                  <p className="text-sm font-semibold mt-1" style={{color:"var(--text)"}}>{fs.source}</p>
-                  <p className="text-xs mt-1" style={{color:"var(--text-muted)"}}>{fs.desc}</p>
-                  <p className="text-xs mt-2 font-mono" style={{color:"var(--text-faint)"}}>${fmtK(scaledAnnual * 1_000_000)}/year</p>
-                </div>
                 );
               })}
             </div>
-          </div>
+          </section>
 
-          <div className="glass-card p-6 mb-6">
-            <h3 className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>Poverty Rate &mdash; <span style={{color:sc.color}}>{sc.name}</span></h3>
-            <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>10-year projection from {data.dividendModel.povertyReduction.baseline}% to {povTarget}%</p>
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={povTraj.map((v,i)=>({year:2026+i,rate:v}))} margin={{top:4,right:8,bottom:0,left:-10}}>
-                <defs><linearGradient id="pov-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={sc.color} stopOpacity={0.3}/><stop offset="100%" stopColor={sc.color} stopOpacity={0}/></linearGradient></defs>
-                <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="year" tick={{fill:"#94a3b8",fontSize:11}} /><YAxis domain={[0,yMax]} tick={{fill:"#94a3b8",fontSize:11}} />
-                <Tooltip contentStyle={{background:"rgba(15,23,42,0.95)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",color:"#e2e8f0",fontSize:"11px"}} />
-                <Area type="monotone" dataKey="rate" stroke={sc.color} fill="url(#pov-g)" strokeWidth={2} name="Poverty rate %" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="glass-card p-6">
-            <h3 className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>Poverty &mdash; All Scenarios</h3>
-            <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>Comparing poverty trajectories across all four scenarios</p>
-            <ResponsiveContainer width="100%" height={240}>
-              <LineChart data={comparisonChartData.poverty || []} margin={{top:4,right:8,bottom:0,left:-10}}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(51,65,85,0.3)" />
-                <XAxis dataKey="year" tick={{fill:"#64748b",fontSize:10}} axisLine={false} tickLine={false} />
-                <YAxis tick={{fill:"#64748b",fontSize:10}} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{background:"rgba(15,23,42,0.95)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",color:"#e2e8f0",fontSize:"11px"}} />
-                {CIV_SCENARIOS.map(s => (
-                  <Line key={s.id} type="monotone" dataKey={s.id} stroke={s.color} strokeWidth={s.id === activeScenario ? 3 : 1} strokeOpacity={s.id === activeScenario ? 1 : 0.35} dot={false} name={s.name} />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </section>);
-        })()}
-
-        {/* BENEFITS */}
-        {tab==="benefits" && (<section>
-          <img src={`/images/civilization/benefits-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
-          <Heading icon={"\u{1F91D}"} title="Benefits & Support Services" sub="Comprehensive resident support: dividends, healthcare, housing, childcare, transit, digital access, legal aid, and credentials" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {data.benefits.map(b => (
-              <div key={b.id} className="glass-card p-5">
-                <div className="flex items-center gap-3 mb-2"><span className="text-2xl">{b.icon}</span><div><h4 className="text-sm font-semibold" style={{color:"var(--text)"}}>{b.title}</h4><span className={`text-[10px] px-2 py-0.5 rounded-full ${b.status==="active"?"bg-emerald-500/15 text-emerald-400 border border-emerald-500/30":"bg-amber-500/15 text-amber-400 border border-amber-500/30"}`}>{b.status}</span></div></div>
-                <p className="text-xs mb-3" style={{color:"var(--text-muted)"}}>{b.desc}</p>
-                <div className="flex items-center justify-between text-xs"><span className="font-semibold" style={{color:"var(--emerald)"}}>{b.amount}</span><span style={{color:"var(--text-faint)"}}>{fmtK(b.recipients)} recipients</span></div>
-              </div>
-            ))}
-          </div>
-          <div className="glass-card p-6">
-            <h3 className="text-sm font-semibold mb-4" style={{color:"var(--text)"}}>Service Provider Network</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.serviceProviders.map(sp => (
-                <div key={sp.name} className="rounded-xl border border-white/5 bg-white/[0.02] p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider mb-1" style={{color:"var(--sky)"}}>{sp.type}</p>
-                  <p className="text-sm font-semibold" style={{color:"var(--text)"}}>{sp.name}</p>
-                  <p className="text-xs mt-1" style={{color:"var(--text-muted)"}}>{sp.coverage}</p>
-                  <p className="text-xs mt-1" style={{color:"var(--text-faint)"}}>Capacity: {fmtK(sp.capacity)}</p>
+          {/* Infrastructure stats */}
+          <section className="f-section" style={{ paddingTop: "1rem" }}>
+            <span className="f-section-num">04</span>
+            <p className="f-label" style={{ marginBottom: "1.25rem" }}>Civic Infrastructure &mdash; <span style={{ color: sc.color }}>{sc.name}</span></p>
+            <div className="f-grid" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+              {[
+                { label: "Pool Size", value: `$${(sf.pool/1000).toFixed(1)}B`, sub: "/year" },
+                { label: "Per Resident", value: `$${sf.yr.toLocaleString()}`, sub: `$${sf.bw} biweekly` },
+                { label: "Enrolled", value: fmtK(sf.pop), sub: "residents" },
+                { label: "Escrow", value: `${sf.esc}`, sub: "months reserve" },
+              ].map(s => (
+                <div key={s.label} className="f-cell">
+                  <p className="f-label" style={{ fontSize: "0.5rem", marginBottom: "0.5rem" }}>{s.label}</p>
+                  <p className="f-metric f-metric-lg" style={{ color: sc.color }}>{s.value}</p>
+                  <p className="f-annotation" style={{ marginTop: "0.25rem" }}>{s.sub}</p>
                 </div>
               ))}
             </div>
-          </div>
-        </section>)}
+          </section>
 
-        {/* KPIs */}
-        {tab==="kpis" && (() => {
-          const sc = CIV_SCENARIOS.find(x => x.id === activeScenario)!;
-          return (<section>
-          <img src={`/images/civilization/kpi-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
-          <Heading icon={"\u{1F4C8}"} title="KPI Dashboard" sub={`Five key indicators under ${sc.name} \u2014 2026 baseline to 2035`} />
-
-          {/* Scenario selector */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            {CIV_SCENARIOS.map(s => (
-              <button key={s.id} onClick={() => setActiveScenario(s.id)} className={`glass-card p-3 text-center transition-all hover:border-white/20 ${activeScenario === s.id ? "ring-2" : ""}`} style={activeScenario === s.id ? { borderColor: `${s.color}55`, boxShadow: `0 0 20px ${s.color}11` } : {}}>
-                <span className="text-lg">{s.icon}</span>
-                <p className="text-[10px] font-semibold mt-1" style={{color: s.color}}>{s.name}</p>
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {data.kpis.map(k => {
-              const st = SCENARIO_TRAJECTORIES[k.id]?.[activeScenario];
-              const traj = st ? st.trajectory : k.trajectory;
-              const cur = st ? st.current : k.current;
-              const tgt = st ? st.target : k.target;
-              const improving = k.better==="lower" ? traj[traj.length-1] < traj[0] : traj[traj.length-1] > traj[0];
-              const progress = k.better==="lower" ? (k.baseline-cur)/(k.baseline-k.target)*100 : (cur-k.baseline)/(k.target-k.baseline)*100;
-              const clampedProgress = Math.min(100, Math.max(-100, progress));
+          {/* Funding breakdown */}
+          <section className="f-section">
+            <span className="f-section-num">05</span>
+            <div className="flex items-baseline gap-4 mb-5">
+              <p className="f-label" style={{ marginBottom: 0 }}>Funding Allocation</p>
+              <span className="f-metric f-metric-md" style={{ color: sc.color }}>${(sf.pool/1000).toFixed(1)}B</span>
+              <span className="f-annotation">/year</span>
+            </div>
+            {data.dividendModel.fundingSources.map((fs, i) => {
+              const scaled = Math.round(fs.annual_m * (sf.m[i] ?? 1));
               return (
-                <div key={k.id} className="glass-card p-5">
-                  <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{color:"var(--text-muted)"}}>{k.label}</p>
-                  <div className="flex items-end justify-between mb-2">
-                    <p className="text-3xl font-bold" style={{color:improving ? k.color : "#f43f5e",fontFamily:"'Space Grotesk',sans-serif"}}>{cur}{k.unit}</p>
-                    <div className="text-right"><p className="text-[10px]" style={{color:"var(--text-faint)"}}>Base: {k.baseline}{k.unit}</p><p className="text-[10px]" style={{color:"var(--text-faint)"}}>Target: {k.target}{k.unit}</p></div>
+                <div key={fs.source} className="flex items-center gap-0 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                  <span className="f-metric f-metric-xs w-12 text-right flex-shrink-0" style={{ color: sc.color }}>{fs.pctOfPool}%</span>
+                  <div className="flex-1 mx-4">
+                    <div className="f-bar-track" style={{ maxWidth: 200 }}>
+                      <div className="f-bar-fill" style={{ width: `${fs.pctOfPool * 2}%`, background: sc.color, opacity: 0.4 }} />
+                    </div>
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden" style={{background:"rgba(255,255,255,0.05)"}}><div className="h-full rounded-full transition-all" style={{width:`${Math.min(100,Math.max(0,clampedProgress))}%`,background:improving ? k.color : "#f43f5e",opacity:0.7}} /></div>
-                  <p className="text-[10px] mt-1 text-right" style={{color:"var(--text-faint)"}}>{clampedProgress > 0 ? `${Math.round(clampedProgress)}% to target` : "Regressing"}</p>
-                  <div className="mt-3 h-24"><ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={traj.map((v,i)=>({year:2026+i,value:v}))} margin={{top:2,right:2,bottom:0,left:-20}}>
-                      <defs><linearGradient id={`kpi-${k.id}-${activeScenario}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={improving ? k.color : "#f43f5e"} stopOpacity={0.3}/><stop offset="100%" stopColor={improving ? k.color : "#f43f5e"} stopOpacity={0}/></linearGradient></defs>
-                      <Area type="monotone" dataKey="value" stroke={improving ? k.color : "#f43f5e"} fill={`url(#kpi-${k.id}-${activeScenario})`} strokeWidth={2} dot={false} />
-                      <XAxis dataKey="year" tick={{fill:"#64748b",fontSize:8}} axisLine={false} tickLine={false} />
-                    </AreaChart>
-                  </ResponsiveContainer></div>
+                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.6)", fontWeight: 500, flex: "1 1 auto" }}>{fs.source}</span>
+                  <span className="f-metric f-metric-xs flex-shrink-0" style={{ color: "rgba(255,255,255,0.4)" }}>${fmtK(scaled * 1e6)}/yr</span>
                 </div>
               );
             })}
-          </div>
+          </section>
 
-          <div className="glass-card p-6 mb-6">
-            <h3 className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>Combined Trajectory &mdash; <span style={{color:sc.color}}>{sc.name}</span></h3>
-            <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>All five KPIs under the active scenario</p>
-            <ResponsiveContainer width="100%" height={300}>
-              <AreaChart data={kpiChartData}>
-                <CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="year" tick={{fill:"#94a3b8",fontSize:11}} /><YAxis tick={{fill:"#94a3b8",fontSize:11}} />
-                <Tooltip contentStyle={{background:"rgba(15,23,42,0.95)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",color:"#e2e8f0",fontSize:"11px"}} />
-                {data.kpis.map(k => (<Area key={k.id} type="monotone" dataKey={k.id} stroke={k.color} fill="none" strokeWidth={2} name={k.label} />))}
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Narrative */}
+          <section className="f-section" style={{ paddingBottom: "3.5rem" }}>
+            <span className="f-section-num">06</span>
+            <p className="f-label" style={{ marginBottom: "1.5rem" }}>Assessment &mdash; <span style={{ color: sc.color }}>{sc.name}</span></p>
+            <blockquote className="f-pullquote mb-6">{NARRATIVE[scenario].pullquote}</blockquote>
+            <p className="f-body">{NARRATIVE[scenario].body}</p>
+          </section>
 
-          <div className="glass-card p-6">
-            <h3 className="text-sm font-semibold mb-1" style={{color:"var(--text)"}}>All Scenarios Compared</h3>
-            <p className="text-xs mb-4" style={{color:"var(--text-faint)"}}>Each KPI across all four scenarios &mdash; active scenario highlighted</p>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {data.kpis.map(k => (
-                <div key={k.id}>
-                  <p className="text-xs font-semibold mb-2" style={{color:k.color}}>{k.label}</p>
+        </>)}
+
+        {/* ═══ TRAJECTORIES ═══ */}
+        {section === "trajectories" && (<>
+
+          <section className="f-section">
+            <span className="f-section-num">01</span>
+            <p className="f-label mb-1">Scenario Comparison</p>
+            <p className="f-annotation mb-6">Five indicators across four scenarios. Active scenario emphasized.</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+              {data.kpis.map((k, idx) => (
+                <div key={k.id} className="f-module" style={{ padding: "1.5rem", borderTop: idx >= 2 ? "none" : undefined, borderLeft: idx % 2 !== 0 ? "none" : undefined }}>
+                  <div className="flex items-baseline justify-between mb-4">
+                    <p className="f-label" style={{ marginBottom: 0, fontSize: "0.52rem" }}>{k.label}</p>
+                    <span className="f-annotation">{k.unit.trim()}</span>
+                  </div>
                   <ResponsiveContainer width="100%" height={180}>
-                    <LineChart data={comparisonChartData[k.id] || []} margin={{top:4,right:8,bottom:0,left:-10}}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(51,65,85,0.3)" />
-                      <XAxis dataKey="year" tick={{fill:"#64748b",fontSize:10}} axisLine={false} tickLine={false} />
-                      <YAxis tick={{fill:"#64748b",fontSize:10}} axisLine={false} tickLine={false} />
-                      <Tooltip contentStyle={{background:"rgba(15,23,42,0.95)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"8px",color:"#e2e8f0",fontSize:"11px"}} />
-                      {CIV_SCENARIOS.map(s => (
-                        <Line key={s.id} type="monotone" dataKey={s.id} stroke={s.color} strokeWidth={s.id === activeScenario ? 3 : 1} strokeOpacity={s.id === activeScenario ? 1 : 0.35} dot={false} name={s.name} />
+                    <LineChart data={cmpData[k.id] || []} margin={{ top: 4, right: 8, bottom: 0, left: -14 }}>
+                      <XAxis dataKey="year" tick={AX} axisLine={false} tickLine={false} />
+                      <YAxis tick={AX} axisLine={false} tickLine={false} />
+                      <Tooltip contentStyle={TT} />
+                      {SCENARIOS.map(s => (
+                        <Line key={s.id} type="monotone" dataKey={s.id} stroke={s.color} strokeWidth={s.id === scenario ? 2 : 0.7} strokeOpacity={s.id === scenario ? 1 : 0.22} dot={false} name={s.name} />
                       ))}
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               ))}
+              {data.kpis.length % 2 !== 0 && <div className="f-module" style={{ borderTop: "none", borderLeft: "none" }} />}
             </div>
-          </div>
-        </section>);
-        })()}
+            <Legend />
+          </section>
 
-        {/* MILESTONES */}
-        {tab==="milestones" && (<section>
-          <img src={`/images/civilization/milestones-${activeScenario}.webp`} alt="" className="w-full h-40 object-cover rounded-xl mb-6 opacity-60" />
-          <Heading icon={"\u{1F3AF}"} title="10-Year Milestones" sub="From discovery sprint to global export (2026\u20132035)" />
-          <div className="space-y-4">
-            {data.milestones.map((m,i) => {
-              const colors = ["var(--sky)","var(--emerald)","var(--violet)","var(--amber)","var(--rose)","var(--emerald)"];
-              const c = colors[i % colors.length];
+          <section className="f-section">
+            <span className="f-section-num">02</span>
+            <p className="f-label mb-5">Detailed Metrics &mdash; <span style={{ color: sc.color }}>{sc.name}</span></p>
+            <div className="hidden sm:flex items-center gap-0 pb-2 mb-1" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+              <span className="f-annotation w-36">Indicator</span>
+              <span className="f-annotation w-24">Current</span>
+              <span className="f-annotation flex-1">Trajectory</span>
+              <span className="f-annotation w-20 text-right">2035</span>
+              <span className="f-annotation w-16 text-right">Target</span>
+            </div>
+            {data.kpis.map(k => {
+              const st = TRAJ[k.id]?.[scenario];
+              const t = st ? st.t : k.trajectory;
+              const cur = st ? st.cur : k.current;
+              const tgt = st ? st.tgt : k.target;
+              const up = k.better === "lower" ? t[9] < t[0] : t[9] > t[0];
               return (
-                <div key={i} className="glass-card p-5 flex gap-4" style={{borderLeft:`3px solid ${c}`}}>
-                  <div className="flex-shrink-0 w-16 text-center"><p className="text-lg font-bold" style={{color:c,fontFamily:"'Space Grotesk',sans-serif"}}>{m.year}</p></div>
-                  <div className="flex-1"><h4 className="text-sm font-semibold mb-2" style={{color:"var(--text)"}}>{m.title}</h4><ul className="space-y-1">{m.items.map((item,j)=>(<li key={j} className="text-xs flex items-start gap-2" style={{color:"var(--text-muted)"}}><span style={{color:c}}>{"\u2022"}</span>{item}</li>))}</ul></div>
+                <div key={k.id} className="flex items-center gap-0 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                  <span className="w-36 text-xs" style={{ color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>{k.label}</span>
+                  <span className="f-metric f-metric-xs w-24" style={{ color: up ? sc.color : "#f43f5e" }}>{cur}{k.unit}</span>
+                  <div className="flex-1" style={{ height: 28 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={t.map((v, i) => ({ y: 2026+i, v }))} margin={{ top: 2, right: 4, bottom: 2, left: 4 }}>
+                        <Line type="monotone" dataKey="v" stroke={up ? sc.color : "#f43f5e"} strokeWidth={1.2} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <span className="f-metric f-metric-xs w-20 text-right" style={{ color: "rgba(255,255,255,0.4)" }}>{t[9]}{k.unit}</span>
+                  <span className="f-annotation w-16 text-right">{tgt}</span>
                 </div>
               );
             })}
-          </div>
-          <div className="glass-card p-6 mt-8" style={{borderLeft:"3px solid var(--emerald)"}}>
-            <p className="text-xs" style={{color:"var(--text-muted)"}}><strong style={{color:"var(--emerald)"}}>Success criteria:</strong> Poverty &lt;5%, reskill &lt;6 months, 100% high-risk AI audited, 75% corridors monitored, export packages adopted by 12+ cities/countries.</p>
-          </div>
-        </section>)}
+          </section>
+        </>)}
+
+        {/* ═══ FUNDING ═══ */}
+        {section === "funding" && (<>
+          <section className="f-section">
+            <span className="f-section-num">01</span>
+            <p className="f-label mb-1">Civic Dividend Model</p>
+            <p className="f-annotation mb-2">Locally controlled dividend. Modeled after Alaska&apos;s Permanent Fund.</p>
+            <hr className="f-rule" />
+            <div className="f-grid mt-6" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+              {[
+                { l: "Pool", v: `$${(sf.pool/1000).toFixed(1)}B`, s: "/year" },
+                { l: "Annual", v: `$${sf.yr.toLocaleString()}`, s: `$${sf.bw} biweekly` },
+                { l: "Enrolled", v: fmtK(sf.pop), s: "residents" },
+                { l: "Escrow", v: `${sf.esc}`, s: "mo reserve" },
+              ].map(x => (
+                <div key={x.l} className="f-cell">
+                  <p className="f-label" style={{ fontSize: "0.5rem", marginBottom: "0.5rem" }}>{x.l}</p>
+                  <p className="f-metric f-metric-lg" style={{ color: sc.color }}>{x.v}</p>
+                  <p className="f-annotation mt-1">{x.s}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="f-section" style={{ paddingTop: "1rem" }}>
+            <span className="f-section-num">02</span>
+            <p className="f-label mb-5">Sources &amp; Allocation</p>
+            {data.dividendModel.fundingSources.map((fs, i) => {
+              const scaled = Math.round(fs.annual_m * (sf.m[i] ?? 1));
+              return (
+                <div key={fs.source} className="py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                  <div className="flex items-baseline gap-4 mb-1.5">
+                    <span className="f-metric f-metric-sm" style={{ color: sc.color, width: 40, textAlign: "right" as const }}>{fs.pctOfPool}%</span>
+                    <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.7)" }}>{fs.source}</span>
+                    <span className="f-metric f-metric-xs ml-auto" style={{ color: "rgba(255,255,255,0.35)" }}>${fmtK(scaled * 1e6)}/yr</span>
+                  </div>
+                  <div className="ml-14">
+                    <div className="f-bar-track mb-1.5" style={{ maxWidth: 280 }}>
+                      <div className="f-bar-fill" style={{ width: `${fs.pctOfPool * 2.5}%`, background: sc.color, opacity: 0.35 }} />
+                    </div>
+                    <p className="f-annotation">{fs.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </section>
+
+          <section className="f-section">
+            <span className="f-section-num">03</span>
+            <p className="f-label mb-1">Poverty Trajectory</p>
+            <p className="f-annotation mb-4">All four scenarios &mdash; 2026 to 2035</p>
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={cmpData.poverty || []} margin={{ top: 8, right: 8, bottom: 0, left: -14 }}>
+                <XAxis dataKey="year" tick={AX} axisLine={false} tickLine={false} />
+                <YAxis tick={AX} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={TT} />
+                {SCENARIOS.map(s => (
+                  <Line key={s.id} type="monotone" dataKey={s.id} stroke={s.color} strokeWidth={s.id === scenario ? 2 : 0.7} strokeOpacity={s.id === scenario ? 1 : 0.22} dot={false} name={s.name} />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+            <Legend />
+          </section>
+        </>)}
+
+        {/* ═══ JOURNEYS ═══ */}
+        {section === "journeys" && (<>
+          <section className="f-section">
+            <span className="f-section-num">01</span>
+            <p className="f-label mb-1">Resident Journey Map</p>
+            <p className="f-annotation mb-6">Five core civic journeys from onboarding to graduation.</p>
+            <div className="f-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+              {data.journeys.map(j => (
+                <button key={j.id} onClick={() => setJourney(j.id === journey ? null : j.id)} className="f-cell text-left" style={{ cursor: "pointer", background: journey === j.id ? "rgba(255,255,255,0.025)" : "#030712", border: "none", padding: "1.5rem 1.25rem" }}>
+                  <span style={{ fontSize: "1.25rem" }}>{j.icon}</span>
+                  <p className="f-heading f-heading-md mt-2">{j.title}</p>
+                  <p className="f-annotation mt-1 mb-3">{j.desc}</p>
+                  <div className="flex gap-3 items-baseline">
+                    <span className="f-metric f-metric-sm" style={{ color: "#10b981" }}>{(j.completionRate*100).toFixed(0)}%</span>
+                    <span className="f-metric f-metric-sm">{j.avgDays}d</span>
+                    <span className="f-metric f-metric-sm" style={{ color: "#38bdf8" }}>{j.satisfactionScore}</span>
+                  </div>
+                  <div className="flex gap-3 mt-0.5">
+                    <span className="f-annotation" style={{ fontSize: "0.5rem" }}>completion</span>
+                    <span className="f-annotation" style={{ fontSize: "0.5rem" }}>duration</span>
+                    <span className="f-annotation" style={{ fontSize: "0.5rem" }}>satisfaction</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {activeJ && (
+            <section className="f-section">
+              <span className="f-section-num">02</span>
+              <div className="flex items-center gap-3 mb-5">
+                <span style={{ fontSize: "1.3rem" }}>{activeJ.icon}</span>
+                <div>
+                  <p className="f-heading f-heading-lg">{activeJ.title} Journey</p>
+                  <p className="f-annotation">{activeJ.desc}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_1px_1fr] gap-0">
+                <div className="pr-6">
+                  <p className="f-label mb-3">Steps</p>
+                  {activeJ.steps.map((s, i) => (
+                    <div key={i} className="flex items-start gap-3 py-2.5" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                      <span className="f-metric f-metric-xs" style={{ color: "rgba(255,255,255,0.15)", width: 14, textAlign: "right" as const, flexShrink: 0 }}>{i+1}</span>
+                      <p className="f-annotation" style={{ color: "rgba(255,255,255,0.5)" }}>{s}</p>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "rgba(255,255,255,0.05)", width: 1 }} className="hidden lg:block" />
+                <div className="pl-0 lg:pl-6 pt-6 lg:pt-0">
+                  <p className="f-label mb-3">Touchpoints</p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {activeJ.touchpoints.map(tp => <span key={tp} className="f-tag">{tp}</span>)}
+                  </div>
+                  <div className="f-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+                    <div className="f-cell text-center">
+                      <p className="f-metric f-metric-md" style={{ color: "#10b981" }}>{(activeJ.completionRate*100).toFixed(0)}%</p>
+                      <p className="f-annotation mt-1">completion</p>
+                    </div>
+                    <div className="f-cell text-center">
+                      <p className="f-metric f-metric-md">{activeJ.avgDays}d</p>
+                      <p className="f-annotation mt-1">duration</p>
+                    </div>
+                    <div className="f-cell text-center">
+                      <p className="f-metric f-metric-md" style={{ color: "#38bdf8" }}>{activeJ.satisfactionScore}/5</p>
+                      <p className="f-annotation mt-1">satisfaction</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+        </>)}
+
+        {/* ═══ SERVICES ═══ */}
+        {section === "services" && (<>
+          <section className="f-section">
+            <span className="f-section-num">01</span>
+            <p className="f-label mb-1">Benefits &amp; Support</p>
+            <p className="f-annotation mb-6">Comprehensive resident support infrastructure.</p>
+            {data.benefits.map(b => (
+              <div key={b.id} className="flex items-start gap-4 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                <span style={{ fontSize: "1.15rem", width: 28, textAlign: "center" as const, flexShrink: 0, marginTop: 2 }}>{b.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-3">
+                    <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.78)" }}>{b.title}</span>
+                    <span className="f-tag" style={{ borderColor: b.status === "active" ? "rgba(16,185,129,0.2)" : "rgba(245,158,11,0.2)", color: b.status === "active" ? "#10b981" : "#f59e0b" }}>{b.status}</span>
+                  </div>
+                  <p className="f-annotation mt-1">{b.desc}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="f-metric f-metric-xs" style={{ color: "#10b981" }}>{b.amount}</p>
+                  <p className="f-annotation">{fmtK(b.recipients)}</p>
+                </div>
+              </div>
+            ))}
+          </section>
+
+          <section className="f-section">
+            <span className="f-section-num">02</span>
+            <p className="f-label mb-5">Provider Network</p>
+            <div className="f-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+              {data.serviceProviders.map(sp => (
+                <div key={sp.name} className="f-cell">
+                  <p className="f-label" style={{ color: "#38bdf8", fontSize: "0.48rem", marginBottom: "0.4rem" }}>{sp.type}</p>
+                  <p style={{ fontSize: "0.78rem", fontWeight: 600, color: "rgba(255,255,255,0.72)" }}>{sp.name}</p>
+                  <p className="f-annotation mt-1">{sp.coverage}</p>
+                  <p className="f-metric f-metric-xs mt-2" style={{ color: "rgba(255,255,255,0.3)" }}>{fmtK(sp.capacity)} capacity</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>)}
+
+        {/* ═══ TIMELINE ═══ */}
+        {section === "timeline" && (<>
+          <section className="f-section">
+            <span className="f-section-num">01</span>
+            <p className="f-label mb-1">10-Year Milestones</p>
+            <p className="f-annotation mb-6">Discovery sprint to global export &mdash; 2026&ndash;2035</p>
+            {data.milestones.map((m, i) => {
+              const last = i === data.milestones.length - 1;
+              return (
+                <div key={i} className="flex gap-6 py-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                  <div className="w-20 flex-shrink-0 text-right">
+                    <p className="f-metric f-metric-md" style={{ color: last ? "#10b981" : "rgba(255,255,255,0.35)" }}>{m.year}</p>
+                  </div>
+                  <div className="flex-1">
+                    <p className="f-heading f-heading-md" style={{ marginBottom: "0.6rem" }}>{m.title}</p>
+                    {m.items.map((item, j) => (
+                      <p key={j} className="f-annotation py-0.5" style={{ color: "rgba(255,255,255,0.4)", paddingLeft: "1rem", textIndent: "-1rem" }}>
+                        <span style={{ color: last ? "rgba(16,185,129,0.4)" : "rgba(255,255,255,0.1)" }}>&mdash;&ensp;</span>{item}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </section>
+        </>)}
+
       </div>
 
-      <footer className="mt-20 py-8 text-center text-xs" style={{color:"var(--text-faint)",borderTop:"1px solid var(--card-border)"}}>
-        <p>CivilizationOS &middot; Clawcode Research &middot; 2026</p>
-        <p className="mt-1">
-          <a href="/blog" className="underline" style={{color:"var(--text-muted)"}}>Blog</a>{" \u00B7 "}
-          <a href="https://github.com/reillyclawcode/CivilizationOS" target="_blank" rel="noopener" className="underline" style={{color:"var(--text-muted)"}}>GitHub</a>{" \u00B7 "}
-          <a href="/simulation" className="underline" style={{color:"var(--text-muted)"}}>Simulation</a>{" \u00B7 "}
-          <a href="/transition" className="underline" style={{color:"var(--text-muted)"}}>TransitionOS</a>{" \u00B7 "}
-          <a href="/governance" className="underline" style={{color:"var(--text-muted)"}}>GovernanceOS</a>{" \u00B7 "}
-          <a href="/climate" className="underline" style={{color:"var(--text-muted)"}}>ClimateOS</a>{" \u00B7 "}
-          <a href="/strategy" className="underline" style={{color:"var(--text-muted)"}}>StrategyOS</a>
-        </p>
+      {/* ── Footer ── */}
+      <footer className="f-page mt-20 py-10" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+        <p className="f-annotation text-center">CivilizationOS &middot; Clawcode Research &middot; 2026</p>
+        <div className="flex justify-center gap-4 mt-3 flex-wrap">
+          {[
+            { href: "/climate", label: "ClimateOS" },
+            { href: "/simulation", label: "Simulation" },
+            { href: "/transition", label: "TransitionOS" },
+            { href: "/governance", label: "GovernanceOS" },
+            { href: "/strategy", label: "StrategyOS" },
+            { href: "/blog", label: "Blog" },
+          ].map(l => (
+            <a key={l.href} href={l.href} className="f-annotation" style={{ color: "rgba(255,255,255,0.22)", transition: "color 0.15s" }}>{l.label}</a>
+          ))}
+        </div>
       </footer>
     </main>
   );
