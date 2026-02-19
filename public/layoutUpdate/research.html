@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css?v=20260218">
 <style>
+.toc-link{display:block;color:var(--text-secondary);border-bottom:1px solid var(--border);padding:8px 0;transition:color 0.15s,background 0.15s;margin:0 -8px;padding-left:8px;padding-right:8px;border-radius:2px}
+.toc-link:hover{color:var(--text-primary);background:var(--bg-raised)}
+.toc-link:last-child{border-bottom:none}
 @media print {
   body { background: #fff; color: #111; }
   .masthead { background: #fff; border-bottom: 1px solid #ccc; }
@@ -116,34 +119,30 @@
 
 <div class="section" style="padding-top:24px">
 <div class="page">
-  <div class="grid grid-2">
-    <div class="cell">
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <a href="#s01" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">01</span>Why This Matters</a>
-        <a href="#s02" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">02</span>Setting an Intent for AI</a>
-        <a href="#s03" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">03</span>Keeping Income Stable</a>
-        <a href="#s04" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">04</span>Repairing Climate Systems</a>
-        <a href="#s05" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">05</span>Putting Money Where the Mission Is</a>
-        <a href="#s06" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">06</span>Software Architecture</a>
-        <a href="#s07" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">07</span>Implementation Kanban</a>
-        <a href="#s08" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">08</span>Future State</a>
-        <a href="#s09" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">09</span>How to Transition</a>
-        <a href="#s10" class="t4" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">10</span>Executive Cheat Sheet</a>
-      </div>
+  <div class="grid grid-2" style="gap:0">
+    <div style="padding:0 16px">
+      <a href="#s01" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">01</span>Why This Matters</a>
+      <a href="#s02" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">02</span>Setting an Intent for AI</a>
+      <a href="#s03" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">03</span>Keeping Income Stable</a>
+      <a href="#s04" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">04</span>Repairing Climate Systems</a>
+      <a href="#s05" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">05</span>Putting Money Where the Mission Is</a>
+      <a href="#s06" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">06</span>Software Architecture</a>
+      <a href="#s07" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">07</span>Implementation Kanban</a>
+      <a href="#s08" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">08</span>Future State</a>
+      <a href="#s09" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">09</span>How to Transition</a>
+      <a href="#s10" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">10</span>Executive Cheat Sheet</a>
     </div>
-    <div class="cell">
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <a href="#s11" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">11</span>Baseline Metrics</a>
-        <a href="#s12" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">12</span>Funding Stack</a>
-        <a href="#s13" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">13</span>Risk Matrix</a>
-        <a href="#s14" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">14</span>Proof Points</a>
-        <a href="#s15" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">15</span>Reader Pathways</a>
-        <a href="#s16" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">16</span>Appendices &amp; Toolkit Links</a>
-        <a href="#s17" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">17</span>Feasibility &amp; Safeguards</a>
-        <a href="#s18" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">18</span>Ten-Year Milestones</a>
-        <a href="#s19" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">19</span>Conclusion</a>
-        <a href="#refs" class="t4" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">&mdash;</span>References</a>
-      </div>
+    <div style="padding:0 16px">
+      <a href="#s11" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">11</span>Baseline Metrics</a>
+      <a href="#s12" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">12</span>Funding Stack</a>
+      <a href="#s13" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">13</span>Risk Matrix</a>
+      <a href="#s14" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">14</span>Proof Points</a>
+      <a href="#s15" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">15</span>Reader Pathways</a>
+      <a href="#s16" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">16</span>Appendices &amp; Toolkit Links</a>
+      <a href="#s17" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">17</span>Feasibility &amp; Safeguards</a>
+      <a href="#s18" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">18</span>Ten-Year Milestones</a>
+      <a href="#s19" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">19</span>Conclusion</a>
+      <a href="#refs" class="t4 toc-link"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">&mdash;</span>References</a>
     </div>
   </div>
 </div>
