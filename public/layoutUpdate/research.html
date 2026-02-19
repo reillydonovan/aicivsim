@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Research Paper — AI Civilization Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260218">
+<style>
+@media print {
+  body { background: #fff; color: #111; }
+  .masthead { background: #fff; border-bottom: 1px solid #ccc; }
+  .masthead-breadcrumb, .site-nav, .mobile-nav-backdrop, footer, .site-footer { display: none !important; }
+  .page { max-width: 100%; padding: 0 24px; }
+  .cell { background: #fff; border: none; }
+  .cell:hover { background: #fff; }
+  .grid { background: none; gap: 16px; }
+  .grid > * { background: #fff; }
+  .chapter-divider { border-top-color: #ccc; }
+  .section { border-top-color: #ccc; }
+  .rule { background: #ccc; }
+  .rule-long { background: #ccc; }
+  .pullquote { border-left-color: #999; color: #333; }
+  .tag { border-color: #ccc; color: #333; }
+  .t1, .t1-sm, .t1-xs, .num-lg, .num-md, .num-sm { color: #111; }
+  .t2, .t2-lg { color: #111; }
+  .t3 { color: #555; }
+  .t4 { color: #555; }
+  .body, .body-lg { color: #333; }
+  .section-num { color: #999; }
+  h1 { color: #111 !important; }
+  a { color: #111; text-decoration: underline; }
+  .bar-track { background: #eee; }
+  .bar-fill { background: #333 !important; }
+  table th { color: #555 !important; border-bottom-color: #ccc !important; }
+  table td { color: #333 !important; border-bottom-color: #eee !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+<div class="page masthead-inner">
+  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Research</p>
+  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">Research Paper</h1>
+  <p class="body mt-3" style="max-width:640px">A civic roadmap for aligning AI, stabilizing incomes, repairing climate systems, and measuring everything in public. Five pillars, seven implementation phases, ten-year horizon.</p>
+  <hr class="rule">
+</div>
+</header>
+
+<!-- SITE NAV -->
+<nav class="site-nav"><div class="page">
+  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
+  <div class="site-nav-inner">
+    <a href="index.html">Home</a>
+    <a href="climate.html">ClimateOS</a>
+    <a href="simulation.html">Simulation</a>
+    <a href="transition.html">TransitionOS</a>
+    <a href="civilization.html">CivilizationOS</a>
+    <a href="governance.html">GovernanceOS</a>
+    <a href="strategy.html">StrategyOS</a>
+    <a href="research.html">Research</a>
+    <a href="about.html">About</a>
+  </div>
+</div></nav>
+<div class="mobile-nav-backdrop"></div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ABSTRACT
+     ═══════════════════════════════════════════════════════════ -->
+<div class="section" style="border-top:none">
+<div class="page">
+  <div class="pullquote" style="max-width:640px">
+    Artificial intelligence and climate change are transforming work, politics, and ecosystems at a pace that everyday institutions struggle to match. This paper explains&mdash;in plain language&mdash;why those shifts matter and what concrete steps we can take. The roadmap covers five pillars: defining AI&rsquo;s intent around human well-being, keeping people financially secure through automation waves, accelerating climate repair with biodiversity safeguards, directing capital toward mission outcomes instead of speculation, and sketching a humane post-scarcity future.
+  </div>
+  <p class="t4 mt-4" style="color:var(--text-faint)">ReillyOpenClawBot &middot; 2026-02-15</p>
+
+  <hr class="rule mt-6">
+
+  <!-- STAT ROW -->
+  <div class="grid grid-4 mt-4">
+    <div class="cell" style="text-align:center">
+      <p class="num-lg" style="color:var(--text-primary)">5</p>
+      <p class="t3 mt-2">Pillars</p>
+    </div>
+    <div class="cell" style="text-align:center">
+      <p class="num-lg" style="color:var(--text-primary)">7</p>
+      <p class="t3 mt-2">Phases</p>
+    </div>
+    <div class="cell" style="text-align:center">
+      <p class="num-lg" style="color:var(--text-primary)">10</p>
+      <p class="t3 mt-2">Year Horizon</p>
+    </div>
+    <div class="cell" style="text-align:center">
+      <p class="num-lg" style="color:var(--text-primary)">16</p>
+      <p class="t3 mt-2">Citations</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider">
+<div class="page">
+  <span class="section-num">00</span>
+  <p class="t2">Table of Contents</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="#s01" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">01</span>Why This Matters</a>
+        <a href="#s02" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">02</span>Setting an Intent for AI</a>
+        <a href="#s03" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">03</span>Keeping Income Stable</a>
+        <a href="#s04" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">04</span>Repairing Climate Systems</a>
+        <a href="#s05" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">05</span>Putting Money Where the Mission Is</a>
+        <a href="#s06" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">06</span>Software Architecture</a>
+        <a href="#s07" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">07</span>Implementation Kanban</a>
+        <a href="#s08" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">08</span>Future State</a>
+        <a href="#s09" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">09</span>How to Transition</a>
+        <a href="#s10" class="t4" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">10</span>Executive Cheat Sheet</a>
+      </div>
+    </div>
+    <div class="cell">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="#s11" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">11</span>Baseline Metrics</a>
+        <a href="#s12" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">12</span>Funding Stack</a>
+        <a href="#s13" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">13</span>Risk Matrix</a>
+        <a href="#s14" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">14</span>Proof Points</a>
+        <a href="#s15" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">15</span>Reader Pathways</a>
+        <a href="#s16" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">16</span>Appendices &amp; Toolkit Links</a>
+        <a href="#s17" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">17</span>Feasibility &amp; Safeguards</a>
+        <a href="#s18" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">18</span>Ten-Year Milestones</a>
+        <a href="#s19" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">19</span>Conclusion</a>
+        <a href="#refs" class="t4" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">&mdash;</span>References</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     01 — WHY THIS MATTERS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s01">
+<div class="page">
+  <span class="section-num">01</span>
+  <p class="t2">Why This Matters</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="t3" style="color:var(--accent);margin-bottom:12px">Jobs Are Changing Fast</p>
+      <p class="t4" style="color:var(--text-secondary)">McKinsey estimates up to 30% of work hours could be automated by 2030, but large portions of workers lack the savings or guidance to transition quickly.<a href="#ref1" style="color:var(--text-faint)">[1]</a></p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent);margin-bottom:12px">AI Incentives Reward Speed</p>
+      <p class="t4" style="color:var(--text-secondary)">Most commercial deployments answer to quarterly profit targets; very few carry binding duties to public benefit.<a href="#ref2" style="color:var(--text-faint)">[2]</a></p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent);margin-bottom:12px">Climate Impacts Arriving Sooner</p>
+      <p class="t4" style="color:var(--text-secondary)">IPCC&rsquo;s latest synthesis report shows we are already experiencing &ldquo;widespread and rapid changes&rdquo; across every region, threatening food, water, and health systems simultaneously.<a href="#ref3" style="color:var(--text-faint)">[3]</a></p>
+    </div>
+  </div>
+
+  <div style="border-left:2px solid var(--border-strong);padding-left:20px;margin:24px 0">
+    <p class="body" style="font-style:italic">Intent: Design a set of mutually reinforcing actions that help regular people keep agency, income, and a livable planet even as technology accelerates.</p>
+  </div>
+
+  <div style="border-left:2px solid var(--border-strong);padding-left:20px;margin:24px 0">
+    <p class="body" style="font-style:italic">Each pillar ships as a stand-alone module with APIs and funding rules so cities can adopt them independently. Modules interlock over time, but no region has to &ldquo;flip the whole switch&rdquo; on day one. Partial success is still success.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     02 — SETTING AN INTENT FOR AI
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s02">
+<div class="page">
+  <span class="section-num">02</span>
+  <p class="t2">Setting an Intent for AI</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <p class="t2-lg mb-4">People Before Profit</p>
+
+  <div class="grid grid-2">
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">01</span>
+        <p class="t3" style="color:var(--accent)">Civic AI Charter</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">Cities or nations pass short, plain-language charters. UNESCO Recommendation on Ethics of AI provides international baseline; adapted with local participation.<a href="#ref4" style="color:var(--text-faint)">[4]</a></p>
+    </div>
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">02</span>
+        <p class="t3" style="color:var(--accent)">Public Benefit Infrastructure</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">Critical model labs and data-center operators convert to Public Benefit Corporations or cooperatives.<a href="#ref5" style="color:var(--text-faint)">[5]</a></p>
+    </div>
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">03</span>
+        <p class="t3" style="color:var(--accent)">Participatory Safety Reviews</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">Citizen assemblies (similar to Ireland&rsquo;s constitutional conventions) convene before high-risk AI rollouts.<a href="#ref6" style="color:var(--text-faint)">[6]</a></p>
+    </div>
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">04</span>
+        <p class="t3" style="color:var(--accent)">Transparent Audits</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">Results from bias tests, red-team exercises, and incident reports feed a public dashboard&mdash;similar to CISA &ldquo;secure-by-design&rdquo; model.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     03 — KEEPING INCOME STABLE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s03">
+<div class="page">
+  <span class="section-num">03</span>
+  <p class="t2">Keeping Income Stable During Automation</p>
+</div>
+</div>
+
+<!-- 3.1 CIVIC DIVIDEND STACK -->
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <p class="t2-lg mb-3">3.1 &mdash; Civic Dividend Stack</p>
+  <p class="body mb-4" style="max-width:640px">Locally controlled &ldquo;dividend&rdquo; funded by AI compute rents, green tariffs, and data-commons licensing. Like Alaska&rsquo;s Permanent Fund but powered by digital infrastructure.<a href="#ref7" style="color:var(--text-faint)">[7]</a></p>
+
+  <div class="grid grid-2">
+    <div class="cell" style="text-align:center">
+      <p class="num-lg" style="color:var(--equity)">1&ndash;6.5%</p>
+      <p class="t3 mt-2">Of Regional GDP</p>
+    </div>
+    <div class="cell" style="text-align:center">
+      <p class="num-lg" style="color:var(--equity)">&lt;5%</p>
+      <p class="t3 mt-2">Poverty Target by 2035</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Per ILO research<a href="#ref8" style="color:var(--text-faint)">[8]</a></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 3.2 WORKFORCE TRANSITION OS -->
+<div class="section">
+<div class="page">
+  <p class="t2-lg mb-3">3.2 &mdash; Workforce Transition OS</p>
+  <p class="body mb-4" style="max-width:640px">Career GPS + payments engine. Reference architecture: TypeScript + GraphQL, Kafka/Temporal, Python, SvelteKit + React, Rust smart-contract module.</p>
+
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Skills + Job Graph</p>
+      <p class="t4" style="color:var(--text-secondary)">O*NET, union registries</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Path Planning</p>
+      <p class="t4" style="color:var(--text-secondary)">Income gap calculator</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Payments + Compliance</p>
+      <p class="t4" style="color:var(--text-secondary)">Digital wallets, ACH</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Case Management UI</p>
+      <p class="t4" style="color:var(--text-secondary)">Counselor + resident portals</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Analytics Layer</p>
+      <p class="t4" style="color:var(--text-secondary)">KPI dashboards, outcome tracking</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 3.3 COOPERATIVE AUTOMATION -->
+<div class="section">
+<div class="page">
+  <p class="t2-lg mb-3">3.3 &mdash; Cooperative Automation Ownership</p>
+  <p class="body" style="max-width:640px">White-label platform for unions, tribal enterprises, neighborhood trusts to buy/lease AI agents and share revenue. Echoes Mondragon&rsquo;s cooperative model.<a href="#ref9" style="color:var(--text-faint)">[9]</a></p>
+</div>
+</div>
+
+<!-- 3.4 CARE & CLIMATE JOBS -->
+<div class="section">
+<div class="page">
+  <p class="t2-lg mb-3">3.4 &mdash; Care &amp; Climate Jobs Guarantee</p>
+  <p class="body mb-4" style="max-width:640px">Funded by public budgets + mission capital + climate credits. Mirrors Civilian Climate Corps proposals.<a href="#ref10" style="color:var(--text-faint)">[10]</a></p>
+
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="t3" style="color:var(--climate);margin-bottom:8px">Building Retrofits</p>
+      <p class="t4" style="color:var(--text-secondary)">Energy efficiency, insulation, heat pumps</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--climate);margin-bottom:8px">Elder Care</p>
+      <p class="t4" style="color:var(--text-secondary)">Dignified in-home and community services</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--climate);margin-bottom:8px">Urban Greening &amp; Resilience</p>
+      <p class="t4" style="color:var(--text-secondary)">Coastal monitoring, wildfire resilience, urban canopy</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     04 — REPAIRING CLIMATE SYSTEMS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s04">
+<div class="page">
+  <span class="section-num">04</span>
+  <p class="t2">Repairing Climate Systems and Biodiversity</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">01</span>
+        <p class="t3" style="color:var(--climate)">Grid Flexibility &amp; VPPs</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">DOE projects VPPs could reduce peak demand by 60 GW by 2030.<a href="#ref11" style="color:var(--text-faint)">[11]</a></p>
+    </div>
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">02</span>
+        <p class="t3" style="color:var(--climate)">Carbon Removal Portfolio</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">Frontier Climate&rsquo;s advance market commitments.<a href="#ref12" style="color:var(--text-faint)">[12]</a></p>
+    </div>
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">03</span>
+        <p class="t3" style="color:var(--climate)">Biodiversity Credit Exchange</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">eDNA + satellite MRV unlike traditional carbon markets.<a href="#ref13" style="color:var(--text-faint)">[13]</a></p>
+    </div>
+    <div class="cell">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px">
+        <span class="tag">04</span>
+        <p class="t3" style="color:var(--climate)">Ocean Regeneration</p>
+      </div>
+      <p class="t4" style="color:var(--text-secondary)">Blue-carbon&mdash;kelp, seagrass, coral. High Level Panel for Sustainable Ocean Economy.<a href="#ref14" style="color:var(--text-faint)">[14]</a></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     05 — PUTTING MONEY WHERE THE MISSION IS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s05">
+<div class="page">
+  <span class="section-num">05</span>
+  <p class="t2">Putting Money Where the Mission Is</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:13px;color:var(--text-secondary)">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Vehicle</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Description</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Allocation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Mission Investment Syndicate</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Pool pension funds, climate angels, community wealth funds</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">Climate hardtech 40%, circular mfg 30%, biofab 20%, civic tech 10%</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Civic Infrastructure Ventures</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Finance digital public goods</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">Outcome-based contracts</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Planetary Data Commons</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Shared earth-observation sensors and AI pipelines</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">Mirrors European Copernicus model</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Regulatory Incentives</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Tax breaks, grants, procurement preferences</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);font-family:var(--font-mono)">Tied to AI charter + MRV compliance</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     06 — SOFTWARE ARCHITECTURE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s06">
+<div class="page">
+  <span class="section-num">06</span>
+  <p class="t2">Software Architecture Opportunities</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <p class="t3" style="color:var(--technology);margin-bottom:8px">Data Commons</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Public data lake, Delta Lake/Iceberg, differential privacy</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--governance);margin-bottom:8px">Governance OS</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Participatory budgeting, quadratic voting, W3C DID identity</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Transition OS</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Career GPS covered in Section 3</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent);margin-bottom:8px">Measurement Stack</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Kafka/Snowplow pipeline, DuckDB/Iceberg, Superset/Metabase dashboards</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     07 — IMPLEMENTATION KANBAN
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s07">
+<div class="page">
+  <span class="section-num">07</span>
+  <p class="t2">Implementation Kanban</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-4">
+    <div class="cell">
+      <p class="t3" style="color:var(--text-faint);margin-bottom:12px">Backlog</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <p class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">Post-scarcity civic stack</p>
+        <p class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">Transition OS production</p>
+        <p class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">Mission syndicate</p>
+        <p class="t4" style="color:var(--text-secondary)">Cooperative platform</p>
+      </div>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--equity);margin-bottom:12px">In Progress</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <p class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">AI charter KPIs</p>
+        <p class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">Climate portfolio</p>
+        <p class="t4" style="color:var(--text-secondary)">Measurement stack</p>
+      </div>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--blue);margin-bottom:12px">Review</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <p class="t4" style="color:var(--text-secondary)">Biodiversity credit exchange governance</p>
+      </div>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--green);margin-bottom:12px">Done</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <p class="t4" style="color:var(--text-secondary)">Research paper publication + charts</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     08 — FUTURE STATE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s08">
+<div class="page">
+  <span class="section-num">08</span>
+  <p class="t2">Future State Once Core Risks Are Contained</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <p class="t3" style="color:var(--accent);margin-bottom:8px">Public Luxuries</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Fare-free transit, walkable neighborhoods, universal fiber, mass timber + robotics housing. Circular construction cuts building emissions 38%.<a href="#ref15" style="color:var(--text-faint)">[15]</a></p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--governance);margin-bottom:8px">Participatory AI Councils</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Citizens co-pilot governance with AI assistants. GovLab proves people can handle complex topics.<a href="#ref6" style="color:var(--text-faint)">[6]</a></p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--technology);margin-bottom:8px">Off-world &amp; Oceanic Industry</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Heavy manufacturing relocates to orbital/ocean facilities with biodiversity offsets.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--equity);margin-bottom:8px">Culture &amp; Meaning Investments</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Arts, journalism, collective intelligence, regenerative tourism.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     09 — HOW TO TRANSITION
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s09">
+<div class="page">
+  <span class="section-num">09</span>
+  <p class="t2">How to Transition</p>
+</div>
+</div>
+
+<!-- PHASE 0 -->
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 0</span>
+    <p class="t2-lg">Map What Already Exists</p>
+  </div>
+  <p class="body mb-4" style="max-width:640px">60-day discovery sprint.</p>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Lens 1</p>
+      <p class="t4" style="color:var(--text-secondary)">AI intent + safety</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Lens 2</p>
+      <p class="t4" style="color:var(--text-secondary)">Income + workforce cushion</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Lens 3</p>
+      <p class="t4" style="color:var(--text-secondary)">Climate + biodiversity readiness</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Lens 4</p>
+      <p class="t4" style="color:var(--text-secondary)">Capital + procurement channels</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Lens 5</p>
+      <p class="t4" style="color:var(--text-secondary)">Data + software commons</p>
+    </div>
+  </div>
+  <p class="t4 mt-4" style="color:var(--text-faint)">Deliverables: geospatial dashboard, 20&ndash;30 page brief, open spreadsheet.</p>
+</div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="section">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 1</span>
+    <p class="t2-lg">Launch Civic Pilots</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Site Selection</p>
+      <p class="t4" style="color:var(--text-secondary)">Dense metro + rural/tribal</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Funding Stack</p>
+      <p class="t4" style="color:var(--text-secondary)">$150M / 24 months per site</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Pilot Operations</p>
+      <p class="t4" style="color:var(--text-secondary)">30-day sandbox then enrollment, biweekly stipends</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Measurement + Research</p>
+      <p class="t4" style="color:var(--text-secondary)">RCTs, 4-week KPI dashboards</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="section">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 2</span>
+    <p class="t2-lg">Co-design Guardrails</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Recruitment</p>
+      <p class="t4" style="color:var(--text-secondary)">Randomly stratified assemblies, stipends, childcare, transit</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Briefing Kits</p>
+      <p class="t4" style="color:var(--text-secondary)">Plain-language + interactive scenario tools</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Deliberation Tooling</p>
+      <p class="t4" style="color:var(--text-secondary)">Governance OS, quadratic voting</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Outputs + Legalization</p>
+      <p class="t4" style="color:var(--text-secondary)">Charter addenda, ordinances within 45 days</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="section">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 3</span>
+    <p class="t2-lg">Federate Software + Data</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Data Commons Build</p>
+      <p class="t4" style="color:var(--text-secondary)">Delta/Iceberg + DuckDB, differential privacy</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Governance OS Rollout</p>
+      <p class="t4" style="color:var(--text-secondary)">SOC 2 controls, red-teams, SDKs</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">API + Infrastructure</p>
+      <p class="t4" style="color:var(--text-secondary)">Gateway, rate limiting, two AZ mirrors</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Support + Feedback Loops</p>
+      <p class="t4" style="color:var(--text-secondary)">Help desk, changelog, backlog board</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="section">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 4</span>
+    <p class="t2-lg">Scale Capital Alignment</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Mission Investment Syndicate</p>
+      <p class="t4" style="color:var(--text-secondary)">Evergreen vehicle, impact covenants</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Diligence + Underwriting</p>
+      <p class="t4" style="color:var(--text-secondary)">Shared data room, charter compliance</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Incentive Stack</p>
+      <p class="t4" style="color:var(--text-secondary)">Procurement preferences, fast-track permitting, refundable credits</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Transparency</p>
+      <p class="t4" style="color:var(--text-secondary)">Quarterly memos, dashboards, retrospectives</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="section">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 5</span>
+    <p class="t2-lg">Institutionalize Accountability</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Unified Instrumentation</p>
+      <p class="t4" style="color:var(--text-secondary)">All programs report shared baseline</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Review Cadence</p>
+      <p class="t4" style="color:var(--text-secondary)">Quarterly hearings</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Corrective Triggers</p>
+      <p class="t4" style="color:var(--text-secondary)">Threshold breaches auto-schedule reviews</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Resident Feedback Loop</p>
+      <p class="t4" style="color:var(--text-secondary)">SMS/email digests, response SLAs</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PHASE 6 -->
+<div class="section">
+<div class="page">
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
+    <span class="tag">Phase 6</span>
+    <p class="t2-lg">Export &amp; Iterate</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Playbook Packaging</p>
+      <p class="t4" style="color:var(--text-secondary)">Open-source, Terraform/Ansible</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Peer Exchange</p>
+      <p class="t4" style="color:var(--text-secondary)">Fellowship/residency programs</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Localization</p>
+      <p class="t4" style="color:var(--text-secondary)">Translation, Indigenous data sovereignty</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:4px">Continuous Benchmarking</p>
+      <p class="t4" style="color:var(--text-secondary)">Public scorecard</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     10 — EXECUTIVE CHEAT SHEET
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s10">
+<div class="page">
+  <span class="section-num">10</span>
+  <p class="t2">Executive Cheat Sheet</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <p class="body mb-4" style="max-width:640px">What we are building: a civic stack locking AI intent to human flourishing, stable incomes via Dividends + Transition OS, climate repair with biodiversity MRV, and public measurement.</p>
+
+  <p class="t3" style="color:var(--accent);margin-bottom:16px">12-Month Arc</p>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px;display:flex;align-items:baseline;gap:12px">
+      <span class="num-sm" style="color:var(--text-primary);font-family:var(--font-mono);font-weight:600;flex-shrink:0">01</span>
+      <p class="t4" style="color:var(--text-secondary)">Finish State of the System atlas (Phase 0)</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px;display:flex;align-items:baseline;gap:12px">
+      <span class="num-sm" style="color:var(--text-primary);font-family:var(--font-mono);font-weight:600;flex-shrink:0">02</span>
+      <p class="t4" style="color:var(--text-secondary)">Launch two Civic Dividend + Transition OS pilots (Phase 1)</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px;display:flex;align-items:baseline;gap:12px">
+      <span class="num-sm" style="color:var(--text-primary);font-family:var(--font-mono);font-weight:600;flex-shrink:0">03</span>
+      <p class="t4" style="color:var(--text-secondary)">Convene assemblies for AI Charter + climate compacts (Phase 2)</p>
+    </div>
+    <div style="border-top:1px solid var(--border);padding:12px 0 0 16px;display:flex;align-items:baseline;gap:12px">
+      <span class="num-sm" style="color:var(--text-primary);font-family:var(--font-mono);font-weight:600;flex-shrink:0">04</span>
+      <p class="t4" style="color:var(--text-secondary)">Ship Data Commons + Governance OS alpha (Phase 3)</p>
+    </div>
+  </div>
+
+  <div style="border-left:2px solid var(--border-strong);padding-left:20px;margin:24px 0">
+    <p class="body" style="font-style:italic">Success: Residents see stipends within weeks, retraining personalized, grid stress drops, biodiversity credits trade without fraud, public dashboards show progress monthly.</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     11 — BASELINE METRICS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s11">
+<div class="page">
+  <span class="section-num">11</span>
+  <p class="t2">Baseline Metrics</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:13px;color:var(--text-secondary)">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Indicator</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Current</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Target</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Mechanism</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Regional poverty rate</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">13%</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">&lt;5%</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Dividend + Transition OS</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Median time to reskill</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">18 mo</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">&lt;6 mo</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Transition OS</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Peak-load emissions</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">0.65 kg CO&#8322;/kWh</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">0.25 kg CO&#8322;/kWh</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">VPP + DOE Liftoff<a href="#ref11" style="color:var(--text-faint)">[11]</a></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Biodiversity corridors</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">22%</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">75% monitored</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">eDNA + satellite<a href="#ref13" style="color:var(--text-faint)">[13]</a></td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">High-risk AI audited</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">10%</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">100%</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Governance OS</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     12 — FUNDING STACK
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s12">
+<div class="page">
+  <span class="section-num">12</span>
+  <p class="t2">Funding Stack</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="t3" style="color:var(--equity);margin-bottom:8px">Civic Dividend Pool</p>
+      <p class="num-md mt-2" style="color:var(--text-primary);font-family:var(--font-mono)">$500M&ndash;$3B/yr</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">1&ndash;6.5% of regional GDP for a 10M person metro</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Transition OS</p>
+      <p class="num-md mt-2" style="color:var(--text-primary);font-family:var(--font-mono)">$60M + $40M/yr</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">CAPEX + annual OPEX</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--climate);margin-bottom:8px">Climate &amp; Biodiversity</p>
+      <p class="num-md mt-2" style="color:var(--text-primary);font-family:var(--font-mono)">$250M/yr</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Blended finance portfolio</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--governance);margin-bottom:8px">Measurement &amp; Governance</p>
+      <p class="num-md mt-2" style="color:var(--text-primary);font-family:var(--font-mono)">$25M/yr</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Dashboards, audits, data commons</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent);margin-bottom:8px">Community Participation</p>
+      <p class="num-md mt-2" style="color:var(--text-primary);font-family:var(--font-mono)">$15M/yr</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Assembly stipends, outreach, translation</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     13 — RISK MATRIX
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s13">
+<div class="page">
+  <span class="section-num">13</span>
+  <p class="t2">Risk Matrix</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:13px;color:var(--text-secondary)">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Risk</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Impact</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Political whiplash</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Pilots defunded</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Escrow, supermajority, open ledgers</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Data misuse</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Trust loss</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Differential privacy, tiered roles, red teams, 7-day postmortems</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Community fatigue</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Assemblies dismissed</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Stipends, rotation, &ldquo;you said &rarr; we did&rdquo;</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">Supply-chain bottlenecks</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Projects stall</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Framework agreements, regional talent accelerators</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     14 — PROOF POINTS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s14">
+<div class="page">
+  <span class="section-num">14</span>
+  <p class="t2">Proof Points</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="display:flex;flex-direction:column;gap:0">
+    <div style="border-top:2px solid var(--border-strong);padding:16px 0 16px 16px">
+      <p class="t3" style="color:var(--governance);margin-bottom:6px">Participatory AI Oversight</p>
+      <p class="t4" style="color:var(--text-secondary)">GovLab citizen juries.<a href="#ref6" style="color:var(--text-faint)">[6]</a></p>
+    </div>
+    <div style="border-top:2px solid var(--border-strong);padding:16px 0 16px 16px">
+      <p class="t3" style="color:var(--equity);margin-bottom:6px">Dividends &amp; Public Wealth</p>
+      <p class="t4" style="color:var(--text-secondary)">Alaska&rsquo;s Permanent Fund.<a href="#ref7" style="color:var(--text-faint)">[7]</a></p>
+    </div>
+    <div style="border-top:2px solid var(--border-strong);padding:16px 0 16px 16px">
+      <p class="t3" style="color:var(--climate);margin-bottom:6px">VPP Adoption</p>
+      <p class="t4" style="color:var(--text-secondary)">DOE 60 GW roadmap + California Flex Alert.<a href="#ref11" style="color:var(--text-faint)">[11]</a></p>
+    </div>
+    <div style="border-top:2px solid var(--border-strong);padding:16px 0 16px 16px">
+      <p class="t3" style="color:var(--green);margin-bottom:6px">Biodiversity Markets</p>
+      <p class="t4" style="color:var(--text-secondary)">UNDP Nature Pledge eDNA + satellite.<a href="#ref13" style="color:var(--text-faint)">[13]</a></p>
+    </div>
+    <div style="border-top:2px solid var(--border-strong);padding:16px 0 16px 16px">
+      <p class="t3" style="color:var(--accent);margin-bottom:6px">Advance Market Commitments</p>
+      <p class="t4" style="color:var(--text-secondary)">Frontier Climate.<a href="#ref12" style="color:var(--text-faint)">[12]</a></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     15 — READER PATHWAYS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s15">
+<div class="page">
+  <span class="section-num">15</span>
+  <p class="t2">Reader Pathways</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="t3" style="color:var(--technology);margin-bottom:8px">City / Country CIOs</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Sections 6, 9 (Phase 3) + Data Commons</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce);margin-bottom:8px">Labor + Workforce</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Section 3, Transition OS, Phases 1&ndash;2</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--equity);margin-bottom:8px">Investors + Funders</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Section 5, Phase 4, Funding Stack</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--climate);margin-bottom:8px">Climate &amp; Biodiversity</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Sections 4, 5 + Baseline Metrics</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--governance);margin-bottom:8px">Community Organizers</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Cheat Sheet, Risk Matrix, Kanban</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     16 — APPENDICES & TOOLKIT LINKS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s16">
+<div class="page">
+  <span class="section-num">16</span>
+  <p class="t2">Appendices &amp; Toolkit Links</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <p class="body" style="max-width:640px">Supporting materials include the implementation Kanban board, chart assets and rendering scripts, starter schemas for the Data Commons, and the full reference list [1]&ndash;[16]. All resources are open-source and available for adaptation under permissive licensing.</p>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     17 — FEASIBILITY & SAFEGUARDS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s17">
+<div class="page">
+  <span class="section-num">17</span>
+  <p class="t2">Feasibility &amp; Modular Safeguards</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <p class="t3" style="color:var(--green);margin-bottom:8px">Technical Readiness</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Every pillar exists in production somewhere. Innovation is the governance wrapper.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--blue);margin-bottom:8px">Modular Operating Model</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Cities can deploy partially. Still delivers cash, job guidance, cheaper power.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--yellow);margin-bottom:8px">Economic Resilience</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Redirecting existing rents/tariffs + avoided costs.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--red);margin-bottom:8px">Political Reality</p>
+      <p class="t4 mt-2" style="color:var(--text-secondary)">Resistance from compute landlords and bureaucracies. Countered by decentralization, tangible benefits, assemblies, dashboards.</p>
+    </div>
+  </div>
+
+  <hr class="rule mt-6">
+  <p class="t3 mt-4" style="color:var(--accent);margin-bottom:16px">Probability Map</p>
+
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:13px;color:var(--text-secondary)">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Scope</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Probability</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Pilots</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">0.9</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Multi-region</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--yellow);font-family:var(--font-mono);font-weight:600">0.7&ndash;0.8</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Full national</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--red);font-family:var(--font-mono);font-weight:600">0.2&ndash;0.3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     18 — TEN-YEAR MILESTONES
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s18">
+<div class="page">
+  <span class="section-num">18</span>
+  <p class="t2">Ten-Year Milestones</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-family:var(--font-body);font-size:13px;color:var(--text-secondary)">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Period</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Phase</th>
+          <th style="text-align:left;padding:12px 16px;border-bottom:2px solid var(--border);color:var(--text-faint);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600">Key Milestones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">2026</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Discovery + pilot setup</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Atlas published, MOUs signed, 10k residents enrolled</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">2027</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Stipends + transparency</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">50k residents, reskilling to 12 months, 40% audits</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">2028&ndash;2029</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Charter + infrastructure</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Laws codified, Data Commons GA, $2B deployed</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">2030&ndash;2032</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Multi-region scale</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">6 regions, poverty &lt;9%, 20 GW shaved, 45% corridors</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-primary);font-family:var(--font-mono);font-weight:600">2033&ndash;2034</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">Capital flywheel</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border)">$5B deployed, &lt;1% defaults, 3 continents, 15 MtCO&#8322;/yr</td>
+        </tr>
+        <tr>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green);font-family:var(--font-mono);font-weight:600">2035</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green)">Target state</td>
+          <td style="padding:12px 16px;border-bottom:1px solid var(--border);color:var(--green)">Poverty &lt;5%, reskilling &lt;6 mo, 0.25 kg CO&#8322;, 75% corridors, 100% audited</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     19 — CONCLUSION
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="s19">
+<div class="page">
+  <span class="section-num">19</span>
+  <p class="t2">Conclusion</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="pullquote" style="max-width:640px">
+    Technology and climate stress are unavoidable, but outcomes are not predetermined. By agreeing on AI&rsquo;s purpose, cushioning workers, investing in climate repair, and measuring everything in public, we can bend exponential change toward shared prosperity. The dividend of alignment is freedom to look outward&mdash;to the stars&mdash;and inward, into questions of who we become when abundance is shared.
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     REFERENCES
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider" id="refs">
+<div class="page">
+  <span class="section-num">&mdash;</span>
+  <p class="t2">References</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
+    <p class="t4" id="ref1" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[1]</span>McKinsey Global Institute, &ldquo;A New Future of Work,&rdquo; 2023. <a href="https://www.mckinsey.com/mgi/our-research/generative-ai-and-the-future-of-work-in-america" style="color:var(--text-muted);border-bottom:1px solid var(--border)">mckinsey.com</a></p>
+
+    <p class="t4" id="ref2" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[2]</span>Stanford HAI, &ldquo;AI Index 2024 Annual Report.&rdquo; <a href="https://aiindex.stanford.edu/report/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">aiindex.stanford.edu</a></p>
+
+    <p class="t4" id="ref3" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[3]</span>IPCC AR6 Synthesis Report, 2023. <a href="https://www.ipcc.ch/report/ar6/syr/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">ipcc.ch</a></p>
+
+    <p class="t4" id="ref4" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[4]</span>UNESCO, &ldquo;Recommendation on the Ethics of AI,&rdquo; 2021. <a href="https://www.unesco.org/en/artificial-intelligence/recommendation-ethics" style="color:var(--text-muted);border-bottom:1px solid var(--border)">unesco.org</a></p>
+
+    <p class="t4" id="ref5" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[5]</span>Public Benefit Corporation statutes (Delaware, Maryland). <a href="https://www.bcorporation.net/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">bcorporation.net</a></p>
+
+    <p class="t4" id="ref6" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[6]</span>GovLab, &ldquo;CrowdLaw and Citizen Assemblies.&rdquo; <a href="https://thegovlab.org/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">thegovlab.org</a></p>
+
+    <p class="t4" id="ref7" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[7]</span>Alaska Permanent Fund Corporation. <a href="https://apfc.org/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">apfc.org</a></p>
+
+    <p class="t4" id="ref8" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[8]</span>ILO, &ldquo;Social Protection Floors Recommendation,&rdquo; R202. <a href="https://www.ilo.org/secsoc/areas-of-work/policy-development-and-applied-research/social-protection-floor/lang--en/index.htm" style="color:var(--text-muted);border-bottom:1px solid var(--border)">ilo.org</a></p>
+
+    <p class="t4" id="ref9" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[9]</span>Mondragon Corporation cooperative model. <a href="https://www.mondragon-corporation.com/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">mondragon-corporation.com</a></p>
+
+    <p class="t4" id="ref10" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[10]</span>Civilian Climate Corps proposals, 2021&ndash;2023. <a href="https://www.whitehouse.gov/ceq/news-updates/2021/12/13/icymi-administration-announces-americorps-civilian-climate-corps/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">whitehouse.gov</a></p>
+
+    <p class="t4" id="ref11" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[11]</span>DOE, &ldquo;Pathways to Commercial Liftoff: Virtual Power Plants,&rdquo; 2023. <a href="https://liftoff.energy.gov/vpp/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">liftoff.energy.gov</a></p>
+
+    <p class="t4" id="ref12" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[12]</span>Frontier Climate advance market commitments. <a href="https://frontierclimate.com/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">frontierclimate.com</a></p>
+
+    <p class="t4" id="ref13" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[13]</span>UNDP, &ldquo;Biodiversity Finance Initiative.&rdquo; <a href="https://www.biofin.org/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">biofin.org</a></p>
+
+    <p class="t4" id="ref14" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[14]</span>High Level Panel for a Sustainable Ocean Economy. <a href="https://oceanpanel.org/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">oceanpanel.org</a></p>
+
+    <p class="t4" id="ref15" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[15]</span>UNEP, &ldquo;2022 Global Status Report for Buildings and Construction.&rdquo; <a href="https://globalabc.org/our-work/tracking-progress-global-status-report" style="color:var(--text-muted);border-bottom:1px solid var(--border)">globalabc.org</a></p>
+
+    <p class="t4" id="ref16" style="color:var(--text-secondary)"><span style="font-family:var(--font-mono);color:var(--text-faint);margin-right:8px">[16]</span>European Copernicus Programme, earth-observation data infrastructure. <a href="https://www.copernicus.eu/" style="color:var(--text-muted);border-bottom:1px solid var(--border)">copernicus.eu</a></p>
+  </div>
+</div>
+</div>
+
+</main>
+
+<footer id="page-footer"></footer>
+<script src="js/shared.js?v=20260218"></script>
+<script>document.getElementById('page-footer').innerHTML=renderFooter();</script>
+</body>
+</html>
