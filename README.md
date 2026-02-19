@@ -26,7 +26,7 @@ A complete redesign built as vanilla HTML/CSS/JS with no framework dependencies.
 ```
 public/layoutUpdate/
 ├── index.html             # Landing page — project overview, scenario guide, system map
-├── climate.html           # ClimateOS — 6 tabs, 8 planetary metrics, tipping points
+├── climate.html           # ClimateOS — 7 tabs, 9 planetary metrics (incl. ocean pH), tipping points
 ├── simulation.html        # SimulationOS — 5 policy levers, 50-year timeline, narrative reports
 ├── transition.html        # TransitionOS — workforce reskilling, income bridge calculator
 ├── civilization.html      # CivilizationOS — composite health index, KPI trajectories, funding
@@ -35,17 +35,19 @@ public/layoutUpdate/
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme
-├── js/shared.js           # Shared utilities — scenarioChart, nav, scenario selectors
+├── js/shared.js           # Shared utilities — scenarioChart, chartHeader, nav, scenario selectors
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
 ### Key features
 
 - **Zero dependencies** — No npm, no build step, no framework. Plain HTML/CSS/JS served as static files.
-- **Today's Score on every page** — Each dashboard opens with a prominent composite score (120px hero) with letter grade, trend, and supporting metric breakdown.
+- **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair.
+- **Standardized chart headers** — Every graph uses a consistent `chartHeader()` function (defined in `shared.js`) that renders a Feltron domain-card style header: uppercase `t3` metric label, large `num-lg` projected value colored to the active scenario, trend arrow (green/red based on direction preference), end-year target, and baseline reference.
 - **Multi-scenario comparison charts** — Every graph displays all four scenarios simultaneously. The active scenario is highlighted with a bold line and filled area; inactive scenarios are dimmed. Implemented via a unified `scenarioChart()` function in `shared.js`.
 - **Narrative simulation reports** — SimulationOS generates natural-language dispatches from the future that evolve across four era phases (Dawn, Divergence, Maturity, Legacy). The narrative tells a human story — not a metrics readout — covering people & livelihoods, climate & energy, trust & governance, AI & the future, and the road ahead. Letter grades update dynamically.
 - **Dynamic scenario-aware data** — Switching scenarios updates every chart, score, description, domain card, and narrative paragraph on every page. No static content remains when scenarios change.
+- **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
 - **Cache-busting** — All CSS/JS references include `?v=` query parameters to prevent stale browser caches after deployment.
@@ -78,8 +80,16 @@ Each report includes sections on People & Livelihoods, Climate & Energy, Trust &
 
 ### Chart system
 
-All charts are rendered via a single `scenarioChart(opts)` function in `shared.js`:
+All charts are rendered via two shared functions in `shared.js`:
 
+**`chartHeader(opts)`** — Renders the header above each chart:
+- Uppercase `t3` metric label (e.g., `TEMPERATURE RISE`)
+- Large `num-lg` projected end value colored to the active scenario
+- Trend arrow (↑/↓/→) with green (improving) or red (worsening) based on metric direction
+- End-year label and baseline reference value
+- Graceful fallback if value is undefined or NaN
+
+**`scenarioChart(opts)`** — Renders the SVG chart:
 - SVG-based with 900×340 viewBox, responsive scaling via `aspect-ratio`
 - Y-axis grid lines, labeled ticks, baseline marker
 - All four scenarios drawn; active scenario highlighted with bold stroke + filled area
@@ -115,7 +125,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
-3. Upload the contents of `public/layoutUpdate/` (8 HTML files + `css/` + `js/` folders) into `public_html/`
+3. Upload the contents of `public/layoutUpdate/` (9 HTML files + `css/` + `js/` folders) into `public_html/`
 4. If updating: bump the `?v=` query string in each HTML file's CSS/JS references to bust browser caches
 
 ---

@@ -79,36 +79,7 @@
       </div>
       <p class="body mt-3">Composite workforce readiness score across poverty rate, reskilling time, placement rate, and employment. Measured 2026 baseline &mdash; before scenario interventions.</p>
       <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="trans-projected"></div>
-      <div class="grid grid-4 mt-6">
-        <div class="cell">
-          <p class="t3" style="color:#d4622a">Poverty Rate</p>
-          <p class="num-lg mt-2">13<span class="t4" style="margin-left:2px">%</span></p>
-          <span class="delta delta-down">rising</span>
-          <div class="bar-track mt-2"><div class="bar-fill" style="width:13%;background:#d4622a"></div></div>
-          <p class="t4 mt-2">Regional poverty. Rising without intervention.</p>
-        </div>
-        <div class="cell">
-          <p class="t3" style="color:#e8a838">Reskill Time</p>
-          <p class="num-lg mt-2">18<span class="t4" style="margin-left:2px">mo</span></p>
-          <span class="delta delta-down">increasing</span>
-          <div class="bar-track mt-2"><div class="bar-fill" style="width:72%;background:#e8a838"></div></div>
-          <p class="t4 mt-2">Median months to complete career transition.</p>
-        </div>
-        <div class="cell">
-          <p class="t3" style="color:#5da5da">Placement Rate</p>
-          <p class="num-lg mt-2">62<span class="t4" style="margin-left:2px">%</span></p>
-          <span class="delta delta-down">declining</span>
-          <div class="bar-track mt-2"><div class="bar-fill" style="width:62%;background:#5da5da"></div></div>
-          <p class="t4 mt-2">Workers placed in new roles post-transition.</p>
-        </div>
-        <div class="cell">
-          <p class="t3" style="color:#4ecdc4">Employment</p>
-          <p class="num-lg mt-2">94<span class="t4" style="margin-left:2px">%</span></p>
-          <span class="delta delta-flat">stable</span>
-          <div class="bar-track mt-2"><div class="bar-fill" style="width:94%;background:#4ecdc4"></div></div>
-          <p class="t4 mt-2">Overall employment including gig/cooperative.</p>
-        </div>
-      </div>
+      <div class="grid grid-4 mt-6" id="trans-metric-cards"></div>
     </div>
 
     <div class="section">
@@ -222,11 +193,43 @@
     {from:'Taxi Driver',     to:'Fleet Manager',            loss:2600, trainMo:10, trainCost:14000, post:62000, payback_base:16, net10yr_base:120000}
   ];
 
+  var CARD_COLORS={poverty:'#d4622a',reskill:'#e8a838',placement:'#5da5da',employment:'#4ecdc4'};
+  var CARD_DESCS={
+    poverty:{baseline:'Rising without intervention.',transition_os:'Declining via income bridges and reskilling.',full_stack:'Near-elimination through universal services.'},
+    reskill:{baseline:'Increasing as pathways fragment.',transition_os:'Compressed via structured pipelines.',full_stack:'Minimized through integrated systems.'},
+    placement:{baseline:'Declining as displaced workers compete.',transition_os:'Growing as reskilling programs mature.',full_stack:'Near-universal placement via cooperative networks.'},
+    employment:{baseline:'Eroding under automation pressure.',transition_os:'Stabilized with new sector growth.',full_stack:'Expanding through diversified labor markets.'}
+  };
+
   function scName(id){ var s=scenarios.find(function(x){return x.id===id}); return s?s.name:id; }
   function last(arr){ return arr[arr.length-1]; }
   function dirClr(m,v){
     if(m.dir==='lower')  return v<=m.baseline?'var(--green)':'var(--red)';
     return v>=m.baseline?'var(--green)':'var(--red)';
+  }
+
+  function renderMetricCards(){
+    var el=document.getElementById('trans-metric-cards');
+    var h='';
+    indicators.forEach(function(m){
+      var endVal=last(D[m.id][active]);
+      var clr=CARD_COLORS[m.id]||scColors[active];
+      var better=(m.dir==='lower')?(endVal<m.baseline):(endVal>m.baseline);
+      var worse=(m.dir==='lower')?(endVal>m.baseline):(endVal<m.baseline);
+      var trend=better?'up':worse?'down':'flat';
+      var trendLabel=better?'improving':worse?'declining':'stable';
+      var trendCls=better?'delta delta-up':worse?'delta delta-down':'delta delta-flat';
+      var barW=m.id==='reskill'?Math.min(100,endVal/25*100):Math.min(100,endVal);
+      var desc=CARD_DESCS[m.id]?CARD_DESCS[m.id][active]||m.note:m.note;
+      h+='<div class="cell">';
+      h+='<p class="t3" style="color:'+clr+'">'+m.label+'</p>';
+      h+='<p class="num-lg mt-2">'+endVal.toFixed(m.dec)+'<span class="t4" style="margin-left:2px">'+m.unit+'</span></p>';
+      h+='<span class="'+trendCls+'">'+trendLabel+'</span>';
+      h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+barW+'%;background:'+clr+'"></div></div>';
+      h+='<p class="t4 mt-2">'+desc+'</p>';
+      h+='</div>';
+    });
+    el.innerHTML=h;
   }
   function fmtDollar(n){
     if(n>=1000) return '$'+Math.round(n/1000)+'K';
@@ -353,6 +356,7 @@
       +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
       +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+pc+';color:'+pc+'">'+grade(ps)+'</span>'
       +(active==='baseline'?' <span class="t4" style="color:var(--red)">If trends continue</span>':'');
+    renderMetricCards();
     renderOverview();
     renderNarrative();
     renderBridges();
