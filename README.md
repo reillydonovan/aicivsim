@@ -32,6 +32,7 @@ public/layoutUpdate/
 ├── civilization.html      # CivilizationOS — composite health index, KPI trajectories, funding
 ├── governance.html        # GovernanceOS — charter status, assemblies, audit coverage
 ├── strategy.html          # StrategyOS — policy action catalog scored by cost/difficulty/impact
+├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme
 ├── js/shared.js           # Shared utilities — scenarioChart, nav, scenario selectors
@@ -46,6 +47,7 @@ public/layoutUpdate/
 - **Narrative simulation reports** — SimulationOS generates natural-language dispatches from the future that evolve across four era phases (Dawn, Divergence, Maturity, Legacy). The narrative tells a human story — not a metrics readout — covering people & livelihoods, climate & energy, trust & governance, AI & the future, and the road ahead. Letter grades update dynamically.
 - **Dynamic scenario-aware data** — Switching scenarios updates every chart, score, description, domain card, and narrative paragraph on every page. No static content remains when scenarios change.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
+- **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
 - **Cache-busting** — All CSS/JS references include `?v=` query parameters to prevent stale browser caches after deployment.
 
 ### Scenario system
