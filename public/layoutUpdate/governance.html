@@ -260,76 +260,81 @@ var FUNDING_STACK={
     {name:'Participation Infrastructure',range:'$2M / yr',pct:2,color:'#d4622a'}]
 };
 
-var ASSEMBLIES={
-  aggressive:[
-    {name:'AI Safety',members:150,turnout:91,binding:88,meetings:12,decisions:8,color:GOV},
-    {name:'Climate & Energy',members:120,turnout:88,binding:83,meetings:10,decisions:6,color:'#4ecdc4'},
-    {name:'Housing & Land Use',members:100,turnout:85,binding:80,meetings:8,decisions:5,color:'#5da5da'},
-    {name:'Digital Rights',members:80,turnout:82,binding:75,meetings:6,decisions:4,color:'#e8a838'},
-    {name:'Budget & Finance',members:100,turnout:90,binding:86,meetings:9,decisions:7,color:'#45b7d1'}],
-  moderate:[
-    {name:'AI Safety',members:120,turnout:78,binding:70,meetings:8,decisions:5,color:GOV},
-    {name:'Climate & Energy',members:100,turnout:75,binding:65,meetings:7,decisions:4,color:'#4ecdc4'},
-    {name:'Housing & Land Use',members:80,turnout:70,binding:60,meetings:5,decisions:3,color:'#5da5da'},
-    {name:'Digital Rights',members:60,turnout:68,binding:55,meetings:4,decisions:2,color:'#e8a838'}],
-  bau:[
-    {name:'AI Safety',members:40,turnout:45,binding:20,meetings:3,decisions:1,color:GOV},
-    {name:'Budget & Finance',members:30,turnout:40,binding:15,meetings:2,decisions:0,color:'#45b7d1'}],
-  worst:[
-    {name:'General Advisory',members:15,turnout:25,binding:0,meetings:1,decisions:0,color:GOV}]
-};
+var ASSEMBLIES=[
+  {name:'AI Safety',color:GOV,
+    aggressive:{members:150,turnout:91,binding:88,meetings:12,decisions:8,status:'Active'},
+    moderate:  {members:120,turnout:78,binding:70,meetings:8,decisions:5,status:'Active'},
+    bau:       {members:40,turnout:45,binding:20,meetings:3,decisions:1,status:'Limited'},
+    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Dissolved'}},
+  {name:'Climate & Energy',color:'#4ecdc4',
+    aggressive:{members:120,turnout:88,binding:83,meetings:10,decisions:6,status:'Active'},
+    moderate:  {members:100,turnout:75,binding:65,meetings:7,decisions:4,status:'Active'},
+    bau:       {members:20,turnout:30,binding:10,meetings:2,decisions:0,status:'Advisory only'},
+    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Dissolved'}},
+  {name:'Housing & Land Use',color:'#5da5da',
+    aggressive:{members:100,turnout:85,binding:80,meetings:8,decisions:5,status:'Active'},
+    moderate:  {members:80,turnout:70,binding:60,meetings:5,decisions:3,status:'Active'},
+    bau:       {members:15,turnout:25,binding:0,meetings:1,decisions:0,status:'Advisory only'},
+    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Not formed'}},
+  {name:'Digital Rights',color:'#e8a838',
+    aggressive:{members:80,turnout:82,binding:75,meetings:6,decisions:4,status:'Active'},
+    moderate:  {members:60,turnout:68,binding:55,meetings:4,decisions:2,status:'Active'},
+    bau:       {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Not formed'},
+    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Not formed'}},
+  {name:'Budget & Finance',color:'#45b7d1',
+    aggressive:{members:100,turnout:90,binding:86,meetings:9,decisions:7,status:'Active'},
+    moderate:  {members:70,turnout:72,binding:58,meetings:5,decisions:3,status:'Active'},
+    bau:       {members:30,turnout:40,binding:15,meetings:2,decisions:0,status:'Limited'},
+    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Dissolved'}}
+];
 
-var MODULES={
-  aggressive:[
-    {name:'Representation',status:'GA',version:'v1.2',color:GOV,
-      metrics:[{l:'Active Voters',v:'78K'},{l:'Delegates',v:'1,200'},{l:'Assemblies',v:'5'}],
+var MODULES=[
+  {name:'Representation',color:GOV,
+    aggressive:{status:'GA',version:'v1.2',metrics:[{l:'Active Voters',v:'78K'},{l:'Delegates',v:'1,200'},{l:'Assemblies',v:'5'}],
       features:['Civic lottery selection engine','Delegate accountability scoring','Quorum enforcement protocol','Multi-language deliberation support']},
-    {name:'Finance',status:'GA',version:'v1.1',color:'#4ecdc4',
-      metrics:[{l:'Disbursed',v:'$1.25B'},{l:'Transactions',v:'8.4M'},{l:'Settlement',v:'12 sec'}],
-      features:['Participatory budget allocation','Civic dividend distribution','Real-time treasury audit trail','Multi-currency settlement layer']},
-    {name:'Transparency',status:'GA',version:'v1.0',color:'#5da5da',
-      metrics:[{l:'Systems Audited',v:'142'},{l:'Incidents',v:'23 (21 resolved)'},{l:'Dashboard Views',v:'340K'}],
-      features:['Algorithmic audit registry','Open decision log with provenance','Compliance dashboard','Whistleblower protection module']},
-    {name:'Identity',status:'Beta',version:'v0.8',color:'#e8a838',
-      metrics:[{l:'IDs Issued',v:'92K'},{l:'Verifications / Day',v:'15K'},{l:'Privacy Incidents',v:'0'}],
-      features:['Self-sovereign identity issuance','Zero-knowledge verification','Privacy-preserving authentication','Selective disclosure protocol']},
-    {name:'Measurement',status:'GA',version:'v1.3',color:'#45b7d1',
-      metrics:[{l:'Events / Day',v:'12M'},{l:'Data Sources',v:'45'},{l:'Reports Generated',v:'156'}],
-      features:['Real-time event ingestion pipeline','Cross-module metric aggregation','Automated anomaly detection','Scenario impact modeling']}],
-  moderate:[
-    {name:'Representation',status:'GA',version:'v1.0',color:GOV,
-      metrics:[{l:'Active Voters',v:'52K'},{l:'Delegates',v:'800'},{l:'Assemblies',v:'4'}],
+    moderate:{status:'GA',version:'v1.0',metrics:[{l:'Active Voters',v:'52K'},{l:'Delegates',v:'800'},{l:'Assemblies',v:'4'}],
       features:['Civic lottery selection engine','Delegate accountability scoring','Quorum enforcement protocol']},
-    {name:'Finance',status:'GA',version:'v0.9',color:'#4ecdc4',
-      metrics:[{l:'Disbursed',v:'$620M'},{l:'Transactions',v:'4.1M'},{l:'Settlement',v:'18 sec'}],
-      features:['Participatory budget allocation','Civic dividend distribution','Basic treasury audit trail']},
-    {name:'Transparency',status:'Beta',version:'v0.7',color:'#5da5da',
-      metrics:[{l:'Systems Audited',v:'68'},{l:'Incidents',v:'14 (10 resolved)'},{l:'Dashboard Views',v:'120K'}],
-      features:['Algorithmic audit registry','Open decision log','Limited compliance dashboard']},
-    {name:'Identity',status:'Alpha',version:'v0.4',color:'#e8a838',
-      metrics:[{l:'IDs Issued',v:'12K'},{l:'Verifications / Day',v:'2K'},{l:'Privacy Incidents',v:'0'}],
-      features:['Self-sovereign identity issuance','Basic verification']},
-    {name:'Measurement',status:'Beta',version:'v0.8',color:'#45b7d1',
-      metrics:[{l:'Events / Day',v:'3M'},{l:'Data Sources',v:'22'},{l:'Reports Generated',v:'45'}],
-      features:['Event ingestion pipeline','Basic metric aggregation','Manual anomaly detection']}],
-  bau:[
-    {name:'Representation',status:'Beta',version:'v0.5',color:GOV,
-      metrics:[{l:'Active Voters',v:'8K'},{l:'Delegates',v:'120'},{l:'Assemblies',v:'2'}],
+    bau:{status:'Beta',version:'v0.5',metrics:[{l:'Active Voters',v:'8K'},{l:'Delegates',v:'120'},{l:'Assemblies',v:'2'}],
       features:['Basic civic registration','Minimal accountability framework']},
-    {name:'Finance',status:'Alpha',version:'v0.3',color:'#4ecdc4',
-      metrics:[{l:'Disbursed',v:'$40M'},{l:'Transactions',v:'210K'},{l:'Settlement',v:'48 sec'}],
+    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Active Voters',v:'\u2014'},{l:'Delegates',v:'\u2014'},{l:'Assemblies',v:'0'}],
+      features:['No governance infrastructure exists']}},
+  {name:'Finance',color:'#4ecdc4',
+    aggressive:{status:'GA',version:'v1.1',metrics:[{l:'Disbursed',v:'$1.25B'},{l:'Transactions',v:'8.4M'},{l:'Settlement',v:'12 sec'}],
+      features:['Participatory budget allocation','Civic dividend distribution','Real-time treasury audit trail','Multi-currency settlement layer']},
+    moderate:{status:'GA',version:'v0.9',metrics:[{l:'Disbursed',v:'$620M'},{l:'Transactions',v:'4.1M'},{l:'Settlement',v:'18 sec'}],
+      features:['Participatory budget allocation','Civic dividend distribution','Basic treasury audit trail']},
+    bau:{status:'Alpha',version:'v0.3',metrics:[{l:'Disbursed',v:'$40M'},{l:'Transactions',v:'210K'},{l:'Settlement',v:'48 sec'}],
       features:['Basic budget allocation','Limited disbursement']},
-    {name:'Transparency',status:'Not deployed',version:'&mdash;',color:'#5da5da',
-      metrics:[{l:'Systems Audited',v:'0'},{l:'Incidents',v:'Unknown'},{l:'Dashboard Views',v:'&mdash;'}],
-      features:['No audit infrastructure deployed']}],
-  worst:[
-    {name:'Representation',status:'Not deployed',version:'&mdash;',color:GOV,
-      metrics:[{l:'Active Voters',v:'&mdash;'},{l:'Delegates',v:'&mdash;'},{l:'Assemblies',v:'0'}],
-      features:['No governance infrastructure exists']},
-    {name:'Finance',status:'Not deployed',version:'&mdash;',color:'#4ecdc4',
-      metrics:[{l:'Disbursed',v:'$0'},{l:'Transactions',v:'&mdash;'},{l:'Settlement',v:'&mdash;'}],
-      features:['No civic financial infrastructure']}]
-};
+    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Disbursed',v:'$0'},{l:'Transactions',v:'\u2014'},{l:'Settlement',v:'\u2014'}],
+      features:['No civic financial infrastructure']}},
+  {name:'Transparency',color:'#5da5da',
+    aggressive:{status:'GA',version:'v1.0',metrics:[{l:'Systems Audited',v:'142'},{l:'Incidents',v:'23 (21 resolved)'},{l:'Dashboard Views',v:'340K'}],
+      features:['Algorithmic audit registry','Open decision log with provenance','Compliance dashboard','Whistleblower protection module']},
+    moderate:{status:'Beta',version:'v0.7',metrics:[{l:'Systems Audited',v:'68'},{l:'Incidents',v:'14 (10 resolved)'},{l:'Dashboard Views',v:'120K'}],
+      features:['Algorithmic audit registry','Open decision log','Limited compliance dashboard']},
+    bau:{status:'Not deployed',version:'\u2014',metrics:[{l:'Systems Audited',v:'0'},{l:'Incidents',v:'Unknown'},{l:'Dashboard Views',v:'\u2014'}],
+      features:['No audit infrastructure deployed']},
+    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Systems Audited',v:'0'},{l:'Incidents',v:'Unknown'},{l:'Dashboard Views',v:'\u2014'}],
+      features:['No transparency infrastructure']}},
+  {name:'Identity',color:'#e8a838',
+    aggressive:{status:'Beta',version:'v0.8',metrics:[{l:'IDs Issued',v:'92K'},{l:'Verifications / Day',v:'15K'},{l:'Privacy Incidents',v:'0'}],
+      features:['Self-sovereign identity issuance','Zero-knowledge verification','Privacy-preserving authentication','Selective disclosure protocol']},
+    moderate:{status:'Alpha',version:'v0.4',metrics:[{l:'IDs Issued',v:'12K'},{l:'Verifications / Day',v:'2K'},{l:'Privacy Incidents',v:'0'}],
+      features:['Self-sovereign identity issuance','Basic verification']},
+    bau:{status:'Not deployed',version:'\u2014',metrics:[{l:'IDs Issued',v:'0'},{l:'Verifications / Day',v:'\u2014'},{l:'Privacy Incidents',v:'\u2014'}],
+      features:['No identity infrastructure']},
+    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'IDs Issued',v:'0'},{l:'Verifications / Day',v:'\u2014'},{l:'Privacy Incidents',v:'\u2014'}],
+      features:['No identity infrastructure']}},
+  {name:'Measurement',color:'#45b7d1',
+    aggressive:{status:'GA',version:'v1.3',metrics:[{l:'Events / Day',v:'12M'},{l:'Data Sources',v:'45'},{l:'Reports Generated',v:'156'}],
+      features:['Real-time event ingestion pipeline','Cross-module metric aggregation','Automated anomaly detection','Scenario impact modeling']},
+    moderate:{status:'Beta',version:'v0.8',metrics:[{l:'Events / Day',v:'3M'},{l:'Data Sources',v:'22'},{l:'Reports Generated',v:'45'}],
+      features:['Event ingestion pipeline','Basic metric aggregation','Manual anomaly detection']},
+    bau:{status:'Not deployed',version:'\u2014',metrics:[{l:'Events / Day',v:'\u2014'},{l:'Data Sources',v:'0'},{l:'Reports Generated',v:'0'}],
+      features:['No measurement infrastructure']},
+    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Events / Day',v:'\u2014'},{l:'Data Sources',v:'0'},{l:'Reports Generated',v:'0'}],
+      features:['No measurement infrastructure']}}
+];
 
 var AUDIT={
   aggressive:[
@@ -430,68 +435,92 @@ function renderFundingStack(){
   document.getElementById('funding-stack').innerHTML=h;
 }
 
+function assemblyScore(d){
+  if(d.members===0) return 0;
+  return Math.round((d.turnout*0.35)+(d.binding*0.35)+(Math.min(d.decisions/8,1)*100*0.2)+(Math.min(d.members/150,1)*100*0.1));
+}
 function renderAssemblies(){
-  var data=ASSEMBLIES[active];
   var clr=SC_COLORS[active];
-  var h='';
-
-  if(data.length===0){
-    h='<p class="body" style="color:var(--red)">No citizen assemblies exist under this scenario.</p>';
-  } else {
-    h='<div class="flex flex-col">';
-    data.forEach(function(a){
-      h+='<div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:24px 0;border-top:1px solid var(--border)">';
-      h+='<div>';
-      h+='<p class="t2-lg" style="color:'+a.color+'">'+a.name+'</p>';
-      h+='<p class="num-md mt-2">'+a.members+' <span class="t4">members</span></p>';
-      h+='<p class="t4 mt-1">'+a.meetings+' meetings &middot; '+a.decisions+' decisions</p>';
-      h+='</div>';
-      h+='<div>';
-      h+='<div class="flex gap-16 items-start">';
-      h+='<div style="flex:1">';
-      h+='<div class="flex justify-between items-baseline mb-1">';
-      h+='<span class="t3">Turnout</span>';
-      h+='<span class="num-sm" style="color:'+a.color+'">'+a.turnout+'%</span>';
-      h+='</div>';
-      h+='<div class="bar-track"><div class="bar-fill" style="width:'+a.turnout+'%;background:'+a.color+'"></div></div>';
-      h+='</div>';
-      h+='<div style="flex:1">';
-      h+='<div class="flex justify-between items-baseline mb-1">';
-      h+='<span class="t3">Binding Rate</span>';
-      h+='<span class="num-sm" style="color:'+a.color+'">'+a.binding+'%</span>';
-      h+='</div>';
-      h+='<div class="bar-track"><div class="bar-fill" style="width:'+a.binding+'%;background:'+a.color+'"></div></div>';
-      h+='</div>';
-      h+='</div>';
-      h+='</div>';
-      h+='</div>';
-    });
+  var h='<div class="flex flex-col">';
+  ASSEMBLIES.forEach(function(a){
+    var d=a[active];
+    var sc=assemblyScore(d);
+    var g=grade(sc);
+    var inactive=d.members===0;
+    var opacity=inactive?'opacity:0.4':'';
+    var statusClr=inactive?'var(--text-faint)':a.color;
+    var gClr=sc>=80?'var(--green)':sc>=60?a.color:sc>=40?'#e8a838':'var(--red)';
+    if(inactive) gClr='var(--text-faint)';
+    h+='<div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:24px 0;border-top:1px solid var(--border);'+opacity+'">';
+    h+='<div>';
+    h+='<p class="t2-lg" style="color:'+a.color+'">'+a.name+'</p>';
+    h+='<div class="flex items-baseline gap-6 mt-2">';
+    h+='<span class="num-lg" style="color:'+gClr+'">'+sc+'</span>';
+    h+='<span class="tag" style="border-color:'+gClr+';color:'+gClr+'">'+g+'</span>';
     h+='</div>';
-  }
+    if(inactive){
+      h+='<p class="t4 mt-1" style="color:var(--text-faint)">'+d.status+'</p>';
+    } else {
+      h+='<p class="num-md mt-2">'+d.members+' <span class="t4">members</span></p>';
+      h+='<p class="t4 mt-1">'+d.meetings+' meetings &middot; '+d.decisions+' decisions</p>';
+      h+='<span class="tag mt-2" style="border-color:'+statusClr+';color:'+statusClr+'">'+d.status+'</span>';
+    }
+    h+='</div>';
+    h+='<div>';
+    h+='<div class="flex gap-16 items-start">';
+    h+='<div style="flex:1">';
+    h+='<div class="flex justify-between items-baseline mb-1">';
+    h+='<span class="t3">Turnout</span>';
+    h+='<span class="num-sm" style="color:'+statusClr+'">'+d.turnout+'%</span>';
+    h+='</div>';
+    h+='<div class="bar-track"><div class="bar-fill" style="width:'+d.turnout+'%;background:'+a.color+';transition:width 0.4s ease"></div></div>';
+    h+='</div>';
+    h+='<div style="flex:1">';
+    h+='<div class="flex justify-between items-baseline mb-1">';
+    h+='<span class="t3">Binding Rate</span>';
+    h+='<span class="num-sm" style="color:'+statusClr+'">'+d.binding+'%</span>';
+    h+='</div>';
+    h+='<div class="bar-track"><div class="bar-fill" style="width:'+d.binding+'%;background:'+a.color+';transition:width 0.4s ease"></div></div>';
+    h+='</div>';
+    h+='</div>';
+    h+='</div>';
+    h+='</div>';
+  });
+  h+='</div>';
   document.getElementById('assembly-list').innerHTML=h;
 }
 
+var MODULE_SCORES={
+  GA:90,Beta:65,Alpha:40,'Not deployed':0
+};
 function renderModules(){
-  var data=MODULES[active];
   var h='<div class="flex flex-col">';
-  data.forEach(function(m){
-    var statusColor=m.status==='GA'?'#4ecdc4':m.status==='Beta'?'#e8a838':m.status==='Alpha'?'#d4622a':'var(--text-faint)';
-    h+='<div style="padding:32px 0;border-top:1px solid var(--border)">';
+  MODULES.forEach(function(mod){
+    var d=mod[active];
+    var statusColor=d.status==='GA'?'#4ecdc4':d.status==='Beta'?'#e8a838':d.status==='Alpha'?'#d4622a':'var(--text-faint)';
+    var inactive=d.status==='Not deployed';
+    var opacity=inactive?'opacity:0.4':'';
+    var sc=MODULE_SCORES[d.status]||0;
+    var g=grade(sc);
+    var gClr=sc>=80?'var(--green)':sc>=60?mod.color:sc>=40?'#e8a838':'var(--text-faint)';
+    h+='<div style="padding:32px 0;border-top:1px solid var(--border);'+opacity+'">';
     h+='<div class="flex items-baseline gap-8 mb-3">';
-    h+='<p class="t2-lg" style="color:'+m.color+'">'+m.name+'</p>';
-    h+='<span class="tag" style="border-color:'+statusColor+';color:'+statusColor+'">'+m.status+'</span>';
-    h+='<span class="num-xs" style="color:var(--text-muted)">'+m.version+'</span>';
+    h+='<p class="t2-lg" style="color:'+mod.color+'">'+mod.name+'</p>';
+    h+='<span class="num-lg" style="color:'+gClr+'">'+sc+'</span>';
+    h+='<span class="tag" style="border-color:'+gClr+';color:'+gClr+'">'+g+'</span>';
+    h+='<span class="tag" style="border-color:'+statusColor+';color:'+statusColor+'">'+d.status+'</span>';
+    h+='<span class="num-xs" style="color:var(--text-muted)">'+d.version+'</span>';
     h+='</div>';
     h+='<div class="grid grid-3" style="margin-bottom:16px">';
-    m.metrics.forEach(function(met){
+    d.metrics.forEach(function(met){
       h+='<div class="cell">';
       h+='<p class="t3">'+met.l+'</p>';
-      h+='<p class="num-md mt-1" style="color:'+m.color+'">'+met.v+'</p>';
+      h+='<p class="num-md mt-1" style="color:'+mod.color+'">'+met.v+'</p>';
       h+='</div>';
     });
     h+='</div>';
     h+='<div class="flex flex-col gap-2">';
-    m.features.forEach(function(f){
+    d.features.forEach(function(f){
       h+='<p class="t4" style="color:var(--text-secondary)">&mdash; '+f+'</p>';
     });
     h+='</div>';
