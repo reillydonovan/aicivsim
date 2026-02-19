@@ -31,26 +31,42 @@ public/layoutUpdate/
 ├── transition.html        # TransitionOS — workforce reskilling, income bridge calculator
 ├── civilization.html      # CivilizationOS — composite health index, KPI trajectories, funding
 ├── governance.html        # GovernanceOS — charter status, assemblies, audit coverage
-├── strategy.html          # StrategyOS — policy action catalog scored by cost/difficulty/impact
+├── strategy.html          # StrategyOS — 20 actions with scenario-aware status/adoption, Today's Score + projected
+├── timeline.html          # Timeline — 200K-year arc of civilization, AI as inflection point, scenario-aware futures
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
-├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme
-├── js/shared.js           # Shared utilities — scenarioChart, chartHeader, nav, scenario selectors
+├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
+├── js/shared.js           # Shared utilities — scenarioChart, chartHeader, nav, scenario selectors, URL hash persistence, ARIA, prev/next nav, renderFooter
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
 ### Key features
 
 - **Zero dependencies** — No npm, no build step, no framework. Plain HTML/CSS/JS served as static files.
-- **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair.
+- **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair. The index page shows all six systems with today + projected scores that update with scenario selection.
+- **Standardized 4-scenario system** — All pages now use the same four scenarios (Aggressive, Moderate, BAU, Worst) with consistent colors (#4ecdc4, #5da5da, #e8a838, #d4622a). TransitionOS was migrated from its original 3-scenario system (Baseline/TransitionOS/Full Stack) to match.
 - **Standardized chart headers** — Every graph uses a consistent `chartHeader()` function (defined in `shared.js`) that renders a Feltron domain-card style header: uppercase `t3` metric label, large `num-lg` projected value colored to the active scenario, trend arrow (green/red based on direction preference), end-year target, and baseline reference.
 - **Multi-scenario comparison charts** — Every graph displays all four scenarios simultaneously. The active scenario is highlighted with a bold line and filled area; inactive scenarios are dimmed. Implemented via a unified `scenarioChart()` function in `shared.js`.
 - **Narrative simulation reports** — SimulationOS generates natural-language dispatches from the future that evolve across four era phases (Dawn, Divergence, Maturity, Legacy). The narrative tells a human story — not a metrics readout — covering people & livelihoods, climate & energy, trust & governance, AI & the future, and the road ahead. Letter grades update dynamically.
-- **Dynamic scenario-aware data** — Switching scenarios updates every chart, score, description, domain card, and narrative paragraph on every page. No static content remains when scenarios change.
+- **Dynamic scenario-aware data** — Switching scenarios updates every chart, score, description, domain card, and narrative paragraph on every page. No static content remains when scenarios change. This includes:
+  - **GovernanceOS assemblies and modules** — All 5 assemblies and 5 modules persist across scenarios with per-scenario values, grades, and status labels (Active/Limited/Dissolved/Not deployed).
+  - **GovernanceOS overview metric cards** — Civic Participation, Charter Adoption, Institutional Trust, and Audit Coverage update dynamically.
+  - **TransitionOS metric cards** — Poverty Rate, Reskill Time, Placement Rate, and Employment update with scenario-specific values and descriptions.
+  - **CivilizationOS timeline** — Each milestone has per-scenario scores, grades, goal comparison, status tags, and narrative notes.
+  - **Climate tipping points** — Risk levels (low/moderate/high/critical) calculated dynamically from projected temperature vs. threshold, with BREACHED indicators, margin display, and scenario-specific notes.
+  - **StrategyOS** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
+  - **Index page** — Six Systems cards show today + projected scores, hero projected score, and scenario descriptions all update dynamically.
 - **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
+- **URL hash scenario persistence** — Active scenario is stored in the URL hash (e.g. `#aggressive`). Sharing a link preserves the selected scenario. Implemented in `shared.js` via `getScenarioFromHash()` / `setScenarioHash()`.
+- **Prev/Next page navigation** — Footer includes contextual navigation links to the previous and next page in the site order.
+- **Print styles** — `@media print` CSS in `style.css` provides clean PDF export for all dashboard pages (hides nav/scenario bars, white background, proper contrast).
+- **Accessibility** — ARIA `role="tablist"` / `role="tab"` / `aria-selected` on section tabs, `aria-pressed` and `aria-label` on scenario buttons, `role="img"` on chart SVGs.
+- **Skeleton loading styles** — CSS shimmer animation classes (`.skeleton`, `.skeleton-chart`, `.skeleton-score`) for use during JS initialization.
+- **Civilizational Timeline** — A narrative editorial page (`timeline.html`) tracing 200,000 years of human inflection points — fire, agriculture, writing, printing press, industrial revolution, computing, internet — culminating in AI as the current inflection. Three tabs: "The Arc" (visual alternating timeline with population/time-to-next-leap stats), "The Inflection" (why this decade is different, with convergence of climate/labor/democracy/inequality), and "Possible Futures" (scenario-aware era-by-era projections through 2050 with grades and verdicts).
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters to prevent stale browser caches after deployment.
+- **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220a`) to prevent stale browser caches after deployment.
 
 ### Scenario system
 
@@ -118,14 +134,21 @@ No install, no build. Open any HTML file directly or serve with any static file 
 
 ### Roadmap / TODO
 
-- [ ] **Refactor shared components into `shared.js`** — Move navigation bar, scenario selector bar, page shell (head/meta/CSS), and footer into JavaScript templates rendered from `shared.js`. Currently these are duplicated across all 9 HTML files, requiring manual edits to each page for global changes (e.g., adding a nav link). A single-source-of-truth pattern in `shared.js` would let one edit propagate everywhere automatically.
+- [ ] **Refactor shared components into `shared.js`** — Move navigation bar, scenario selector bar, page shell (head/meta/CSS), and footer into JavaScript templates rendered from `shared.js`. Currently these are duplicated across all 9 HTML files, requiring manual edits to each page for global changes (e.g., adding a nav link). A single-source-of-truth pattern in `shared.js` would let one edit propagate everywhere automatically. Footer has already been standardized via `renderFooter()`.
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, partials), evaluate migrating to PHP includes (Hostinger supports PHP natively) or a lightweight SSG like 11ty/Hugo with a build step.
+- [ ] **Cross-system feedback loops** — When a scenario is selected, show how metrics in one OS affect metrics in another (e.g., climate score degradation increasing workforce displacement). Currently each page models independently.
+- [ ] **Data export** — Add a "Download CSV" button to each chart allowing users to export the underlying scenario data for their own analysis.
+- [ ] **Dark/light mode toggle** — Add a theme switcher. Print styles already use a white background; a light mode for screen would extend that.
+- [ ] **Scenario comparison mode** — Side-by-side view showing two scenarios compared directly across all metrics on a single page.
+- [ ] **Animated transitions** — Add CSS/JS transitions when switching scenarios so charts and values animate smoothly rather than snapping.
+- [ ] **Scenario persistence across pages** — Currently URL hash preserves scenario on a single page. Consider using `localStorage` so navigating between pages maintains the selected scenario automatically.
+- [ ] **Interactive policy levers on more pages** — SimulationOS has slider-based policy levers; extend this concept to other pages (e.g., adjust dividend rate on TransitionOS to see income bridge impact in real time).
 
 ### Deploying to Hostinger
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
-3. Upload the contents of `public/layoutUpdate/` (9 HTML files + `css/` + `js/` folders) into `public_html/`
+3. Upload the contents of `public/layoutUpdate/` (10 HTML files + `css/` + `js/` folders) into `public_html/`
 4. If updating: bump the `?v=` query string in each HTML file's CSS/JS references to bust browser caches
 
 ---

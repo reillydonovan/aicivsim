@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Timeline — The Arc of Civilization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260220a">
+<style>
+.tl-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--border-strong);transform:translateX(-50%)}
+.tl-era{position:relative;padding:48px 0}
+.tl-era:last-child{padding-bottom:0}
+.tl-node{position:absolute;left:50%;top:56px;width:16px;height:16px;border-radius:50%;border:2px solid;transform:translate(-50%,0);z-index:2;background:var(--bg)}
+.tl-node.pulse{animation:pulse-glow 2s ease-in-out infinite}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(78,205,196,0.4)}50%{box-shadow:0 0 0 12px rgba(78,205,196,0)}}
+.tl-content{width:42%;padding:0}
+.tl-era:nth-child(odd) .tl-content{margin-left:58%}
+.tl-era:nth-child(even) .tl-content{margin-right:58%;text-align:right}
+.tl-era:nth-child(even) .tl-content .tl-detail{text-align:right}
+.tl-year{font-family:var(--font-mono);font-size:13px;letter-spacing:0.08em;margin-bottom:4px}
+.tl-title{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--text-primary);line-height:1.3;margin-bottom:8px}
+.tl-body{font-family:var(--font-body);font-size:13px;line-height:1.7;color:var(--text-secondary)}
+.tl-detail{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.tl-era:nth-child(even) .tl-detail{justify-content:flex-end}
+.tl-stat{text-align:center}
+.tl-stat .num-md{font-size:18px}
+
+@media(max-width:768px){
+  .tl-line{left:24px}
+  .tl-node{left:24px}
+  .tl-content{width:calc(100% - 56px)!important;margin-left:56px!important;margin-right:0!important;text-align:left!important}
+  .tl-era:nth-child(even) .tl-content .tl-detail{justify-content:flex-start}
+  .tl-era:nth-child(even) .tl-content{text-align:left!important}
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+<div class="page masthead-inner">
+  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Timeline</p>
+  <p class="t3" style="color:var(--accent);letter-spacing:0.3em;margin-bottom:8px">THE ARC OF CIVILIZATION</p>
+  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">200,000 Years in 12 Minutes</h1>
+  <p class="body mt-3" style="max-width:520px">Every civilization-defining technology — fire, agriculture, writing, industry, computing — changed what was possible. AI is the latest. It may be the last one we get to choose how to deploy. This is the story of that arc, and why the next decade matters more than any before it.</p>
+  <hr class="rule">
+</div>
+</header>
+
+<!-- SITE NAV -->
+<nav class="site-nav"><div class="page">
+  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
+  <div class="site-nav-inner">
+    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
+  </div>
+</div></nav>
+<div class="mobile-nav-backdrop"></div>
+
+<!-- CONTROL BAR -->
+<div class="control-bar">
+<div class="page">
+  <div class="control-bar-inner">
+    <div class="nav-tabs" id="nav-tabs">
+      <button class="nav-tab active" data-section="arc">The Arc</button>
+      <button class="nav-tab" data-section="inflection">The Inflection</button>
+      <button class="nav-tab" data-section="futures">Possible Futures</button>
+    </div>
+    <div class="scenario-bar" id="scenario-bar">
+      <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
+      <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
+      <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
+      <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<main>
+
+<!-- ═══ TAB 1: THE ARC ═══ -->
+<div id="sec-arc">
+
+<div class="section"><div class="page">
+  <span class="section-num">01</span>
+  <p class="t2">The Long View</p>
+  <hr class="rule">
+  <p class="body mt-3" style="max-width:640px">Homo sapiens has existed for roughly 200,000 years. For most of that time, the pace of change was imperceptible within a single lifetime. Then, in the last 10,000 years, a series of inflection points — each building on the last — compressed more transformation into less time. We are living through the steepest part of that curve.</p>
+</div></div>
+
+<div class="section" style="padding-top:0"><div class="page" style="position:relative">
+  <div class="tl-line"></div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#d4622a"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#d4622a">~200,000 BCE</p>
+      <p class="tl-title">Fire &amp; Language</p>
+      <p class="tl-body">The control of fire and the emergence of symbolic language. For the first time, knowledge could be shared, accumulated, and passed between generations. Survival became collective. The species began to think beyond the immediate moment.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#d4622a">~1M</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#d4622a">30</p><p class="t4">year lifespan</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#e8a838"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#e8a838">~10,000 BCE</p>
+      <p class="tl-title">Agriculture &amp; Settlement</p>
+      <p class="tl-body">The Neolithic Revolution. Humans stopped following food and started growing it. Permanent settlements created surplus, which created specialization, which created hierarchy, trade, religion, and war. Civilization as a concept was born. The population clock accelerated.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#e8a838">~5M</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#e8a838">10K</p><p class="t4">years to next leap</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#5da5da"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#5da5da">~3,400 BCE</p>
+      <p class="tl-title">Writing &amp; Record-Keeping</p>
+      <p class="tl-body">Cuneiform in Mesopotamia, hieroglyphs in Egypt. For the first time, knowledge outlived the knower. Laws could be codified, debts tracked, histories recorded. The institutional memory of civilization began — and with it, the possibility of compounding knowledge across centuries.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#5da5da">~30M</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#5da5da">5K</p><p class="t4">years to next leap</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#9b87f5"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#9b87f5">1440 CE</p>
+      <p class="tl-title">The Printing Press</p>
+      <p class="tl-body">Gutenberg's movable type broke the monopoly on knowledge. Ideas could scale. The Reformation, the Scientific Revolution, the Enlightenment — all downstream of mass literacy. For the first time, an individual's thoughts could reach millions. The pace of institutional change accelerated by an order of magnitude.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#9b87f5">~400M</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#9b87f5">350</p><p class="t4">years to next leap</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#e8a838"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#e8a838">1760–1840</p>
+      <p class="tl-title">Industrial Revolution</p>
+      <p class="tl-body">Steam, coal, and mechanized production. Human muscle was replaced by machine power. Urbanization, factories, railroads, pollution. GDP per capita, flat for millennia, began its exponential climb. So did inequality, resource extraction, and atmospheric carbon. The Anthropocene had begun.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#e8a838">1B</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#e8a838">150</p><p class="t4">years to next leap</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#5da5da"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#5da5da">1940–1970</p>
+      <p class="tl-title">Computing &amp; the Atomic Age</p>
+      <p class="tl-body">Turing, von Neumann, ENIAC. The power to calculate at superhuman speed. Simultaneously, nuclear weapons gave humanity the ability to destroy itself for the first time. The space race, the Green Revolution, the transistor. More change in 30 years than in the prior 3,000. The gap between capability and wisdom widened.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#5da5da">3.7B</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#5da5da">50</p><p class="t4">years to next leap</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node" style="border-color:#4ecdc4"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:#4ecdc4">1990–2010</p>
+      <p class="tl-title">The Internet &amp; Globalization</p>
+      <p class="tl-body">The network connected every mind on the planet. Information became free, instant, and overwhelming. Markets globalized, supply chains stretched across oceans, and culture became planetary. But so did misinformation, surveillance, and the fragmentation of shared reality. The infrastructure for both utopia and dystopia was laid in the same cables.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:#4ecdc4">6.9B</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:#4ecdc4">15</p><p class="t4">years to next leap</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tl-era">
+    <div class="tl-node pulse" style="border-color:var(--accent);background:var(--accent)"></div>
+    <div class="tl-content">
+      <p class="tl-year" style="color:var(--accent);font-size:16px;font-weight:600">2020–NOW</p>
+      <p class="tl-title" style="font-size:28px;color:var(--accent)">Artificial Intelligence</p>
+      <p class="tl-body" style="font-size:14px;color:var(--text-primary)">For the first time in 200,000 years, the tool can think. AI doesn't just extend human capability — it replaces human cognitive labor, generates novel knowledge, and makes decisions at scales and speeds no institution was designed to handle. Every prior inflection point changed what humans <em>could do</em>. This one changes what humans <em>need to do</em> — and whether our institutions, economies, and democracies can adapt fast enough to stay in control of the transition.</p>
+      <div class="tl-detail">
+        <div class="tl-stat"><p class="num-md" style="color:var(--accent)">8.2B</p><p class="t4">global population</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:var(--accent)">~10</p><p class="t4">years to act</p></div>
+        <div class="tl-stat"><p class="num-md" style="color:var(--accent)">1st</p><p class="t4">tool that thinks</p></div>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+
+<div class="section"><div class="page">
+  <div class="pullquote" style="max-width:640px;border-left-color:var(--accent)">Every prior technology extended human reach. AI is the first that can operate without us. The question is no longer whether the future will be shaped by intelligent machines — it's whether humans will have designed the institutions to govern them before it's too late.</div>
+</div></div>
+
+</div>
+
+<!-- ═══ TAB 2: THE INFLECTION ═══ -->
+<div id="sec-inflection" style="display:none">
+
+<div class="section"><div class="page">
+  <span class="section-num">02</span>
+  <p class="t2">Why This Decade Is Different</p>
+  <hr class="rule">
+  <p class="body mt-3" style="max-width:640px">Every previous inflection point gave humanity generations to adapt. Agriculture took thousands of years to spread. The printing press took centuries to reshape institutions. Even the Industrial Revolution unfolded over decades. AI is compressing that timeline into years.</p>
+</div></div>
+
+<div class="section" style="padding-top:0"><div class="page">
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="num-lg" style="color:var(--accent)">18</p>
+      <p class="t3 mt-1">Months</p>
+      <p class="t4 mt-2">Time between GPT-3 and GPT-4. Each generation leap now happens in months, not decades. Institutional adaptation cycles are measured in years. The gap is structural.</p>
+    </div>
+    <div class="cell">
+      <p class="num-lg" style="color:#d4622a">300M</p>
+      <p class="t3 mt-1">Jobs at Risk</p>
+      <p class="t4 mt-2">Goldman Sachs estimates 300 million full-time jobs globally could be exposed to AI automation. Not over a century — within the next decade. Reskilling infrastructure doesn't exist at this scale.</p>
+    </div>
+    <div class="cell">
+      <p class="num-lg" style="color:#4ecdc4">$15.7T</p>
+      <p class="t3 mt-1">Projected GDP Impact</p>
+      <p class="t4 mt-2">PwC projects AI could contribute $15.7 trillion to the global economy by 2030. The question is whether that wealth concentrates or distributes. Policy decisions made now determine the answer.</p>
+    </div>
+  </div>
+</div></div>
+
+<div class="chapter-divider"><div class="page">
+  <p class="t2">The Convergence</p>
+</div></div>
+
+<div class="section" style="padding-top:24px"><div class="page">
+  <p class="body mb-6" style="max-width:640px">AI doesn't arrive in isolation. It arrives at the intersection of five simultaneous civilizational pressures. No generation in history has faced all five at once.</p>
+  <div class="grid grid-2">
+    <div class="cell">
+      <p class="t3" style="color:var(--climate)">Climate Emergency</p>
+      <p class="num-md mt-2" style="color:var(--climate)">+1.1°C</p>
+      <p class="t4 mt-2">Already above pre-industrial baseline. The remaining carbon budget for 1.5°C is exhausted within this decade. Every year of delay locks in more severe outcomes. AI could accelerate decarbonization — or accelerate consumption.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--workforce)">Labor Disruption</p>
+      <p class="num-md mt-2" style="color:var(--workforce)">40–50%</p>
+      <p class="t4 mt-2">Estimated share of current tasks that AI can perform. Unlike previous automation waves that displaced manual labor, this one targets knowledge work — lawyers, programmers, analysts, writers, designers. The middle class is in the crosshairs.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--governance)">Democratic Erosion</p>
+      <p class="num-md mt-2" style="color:var(--governance)">72%</p>
+      <p class="t4 mt-2">Share of the world's population living in autocratizing countries (V-Dem 2024). AI-powered surveillance, deepfakes, and algorithmic manipulation give authoritarian systems asymmetric power over democracies that move slowly.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--equity)">Inequality Acceleration</p>
+      <p class="num-md mt-2" style="color:var(--equity)">$44T</p>
+      <p class="t4 mt-2">Combined wealth of the world's 2,640 billionaires — more than the bottom 60% of humanity. AI-driven productivity gains flow to capital owners unless institutional mechanisms redirect them. Civic dividends are one such mechanism.</p>
+    </div>
+  </div>
+</div></div>
+
+<div class="section"><div class="page">
+  <div class="pullquote" style="max-width:640px;border-left-color:var(--accent)">The window for intervention is roughly 2025–2035. After that, AI systems will be too deeply embedded in economic and governance infrastructure to retrofit with democratic safeguards. The institutions we build in this decade — or fail to build — will determine the trajectory for the rest of the century.</div>
+  <p class="body mt-4" style="max-width:640px">This is what the simulator models. Not whether AI will transform civilization — that's already happening — but whether the transformation will be governed, equitable, and sustainable. The four scenarios represent the realistic range of outcomes based on how aggressively humanity acts in this narrow window.</p>
+</div></div>
+
+</div>
+
+<!-- ═══ TAB 3: POSSIBLE FUTURES ═══ -->
+<div id="sec-futures" style="display:none">
+
+<div class="section"><div class="page">
+  <span class="section-num">03</span>
+  <p class="t2">Possible Futures — <span id="futures-scenario-label">Aggressive</span></p>
+  <hr class="rule">
+  <p class="body mt-3" style="max-width:640px" id="futures-intro"></p>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-top:20px" id="futures-score"></div>
+</div></div>
+
+<div class="section" style="padding-top:0"><div class="page">
+  <div id="futures-timeline"></div>
+</div></div>
+
+<div class="section"><div class="page">
+  <div class="pullquote" id="futures-verdict" style="max-width:640px"></div>
+</div></div>
+
+</div>
+
+</main>
+
+<div id="page-footer"></div>
+
+<script src="js/shared.js?v=20260220a"></script>
+<script>
+(function(){
+
+var SC=[
+  {id:'aggressive',name:'Aggressive Action',color:'#4ecdc4'},
+  {id:'moderate',name:'Moderate Reform',color:'#5da5da'},
+  {id:'bau',name:'Business as Usual',color:'#e8a838'},
+  {id:'worst',name:'Worst Case',color:'#d4622a'}
+];
+var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
+var active='aggressive';
+
+var FUTURES_SCORES={aggressive:88,moderate:62,bau:28,worst:12};
+
+var FUTURES_INTROS={
+  aggressive:'Under aggressive action, the 2025–2035 window is used decisively. AI governance charters are ratified, civic dividends redistribute productivity gains, climate investment reaches 25% of GDP, and workforce transition programs achieve near-universal coverage. By 2050, civilization is on a recovery trajectory — not because problems disappeared, but because institutions were built to manage them.',
+  moderate:'Moderate reform makes meaningful progress but leaves critical gaps. Some regions adopt AI governance; others don\'t. Civic dividends reach pilot scale but not universality. Climate investment is real but insufficient to avoid all tipping points. By 2050, the world is better than inaction — but the window for several key interventions has closed.',
+  bau:'Business as usual means the 2025–2035 window closes without coordinated action. AI deployment proceeds without governance frameworks. Climate targets are missed. Workforce displacement accelerates without reskilling infrastructure. By 2050, structural decline is locked in — not through dramatic collapse, but through the slow erosion of institutional capacity.',
+  worst:'Under worst-case conditions, the convergence overwhelms institutional capacity. Democratic backsliding accelerates AI-powered authoritarianism. Climate tipping points are breached. Labor displacement creates permanent underclass. By 2050, the civilization health index has collapsed to levels not seen since the pre-industrial era — but with 8 billion people dependent on systems that no longer function.'
+};
+
+var FUTURE_ERAS=[
+  {year:'2026–2028',title:'The Window Opens',
+    aggressive:{score:55,note:'Foundations laid rapidly. AI governance charters drafted. First civic dividend trials. Climate investment begins scaling. Global coordination emerging.'},
+    moderate:{score:48,note:'Partial foundations. Some regions act; others wait. Pilot programs launch but lack universal mandate. Coordination fragmented.'},
+    bau:{score:38,note:'Incremental moves only. Voluntary AI ethics guidelines. No structural change. Climate pledges renewed but unfunded.'},
+    worst:{score:28,note:'Democratic erosion accelerates. AI regulation blocked by industry lobbying. Climate denial resurges. Social trust collapses.'}},
+  {year:'2029–2032',title:'The Divergence',
+    aggressive:{score:72,note:'The gap becomes visible. Citizens in governed regions feel the difference — cleaner air, stable work, functioning institutions. The model proves itself and adoption accelerates.'},
+    moderate:{score:58,note:'Progress visible in some metrics, not others. Climate is stabilizing. But workforce displacement is outpacing reskilling. Inequality persists.'},
+    bau:{score:30,note:'No structural response. AI displaces millions. Climate events intensify. Public frustration grows but institutions offer no pathway for change.'},
+    worst:{score:18,note:'Cascading failures. Authoritarian AI surveillance becomes normalized. Climate refugees overwhelm unprepared systems. Institutional trust near zero.'}},
+  {year:'2033–2040',title:'Patterns Lock In',
+    aggressive:{score:82,note:'A generation grows up in a different world — with democratic AI oversight, green energy, civic dividends, and meaningful work. The changes feel normal to them. Recovery accelerates.'},
+    moderate:{score:60,note:'A mixed world. Some regions thrive; others stagnate. Global cooperation is partial. The "moderate" outcome feels fragile — always one crisis away from regression.'},
+    bau:{score:25,note:'Decline becomes structural. The cost of retrofitting governance is now higher than the cost of building it would have been a decade ago. Momentum runs against reform.'},
+    worst:{score:12,note:'Civilizational capacity has been degraded beyond easy repair. Human agency over AI systems has been largely ceded. Recovery, if possible, is measured in generations.'}},
+  {year:'2041–2050',title:'The Verdict',
+    aggressive:{score:88,note:'The long bet pays off. Temperature stabilizing. Poverty near-eliminated. Institutions resilient. The AI transition — the most dangerous technology shift in human history — was governed. It worked.'},
+    moderate:{score:62,note:'A world better than inaction, but haunted by what was possible. Several tipping points were narrowly avoided. Several were not. The cost of delay is visible in the data.'},
+    bau:{score:28,note:'The world that chose not to choose. No catastrophic single event — just the steady accumulation of unaddressed crises. Future generations will ask why, with all the knowledge available, nothing was done.'},
+    worst:{score:12,note:'The world that lost the thread. AI is powerful but ungoverned. Climate has crossed multiple tipping points. Institutions exist in name only. The arc of civilization, after 200,000 years, has bent toward a diminished future.'}}
+];
+
+var FUTURES_VERDICT={
+  aggressive:'We looked at the most powerful technology ever created, and we decided — collectively, imperfectly, but decisively — to govern it. That choice echoed across every system: climate, economy, democracy, wellbeing. The arc of civilization continues upward. Not because of luck, but because of design.',
+  moderate:'We did some things right and many things too late. The world in 2050 is livable, but it carries the weight of missed opportunities. The lesson is clear: partial action produces partial results. The next generation inherits both our progress and our hesitation.',
+  bau:'The knowledge existed. The tools existed. The resources existed. What didn\'t exist was the collective will to use them. Business as usual was not a decision — it was the absence of one. And absence, compounded over decades, is its own kind of catastrophe.',
+  worst:'There is a version of history where 2025 was the turning point — where humanity recognized the convergence of AI, climate, inequality, and democratic erosion, and chose to act. This is not that version. The arc of civilization, after 200,000 years of upward momentum, has flattened. What comes next is up to whoever rebuilds.'
+};
+
+function render(){
+  var clr=SC_COLORS[active];
+  var scLabel=SC.find(function(s){return s.id===active}).name;
+  var ps=FUTURES_SCORES[active];
+  updateScenarioBar('#scenario-bar',active,SC);
+  document.getElementById('futures-scenario-label').textContent=scLabel;
+  document.getElementById('futures-scenario-label').style.color=clr;
+  document.getElementById('futures-intro').innerHTML=FUTURES_INTROS[active];
+  document.getElementById('futures-score').innerHTML=
+    '<span class="t3">2050 Civilization Score ('+scLabel+'):</span> '
+    +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
+    +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
+    +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
+  document.getElementById('futures-verdict').innerHTML=FUTURES_VERDICT[active];
+  document.getElementById('futures-verdict').style.borderLeftColor=clr;
+
+  var h='<div class="flex flex-col">';
+  FUTURE_ERAS.forEach(function(era){
+    var d=era[active];
+    var g=grade(d.score);
+    var gClr=d.score>=80?'var(--green)':d.score>=60?clr:d.score>=40?'#e8a838':'var(--red)';
+    h+='<div style="display:flex;gap:32px;padding:24px 0;border-top:1px solid var(--border)">';
+    h+='<div style="flex-shrink:0;width:120px">';
+    h+='<p class="num-md" style="color:var(--text-primary)">'+era.year+'</p>';
+    h+='<div class="flex items-baseline gap-4 mt-2">';
+    h+='<span class="num-lg" style="color:'+gClr+'">'+d.score+'</span>';
+    h+='<span class="tag" style="border-color:'+gClr+';color:'+gClr+'">'+g+'</span>';
+    h+='</div>';
+    h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+d.score+'%;background:'+gClr+';transition:width 0.4s ease"></div></div>';
+    h+='</div>';
+    h+='<div>';
+    h+='<p class="t2-lg" style="margin-bottom:8px">'+era.title+'</p>';
+    h+='<p class="body">'+d.note+'</p>';
+    h+='</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('futures-timeline').innerHTML=h;
+}
+
+initSectionNav('#nav-tabs','sec-','arc');
+initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
+render();
+document.getElementById('page-footer').innerHTML=renderFooter();
+
+})();
+</script>
+</body>
+</html>

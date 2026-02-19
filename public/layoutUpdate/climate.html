@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260219c">
+<link rel="stylesheet" href="css/style.css?v=20260220a">
 </head>
 <body>
 
@@ -28,7 +28,7 @@
 <nav class="site-nav"><div class="page">
   <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
   <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="research.html">Research</a><a href="about.html">About</a>
+    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
   </div>
 </div></nav>
 <div class="mobile-nav-backdrop"></div>
@@ -162,7 +162,7 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260219c"></script>
+<script src="js/shared.js?v=20260220a"></script>
 <script>
 (function(){
 
@@ -310,18 +310,24 @@
 
   /* ── Tipping points data ── */
   var tippingPoints=[
-    {name:'Amazon Rainforest Dieback',threshold:'+2.5\u00b0C',risk:'high',riskColor:'#e8a838',
-     desc:'Prolonged drought and rising temperatures convert large swathes of the Amazon from carbon sink to carbon source. Feedback loops accelerate regional drying and global CO\u2082 release.'},
-    {name:'West Antarctic Ice Sheet Collapse',threshold:'+1.5 \u2013 2\u00b0C',risk:'critical',riskColor:'#d4622a',
-     desc:'Marine ice-sheet instability triggers irreversible grounding-line retreat. Commits 3\u20135 meters of long-term sea level rise over centuries.'},
-    {name:'Permafrost Carbon Release',threshold:'+1.5\u00b0C',risk:'critical',riskColor:'#d4622a',
-     desc:'Thawing permafrost releases methane and CO\u2082 stored for millennia. Acts as an amplifying feedback, adding 0.1\u20130.3\u00b0C of additional warming by 2100.'},
-    {name:'Atlantic Meridional Overturning',threshold:'Freshwater threshold',risk:'high',riskColor:'#e8a838',
-     desc:'Greenland melt and altered precipitation weaken the AMOC, disrupting heat transport. Northern Europe cools while tropics overheat; monsoon patterns shift.'},
-    {name:'Boreal Forest Shift',threshold:'+3\u00b0C',risk:'moderate',riskColor:'#5da5da',
-     desc:'Warming pushes the boreal treeline northward while southern margins succumb to wildfire and drought. Net carbon balance flips negative at high warming.'},
-    {name:'Coral Reef Die-Off',threshold:'+1.5\u00b0C',risk:'critical',riskColor:'#d4622a',
-     desc:'Mass bleaching events become annual above +1.5\u00b0C. Functional extinction of tropical coral reefs eliminates habitat for 25% of marine species and coastal protection for 500 million people.'}
+    {name:'Amazon Rainforest Dieback',thresholdC:2.5,thresholdLabel:'+2.5\u00b0C',
+     desc:'Prolonged drought and rising temperatures convert large swathes of the Amazon from carbon sink to carbon source. Feedback loops accelerate regional drying and global CO\u2082 release.',
+     scenarioNote:{aggressive:'Warming held well below threshold. Amazon under active protection and restoration.',moderate:'Warming approaching threshold. Amazon stabilized but drought stress increasing.',bau:'Threshold breached. Large-scale dieback underway with cascading CO\u2082 release.',worst:'Far above threshold. Amazon transitioning to savanna. Irreversible carbon release.'}},
+    {name:'West Antarctic Ice Sheet Collapse',thresholdC:1.75,thresholdLabel:'+1.5\u20132\u00b0C',
+     desc:'Marine ice-sheet instability triggers irreversible grounding-line retreat. Commits 3\u20135 meters of long-term sea level rise over centuries.',
+     scenarioNote:{aggressive:'Warming near lower threshold. Ice sheet stabilized with minimal retreat.',moderate:'Within threshold range. Slow retreat underway \u2014 multi-century commitment.',bau:'Above threshold. Accelerating retreat. Several meters of committed sea level rise.',worst:'Far above threshold. Rapid collapse underway. Coastal adaptation overwhelmed.'}},
+    {name:'Permafrost Carbon Release',thresholdC:1.5,thresholdLabel:'+1.5\u00b0C',
+     desc:'Thawing permafrost releases methane and CO\u2082 stored for millennia. Acts as an amplifying feedback, adding 0.1\u20130.3\u00b0C of additional warming by 2100.',
+     scenarioNote:{aggressive:'Warming at threshold. Thawing slowed but some release unavoidable.',moderate:'Above threshold. Moderate thaw releasing stored carbon. +0.1\u00b0C feedback.',bau:'Well above threshold. Widespread thaw. +0.2\u00b0C amplifying feedback locked in.',worst:'Runaway thaw. Methane release accelerating. +0.3\u00b0C or more additional warming.'}},
+    {name:'Atlantic Meridional Overturning',thresholdC:2.0,thresholdLabel:'+2\u00b0C (freshwater)',
+     desc:'Greenland melt and altered precipitation weaken the AMOC, disrupting heat transport. Northern Europe cools while tropics overheat; monsoon patterns shift.',
+     scenarioNote:{aggressive:'Below threshold. AMOC circulation stable with minor weakening.',moderate:'Near threshold. AMOC weakening detectable. European weather patterns shifting.',bau:'Above threshold. AMOC significantly weakened. Northern Europe cooling while tropics destabilize.',worst:'Collapse risk high. AMOC near shutdown. Catastrophic weather pattern disruption.'}},
+    {name:'Boreal Forest Shift',thresholdC:3.0,thresholdLabel:'+3\u00b0C',
+     desc:'Warming pushes the boreal treeline northward while southern margins succumb to wildfire and drought. Net carbon balance flips negative at high warming.',
+     scenarioNote:{aggressive:'Well below threshold. Boreal forests stable and expanding carbon uptake.',moderate:'Below threshold. Southern margins under stress but net carbon balance positive.',bau:'Near threshold. Wildfire frequency doubling. Carbon balance turning negative.',worst:'Above threshold. Boreal forests collapsing at southern margins. Major carbon source.'}},
+    {name:'Coral Reef Die-Off',thresholdC:1.5,thresholdLabel:'+1.5\u00b0C',
+     desc:'Mass bleaching events become annual above +1.5\u00b0C. Functional extinction of tropical coral reefs eliminates habitat for 25% of marine species and coastal protection for 500 million people.',
+     scenarioNote:{aggressive:'At threshold. Bleaching events reduced. Coral recovery programs showing results.',moderate:'Above threshold. Annual bleaching. 60% of reefs degraded but some recovery possible.',bau:'Well above threshold. 90% of reefs functionally extinct. Marine habitat collapse.',worst:'Catastrophically above threshold. Coral reefs extinct. Marine ecosystem restructuring.'}}
   ];
 
   /* ── Climate domains — today + per-scenario projected ── */
@@ -611,19 +617,34 @@
   function renderTipping(){
     var el=document.getElementById('tipping-list');
     var tempEnd=last(D.temp[active]);
+    var clr=scColors[active];
     var html='';
-    tippingPoints.forEach(function(tp,i){
-      html+='<div style="padding:20px 0;border-top:1px solid var(--border)">'
+    tippingPoints.forEach(function(tp){
+      var margin=tp.thresholdC-tempEnd;
+      var risk,riskColor;
+      if(margin>0.5){risk='low';riskColor='var(--green)';}
+      else if(margin>0.1){risk='moderate';riskColor='#5da5da';}
+      else if(margin>-0.3){risk='high';riskColor='#e8a838';}
+      else{risk='critical';riskColor='#d4622a';}
+      var breached=tempEnd>=tp.thresholdC;
+      var note=tp.scenarioNote[active];
+      html+='<div style="padding:20px 0;border-top:1px solid var(--border)'+(breached?';border-left:3px solid '+riskColor+';padding-left:16px':'')+'">'
         +'<div class="flex justify-between items-start">'
-        +'<div>'
+        +'<div style="flex:1">'
         +'<span class="t2-lg">'+tp.name+'</span>'
         +'<div class="flex gap-8 items-center mt-2">'
-        +'<span class="t3">Threshold: '+tp.threshold+'</span>'
-        +'<span class="tag" style="border-color:'+tp.riskColor+';color:'+tp.riskColor+'">'+tp.risk+'</span>'
+        +'<span class="t3">Threshold: '+tp.thresholdLabel+'</span>'
+        +'<span class="tag" style="border-color:'+riskColor+';color:'+riskColor+'">'+risk+'</span>'
+        +(breached?'<span class="tag" style="border-color:var(--red);color:var(--red)">BREACHED</span>':'')
         +'</div>'
+        +'</div>'
+        +'<div style="text-align:right">'
+        +'<p class="t4">Projected: <span class="num-sm" style="color:'+clr+'">+'+tempEnd.toFixed(2)+'\u00b0C</span></p>'
+        +'<p class="t4 mt-1" style="color:'+(breached?'var(--red)':'var(--green)')+'">Margin: '+(margin>0?'+':'')+margin.toFixed(2)+'\u00b0C</p>'
         +'</div>'
         +'</div>'
         +'<p class="body mt-3">'+tp.desc+'</p>'
+        +'<p class="t4 mt-2" style="color:'+clr+'">'+note+'</p>'
         +'</div>';
     });
     el.innerHTML=html;

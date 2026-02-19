@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260219c">
+<link rel="stylesheet" href="css/style.css?v=20260220a">
 </head>
 <body>
 
@@ -26,7 +26,7 @@
 <nav class="site-nav"><div class="page">
   <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
   <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="research.html">Research</a><a href="about.html">About</a>
+    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
   </div>
 </div></nav>
 <div class="mobile-nav-backdrop"></div>
@@ -132,24 +132,9 @@
 
 </main>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-<div class="page">
-  <hr class="rule-long" style="margin-bottom:32px">
-  <div class="flex justify-between items-end flex-wrap gap-8">
-    <div>
-      <p class="t3" style="color:#e8a838;margin-bottom:8px">CIVILIZATIONOS</p>
-      <p class="t4">AI Civilization Simulator &middot; Clawcode Research &middot; 2026</p>
-    </div>
-    <div class="text-right">
-      <p class="t4" style="color:var(--text-faint)">Data: simulated projections, not real-time</p>
-      <p class="t4" style="color:var(--text-faint)">Design: Feltron-inspired editorial data report</p>
-    </div>
-  </div>
-</div>
-</footer>
+<div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260219c"></script>
+<script src="js/shared.js?v=20260220a"></script>
 <script>
 (function(){
 var SC=[
@@ -467,6 +452,7 @@ function renderTimeline(){
 initSectionNav('#tabs','sec-','overview');
 initScenarioSelector('#scbar',render);
 render('aggressive');
+document.getElementById('page-footer').innerHTML=renderFooter();
 })();
 </script>
 </body>

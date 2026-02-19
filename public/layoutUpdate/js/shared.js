@@ -110,7 +110,7 @@ function scenarioChart(opts){
   function fVal(v){ return prefix+v.toFixed(dec)+unit; }
 
   var nTicks=5;
-  var svg='<svg viewBox="0 0 '+vw+' '+vh+'" style="width:100%;aspect-ratio:'+vw+'/'+vh+'" preserveAspectRatio="xMidYMid meet">';
+  var svg='<svg viewBox="0 0 '+vw+' '+vh+'" style="width:100%;aspect-ratio:'+vw+'/'+vh+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scenario comparison chart">';
 
   for(var t=0;t<nTicks;t++){
     var tv=mn+(t/(nTicks-1))*rng;
@@ -225,25 +225,52 @@ function deltaHTML(val,ref){
 /* ── Section navigation ── */
 function initSectionNav(navSelector, sectionPrefix, defaultSection){
   var btns=document.querySelectorAll(navSelector+' .nav-tab');
+  var nav=document.querySelector(navSelector);
+  if(nav) nav.setAttribute('role','tablist');
   function show(id){
-    document.querySelectorAll('[id^="'+sectionPrefix+'"]').forEach(function(el){el.style.display='none'});
+    document.querySelectorAll('[id^="'+sectionPrefix+'"]').forEach(function(el){
+      el.style.display='none';
+      el.setAttribute('aria-hidden','true');
+    });
     var sec=document.getElementById(sectionPrefix+id);
-    if(sec) sec.style.display='block';
-    btns.forEach(function(b){b.classList.toggle('active',b.dataset.section===id)});
+    if(sec){sec.style.display='block';sec.setAttribute('aria-hidden','false');}
+    btns.forEach(function(b){
+      var isA=b.dataset.section===id;
+      b.classList.toggle('active',isA);
+      b.setAttribute('aria-selected',isA?'true':'false');
+    });
   }
-  btns.forEach(function(b){b.addEventListener('click',function(){show(b.dataset.section)})});
+  btns.forEach(function(b){
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-controls',sectionPrefix+b.dataset.section);
+    b.addEventListener('click',function(){show(b.dataset.section)});
+  });
   show(defaultSection||btns[0].dataset.section);
   return show;
 }
 
 /* ── Scenario selector ── */
+function getScenarioFromHash(){
+  var h=window.location.hash.replace('#','');
+  if(h&&/^(aggressive|moderate|bau|worst)$/.test(h)) return h;
+  return null;
+}
+function setScenarioHash(id){
+  if(window.history&&window.history.replaceState) window.history.replaceState(null,'','#'+id);
+  else window.location.hash=id;
+}
 function initScenarioSelector(barSelector, callback){
   var btns=document.querySelectorAll(barSelector+' .scenario-btn');
   btns.forEach(function(b){
     b.addEventListener('click',function(){
+      setScenarioHash(b.dataset.sc);
       callback(b.dataset.sc);
     });
   });
+  var fromHash=getScenarioFromHash();
+  if(fromHash){
+    setTimeout(function(){callback(fromHash)},0);
+  }
 }
 
 function updateScenarioBar(barSelector, activeId, scenarios){
@@ -253,6 +280,8 @@ function updateScenarioBar(barSelector, activeId, scenarios){
     if(!info) return;
     var isA=sc===activeId;
     b.style.color=isA?info.color:'var(--text-faint)';
+    b.setAttribute('aria-pressed',isA?'true':'false');
+    b.setAttribute('aria-label','Scenario: '+info.name+(isA?' (active)':''));
     var dot=b.querySelector('.dot');
     if(dot) dot.style.background=isA?info.color:'rgba(255,255,255,0.1)';
   });
@@ -282,9 +311,41 @@ function updateScenarioBar(barSelector, activeId, scenarios){
 })();
 
 /* ── HTML template for shared page shell ── */
+var PAGE_ORDER=[
+  {href:'index.html',label:'Home'},
+  {href:'climate.html',label:'ClimateOS'},
+  {href:'simulation.html',label:'SimulationOS'},
+  {href:'transition.html',label:'TransitionOS'},
+  {href:'civilization.html',label:'CivilizationOS'},
+  {href:'governance.html',label:'GovernanceOS'},
+  {href:'strategy.html',label:'StrategyOS'},
+  {href:'timeline.html',label:'Timeline'},
+  {href:'research.html',label:'Research'},
+  {href:'about.html',label:'About'}
+];
 function renderFooter(){
-  return '<footer class="site-footer"><div class="page text-center">'+
+  var path=window.location.pathname;
+  var idx=-1;
+  PAGE_ORDER.forEach(function(p,i){if(path.indexOf(p.href)!==-1) idx=i});
+  if(idx===-1&&(path.endsWith('/')||path.endsWith('/index.html'))) idx=0;
+  var nav='';
+  if(idx>0||idx<PAGE_ORDER.length-1){
+    nav='<div class="flex justify-between" style="margin-bottom:24px">';
+    if(idx>0){
+      var prev=PAGE_ORDER[idx-1];
+      nav+='<a href="'+prev.href+'" style="color:var(--text-muted);text-decoration:none;font-family:var(--font-body);font-size:13px">&larr; '+prev.label+'</a>';
+    } else { nav+='<span></span>'; }
+    if(idx<PAGE_ORDER.length-1){
+      var next=PAGE_ORDER[idx+1];
+      nav+='<a href="'+next.href+'" style="color:var(--text-muted);text-decoration:none;font-family:var(--font-body);font-size:13px">'+next.label+' &rarr;</a>';
+    } else { nav+='<span></span>'; }
+    nav+='</div>';
+  }
+  return '<footer class="site-footer"><div class="page">'+
+    nav+
+    '<div class="text-center">'+
     '<p class="t4">AI Civilization Simulator &middot; Clawcode Research &middot; 2026</p>'+
     '<p class="t4 mt-2" style="color:var(--text-faint)">Data: simulated projections. Methodology: scenario modeling with policy lever inputs.<br>Typography: Space Grotesk, Inter, JetBrains Mono. Layout: 12-column editorial grid.</p>'+
+    '</div>'+
   '</div></footer>';
 }

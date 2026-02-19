@@ -242,3 +242,38 @@ img{display:block;max-width:100%}
   .pullquote{font-size:15px}
   .nav-tab{padding:10px 12px;font-size:9px}
 }
+
+/* ================================================================
+   LOADING / SKELETON
+   ================================================================ */
+@keyframes shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.skeleton{background:linear-gradient(90deg,var(--bg-raised) 25%,rgba(255,255,255,0.04) 50%,var(--bg-raised) 75%);background-size:400px 100%;animation:shimmer 1.5s infinite;border-radius:4px;min-height:20px}
+.skeleton-chart{height:180px}
+.skeleton-score{width:80px;height:60px;display:inline-block}
+.skeleton-text{height:14px;margin:6px 0}
+.skeleton-bar{height:8px;margin-top:8px}
+
+/* ================================================================
+   PRINT STYLES
+   ================================================================ */
+@media print{
+  body{background:#fff!important;color:#111!important;font-size:11px}
+  .site-nav,.control-bar,.mobile-nav-toggle,.mobile-nav-backdrop,.scenario-bar,.site-footer{display:none!important}
+  .masthead{background:#fff!important;border-bottom:2px solid #111;padding:12px 0}
+  .page{max-width:100%!important;padding:0 16px!important}
+  .section{padding:16px 0!important;page-break-inside:avoid}
+  .chapter-divider{padding:8px 0!important;background:#f5f5f5!important;margin:12px 0}
+  .cell{border:1px solid #ddd!important;padding:12px!important;background:#fff!important;page-break-inside:avoid}
+  .grid{gap:8px!important}
+  .bar-track{background:#eee!important}
+  .bar-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .score-hero{font-size:48px!important}
+  .num-lg{font-size:28px!important}
+  .tag{border-width:1px!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  svg{max-height:200px}
+  .pullquote{border-left-color:#333!important;color:#333!important}
+  a{color:#111!important}
+  a[href]::after{content:" (" attr(href) ")";font-size:9px;color:#666}
+  .site-nav a[href]::after,.site-footer a[href]::after{content:none}
+  *{color-adjust:exact;-webkit-print-color-adjust:exact}
+}

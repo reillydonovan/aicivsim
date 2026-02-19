@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260219c">
+<link rel="stylesheet" href="css/style.css?v=20260220a">
 </head>
 <body>
 
@@ -32,6 +32,7 @@
     <a href="civilization.html">CivilizationOS</a>
     <a href="governance.html">GovernanceOS</a>
     <a href="strategy.html">StrategyOS</a>
+    <a href="timeline.html">Timeline</a>
     <a href="research.html">Research</a>
     <a href="about.html">About</a>
   </div>
@@ -39,6 +40,21 @@
 <div class="mobile-nav-backdrop"></div>
 
 <main>
+
+<!-- SCENARIO BAR (home page) -->
+<div class="control-bar">
+<div class="page">
+  <div class="control-bar-inner">
+    <div></div>
+    <div class="scenario-bar" id="scenario-bar">
+      <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
+      <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
+      <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
+      <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
+    </div>
+  </div>
+</div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════
      01 — HERO SCORE
@@ -59,6 +75,7 @@
     </div>
   </div>
   <p class="t4 mt-2" style="color:var(--text-muted)">6 domains measured</p>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="hero-projected"></div>
   <p class="body mt-4">Aggregate score across climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today &mdash; before any of the four scenarios are applied.</p>
 </div>
 </div>
@@ -69,63 +86,13 @@
 <div class="chapter-divider">
 <div class="page">
   <span class="section-num">02</span>
-  <p class="t2">Six Systems Index</p>
+  <p class="t2">Six Systems Index &mdash; <span id="idx-scenario-label" style="color:#4ecdc4">Aggressive</span></p>
 </div>
 </div>
 
 <div class="section" style="padding-top:24px">
 <div class="page">
-  <div class="grid grid-6">
-
-    <a href="climate.html" class="cell">
-      <p class="t3" style="color:var(--climate)">ClimateOS</p>
-      <p class="num-lg mt-2">42</p>
-      <p class="t4 mt-1"><span class="tag" style="border-color:var(--climate);color:var(--climate)">D+</span></p>
-      <div class="bar-track mt-3"><div class="bar-fill" style="width:42%;background:var(--climate)"></div></div>
-      <p class="t4 mt-2">Climate resilience, emissions trajectories, biodiversity corridors</p>
-    </a>
-
-    <a href="simulation.html" class="cell">
-      <p class="t3" style="color:var(--technology)">SimulationOS</p>
-      <p class="num-lg mt-2">12</p>
-      <p class="t4 mt-1"><span class="tag" style="border-color:var(--technology);color:var(--technology)">branches</span></p>
-      <div class="bar-track mt-3"><div class="bar-fill" style="width:24%;background:var(--technology)"></div></div>
-      <p class="t4 mt-2">12 scenario branches across a 50-year projection horizon</p>
-    </a>
-
-    <a href="transition.html" class="cell">
-      <p class="t3" style="color:var(--workforce)">TransitionOS</p>
-      <p class="num-lg mt-2">43</p>
-      <p class="t4 mt-1"><span class="tag" style="border-color:var(--workforce);color:var(--workforce)">D+</span></p>
-      <div class="bar-track mt-3"><div class="bar-fill" style="width:43%;background:var(--workforce)"></div></div>
-      <p class="t4 mt-2">Workforce readiness, reskilling rates, civic dividend modeling</p>
-    </a>
-
-    <a href="civilization.html" class="cell">
-      <p class="t3" style="color:var(--equity)">CivilizationOS</p>
-      <p class="num-lg mt-2">44</p>
-      <p class="t4 mt-1"><span class="tag" style="border-color:var(--equity);color:var(--equity)">D+</span></p>
-      <div class="bar-track mt-3"><div class="bar-fill" style="width:44%;background:var(--equity)"></div></div>
-      <p class="t4 mt-2">Aggregate civilizational health across all six domains</p>
-    </a>
-
-    <a href="governance.html" class="cell">
-      <p class="t3" style="color:var(--governance)">GovernanceOS</p>
-      <p class="num-lg mt-2">40</p>
-      <p class="t4 mt-1"><span class="tag" style="border-color:var(--governance);color:var(--governance)">D</span></p>
-      <div class="bar-track mt-3"><div class="bar-fill" style="width:40%;background:var(--governance)"></div></div>
-      <p class="t4 mt-2">Institutional trust, AI governance charters, civic participation</p>
-    </a>
-
-    <a href="strategy.html" class="cell">
-      <p class="t3" style="color:var(--accent)">StrategyOS</p>
-      <p class="num-lg mt-2">50+</p>
-      <p class="t4 mt-1"><span class="tag" style="border-color:var(--accent);color:var(--accent)">strategies</span></p>
-      <div class="bar-track mt-3"><div class="bar-fill" style="width:60%;background:var(--accent)"></div></div>
-      <p class="t4 mt-2">50+ intervention strategies across 3 implementation levels</p>
-    </a>
-
-  </div>
+  <div class="grid grid-6" id="systems-grid"></div>
 </div>
 </div>
 
@@ -215,41 +182,7 @@
 <div class="section" style="padding-top:24px">
 <div class="page">
   <p class="body mb-6" style="max-width:640px">Every projection is modeled under four divergent scenarios. Each varies the core policy levers &mdash; civic dividend rates, AI governance charter adoption, climate investment, workforce reskilling, and institutional transparency &mdash; to produce different long-term trajectories.</p>
-
-  <div class="grid grid-2">
-    <div class="cell">
-      <div class="flex items-center gap-4 mb-3">
-        <span class="dot" style="background:#4ecdc4;width:10px;height:10px"></span>
-        <p class="t3" style="color:#4ecdc4">Aggressive Action</p>
-      </div>
-      <p class="t4 mt-2" style="color:var(--text-secondary)">Full deployment of civic infrastructure. 10% civic dividends, enforced AI charter with citizen oversight, 25% GDP climate capex, 20% reskilling investment, 80% governance transparency. Coordinated global response at unprecedented scale.</p>
-      <p class="t4 mt-2" style="color:#4ecdc4">2050 outcome: <strong>88/100</strong> &mdash; systemic recovery underway</p>
-    </div>
-    <div class="cell">
-      <div class="flex items-center gap-4 mb-3">
-        <span class="dot" style="background:#5da5da;width:10px;height:10px"></span>
-        <p class="t3" style="color:#5da5da">Moderate Reform</p>
-      </div>
-      <p class="t4 mt-2" style="color:var(--text-secondary)">Partial adoption of reforms. Pilot-region dividends, selective governance reform, 15% climate capex, gradual reskilling. Meaningful but uneven progress. Some institutions modernize; others lag.</p>
-      <p class="t4 mt-2" style="color:#5da5da">2050 outcome: <strong>62/100</strong> &mdash; moderate improvement</p>
-    </div>
-    <div class="cell">
-      <div class="flex items-center gap-4 mb-3">
-        <span class="dot" style="background:#e8a838;width:10px;height:10px"></span>
-        <p class="t3" style="color:#e8a838">Business as Usual</p>
-      </div>
-      <p class="t4 mt-2" style="color:var(--text-secondary)">Current trajectory continues. No civic dividends, minimal AI governance, piecemeal climate response, insufficient reskilling. The system drifts toward structural decline through inaction.</p>
-      <p class="t4 mt-2" style="color:#e8a838">2050 outcome: <strong>28/100</strong> &mdash; systemic decline</p>
-    </div>
-    <div class="cell">
-      <div class="flex items-center gap-4 mb-3">
-        <span class="dot" style="background:#d4622a;width:10px;height:10px"></span>
-        <p class="t3" style="color:#d4622a">Worst Case</p>
-      </div>
-      <p class="t4 mt-2" style="color:var(--text-secondary)">Institutional failure, democratic backsliding, civic disengagement, unchecked AI deployment, and compounding climate crises. Feedback loops accelerate decline across every domain.</p>
-      <p class="t4 mt-2" style="color:#d4622a">2050 outcome: <strong>12/100</strong> &mdash; civilizational failure</p>
-    </div>
-  </div>
+  <div class="grid grid-2" id="scenario-cards"></div>
 </div>
 </div>
 
@@ -309,11 +242,37 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
-     07 — METHODOLOGY
+     07 — THE ARC
      ═══════════════════════════════════════════════════════════ -->
 <div class="chapter-divider">
 <div class="page">
   <span class="section-num">07</span>
+  <p class="t2">The Arc of Civilization</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div>
+      <p class="body" style="max-width:480px">Every civilization-defining technology changed what was possible. AI is the latest — and it may be the last one we get to choose how to deploy. <a href="timeline.html" style="color:var(--accent)">The Timeline</a> traces 200,000 years of human inflection points and asks: what do the next 25 years look like?</p>
+      <a href="timeline.html" class="tag mt-4" style="display:inline-block;border-color:var(--accent);color:var(--accent);font-size:12px;padding:8px 16px;text-decoration:none">Explore the Timeline &rarr;</a>
+    </div>
+    <div class="cell" style="text-align:center;padding:24px">
+      <p class="num-lg" style="color:var(--accent)">200K</p>
+      <p class="t3 mt-1">Years of Humanity</p>
+      <p class="t4 mt-3" style="color:var(--text-muted)">8 inflection points. Each compressed more change into less time. The gap between the last two is 15 years. The window for the next one is ~10.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     08 — METHODOLOGY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider">
+<div class="page">
+  <span class="section-num">08</span>
   <p class="t2">Methodology &amp; Data Sources</p>
 </div>
 </div>
@@ -339,29 +298,131 @@
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-<div class="page">
-  <hr class="rule-long" style="margin-bottom:32px">
-  <div class="flex justify-between items-end flex-wrap gap-8">
-    <div>
-      <p class="t3" style="color:var(--accent);margin-bottom:8px">AICIVSIM</p>
-      <p class="t4">AI Civilization Simulator</p>
-      <p class="t4" style="color:var(--text-faint)">Clawcode Research &middot; 2026</p>
-    </div>
-    <div class="text-right">
-      <p class="t4" style="color:var(--text-faint)">Data: simulated projections, not real-time</p>
-      <p class="t4" style="color:var(--text-faint)">Typography: Space Grotesk / Inter / JetBrains Mono</p>
-      <p class="t4" style="color:var(--text-faint)">Design: Feltron-inspired editorial data report</p>
-    </div>
-  </div>
-</div>
-</footer>
+<!-- FOOTER -->
+<div id="page-footer"></div>
 
 </main>
 
-<script src="js/shared.js?v=20260219c"></script>
+<script src="js/shared.js?v=20260220a"></script>
+<script>
+(function(){
+
+var SC=[
+  {id:'aggressive',name:'Aggressive Action',color:'#4ecdc4'},
+  {id:'moderate',name:'Moderate Reform',color:'#5da5da'},
+  {id:'bau',name:'Business as Usual',color:'#e8a838'},
+  {id:'worst',name:'Worst Case',color:'#d4622a'}
+];
+var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
+var active='aggressive';
+
+var SYSTEMS=[
+  {id:'climate',   label:'ClimateOS',      href:'climate.html',      color:'var(--climate)',    today:42,
+   desc:'Climate resilience, emissions trajectories, biodiversity corridors',
+   projected:{aggressive:85,moderate:58,bau:28,worst:12}},
+  {id:'simulation',label:'SimulationOS',    href:'simulation.html',   color:'var(--technology)', today:null,
+   desc:'Interactive engine with 5 policy levers and 50-year narrative projections',
+   meta:'12 branches',projected:null},
+  {id:'transition',label:'TransitionOS',    href:'transition.html',   color:'var(--workforce)',  today:43,
+   desc:'Workforce readiness, reskilling rates, income bridge calculator',
+   projected:{aggressive:88,moderate:68,bau:28,worst:12}},
+  {id:'civilization',label:'CivilizationOS',href:'civilization.html', color:'var(--equity)',     today:44,
+   desc:'Aggregate civilizational health across all six domains',
+   projected:{aggressive:81,moderate:61,bau:30,worst:13}},
+  {id:'governance',label:'GovernanceOS',    href:'governance.html',   color:'var(--governance)', today:40,
+   desc:'Institutional trust, AI governance charters, civic participation',
+   projected:{aggressive:85,moderate:65,bau:30,worst:10}},
+  {id:'strategy',  label:'StrategyOS',      href:'strategy.html',     color:'var(--accent)',     today:35,
+   desc:'20 intervention strategies across 3 implementation levels',
+   projected:{aggressive:88,moderate:62,bau:22,worst:8}}
+];
+
+var COMPOSITE_PROJECTED={aggressive:85,moderate:63,bau:28,worst:11};
+
+var SC_DESCS={
+  aggressive:'Full deployment of civic infrastructure. 10% civic dividends, enforced AI charter with citizen oversight, 25% GDP climate capex, 20% reskilling investment, 80% governance transparency. Coordinated global response at unprecedented scale.',
+  moderate:'Partial adoption of reforms. Pilot-region dividends, selective governance reform, 15% climate capex, gradual reskilling. Meaningful but uneven progress. Some institutions modernize; others lag.',
+  bau:'Current trajectory continues. No civic dividends, minimal AI governance, piecemeal climate response, insufficient reskilling. The system drifts toward structural decline through inaction.',
+  worst:'Institutional failure, democratic backsliding, civic disengagement, unchecked AI deployment, and compounding climate crises. Feedback loops accelerate decline across every domain.'
+};
+var SC_OUTCOMES={
+  aggressive:'systemic recovery underway',
+  moderate:'moderate improvement',
+  bau:'systemic decline',
+  worst:'civilizational failure'
+};
+
+function renderSystems(){
+  var clr=SC_COLORS[active];
+  var h='';
+  SYSTEMS.forEach(function(s){
+    var proj=s.projected?s.projected[active]:null;
+    var g=proj!=null?grade(proj):null;
+    var pClr=proj!=null?clr:s.color;
+    h+='<a href="'+s.href+'" class="cell">';
+    h+='<p class="t3" style="color:'+s.color+'">'+s.label+'</p>';
+    if(s.today!=null){
+      h+='<p class="num-lg mt-2">'+s.today+'</p>';
+      h+='<p class="t4 mt-1"><span class="tag" style="border-color:'+s.color+';color:'+s.color+'">'+grade(s.today)+'</span> <span class="t4" style="color:var(--text-faint)">today</span></p>';
+    } else {
+      h+='<p class="num-lg mt-2">'+s.meta+'</p>';
+    }
+    if(proj!=null){
+      h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:'+proj+'%;background:'+pClr+';transition:width 0.4s ease"></div></div>';
+      h+='<div class="flex items-baseline gap-4 mt-2">';
+      h+='<span class="num-sm" style="color:'+pClr+'">'+proj+'</span>';
+      h+='<span class="tag" style="border-color:'+pClr+';color:'+pClr+';font-size:10px;padding:2px 6px">'+g+'</span>';
+      h+='<span class="t4" style="color:var(--text-faint)">projected</span>';
+      h+='</div>';
+    } else {
+      h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:24%;background:'+s.color+'"></div></div>';
+    }
+    h+='<p class="t4 mt-2">'+s.desc+'</p>';
+    h+='</a>';
+  });
+  document.getElementById('systems-grid').innerHTML=h;
+}
+
+function renderScenarioCards(){
+  var h='';
+  SC.forEach(function(s){
+    var isA=s.id===active;
+    var proj=COMPOSITE_PROJECTED[s.id];
+    var g=grade(proj);
+    h+='<div class="cell" style="'+(isA?'border:1px solid '+s.color+';':'opacity:0.6;')+'">';
+    h+='<div class="flex items-center gap-4 mb-3">';
+    h+='<span class="dot" style="background:'+s.color+';width:10px;height:10px"></span>';
+    h+='<p class="t3" style="color:'+s.color+'">'+s.name+'</p>';
+    if(isA) h+='<span class="tag" style="border-color:'+s.color+';color:'+s.color+';font-size:10px;padding:2px 6px">Active</span>';
+    h+='</div>';
+    h+='<p class="t4 mt-2" style="color:var(--text-secondary)">'+SC_DESCS[s.id]+'</p>';
+    h+='<p class="t4 mt-2" style="color:'+s.color+'">2050 outcome: <strong>'+proj+'/100</strong> ('+g+') &mdash; '+SC_OUTCOMES[s.id]+'</p>';
+    h+='</div>';
+  });
+  document.getElementById('scenario-cards').innerHTML=h;
+}
+
+function render(){
+  var clr=SC_COLORS[active];
+  var scLabel=SC.find(function(s){return s.id===active}).name;
+  var ps=COMPOSITE_PROJECTED[active];
+  updateScenarioBar('#scenario-bar',active,SC);
+  document.getElementById('idx-scenario-label').textContent=scLabel;
+  document.getElementById('idx-scenario-label').style.color=clr;
+  document.getElementById('hero-projected').innerHTML=
+    '<span class="t3">Projected 2050 ('+scLabel+'):</span> '
+    +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
+    +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
+    +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
+  renderSystems();
+  renderScenarioCards();
+}
+
+initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
+render();
+document.getElementById('page-footer').innerHTML=renderFooter();
+
+})();
+</script>
 </body>
 </html>
