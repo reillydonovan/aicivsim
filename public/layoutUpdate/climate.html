@@ -233,6 +233,12 @@
       moderate:  interp(31,35.3,25,0.9),
       bau:       interp(31,21.3,25,1.2),
       worst:     interp(31,8.5,25,1.4)
+    },
+    ocean:{
+      aggressive:interp(8.07,8.12,25,0.6),
+      moderate:  interp(8.07,8.04,25,1.0),
+      bau:       interp(8.07,7.95,25,1.3),
+      worst:     interp(8.07,7.85,25,1.5)
     }
   };
 
@@ -285,7 +291,13 @@
        aggressive:'Forest cover expands to 42.3% through massive reforestation, agroforestry, and deforestation bans. Carbon sink capacity grows substantially.',
        moderate:'Forest cover reaches 35.3% \u2014 modest gains from targeted reforestation but ongoing pressure from agriculture.',
        bau:'Forest cover declines to 21.3% \u2014 continued deforestation for agriculture and development. Amazon tipping point at risk.',
-       worst:'Only 8.5% forest cover remains. Widespread deforestation plus climate-driven dieback. The Amazon has flipped from carbon sink to source.'}}
+       worst:'Only 8.5% forest cover remains. Widespread deforestation plus climate-driven dieback. The Amazon has flipped from carbon sink to source.'}},
+    {id:'ocean', label:'Ocean pH', unit:'', prefix:'', baseline:8.07, dec:2, dir:'higher',
+     notes:{
+       aggressive:'Ocean pH recovers to 8.12 by 2050. Reduced CO\u2082 absorption and marine conservation allow coral systems to begin recovery. Acidification trend reversed.',
+       moderate:'pH stabilizes near 8.04 \u2014 slight decline from today. Coral degradation slows but reef recovery remains limited without deeper emission cuts.',
+       bau:'pH drops to 7.95 under business as usual. Most coral reefs functionally extinct. Shell-forming organisms under severe stress across all ocean basins.',
+       worst:'pH crashes below 7.85. Marine ecosystem collapse accelerates. Fisheries fail, coastal food security collapses for billions.'}}
   ];
 
   /* ── Scenario narratives ── */
@@ -534,7 +546,7 @@
 
   /* ── Render: Biodiversity tab ── */
   function renderBiodiversity(){
-    var bioMetrics=['biodiversity','forest'];
+    var bioMetrics=['biodiversity','forest','ocean'];
     var el=document.getElementById('biodiversity-sparklines');
     var html='';
     bioMetrics.forEach(function(id,i){

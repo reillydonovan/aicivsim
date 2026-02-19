@@ -106,6 +106,11 @@ python -m http.server 8080    # http://localhost:8080
 
 No install, no build. Open any HTML file directly or serve with any static file server.
 
+### Roadmap / TODO
+
+- [ ] **Refactor shared components into `shared.js`** — Move navigation bar, scenario selector bar, page shell (head/meta/CSS), and footer into JavaScript templates rendered from `shared.js`. Currently these are duplicated across all 9 HTML files, requiring manual edits to each page for global changes (e.g., adding a nav link). A single-source-of-truth pattern in `shared.js` would let one edit propagate everywhere automatically.
+- [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, partials), evaluate migrating to PHP includes (Hostinger supports PHP natively) or a lightweight SSG like 11ty/Hugo with a build step.
+
 ### Deploying to Hostinger
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
