@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220a">
+<link rel="stylesheet" href="css/style.css?v=20260220e">
 </head>
 <body>
 
@@ -26,13 +26,7 @@
 <!-- ============================================================
      SITE NAV
      ============================================================ -->
-<nav class="site-nav"><div class="page">
-  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
-  <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
-  </div>
-</div></nav>
-<div class="mobile-nav-backdrop"></div>
+<div id="site-nav-mount"></div>
 
 <!-- ============================================================
      CONTROL BAR
@@ -45,12 +39,7 @@
         <button class="nav-tab" data-section="trajectories">Trajectories</button>
         <button class="nav-tab" data-section="scenarios">Scenarios</button>
       </div>
-      <div class="scenario-bar" id="scenario-bar">
-        <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
-        <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
-        <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
-        <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
-      </div>
+      <div class="scenario-bar" id="scenario-bar"></div>
     </div>
   </div>
 </div>
@@ -201,6 +190,17 @@
     <div id="narrative-report" class="mt-4"></div>
   </div>
 
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: CROSS-SYSTEM IMPACT
+       ────────────────────────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-num">07</span>
+    <p class="t2">Cross-System Impact</p>
+    <hr class="rule">
+    <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
+    <div id="cross-system-mount" class="mt-4"></div>
+  </div>
+
 </main>
 
 <!-- ============================================================
@@ -211,9 +211,11 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260220a"></script>
+<script src="js/shared.js?v=20260220e"></script>
 <script>
 (function(){
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
 
   /* ── Scenario Data ── */
   var SC = {
@@ -429,11 +431,14 @@
       var span = (i === METRICS.length - 1 && METRICS.length % 2 === 1) ? ' style="grid-column:1/-1"' : '';
       html += '<div class="cell"'+span+'>'
         + chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:SC[active].color,endYear:2070})
-        + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,markerYear:currentYear})
+        + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,markerYear:currentYear,exportId:'sim-dash-'+m.id})
         + '</div>';
     });
 
     el.innerHTML = html;
+    METRICS.forEach(function(m){
+      registerChartExport('sim-dash-'+m.id,{aggressive:SC.aggressive[m.id],moderate:SC.moderate[m.id],bau:SC.bau[m.id],worst:SC.worst[m.id]},2027,2070,m.unit,'');
+    });
     document.getElementById('dash-scenario-label').textContent = SC[active].name;
   }
 
@@ -449,11 +454,14 @@
       var endVal = SC[active][m.id][43];
       html += '<div style="padding:32px 0;' + (i > 0 ? 'border-top:1px solid var(--border)' : '') + '">'
         + chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:SC[active].color,endYear:2070})
-        + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:200,markerYear:currentYear})
+        + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:200,markerYear:currentYear,exportId:'sim-traj-'+m.id})
         + '</div>';
     });
 
     el.innerHTML = html;
+    METRICS.forEach(function(m){
+      registerChartExport('sim-traj-'+m.id,{aggressive:SC.aggressive[m.id],moderate:SC.moderate[m.id],bau:SC.bau[m.id],worst:SC.worst[m.id]},2027,2070,m.unit,'');
+    });
   }
 
   /* ── Render: Scenario cards ── */
@@ -804,6 +812,7 @@
     generateNarrative();
     renderTrajectories();
     renderScenarios();
+    var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('simulation');
   }
 
   /* ── Event: sliders change ── */

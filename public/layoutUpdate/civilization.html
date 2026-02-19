@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220a">
+<link rel="stylesheet" href="css/style.css?v=20260220e">
 </head>
 <body>
 
@@ -22,14 +22,7 @@
 </div>
 </header>
 
-<!-- SITE NAV -->
-<nav class="site-nav"><div class="page">
-  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
-  <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
-  </div>
-</div></nav>
-<div class="mobile-nav-backdrop"></div>
+<div id="site-nav-mount"></div>
 
 <!-- CONTROL BAR -->
 <div class="control-bar">
@@ -41,12 +34,7 @@
       <button class="nav-tab" data-section="funding">Funding</button>
       <button class="nav-tab" data-section="timeline">Timeline</button>
     </div>
-    <div class="scenario-bar" id="scbar">
-      <button class="scenario-btn" data-sc="aggressive"><span class="dot"></span>Aggressive</button>
-      <button class="scenario-btn" data-sc="moderate"><span class="dot"></span>Moderate</button>
-      <button class="scenario-btn" data-sc="bau"><span class="dot"></span>BAU</button>
-      <button class="scenario-btn" data-sc="worst"><span class="dot"></span>Worst</button>
-    </div>
+    <div class="scenario-bar" id="scbar"></div>
   </div>
 </div>
 </div>
@@ -130,13 +118,24 @@
   </div></div>
 </div>
 
+<!-- ═══ CROSS-SYSTEM IMPACT ═══ -->
+<div class="section"><div class="page">
+  <span class="section-num">09</span>
+  <p class="t2">Cross-System Impact</p>
+  <hr class="rule">
+  <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
+  <div id="cross-system-mount" class="mt-4"></div>
+</div></div>
+
 </main>
 
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260220a"></script>
+<script src="js/shared.js?v=20260220e"></script>
 <script>
 (function(){
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('scbar').innerHTML=renderScenarioButtons();
 var SC=[
   {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
   {id:'moderate',name:'Moderate',color:'#5da5da'},
@@ -283,6 +282,7 @@ function render(sc){
   renderFunding();
   document.getElementById('timeline-desc').innerHTML='Milestone phases under <strong style="color:'+clr+'">'+scLabel+'</strong>. '+(sc==='aggressive'?'Each phase builds compounding institutional capacity on an accelerated timeline.':sc==='moderate'?'Progress is steady but timelines extend. Later phases may not be reached within the projection window.':sc==='bau'?'Without structural investment, only the discovery phase is likely to complete. Later milestones remain theoretical.':'Institutional failure prevents any milestone from advancing past initial planning. Timelines collapse.');
   renderTimeline();
+  var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('civilization');
 }
 
 function renderHero(){
@@ -352,7 +352,8 @@ function renderSparks(){
     var baseVal=ds[activeSc][0];
     h+='<div class="cell"'+span+'>';
     h+=chartHeader({label:kpi.label,value:endVal,unit:kpi.unit,dec:1,dir:kpi.dir,baseline:baseVal,color:SC_COLORS[activeSc],endYear:2035});
-    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:kpi.unit,dec:1,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160});
+    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:kpi.unit,dec:1,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160,exportId:'civ-'+k});
+    registerChartExport('civ-'+k,ds,2026,2035,kpi.unit,'');
     h+='</div>';
   });
   h+='</div>';
@@ -405,7 +406,8 @@ function renderFunding(){
   var povBase=datasets[activeSc][0];
   document.getElementById('funding-chart').innerHTML=
     chartHeader({label:'Poverty Rate',value:povEnd,unit:'%',dec:1,dir:'lower',baseline:povBase,color:SC_COLORS[activeSc],endYear:2035})
-    +scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160});
+    +scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160,exportId:'civ-poverty'});
+  registerChartExport('civ-poverty',datasets,2026,2035,'%','');
   document.getElementById('funding-legend').innerHTML='';
 }
 

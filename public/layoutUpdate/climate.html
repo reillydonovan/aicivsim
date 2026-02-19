@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220a">
+<link rel="stylesheet" href="css/style.css?v=20260220e">
 </head>
 <body>
 
@@ -25,13 +25,7 @@
 <!-- ============================================================
      SITE NAV
      ============================================================ -->
-<nav class="site-nav"><div class="page">
-  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
-  <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
-  </div>
-</div></nav>
-<div class="mobile-nav-backdrop"></div>
+<div id="site-nav-mount"></div>
 
 <!-- ============================================================
      CONTROL BAR
@@ -47,12 +41,7 @@
         <button class="nav-tab" data-section="resources">Resources</button>
         <button class="nav-tab" data-section="tipping">Tipping Points</button>
       </div>
-      <div class="scenario-bar" id="scenario-bar">
-        <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
-        <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
-        <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
-        <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
-      </div>
+      <div class="scenario-bar" id="scenario-bar"></div>
     </div>
   </div>
 </div>
@@ -75,6 +64,40 @@
 
     <div class="section">
       <span class="section-num">02</span>
+      <p class="t2">Policy Levers</p>
+      <hr class="rule">
+      <p class="body mt-2">Adjust levers to see how climate policy investments affect projected outcomes.</p>
+      <div class="grid grid-3 mt-4">
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label"><span class="t3">Carbon Tax</span><span class="num-md" id="val-lever-carbon" style="color:var(--climate)">$75/ton</span></div>
+            <input type="range" class="slider-track mt-2" id="sl-lever-carbon" min="0" max="200" step="5" value="75">
+            <div class="flex justify-between mt-1"><span class="t4">$0</span><span class="t4">$200</span></div>
+            <p class="t4 mt-2">Carbon price per metric ton.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label"><span class="t3">Renewable Investment</span><span class="num-md" id="val-lever-renewable" style="color:var(--climate)">15%</span></div>
+            <input type="range" class="slider-track mt-2" id="sl-lever-renewable" min="0" max="30" step="1" value="15">
+            <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">30%</span></div>
+            <p class="t4 mt-2">Share of GDP directed to clean energy.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label"><span class="t3">Conservation Target</span><span class="num-md" id="val-lever-conservation" style="color:var(--climate)">30%</span></div>
+            <input type="range" class="slider-track mt-2" id="sl-lever-conservation" min="0" max="50" step="1" value="30">
+            <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">50%</span></div>
+            <p class="t4 mt-2">Land/ocean area under protection.</p>
+          </div>
+        </div>
+      </div>
+      <div id="lever-impact" class="mt-4"></div>
+    </div>
+
+    <div class="section">
+      <span class="section-num">03</span>
       <h2 class="t2">2050 Projection &mdash; <span id="ov-scenario-label">Aggressive</span></h2>
       <hr class="rule">
       <div class="grid grid-2 mt-4" id="projection-grid"></div>
@@ -87,7 +110,7 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-scenarios" style="display:none">
     <div class="section">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <h2 class="t2">Scenario Comparison</h2>
       <hr class="rule">
       <div class="grid grid-2 mt-4" id="comparison-grid"></div>
@@ -99,7 +122,7 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-biodiversity" style="display:none">
     <div class="section">
-      <span class="section-num">04</span>
+      <span class="section-num">05</span>
       <h2 class="t2">Biodiversity &amp; Ecosystems &mdash; <span id="bio-scenario-label">Aggressive</span></h2>
       <hr class="rule">
       <div id="bio-today-score"></div>
@@ -114,7 +137,7 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-energy" style="display:none">
     <div class="section">
-      <span class="section-num">05</span>
+      <span class="section-num">06</span>
       <h2 class="t2">Energy &amp; Emissions &mdash; <span id="energy-scenario-label">Aggressive</span></h2>
       <hr class="rule">
       <div id="energy-today-score"></div>
@@ -129,7 +152,7 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-resources" style="display:none">
     <div class="section">
-      <span class="section-num">06</span>
+      <span class="section-num">07</span>
       <h2 class="t2">Resource Security &mdash; <span id="res-scenario-label">Aggressive</span></h2>
       <hr class="rule">
       <div id="res-today-score"></div>
@@ -144,12 +167,23 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-tipping" style="display:none">
     <div class="section">
-      <span class="section-num">07</span>
+      <span class="section-num">08</span>
       <h2 class="t2">Tipping Points</h2>
       <hr class="rule">
       <p class="body mt-3">Critical thresholds in the Earth system. Once crossed, these feedbacks become self-reinforcing and largely irreversible on human timescales.</p>
       <div class="mt-6" id="tipping-list"></div>
     </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: CROSS-SYSTEM IMPACT
+       ────────────────────────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-num">09</span>
+    <p class="t2">Cross-System Impact</p>
+    <hr class="rule">
+    <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
+    <div id="cross-system-mount" class="mt-4"></div>
   </div>
 
 </main>
@@ -162,9 +196,11 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260220a"></script>
+<script src="js/shared.js?v=20260220e"></script>
 <script>
 (function(){
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
 
   /* ── Interpolation helper ── */
   function interp(start,end,n,curve){
@@ -448,10 +484,13 @@
       var endVal=ds[active][ds[active].length-1];
       html+='<div class="cell">'
         +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:140})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:140,exportId:'climate-ov-'+m.id})
         +'</div>';
     });
     el.innerHTML=html;
+    metrics.forEach(function(m){
+      registerChartExport('climate-ov-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2026,2050,m.unit,m.prefix||'');
+    });
   }
 
   /* ── Render: Climate narrative ── */
@@ -470,10 +509,13 @@
       var endVal2=ds[active][ds[active].length-1];
       html+='<div class="cell">'
         +chartHeader({label:m.label,value:endVal2,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180,exportId:'climate-cmp-'+m.id})
         +'</div>';
     });
     el.innerHTML=html;
+    metrics.forEach(function(m){
+      registerChartExport('climate-cmp-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2026,2050,m.unit,m.prefix||'');
+    });
   }
 
   /* ── Render: Sub-section today scores ── */
@@ -564,10 +606,14 @@
       var span=(i===bioMetrics.length-1 && bioMetrics.length%2===1)?' style="grid-column:1/-1"':'';
       html+='<div class="cell"'+span+'>'
         +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180,exportId:'climate-bio-'+id})
         +'</div>';
     });
     el.innerHTML=html;
+    bioMetrics.forEach(function(id){
+      var m=metricById(id);
+      registerChartExport('climate-bio-'+id,{aggressive:D[id].aggressive,moderate:D[id].moderate,bau:D[id].bau,worst:D[id].worst},2026,2050,m.unit,m.prefix||'');
+    });
     document.getElementById('biodiversity-comparison').innerHTML='';
   }
 
@@ -585,10 +631,14 @@
       var span=(i===energyMetrics.length-1 && energyMetrics.length%2===1)?' style="grid-column:1/-1"':'';
       html+='<div class="cell"'+span+'>'
         +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180,exportId:'climate-energy-'+id})
         +'</div>';
     });
     el.innerHTML=html;
+    energyMetrics.forEach(function(id){
+      var m=metricById(id);
+      registerChartExport('climate-energy-'+id,{aggressive:D[id].aggressive,moderate:D[id].moderate,bau:D[id].bau,worst:D[id].worst},2026,2050,m.unit,m.prefix||'');
+    });
     document.getElementById('energy-comparison').innerHTML='';
   }
 
@@ -606,10 +656,14 @@
       var span=(i===resMetrics.length-1 && resMetrics.length%2===1)?' style="grid-column:1/-1"':'';
       html+='<div class="cell"'+span+'>'
         +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180,exportId:'climate-res-'+id})
         +'</div>';
     });
     el.innerHTML=html;
+    resMetrics.forEach(function(id){
+      var m=metricById(id);
+      registerChartExport('climate-res-'+id,{aggressive:D[id].aggressive,moderate:D[id].moderate,bau:D[id].bau,worst:D[id].worst},2026,2050,m.unit,m.prefix||'');
+    });
     document.getElementById('resources-comparison').innerHTML='';
   }
 
@@ -650,6 +704,34 @@
     el.innerHTML=html;
   }
 
+  /* ── Policy Levers ── */
+  function initLevers(){
+    var carbonSl=document.getElementById('sl-lever-carbon');
+    var renewableSl=document.getElementById('sl-lever-renewable');
+    var conservationSl=document.getElementById('sl-lever-conservation');
+    if(!carbonSl)return;
+    function updateLevers(){
+      var carbon=parseInt(carbonSl.value);
+      var renewable=parseInt(renewableSl.value);
+      var conservation=parseInt(conservationSl.value);
+      document.getElementById('val-lever-carbon').textContent='$'+carbon+'/ton';
+      document.getElementById('val-lever-renewable').textContent=renewable+'%';
+      document.getElementById('val-lever-conservation').textContent=conservation+'%';
+      var baseScore=PROJECTED_SCORE[active];
+      var carbonEffect=(carbon-75)/200*10;
+      var renewableEffect=(renewable-15)/30*8;
+      var conservationEffect=(conservation-30)/50*5;
+      var adjusted=Math.max(0,Math.min(100,Math.round(baseScore+carbonEffect+renewableEffect+conservationEffect)));
+      var el=document.getElementById('lever-impact');
+      var clr=gClr(adjusted);
+      el.innerHTML='<div class="flex items-baseline gap-8 mt-2"><span class="t3">Lever-Adjusted Score:</span><span class="num-lg" style="color:'+clr+'">'+adjusted+'</span><span class="t4">/100</span><span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(adjusted)+'</span><span class="t4" style="color:var(--text-muted)">(base: '+baseScore+')</span></div>';
+    }
+    carbonSl.addEventListener('input',updateLevers);
+    renewableSl.addEventListener('input',updateLevers);
+    conservationSl.addEventListener('input',updateLevers);
+    updateLevers();
+  }
+
   /* ── Master render ── */
   var TAB_DESC={
     bio:{aggressive:'Under aggressive action, biodiversity recovers to 125% of baseline by 2050. Rewilding corridors expand, forest cover grows to 42%, and ecosystem restoration reverses decades of decline.',
@@ -686,6 +768,8 @@
     renderResScore();
     renderResources();
     renderTipping();
+    var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('climate');
+    initLevers();
   }
 
   /* ── Init ── */

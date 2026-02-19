@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220a">
+<link rel="stylesheet" href="css/style.css?v=20260220e">
 </head>
 <body>
 
@@ -26,13 +26,7 @@
 <!-- ============================================================
      SITE NAV
      ============================================================ -->
-<nav class="site-nav"><div class="page">
-  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
-  <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
-  </div>
-</div></nav>
-<div class="mobile-nav-backdrop"></div>
+<div id="site-nav-mount"></div>
 
 <!-- ============================================================
      CONTROL BAR
@@ -45,12 +39,7 @@
         <button class="nav-tab" data-section="bridges">Income Bridges</button>
         <button class="nav-tab" data-section="projections">Projections</button>
       </div>
-      <div class="scenario-bar" id="scenario-bar">
-        <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
-        <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
-        <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
-        <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
-      </div>
+      <div class="scenario-bar" id="scenario-bar"></div>
     </div>
   </div>
 </div>
@@ -85,6 +74,40 @@
 
     <div class="section">
       <span class="section-num">02</span>
+      <p class="t2">Policy Levers</p>
+      <hr class="rule">
+      <p class="body mt-2">Adjust levers to see how workforce transition investments affect projected outcomes.</p>
+      <div class="grid grid-3 mt-4">
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label"><span class="t3">Civic Dividend</span><span class="num-md" id="val-lever-div" style="color:var(--workforce)">$1,200/mo</span></div>
+            <input type="range" class="slider-track mt-2" id="sl-lever-div" min="0" max="2400" step="100" value="1200">
+            <div class="flex justify-between mt-1"><span class="t4">$0</span><span class="t4">$2,400</span></div>
+            <p class="t4 mt-2">Monthly universal civic dividend distributed to displaced workers.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label"><span class="t3">Reskill Budget</span><span class="num-md" id="val-lever-reskill" style="color:var(--workforce)">15%</span></div>
+            <input type="range" class="slider-track mt-2" id="sl-lever-reskill" min="0" max="30" step="1" value="15">
+            <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">30%</span></div>
+            <p class="t4 mt-2">Share of transition budget allocated to reskilling and placement programs.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label"><span class="t3">Automation Pace</span><span class="num-md" id="val-lever-auto" style="color:var(--workforce)">Medium</span></div>
+            <input type="range" class="slider-track mt-2" id="sl-lever-auto" min="1" max="3" step="1" value="2">
+            <div class="flex justify-between mt-1"><span class="t4">Slow</span><span class="t4">Fast</span></div>
+            <p class="t4 mt-2">Rate of AI-driven automation deployment across industries.</p>
+          </div>
+        </div>
+      </div>
+      <div id="lever-impact" class="mt-4"></div>
+    </div>
+
+    <div class="section">
+      <span class="section-num">03</span>
       <h2 class="t2">Scenario Projection &mdash; <span id="ov-scenario-label">Baseline</span></h2>
       <hr class="rule">
       <div class="grid grid-2 mt-4" id="overview-grid"></div>
@@ -97,7 +120,7 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-bridges" style="display:none">
     <div class="section">
-      <span class="section-num">03</span>
+      <span class="section-num">04</span>
       <h2 class="t2">Income Bridge Calculator</h2>
       <hr class="rule">
       <p class="t4 mt-3" style="max-width:560px" id="bridges-desc">How civic dividends cover the income gap during career transitions.</p>
@@ -110,11 +133,22 @@
        ────────────────────────────────────────────────────────── -->
   <div id="sec-projections" style="display:none">
     <div class="section">
-      <span class="section-num">04</span>
+      <span class="section-num">05</span>
       <h2 class="t2">Scenario Projections &mdash; <span id="proj-scenario-label">Baseline</span></h2>
       <hr class="rule">
       <div class="grid grid-2 mt-4" id="projections-grid"></div>
     </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: CROSS-SYSTEM IMPACT
+       ────────────────────────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-num">06</span>
+    <p class="t2">Cross-System Impact</p>
+    <hr class="rule">
+    <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
+    <div id="cross-system-mount" class="mt-4"></div>
   </div>
 
 </main>
@@ -127,9 +161,11 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260220a"></script>
+<script src="js/shared.js?v=20260220e"></script>
 <script>
 (function(){
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
 
   var scenarios=[
     {id:'aggressive', name:'Aggressive', color:'#4ecdc4'},
@@ -256,10 +292,13 @@
       var endVal=ds[active][ds[active].length-1];
       html+='<div class="cell">'
         +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2035})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,exportId:'transition-ov-'+m.id})
         +'</div>';
     });
     el.innerHTML=html;
+    indicators.forEach(function(m){
+      registerChartExport('transition-ov-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2035,m.unit,'');
+    });
   }
 
   function renderNarrative(){
@@ -341,10 +380,42 @@
       var endVal=ds[active][ds[active].length-1];
       html+='<div class="cell">'
         +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2035})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:180})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:180,exportId:'transition-proj-'+m.id})
         +'</div>';
     });
     el.innerHTML=html;
+    indicators.forEach(function(m){
+      registerChartExport('transition-proj-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2035,m.unit,'');
+    });
+  }
+
+  /* ── Policy Levers ── */
+  function initLevers(){
+    var divSl=document.getElementById('sl-lever-div');
+    var reskillSl=document.getElementById('sl-lever-reskill');
+    var autoSl=document.getElementById('sl-lever-auto');
+    if(!divSl)return;
+    function updateLevers(){
+      var div=parseInt(divSl.value);
+      var rsk=parseInt(reskillSl.value);
+      var aut=parseInt(autoSl.value);
+      var autoLabel=['Slow','Medium','Fast'];
+      document.getElementById('val-lever-div').textContent='$'+div.toLocaleString()+'/mo';
+      document.getElementById('val-lever-reskill').textContent=rsk+'%';
+      document.getElementById('val-lever-auto').textContent=autoLabel[aut-1];
+      var baseScore=TRANS_SCORES[active];
+      var divEffect=(div-1200)/2400*8;
+      var rskEffect=(rsk-15)/30*6;
+      var autEffect=(2-aut)*5;
+      var adjusted=Math.max(0,Math.min(100,Math.round(baseScore+divEffect+rskEffect+autEffect)));
+      var el=document.getElementById('lever-impact');
+      var clr=gClr(adjusted);
+      el.innerHTML='<div class="flex items-baseline gap-8 mt-2"><span class="t3">Lever-Adjusted Score:</span><span class="num-lg" style="color:'+clr+'">'+adjusted+'</span><span class="t4">/100</span><span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(adjusted)+'</span><span class="t4" style="color:var(--text-muted)">(base: '+baseScore+')</span></div>';
+    }
+    divSl.addEventListener('input',updateLevers);
+    reskillSl.addEventListener('input',updateLevers);
+    autoSl.addEventListener('input',updateLevers);
+    updateLevers();
   }
 
   /* ── Master render ── */
@@ -368,6 +439,8 @@
     renderNarrative();
     renderBridges();
     renderProjections();
+    var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('transition');
+    initLevers();
   }
 
   /* ── Init ── */

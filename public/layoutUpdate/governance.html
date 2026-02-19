@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220a">
+<link rel="stylesheet" href="css/style.css?v=20260220e">
 </head>
 <body>
 
@@ -23,13 +23,7 @@
 </header>
 
 <!-- SITE NAV -->
-<nav class="site-nav"><div class="page">
-  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
-  <div class="site-nav-inner">
-    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="timeline.html">Timeline</a><a href="research.html">Research</a><a href="about.html">About</a>
-  </div>
-</div></nav>
-<div class="mobile-nav-backdrop"></div>
+<div id="site-nav-mount"></div>
 
 <!-- CONTROL BAR -->
 <div class="control-bar">
@@ -41,12 +35,7 @@
       <button class="nav-tab" data-section="modules">Modules</button>
       <button class="nav-tab" data-section="audit">Audit Timeline</button>
     </div>
-    <div class="scenario-bar" id="scenario-bar">
-      <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
-      <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
-      <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
-      <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
-    </div>
+    <div class="scenario-bar" id="scenario-bar"></div>
   </div>
 </div>
 </div>
@@ -77,6 +66,40 @@
 
   <div class="section"><div class="page">
     <span class="section-num">02</span>
+    <p class="t2">Policy Levers</p>
+    <hr class="rule">
+    <p class="body mt-2">Adjust levers to see how governance infrastructure investments affect projected outcomes.</p>
+    <div class="grid grid-3 mt-4">
+      <div class="cell">
+        <div class="slider-group">
+          <div class="slider-label"><span class="t3">Charter Enforcement</span><span class="num-md" id="val-lever-charter" style="color:var(--governance)">70%</span></div>
+          <input type="range" class="slider-track mt-2" id="sl-lever-charter" min="0" max="100" step="5" value="70">
+          <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">100%</span></div>
+          <p class="t4 mt-2">Binding power of AI governance charters.</p>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="slider-group">
+          <div class="slider-label"><span class="t3">Assembly Frequency</span><span class="num-md" id="val-lever-assembly" style="color:var(--governance)">12/yr</span></div>
+          <input type="range" class="slider-track mt-2" id="sl-lever-assembly" min="2" max="24" step="1" value="12">
+          <div class="flex justify-between mt-1"><span class="t4">2/yr</span><span class="t4">24/yr</span></div>
+          <p class="t4 mt-2">How often citizen assemblies convene.</p>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="slider-group">
+          <div class="slider-label"><span class="t3">Audit Coverage</span><span class="num-md" id="val-lever-audit" style="color:var(--governance)">60%</span></div>
+          <input type="range" class="slider-track mt-2" id="sl-lever-audit" min="0" max="100" step="5" value="60">
+          <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">100%</span></div>
+          <p class="t4 mt-2">Percentage of AI systems under mandatory audit.</p>
+        </div>
+      </div>
+    </div>
+    <div id="lever-impact" class="mt-4"></div>
+  </div></div>
+
+  <div class="section"><div class="page">
+    <span class="section-num">03</span>
     <p class="t2">Participation &mdash; <span id="ov-scenario-label">Aggressive</span></p>
     <hr class="rule">
     <div id="participation-grid"></div>
@@ -101,7 +124,7 @@
 <!-- ASSEMBLIES -->
 <div id="sec-assemblies" style="display:none">
   <div class="section"><div class="page">
-    <span class="section-num">03</span>
+    <span class="section-num">04</span>
     <p class="t2">Citizen Assemblies</p>
     <hr class="rule">
     <p class="body mb-6">Standing deliberative bodies with binding authority over AI policy domains. Members selected by civic lottery, rotating on staggered two-year terms. Decisions require supermajority and pass through a transparency review before implementation.</p>
@@ -112,7 +135,7 @@
 <!-- MODULES -->
 <div id="sec-modules" style="display:none">
   <div class="section"><div class="page">
-    <span class="section-num">04</span>
+    <span class="section-num">05</span>
     <p class="t2">Governance Modules</p>
     <hr class="rule">
     <p class="body mb-6">Modular governance infrastructure. Each module operates independently with standardized APIs for cross-system coordination. Status reflects production readiness and audit compliance.</p>
@@ -123,7 +146,7 @@
 <!-- AUDIT TIMELINE -->
 <div id="sec-audit" style="display:none">
   <div class="section"><div class="page">
-    <span class="section-num">05</span>
+    <span class="section-num">06</span>
     <p class="t2">Audit Coverage</p>
     <hr class="rule">
     <p class="body mb-6">Percentage of high-risk AI systems audited through participatory safety review. Target: 100% by 2035. Incidents track bias, safety, and governance failures detected.</p>
@@ -132,13 +155,24 @@
   </div></div>
 </div>
 
+<!-- CROSS-SYSTEM IMPACT -->
+<div class="section"><div class="page">
+  <span class="section-num">07</span>
+  <p class="t2">Cross-System Impact</p>
+  <hr class="rule">
+  <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
+  <div id="cross-system-mount" class="mt-4"></div>
+</div></div>
+
 </main>
 
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260220a"></script>
+<script src="js/shared.js?v=20260220e"></script>
 <script>
 (function(){
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
 
 var GOV='#9b87f5';
 var SCENARIOS=[
@@ -526,15 +560,17 @@ function renderAudit(){
   var s='<div class="grid grid-2">';
   s+='<div class="cell">';
   s+=chartHeader({label:'Audit Coverage',value:covEnd,unit:'%',dec:0,dir:'higher',baseline:covBase,color:SC_COLORS[active],endYear:2035});
-  s+=scenarioChart({datasets:covDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'%',dec:0,dir:'higher',note:'Percentage of high-risk AI systems audited. Under aggressive governance, full coverage is achieved by 2034. Without intervention, audit capacity stagnates below 30%.',height:160});
+  s+=scenarioChart({datasets:covDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'%',dec:0,dir:'higher',note:'Percentage of high-risk AI systems audited. Under aggressive governance, full coverage is achieved by 2034. Without intervention, audit capacity stagnates below 30%.',height:160,exportId:'gov-audit-coverage'});
   s+='</div>';
 
   s+='<div class="cell">';
   s+=chartHeader({label:'Incidents Resolved',value:incEnd,unit:'',dec:0,dir:'lower',baseline:incBase,color:SC_COLORS[active],endYear:2035});
-  s+=scenarioChart({datasets:incDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'',dec:0,dir:'lower',note:'Safety incidents detected per year. Strong governance catches more early then drives incidents down. Weak governance sees compounding undetected failures.',height:160});
+  s+=scenarioChart({datasets:incDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'',dec:0,dir:'lower',note:'Safety incidents detected per year. Strong governance catches more early then drives incidents down. Weak governance sees compounding undetected failures.',height:160,exportId:'gov-incidents'});
   s+='</div>';
   s+='</div>';
   document.getElementById('audit-sparks').innerHTML=s;
+  registerChartExport('gov-audit-coverage',covDs,2026,2035,'%','');
+  registerChartExport('gov-incidents',incDs,2026,2035,'','');
 
   var t='<div style="display:inline-grid;grid-template-columns:60px 80px 80px 80px 80px 80px;gap:1px;background:var(--border)">';
   var cols=['Year','Audited','Total','Coverage','Incidents','Resolved'];
@@ -574,6 +610,34 @@ function renderGovMetricCards(){
   el.innerHTML=h;
 }
 
+/* ── Policy Levers ── */
+function initLevers(){
+  var charterSl=document.getElementById('sl-lever-charter');
+  var assemblySl=document.getElementById('sl-lever-assembly');
+  var auditSl=document.getElementById('sl-lever-audit');
+  if(!charterSl)return;
+  function updateLevers(){
+    var charter=parseInt(charterSl.value);
+    var assembly=parseInt(assemblySl.value);
+    var audit=parseInt(auditSl.value);
+    document.getElementById('val-lever-charter').textContent=charter+'%';
+    document.getElementById('val-lever-assembly').textContent=assembly+'/yr';
+    document.getElementById('val-lever-audit').textContent=audit+'%';
+    var baseScore=GOV_SCORES[active];
+    var charterEffect=(charter-70)/100*8;
+    var assemblyEffect=(assembly-12)/24*4;
+    var auditEffect=(audit-60)/100*6;
+    var adjusted=Math.max(0,Math.min(100,Math.round(baseScore+charterEffect+assemblyEffect+auditEffect)));
+    var el=document.getElementById('lever-impact');
+    var clr=gClr(adjusted);
+    el.innerHTML='<div class="flex items-baseline gap-8 mt-2"><span class="t3">Lever-Adjusted Score:</span><span class="num-lg" style="color:'+clr+'">'+adjusted+'</span><span class="t4">/100</span><span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(adjusted)+'</span><span class="t4" style="color:var(--text-muted)">(base: '+baseScore+')</span></div>';
+  }
+  charterSl.addEventListener('input',updateLevers);
+  assemblySl.addEventListener('input',updateLevers);
+  auditSl.addEventListener('input',updateLevers);
+  updateLevers();
+}
+
 /* ── MASTER RENDER ── */
 function render(){
   updateScenarioBar('#scenario-bar',active,SCENARIOS);
@@ -594,6 +658,8 @@ function render(){
   renderAssemblies();
   renderModules();
   renderAudit();
+  var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('governance');
+  initLevers();
 }
 
 /* ── INIT ── */

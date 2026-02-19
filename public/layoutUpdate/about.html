@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220a">
+<link rel="stylesheet" href="css/style.css?v=20260220e">
 </head>
 <body>
 
@@ -20,23 +20,7 @@
 </div>
 </header>
 
-<!-- ── SITE NAV ── -->
-<nav class="site-nav"><div class="page">
-  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
-  <div class="site-nav-inner">
-    <a href="index.html">Home</a>
-    <a href="climate.html">ClimateOS</a>
-    <a href="simulation.html">Simulation</a>
-    <a href="transition.html">TransitionOS</a>
-    <a href="civilization.html">CivilizationOS</a>
-    <a href="governance.html">GovernanceOS</a>
-    <a href="strategy.html">StrategyOS</a>
-    <a href="timeline.html">Timeline</a>
-    <a href="research.html">Research</a>
-    <a href="about.html">About</a>
-  </div>
-</div></nav>
-<div class="mobile-nav-backdrop"></div>
+<div id="site-nav-mount"></div>
 
 <main>
 
@@ -349,6 +333,9 @@
 
 </main>
 
-<script src="js/shared.js?v=20260220a"></script>
+<script src="js/shared.js?v=20260220e"></script>
+<script>
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+</script>
 </body>
 </html>

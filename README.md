@@ -36,7 +36,7 @@ public/layoutUpdate/
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
-├── js/shared.js           # Shared utilities — scenarioChart, chartHeader, nav, scenario selectors, URL hash persistence, ARIA, prev/next nav, renderFooter
+├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, dark/light mode, localStorage persistence, CSV export, cross-system feedback, comparison mode, animated transitions, ARIA, renderFooter
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
@@ -57,7 +57,7 @@ public/layoutUpdate/
   - **StrategyOS** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
   - **Index page** — Six Systems cards show today + projected scores, hero projected score, and scenario descriptions all update dynamically.
 - **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
-- **URL hash scenario persistence** — Active scenario is stored in the URL hash (e.g. `#aggressive`). Sharing a link preserves the selected scenario. Implemented in `shared.js` via `getScenarioFromHash()` / `setScenarioHash()`.
+- **Scenario persistence (hash + localStorage)** — Active scenario is stored in the URL hash (e.g. `#aggressive`) AND in `localStorage`. Sharing a link preserves the selected scenario; navigating between pages automatically maintains the selected scenario via localStorage fallback.
 - **Prev/Next page navigation** — Footer includes contextual navigation links to the previous and next page in the site order.
 - **Print styles** — `@media print` CSS in `style.css` provides clean PDF export for all dashboard pages (hides nav/scenario bars, white background, proper contrast).
 - **Accessibility** — ARIA `role="tablist"` / `role="tab"` / `aria-selected` on section tabs, `aria-pressed` and `aria-label` on scenario buttons, `role="img"` on chart SVGs.
@@ -65,8 +65,15 @@ public/layoutUpdate/
 - **Civilizational Timeline** — A narrative editorial page (`timeline.html`) tracing 200,000 years of human inflection points — fire, agriculture, writing, printing press, industrial revolution, computing, internet — culminating in AI as the current inflection. Three tabs: "The Arc" (visual alternating timeline with population/time-to-next-leap stats), "The Inflection" (why this decade is different, with convergence of climate/labor/democracy/inequality), and "Possible Futures" (scenario-aware era-by-era projections through 2050 with grades and verdicts).
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
+- **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`.
+- **Dark / light mode** — Theme toggle in the nav bar switches between dark (default) and light mode. Preference persists in localStorage. Light mode overrides CSS custom properties for backgrounds, text, borders, and chart elements.
+- **Data export (CSV)** — Every chart includes a "CSV" download button. Click to export all scenario data for that metric as a CSV file. Powered by `registerChartExport()` + `downloadCSV()` in `shared.js`.
+- **Cross-system feedback loops** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence other operating systems (e.g., climate degradation increasing workforce displacement, governance strength enabling climate policy).
+- **Interactive policy levers** — SimulationOS has 5 sliders; ClimateOS (carbon tax, renewable investment, conservation target), TransitionOS (civic dividend, reskill budget, automation pace), and GovernanceOS (charter enforcement, assembly frequency, audit coverage) each have 3 additional lever controls that adjust projected scores in real time.
+- **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220a`) to prevent stale browser caches after deployment.
+- **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., ClimateOS with 6 tabs). Horizontal scroll on both rows at narrower widths.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220e`) to prevent stale browser caches after deployment.
 
 ### Scenario system
 
@@ -79,7 +86,7 @@ Four scenarios model diverging futures across all dashboards:
 | **Business as Usual** | `bau` | 0% dividends, no charter, 5% capex, 3% reskilling, 20% transparency |
 | **Worst Case** | `worst` | 0% dividends, no charter, 2% capex, 1% reskilling, 10% transparency |
 
-SimulationOS adds interactive policy levers (sliders for dividend rate, climate capex, reskilling investment, governance transparency; toggle for AI charter) that dynamically resolve to the nearest scenario.
+SimulationOS has 5 interactive policy levers (sliders for dividend rate, climate capex, reskilling investment, governance transparency; toggle for AI charter) that dynamically resolve to the nearest scenario. ClimateOS, TransitionOS, and GovernanceOS each add 3 page-specific policy levers that adjust projected scores in real time.
 
 ### Simulation report system
 
@@ -134,15 +141,20 @@ No install, no build. Open any HTML file directly or serve with any static file 
 
 ### Roadmap / TODO
 
-- [ ] **Refactor shared components into `shared.js`** — Move navigation bar, scenario selector bar, page shell (head/meta/CSS), and footer into JavaScript templates rendered from `shared.js`. Currently these are duplicated across all 9 HTML files, requiring manual edits to each page for global changes (e.g., adding a nav link). A single-source-of-truth pattern in `shared.js` would let one edit propagate everywhere automatically. Footer has already been standardized via `renderFooter()`.
-- [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, partials), evaluate migrating to PHP includes (Hostinger supports PHP natively) or a lightweight SSG like 11ty/Hugo with a build step.
-- [ ] **Cross-system feedback loops** — When a scenario is selected, show how metrics in one OS affect metrics in another (e.g., climate score degradation increasing workforce displacement). Currently each page models independently.
-- [ ] **Data export** — Add a "Download CSV" button to each chart allowing users to export the underlying scenario data for their own analysis.
-- [ ] **Dark/light mode toggle** — Add a theme switcher. Print styles already use a white background; a light mode for screen would extend that.
-- [ ] **Scenario comparison mode** — Side-by-side view showing two scenarios compared directly across all metrics on a single page.
-- [ ] **Animated transitions** — Add CSS/JS transitions when switching scenarios so charts and values animate smoothly rather than snapping.
-- [ ] **Scenario persistence across pages** — Currently URL hash preserves scenario on a single page. Consider using `localStorage` so navigating between pages maintains the selected scenario automatically.
-- [ ] **Interactive policy levers on more pages** — SimulationOS has slider-based policy levers; extend this concept to other pages (e.g., adjust dividend rate on TransitionOS to see income bridge impact in real time).
+- [x] ~~Refactor shared components into `shared.js`~~ — Nav bar, scenario buttons, mobile toggle, and footer now generated from JS templates. `PAGE_ORDER` is the single source of truth for site structure.
+- [x] ~~Cross-system feedback loops~~ — Each dashboard shows a "Cross-System Impact" panel with directional influence weights.
+- [x] ~~Data export~~ — CSV download buttons on every chart.
+- [x] ~~Dark/light mode toggle~~ — Theme switcher with localStorage persistence.
+- [ ] **Scenario comparison mode** — Side-by-side scoring panel comparing two scenarios on all dashboard pages. (Infrastructure built in `shared.js` via `initComparisonMode()`, currently disabled.)
+- [x] ~~Animated transitions~~ — CSS transitions + `fadeSwitch()` / `animateValue()` utilities.
+- [x] ~~Scenario persistence across pages~~ — localStorage fallback added to URL hash persistence.
+- [x] ~~Interactive policy levers on more pages~~ — ClimateOS, TransitionOS, and GovernanceOS each have 3 interactive sliders.
+- [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
+- [ ] **Real-time cross-system feedback** — Currently cross-system panels are informational. Wire them so adjusting a policy lever on one page dynamically affects scores shown on other pages.
+- [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
+- [ ] **Data source integration** — Connect to real-world data APIs (World Bank, NOAA, ILO) to ground baseline values in actual measurements.
+- [ ] **Scenario builder** — Allow users to create custom scenarios beyond the four presets by defining their own policy lever configurations.
+- [ ] **Accessibility audit** — Full WCAG 2.1 AA compliance review, focus management, screen reader testing.
 
 ### Deploying to Hostinger
 
