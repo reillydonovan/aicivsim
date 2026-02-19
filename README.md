@@ -33,6 +33,7 @@ public/layoutUpdate/
 ├── governance.html        # GovernanceOS — charter status, assemblies, audit coverage
 ├── strategy.html          # StrategyOS — 20 actions with scenario-aware status/adoption, Today's Score + projected
 ├── timeline.html          # Timeline — 200K-year arc of civilization, AI as inflection point, scenario-aware futures
+├── viz.html               # 3D network visualization — Three.js interactive systems graph
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
@@ -63,6 +64,20 @@ public/layoutUpdate/
 - **Accessibility** — ARIA `role="tablist"` / `role="tab"` / `aria-selected` on section tabs, `aria-pressed` and `aria-label` on scenario buttons, `role="img"` on chart SVGs.
 - **Skeleton loading styles** — CSS shimmer animation classes (`.skeleton`, `.skeleton-chart`, `.skeleton-score`) for use during JS initialization.
 - **Civilizational Timeline** — A narrative editorial page (`timeline.html`) tracing 200,000 years of human inflection points — fire, agriculture, writing, printing press, industrial revolution, computing, internet — culminating in AI as the current inflection. Three tabs: "The Arc" (visual alternating timeline with population/time-to-next-leap stats), "The Inflection" (why this decade is different, with convergence of climate/labor/democracy/inequality), and "Possible Futures" (scenario-aware era-by-era projections through 2050 with grades and verdicts).
+- **3D network visualization** — `viz.html` renders all six operating systems as an interactive Three.js node graph orbiting a central "Aggregate" node. Features include:
+  - **Scenario-aware connections** — Lines between nodes are colored (green positive / red negative) and opacity-scaled by cross-system influence weights from `shared.js` CROSS_SYSTEM data.
+  - **Directional particles** — Flow along connections in the direction of stronger influence; scatter under low aggregate health.
+  - **Camera fly-to** — Clicking a node smoothly animates the camera to center on it; Escape returns to overview.
+  - **Hover tooltips** — Cursor-following tooltip shows system name, score, grade, and interaction hints.
+  - **Connection tooltips** — Hovering highlighted connections (when a node is selected) shows bidirectional impact percentages and effect descriptions.
+  - **Tipping point shockwaves** — Predefined tipping points (Arctic ice-free, governance collapse, etc.) fire red shockwave animations and text overlays when the timeline passes their threshold year.
+  - **Timeline playback** — Year slider (2026–2050) with play/pause; scores, node sizes, and connection weights interpolate over time.
+  - **Timeline trail** — Small spheres mark the central node's position each year during playback, color-coded by health.
+  - **Scenario comparison panel** — "Compare" toggle opens a right-side data panel showing all 6 system scores + aggregate for two scenarios side-by-side with color-coded deltas. Updates live with the year slider.
+  - **Globe mode** — Toggle switches from hexagonal network to positions on a wireframe icosphere with great-circle arc connections.
+  - **Ambient sound** — Web Audio API generates a procedural drone + chord that shifts from dissonant (worst case) to harmonious (aggressive) with aggregate health. Node clicks trigger pitched pings. Mute button provided.
+  - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects.
+  - **Double-click navigation** — Double-clicking a system node opens its dashboard page.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
 - **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`.
@@ -160,7 +175,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
-3. Upload the contents of `public/layoutUpdate/` (10 HTML files + `css/` + `js/` folders) into `public_html/`
+3. Upload the contents of `public/layoutUpdate/` (11 HTML files + `css/` + `js/` folders) into `public_html/`
 4. If updating: bump the `?v=` query string in each HTML file's CSS/JS references to bust browser caches
 
 ---
