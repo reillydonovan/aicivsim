@@ -41,21 +41,9 @@
 <div class="section">
 <div class="page">
   <span class="section-num">01</span>
-  <p class="t3" style="margin-bottom:4px">Civilization Health Index &mdash; <span style="color:var(--text-primary)">Today</span></p>
-  <p class="t4" style="margin-bottom:24px">Measured February 2026. Current state before any scenario intervention.</p>
-  <div style="display:flex;align-items:baseline;gap:16px">
-    <span class="score-hero" style="color:var(--accent)">44</span>
-    <div>
-      <span class="score-sub">/100</span>
-      <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-        <span class="tag" style="font-size:18px;padding:6px 14px;border-color:var(--accent);color:var(--accent)">D+</span>
-        <span class="delta delta-down" style="font-size:13px">all declining</span>
-      </div>
-    </div>
-  </div>
-  <p class="t4 mt-2" style="color:var(--text-muted)">6 domains measured</p>
-  <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="hero-projected"></div>
-  <p class="body mt-4">Aggregate score across climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today &mdash; before any of the four scenarios are applied.</p>
+  <h2 class="t2">Today&rsquo;s Civilization Score</h2>
+  <hr class="rule">
+  <div id="hero-score"></div>
 </div>
 </div>
 
@@ -383,18 +371,46 @@ function renderScenarioCards(){
   document.getElementById('scenario-cards').innerHTML=h;
 }
 
+function renderHeroScore(){
+  var el=document.getElementById('hero-score');
+  var compositeToday=44;
+  var bauScore=COMPOSITE_PROJECTED.bau;
+  var ps=COMPOSITE_PROJECTED[active];
+  var clr=SC_COLORS[active];
+  var scLabel=SC.find(function(s){return s.id===active}).name;
+
+  var h='';
+  h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
+  h+='<span class="score-hero" style="color:var(--accent)">'+compositeToday+'</span>';
+  h+='<div>';
+  h+='<span class="score-sub">/100</span>';
+  h+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
+  h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:var(--accent);color:var(--accent)">'+grade(compositeToday)+'</span>';
+  h+='<span class="delta delta-down" style="font-size:13px">all declining</span>';
+  h+='</div>';
+  h+='</div>';
+  h+='</div>';
+
+  h+='<p class="body mt-3">Aggregate score across climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today \u2014 before any of the four scenarios are applied.</p>';
+  h+='<p class="t4 mt-2" style="color:var(--text-muted)">If trends continue: <span style="color:#d4622a">'+grade(bauScore)+' ('+bauScore+'/100)</span> by 2050</p>';
+
+  h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
+  h+='<span class="t3">Projected 2050 ('+scLabel+'):</span> ';
+  h+='<span class="score-projected" style="color:'+clr+'">'+ps+'</span>';
+  h+='<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
+  h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
+  h+='</div>';
+
+  el.innerHTML=h;
+}
+
 function render(){
   var clr=SC_COLORS[active];
   var scLabel=SC.find(function(s){return s.id===active}).name;
-  var ps=COMPOSITE_PROJECTED[active];
   updateScenarioBar('#scenario-bar',active,SC);
   document.getElementById('idx-scenario-label').textContent=scLabel;
   document.getElementById('idx-scenario-label').style.color=clr;
-  document.getElementById('hero-projected').innerHTML=
-    '<span class="t3">Projected 2050 ('+scLabel+'):</span> '
-    +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
-    +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
-    +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
+  renderHeroScore();
   renderSystems();
   renderScenarioCards();
 }
