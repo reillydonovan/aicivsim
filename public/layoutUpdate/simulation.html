@@ -66,7 +66,7 @@
   <div id="sec-dashboard">
     <div class="section" id="sim-hero-section">
       <span class="section-num">01</span>
-      <h2 class="t2">Trajectory Score</h2>
+      <h2 class="t2">Today's Trajectory Score</h2>
       <hr class="rule">
       <div id="sim-hero-score"></div>
     </div>
@@ -748,6 +748,9 @@
   }
 
   /* ── Master render ── */
+  var TODAY_SCORE = Math.round((1 - 0.385) * 20 + 0.432 * 25 + Math.max(0, (36.3 - 36.3) / 36.3) * 25 + 0.355 * 20 + 0);
+  var TODAY_LABEL = TODAY_SCORE >= 70 ? 'Recovery trajectory' : TODAY_SCORE >= 50 ? 'Under stress' : TODAY_SCORE >= 30 ? 'Systemic strain' : 'Critical failure';
+
   function renderSimHero(){
     var s = SC[active];
     var yr = currentYear;
@@ -759,19 +762,37 @@
     score = Math.max(0, Math.min(100, score));
     var lbl = score >= 70 ? 'Recovery trajectory' : score >= 50 ? 'Under stress' : score >= 30 ? 'Systemic strain' : 'Critical failure';
     var clr = s.color;
+    var tClr = TODAY_SCORE >= 70 ? 'var(--green)' : TODAY_SCORE >= 50 ? '#e8a838' : TODAY_SCORE >= 30 ? '#d4622a' : 'var(--red)';
     var el = document.getElementById('sim-hero-score');
     var h = '';
+
+    /* Today's baseline score */
     h += '<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
-    h += '<span class="score-hero" style="color:'+clr+'">'+score+'</span>';
+    h += '<span class="score-hero" style="color:'+tClr+'">'+TODAY_SCORE+'</span>';
     h += '<div>';
     h += '<span class="score-sub">/100</span>';
     h += '<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
-    h += '<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+clr+';color:'+clr+'">'+grade(score)+'</span>';
-    h += '<span class="t4" style="font-size:14px;color:var(--text-muted)">'+lbl+'</span>';
+    h += '<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+tClr+';color:'+tClr+'">'+grade(TODAY_SCORE)+'</span>';
+    h += '<span class="t4" style="font-size:14px;color:var(--text-muted)">'+TODAY_LABEL+'</span>';
     h += '</div>';
     h += '</div>';
     h += '</div>';
-    h += '<p class="body mt-3">Composite trajectory score under <strong style="color:'+clr+'">'+s.name+'</strong> at year '+yr+'. Derived from inequality, trust, emissions, resilience, and governance metrics.</p>';
+
+    h += '<p class="body mt-3">Composite baseline score across inequality, civic trust, emissions, resilience, and governance. Measured at 2026 before any scenario interventions.</p>';
+    h += '<p class="t4 mt-2" style="color:var(--text-muted)">If trends continue: <span style="color:#d4622a">F ('+Math.round((1 - interpVal(SC.worst.gini, 2070)) * 20 + interpVal(SC.worst.trust, 2070) * 25 + Math.max(0, (36.3 - interpVal(SC.worst.emis, 2070)) / 36.3) * 25 + interpVal(SC.worst.resil, 2070) * 20)+'/100)</span> by 2070</p>';
+
+    /* Projected score under active scenario at current year */
+    var delta = score - TODAY_SCORE;
+    var dSign = delta > 0 ? '+' : '';
+    h += '<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
+    h += '<span class="t3">'+yr+' under '+s.name+':</span> ';
+    h += '<span class="score-projected" style="color:'+clr+'">'+score+'</span>';
+    h += '<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
+    h += '<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(score)+'</span>';
+    h += '<span class="t4" style="margin-left:8px;color:'+(delta>=0?'var(--green)':'var(--red)')+'">'+dSign+delta+' vs today</span>';
+    h += '</div>';
+    h += '<p class="t4 mt-1" style="color:var(--text-faint)">'+lbl+'</p>';
+
     el.innerHTML = h;
   }
 
