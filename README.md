@@ -68,12 +68,12 @@ public/layoutUpdate/
 - **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`.
 - **Dark / light mode** — Theme toggle in the nav bar switches between dark (default) and light mode. Preference persists in localStorage. Light mode overrides CSS custom properties for backgrounds, text, borders, and chart elements.
 - **Data export (CSV)** — Every chart includes a "CSV" download button. Click to export all scenario data for that metric as a CSV file. Powered by `registerChartExport()` + `downloadCSV()` in `shared.js`.
-- **Cross-system feedback loops** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence other operating systems (e.g., climate degradation increasing workforce displacement, governance strength enabling climate policy).
+- **Cross-system feedback loops (scenario-aware)** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence other operating systems. Weights, effect descriptions, and visual impact bars all update dynamically when the user switches scenarios — e.g., ClimateOS's workforce displacement impact ranges from −5% under Aggressive Action to −35% under Worst Case, each with a unique narrative explanation.
 - **Interactive policy levers** — SimulationOS has 5 sliders; ClimateOS (carbon tax, renewable investment, conservation target), TransitionOS (civic dividend, reskill budget, automation pace), and GovernanceOS (charter enforcement, assembly frequency, audit coverage) each have 3 additional lever controls that adjust projected scores in real time.
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., ClimateOS with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220e`) to prevent stale browser caches after deployment.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220f`) to prevent stale browser caches after deployment.
 
 ### Scenario system
 
@@ -142,7 +142,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 ### Roadmap / TODO
 
 - [x] ~~Refactor shared components into `shared.js`~~ — Nav bar, scenario buttons, mobile toggle, and footer now generated from JS templates. `PAGE_ORDER` is the single source of truth for site structure.
-- [x] ~~Cross-system feedback loops~~ — Each dashboard shows a "Cross-System Impact" panel with directional influence weights.
+- [x] ~~Cross-system feedback loops~~ — Each dashboard shows a "Cross-System Impact" panel with directional influence weights, scenario-specific descriptions, and visual impact bars that update dynamically with the active scenario.
 - [x] ~~Data export~~ — CSV download buttons on every chart.
 - [x] ~~Dark/light mode toggle~~ — Theme switcher with localStorage persistence.
 - [ ] **Scenario comparison mode** — Side-by-side scoring panel comparing two scenarios on all dashboard pages. (Infrastructure built in `shared.js` via `initComparisonMode()`, currently disabled.)
@@ -150,7 +150,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [x] ~~Scenario persistence across pages~~ — localStorage fallback added to URL hash persistence.
 - [x] ~~Interactive policy levers on more pages~~ — ClimateOS, TransitionOS, and GovernanceOS each have 3 interactive sliders.
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
-- [ ] **Real-time cross-system feedback** — Currently cross-system panels are informational. Wire them so adjusting a policy lever on one page dynamically affects scores shown on other pages.
+- [ ] **Real-time cross-system feedback** — Cross-system panels now reflect the active scenario, but adjusting a policy lever on one page does not yet propagate score changes to other pages in real time.
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
 - [ ] **Data source integration** — Connect to real-world data APIs (World Bank, NOAA, ILO) to ground baseline values in actual measurements.
 - [ ] **Scenario builder** — Allow users to create custom scenarios beyond the four presets by defining their own policy lever configurations.

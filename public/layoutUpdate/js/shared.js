@@ -211,76 +211,155 @@ function exportChartData(datasets,startYear,endYear,unit,prefix){
 }
 
 /* ================================================================
-   CROSS-SYSTEM FEEDBACK LOOPS
+   CROSS-SYSTEM FEEDBACK LOOPS — scenario-aware
    ================================================================ */
 var CROSS_SYSTEM={
   climate:{
     label:'ClimateOS',color:'var(--climate)',
     impacts:[
-      {target:'transition',label:'TransitionOS',effect:'Climate shifts displace fossil-fuel workers, increasing reskilling demand',weight:-0.15},
-      {target:'governance',label:'GovernanceOS',effect:'Climate emergencies strain institutional capacity and erode public trust',weight:-0.10},
-      {target:'civilization',label:'CivilizationOS',effect:'Environmental degradation reduces wellbeing and increases inequality',weight:-0.12}
+      {target:'transition',label:'TransitionOS',
+        aggressive:{weight:-0.05,effect:'Managed green transition creates short-term displacement but reskilling infrastructure absorbs it. Net workforce disruption minimal.'},
+        moderate:{weight:-0.10,effect:'Moderate climate investment displaces some fossil-fuel workers. Reskilling programs exist but lag behind demand.'},
+        bau:{weight:-0.22,effect:'Unmanaged climate shifts force rapid fossil-fuel exits. No reskilling infrastructure — mass displacement underway.'},
+        worst:{weight:-0.35,effect:'Climate emergencies trigger industry collapse across multiple sectors. Workforce displacement is systemic and unaddressed.'}},
+      {target:'governance',label:'GovernanceOS',
+        aggressive:{weight:-0.03,effect:'Climate stability reduces emergency governance burden. Institutions focus on long-term planning rather than crisis response.'},
+        moderate:{weight:-0.08,effect:'Periodic climate events strain governance capacity. Institutions cope but emergency protocols consume bandwidth.'},
+        bau:{weight:-0.18,effect:'Frequent climate disasters erode institutional trust. Governance capacity diverted to perpetual crisis management.'},
+        worst:{weight:-0.30,effect:'Cascading climate failures overwhelm institutions entirely. Public trust in governance collapses.'}},
+      {target:'civilization',label:'CivilizationOS',
+        aggressive:{weight:-0.04,effect:'Environmental recovery improves quality of life. Biodiversity stabilizing. Air and water quality trending positive.'},
+        moderate:{weight:-0.10,effect:'Mixed environmental outcomes. Some regions improve, others degrade. Inequality in environmental quality persists.'},
+        bau:{weight:-0.20,effect:'Environmental degradation accelerates. Heat stress, water scarcity, and crop failure reduce wellbeing across populations.'},
+        worst:{weight:-0.38,effect:'Multiple tipping points breached. Civilizational wellbeing in freefall as habitable zones shrink and resources collapse.'}}
     ]
   },
   transition:{
     label:'TransitionOS',color:'var(--workforce)',
     impacts:[
-      {target:'governance',label:'GovernanceOS',effect:'Economic stability enables civic participation and institutional trust',weight:0.12},
-      {target:'civilization',label:'CivilizationOS',effect:'Workforce transition reduces poverty and inequality metrics',weight:0.15},
-      {target:'climate',label:'ClimateOS',effect:'Reskilled workers enter green energy sectors, accelerating decarbonization',weight:0.08}
+      {target:'governance',label:'GovernanceOS',
+        aggressive:{weight:0.18,effect:'Near-full employment and civic dividends create an engaged, trusting citizenry. Institutional legitimacy at historic highs.'},
+        moderate:{weight:0.10,effect:'Moderate workforce stability supports civic participation. Trust rebuilding, but gaps remain in underserved regions.'},
+        bau:{weight:-0.05,effect:'Rising unemployment breeds frustration and disengagement. Civic participation declining as economic anxiety grows.'},
+        worst:{weight:-0.20,effect:'Mass unemployment destroys social contract. Anti-institutional sentiment surges. Governance legitimacy in crisis.'}},
+      {target:'civilization',label:'CivilizationOS',
+        aggressive:{weight:0.20,effect:'Universal reskilling and civic dividends dramatically reduce poverty and inequality. Workforce transition becomes a model for equity.'},
+        moderate:{weight:0.12,effect:'Partial reskilling reduces poverty but inequality persists. Some communities left behind by automation wave.'},
+        bau:{weight:-0.08,effect:'Poverty rising as automation displaces without replacement. Inequality widening. Middle class eroding.'},
+        worst:{weight:-0.25,effect:'Permanent underclass forming. No pathway from displacement to employment. Inequality at levels not seen in a century.'}},
+      {target:'climate',label:'ClimateOS',
+        aggressive:{weight:0.12,effect:'Reskilled workforce powers green energy buildout. Clean sector employment exceeds fossil-fuel legacy jobs.'},
+        moderate:{weight:0.06,effect:'Some workers transition to green sectors but pace is slow. Net emissions benefit modest.'},
+        bau:{weight:-0.02,effect:'No workforce pipeline for green sectors. Clean energy buildout bottlenecked by labor shortages.'},
+        worst:{weight:-0.08,effect:'Economic collapse reduces emissions through degrowth — not by design but by failure. No green transition.'}}
     ]
   },
   civilization:{
     label:'CivilizationOS',color:'#e8a838',
     impacts:[
-      {target:'governance',label:'GovernanceOS',effect:'Higher wellbeing increases civic engagement and institutional legitimacy',weight:0.10},
-      {target:'transition',label:'TransitionOS',effect:'Civic dividends fund reskilling and reduce displacement friction',weight:0.08},
-      {target:'strategy',label:'StrategyOS',effect:'Public awareness drives adoption of personal and organizational strategies',weight:0.12}
+      {target:'governance',label:'GovernanceOS',
+        aggressive:{weight:0.15,effect:'High wellbeing and equity produce an engaged citizenry. Democratic institutions strengthened by broad participation.'},
+        moderate:{weight:0.08,effect:'Moderate wellbeing supports baseline civic engagement. Institutional trust slowly rebuilding.'},
+        bau:{weight:-0.05,effect:'Declining wellbeing reduces civic participation. Apathy and distrust spreading through affected communities.'},
+        worst:{weight:-0.18,effect:'Civilizational decline breeds extremism and institutional rejection. Democratic norms under direct threat.'}},
+      {target:'transition',label:'TransitionOS',
+        aggressive:{weight:0.12,effect:'Civic dividends fund reskilling and reduce displacement friction. Transition costs shared equitably.'},
+        moderate:{weight:0.06,effect:'Some dividend funding reaches displaced workers. Reskilling partially subsidized but unevenly distributed.'},
+        bau:{weight:-0.04,effect:'No dividend system. Displaced workers bear full transition costs individually.'},
+        worst:{weight:-0.15,effect:'Social safety net collapsed. No resources available for workforce transition of any kind.'}},
+      {target:'strategy',label:'StrategyOS',
+        aggressive:{weight:0.18,effect:'High public awareness and engagement drive rapid adoption of personal, organizational, and policy strategies.'},
+        moderate:{weight:0.10,effect:'Moderate public engagement. Strategy adoption concentrated in already-active demographics.'},
+        bau:{weight:0.02,effect:'Low engagement limits strategy adoption to early adopters. Systemic change stalls.'},
+        worst:{weight:-0.08,effect:'Public disengagement and cynicism prevent any meaningful strategy adoption. Fatalism dominates.'}}
     ]
   },
   governance:{
     label:'GovernanceOS',color:'var(--governance)',
     impacts:[
-      {target:'climate',label:'ClimateOS',effect:'Strong governance enables climate policy enforcement and carbon pricing',weight:0.15},
-      {target:'civilization',label:'CivilizationOS',effect:'Democratic institutions protect equity and distribute AI productivity gains',weight:0.12},
-      {target:'transition',label:'TransitionOS',effect:'Policy frameworks fund workforce transition and mandate reskilling',weight:0.10}
+      {target:'climate',label:'ClimateOS',
+        aggressive:{weight:0.22,effect:'Strong governance enforces carbon pricing, renewable mandates, and conservation targets. Climate policy fully funded and binding.'},
+        moderate:{weight:0.12,effect:'Partial governance enables some climate policy. Carbon pricing exists but enforcement is inconsistent.'},
+        bau:{weight:0.02,effect:'Weak governance produces voluntary commitments only. No binding climate legislation. Industry self-regulates.'},
+        worst:{weight:-0.10,effect:'Governance capture by fossil-fuel interests actively blocks climate action. Regulatory rollback underway.'}},
+      {target:'civilization',label:'CivilizationOS',
+        aggressive:{weight:0.18,effect:'Democratic institutions protect equity, distribute AI productivity gains, and ensure universal service access.'},
+        moderate:{weight:0.10,effect:'Institutions provide partial safety net. Equity improving but concentrated benefits persist.'},
+        bau:{weight:-0.05,effect:'Weak institutions unable to counter wealth concentration. AI gains flow to capital owners.'},
+        worst:{weight:-0.20,effect:'Institutional failure enables authoritarian capture. Equity protections dismantled. Surveillance replaces democracy.'}},
+      {target:'transition',label:'TransitionOS',
+        aggressive:{weight:0.15,effect:'Policy mandates fund universal reskilling, regulate automation pace, and guarantee transition support.'},
+        moderate:{weight:0.08,effect:'Some policy support for workforce transition. Reskilling funded but not mandated.'},
+        bau:{weight:-0.02,effect:'No policy framework for workforce transition. Market forces alone determine outcomes.'},
+        worst:{weight:-0.12,effect:'Governance collapse means no labor protections. Workers face automation with zero institutional support.'}}
     ]
   },
   strategy:{
     label:'StrategyOS',color:'var(--equity)',
     impacts:[
-      {target:'climate',label:'ClimateOS',effect:'Individual and organizational action reduces emissions and improves land use',weight:0.06},
-      {target:'governance',label:'GovernanceOS',effect:'Organized advocacy strengthens democratic participation and charter adoption',weight:0.08},
-      {target:'transition',label:'TransitionOS',effect:'Proactive reskilling by organizations reduces displacement severity',weight:0.10}
+      {target:'climate',label:'ClimateOS',
+        aggressive:{weight:0.10,effect:'Widespread individual and organizational action measurably reduces emissions. Consumer behavior shifts accelerate corporate change.'},
+        moderate:{weight:0.05,effect:'Moderate adoption of green strategies. Some measurable emissions impact from early movers.'},
+        bau:{weight:0.01,effect:'Minimal voluntary action. Individual strategies too scattered to produce systemic impact.'},
+        worst:{weight:-0.03,effect:'Strategy adoption near zero. Public fatalism prevents even personal action.'}},
+      {target:'governance',label:'GovernanceOS',
+        aggressive:{weight:0.12,effect:'Organized advocacy and civic engagement strengthen democratic institutions and accelerate charter adoption.'},
+        moderate:{weight:0.06,effect:'Moderate civic pressure supports governance reform. Charter awareness growing but adoption patchy.'},
+        bau:{weight:0.01,effect:'No organized pressure for governance reform. Status quo entrenched.'},
+        worst:{weight:-0.05,effect:'Anti-institutional movements undermine governance reform efforts. Advocacy groups defunded or suppressed.'}},
+      {target:'transition',label:'TransitionOS',
+        aggressive:{weight:0.14,effect:'Proactive organizational reskilling and individual upskilling reduce displacement severity. Companies invest ahead of automation.'},
+        moderate:{weight:0.08,effect:'Some organizations invest in reskilling. Individual upskilling growing but unevenly distributed.'},
+        bau:{weight:0.02,effect:'Negligible proactive reskilling. Organizations automate first, address displacement later (if at all).'},
+        worst:{weight:-0.04,effect:'No organizational investment in transition. Workers abandoned to market forces.'}}
     ]
   },
   simulation:{
     label:'SimulationOS',color:'var(--technology)',
     impacts:[
-      {target:'climate',label:'ClimateOS',effect:'Policy lever adjustments directly model climate investment trajectories',weight:0.20},
-      {target:'transition',label:'TransitionOS',effect:'Automation rate and dividend amount shape workforce outcomes',weight:0.18},
-      {target:'governance',label:'GovernanceOS',effect:'Governance investment lever determines institutional capacity',weight:0.15}
+      {target:'climate',label:'ClimateOS',
+        aggressive:{weight:0.25,effect:'Maximum climate capex allocation directly funds renewable buildout, grid storage, and carbon capture at scale.'},
+        moderate:{weight:0.15,effect:'Moderate climate investment produces measurable but incomplete decarbonization trajectory.'},
+        bau:{weight:0.03,effect:'Minimal climate investment. Emissions reduction depends entirely on market-driven technology adoption.'},
+        worst:{weight:-0.05,effect:'Climate investment actively defunded. Fossil-fuel subsidies restored. Emissions trajectory worsening.'}},
+      {target:'transition',label:'TransitionOS',
+        aggressive:{weight:0.22,effect:'High civic dividends and reskilling investment create comprehensive workforce safety net.'},
+        moderate:{weight:0.12,effect:'Moderate dividend and reskilling investment provides partial coverage. Gaps remain for hardest-hit sectors.'},
+        bau:{weight:-0.05,effect:'No dividend system. Minimal reskilling. Automation proceeds without workforce support.'},
+        worst:{weight:-0.18,effect:'Zero workforce investment. Automation maximized for profit extraction. Displacement is a feature, not a bug.'}},
+      {target:'governance',label:'GovernanceOS',
+        aggressive:{weight:0.18,effect:'Full transparency and binding AI charter create accountable, participatory governance infrastructure.'},
+        moderate:{weight:0.10,effect:'Active charter and moderate transparency support governance but lack universal enforcement.'},
+        bau:{weight:-0.03,effect:'No charter, minimal transparency. AI governance is voluntary and toothless.'},
+        worst:{weight:-0.15,effect:'Governance deliberately weakened. AI systems deployed without oversight. Accountability mechanisms dismantled.'}}
     ]
   }
 };
 
-function renderCrossSystem(systemId){
+function renderCrossSystem(systemId,scenario){
   var sys=CROSS_SYSTEM[systemId];
   if(!sys) return '';
+  var sc=scenario||'aggressive';
+  var scInfo=SCENARIOS.find(function(s){return s.id===sc});
+  var scClr=scInfo?scInfo.color:'var(--text-primary)';
+  var scName=scInfo?scInfo.name:sc;
   var h='<div class="cross-system-panel">';
-  h+='<p class="t3" style="margin-bottom:12px">Cross-System Impact</p>';
-  h+='<p class="t4" style="margin-bottom:16px;color:var(--text-muted)">How '+sys.label+' metrics influence other systems</p>';
+  h+='<p class="t3" style="margin-bottom:4px">Cross-System Impact</p>';
+  h+='<p class="t4" style="margin-bottom:16px;color:var(--text-muted)">How '+sys.label+' under <span style="color:'+scClr+'">'+scName+'</span> influences other systems</p>';
   sys.impacts.forEach(function(imp){
-    var dir=imp.weight>0?'positive':'negative';
-    var arrow=imp.weight>0?'\u2197':'\u2198';
-    var clr=imp.weight>0?'var(--green)':'var(--red)';
-    var pct=Math.abs(imp.weight*100).toFixed(0);
+    var d=imp[sc]||imp.aggressive;
+    var w=d.weight;
+    var arrow=w>0?'\u2197':w<0?'\u2198':'\u2192';
+    var clr=w>0?'var(--green)':w<0?'var(--red)':'var(--text-muted)';
+    var pct=Math.abs(w*100).toFixed(0);
+    var barW=Math.min(100,Math.abs(w)*250);
     h+='<div class="cross-impact-row">';
     h+='<div class="flex items-center gap-8">';
-    h+='<span class="num-sm" style="color:'+clr+';width:32px">'+arrow+pct+'%</span>';
+    h+='<span class="num-sm" style="color:'+clr+';min-width:40px">'+arrow+pct+'%</span>';
     h+='<span class="t3" style="color:var(--text-secondary)">'+imp.label+'</span>';
+    h+='<div class="bar-track" style="flex:1;max-width:120px"><div class="bar-fill" style="width:'+barW+'%;background:'+clr+'"></div></div>';
     h+='</div>';
-    h+='<p class="t4" style="margin-top:2px;padding-left:40px">'+imp.effect+'</p>';
+    h+='<p class="t4" style="margin-top:4px;padding-left:48px">'+d.effect+'</p>';
     h+='</div>';
   });
   h+='</div>';

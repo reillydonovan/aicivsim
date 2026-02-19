@@ -295,6 +295,7 @@ body.light .pullquote{border-left-color:var(--border-strong)}
 .cross-system-panel{padding:24px;background:var(--bg-raised);border:1px solid var(--border);border-radius:4px;margin-top:24px}
 .cross-impact-row{padding:10px 0;border-bottom:1px solid var(--border)}
 .cross-impact-row:last-child{border-bottom:none}
+.cross-impact-row .bar-track{height:4px;margin-top:0;border-radius:2px;background:var(--border)}
 
 /* ================================================================
    ANIMATED TRANSITIONS
