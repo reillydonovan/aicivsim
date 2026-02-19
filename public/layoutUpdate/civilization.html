@@ -275,7 +275,7 @@ function renderHero(){
   var today=avg(DOMAINS.map(function(d){return d.today}));
   var delta=sc-today;
   var clr=SC_COLORS[activeSc];
-  var tClr='var(--text-muted)';
+  var tClr=today>=70?'var(--green)':today>=50?'#e8a838':today>=30?'#d4622a':'var(--red)';
   var h='';
   h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
   h+='<span class="score-hero" style="color:'+tClr+'">'+today+'</span>';
