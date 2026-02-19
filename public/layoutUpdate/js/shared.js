@@ -231,7 +231,17 @@ var CROSS_SYSTEM={
         aggressive:{weight:-0.04,effect:'Environmental recovery improves quality of life. Biodiversity stabilizing. Air and water quality trending positive.'},
         moderate:{weight:-0.10,effect:'Mixed environmental outcomes. Some regions improve, others degrade. Inequality in environmental quality persists.'},
         bau:{weight:-0.20,effect:'Environmental degradation accelerates. Heat stress, water scarcity, and crop failure reduce wellbeing across populations.'},
-        worst:{weight:-0.38,effect:'Multiple tipping points breached. Civilizational wellbeing in freefall as habitable zones shrink and resources collapse.'}}
+        worst:{weight:-0.38,effect:'Multiple tipping points breached. Civilizational wellbeing in freefall as habitable zones shrink and resources collapse.'}},
+      {target:'strategy',label:'StrategyOS',
+        aggressive:{weight:0.10,effect:'Climate urgency galvanizes public action. Strategy adoption accelerates as citizens see tangible environmental progress.'},
+        moderate:{weight:0.04,effect:'Moderate climate awareness drives some strategy adoption. Public engagement uneven across demographics.'},
+        bau:{weight:-0.06,effect:'Climate fatigue sets in. Public disengages from strategy adoption as problems feel insurmountable.'},
+        worst:{weight:-0.14,effect:'Climate despair paralyzes action. Strategy adoption collapses as populations shift to survival mode.'}},
+      {target:'simulation',label:'SimulationOS',
+        aggressive:{weight:0.08,effect:'Positive climate data validates simulation models. Public trust in projections increases, strengthening evidence-based policy.'},
+        moderate:{weight:0.03,effect:'Mixed climate results create uncertainty in simulation accuracy. Model credibility holds but confidence is tepid.'},
+        bau:{weight:-0.05,effect:'Worsening climate outcomes undermine confidence in simulation models. Policy-makers question projection value.'},
+        worst:{weight:-0.12,effect:'Climate reality far exceeds worst projections. Simulation credibility collapses — models seen as dangerously optimistic.'}}
     ]
   },
   transition:{
@@ -251,7 +261,17 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.12,effect:'Reskilled workforce powers green energy buildout. Clean sector employment exceeds fossil-fuel legacy jobs.'},
         moderate:{weight:0.06,effect:'Some workers transition to green sectors but pace is slow. Net emissions benefit modest.'},
         bau:{weight:-0.02,effect:'No workforce pipeline for green sectors. Clean energy buildout bottlenecked by labor shortages.'},
-        worst:{weight:-0.08,effect:'Economic collapse reduces emissions through degrowth — not by design but by failure. No green transition.'}}
+        worst:{weight:-0.08,effect:'Economic collapse reduces emissions through degrowth — not by design but by failure. No green transition.'}},
+      {target:'strategy',label:'StrategyOS',
+        aggressive:{weight:0.15,effect:'Employed, secure populations invest in long-term strategies. Reskilling culture normalizes lifelong learning and civic action.'},
+        moderate:{weight:0.07,effect:'Moderate economic security allows some strategic planning. Adoption concentrated among those with stable employment.'},
+        bau:{weight:-0.04,effect:'Economic precarity leaves no bandwidth for strategic engagement. Survival overrides long-term planning.'},
+        worst:{weight:-0.12,effect:'Mass unemployment eliminates capacity for strategy adoption. Populations focused entirely on immediate survival.'}},
+      {target:'simulation',label:'SimulationOS',
+        aggressive:{weight:0.10,effect:'Successful transition validates simulation projections. Public trust in modeling strengthens evidence-based governance.'},
+        moderate:{weight:0.04,effect:'Partial transition results provide mixed validation of simulation models. Credibility holds in some sectors.'},
+        bau:{weight:-0.03,effect:'Stalled transition outcomes cast doubt on simulation accuracy. Policy-makers question model assumptions.'},
+        worst:{weight:-0.10,effect:'Catastrophic workforce outcomes discredit simulation models entirely. Projections seen as meaningless in crisis.'}}
     ]
   },
   civilization:{
@@ -271,7 +291,17 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.18,effect:'High public awareness and engagement drive rapid adoption of personal, organizational, and policy strategies.'},
         moderate:{weight:0.10,effect:'Moderate public engagement. Strategy adoption concentrated in already-active demographics.'},
         bau:{weight:0.02,effect:'Low engagement limits strategy adoption to early adopters. Systemic change stalls.'},
-        worst:{weight:-0.08,effect:'Public disengagement and cynicism prevent any meaningful strategy adoption. Fatalism dominates.'}}
+        worst:{weight:-0.08,effect:'Public disengagement and cynicism prevent any meaningful strategy adoption. Fatalism dominates.'}},
+      {target:'climate',label:'ClimateOS',
+        aggressive:{weight:0.08,effect:'High wellbeing enables climate investment. Prosperous societies prioritize environmental stewardship and fund green infrastructure.'},
+        moderate:{weight:0.03,effect:'Moderate wellbeing allows some environmental investment. Climate remains a priority but competes with other concerns.'},
+        bau:{weight:-0.04,effect:'Declining wellbeing pushes climate down the priority list. Short-term economic survival overrides environmental goals.'},
+        worst:{weight:-0.10,effect:'Civilizational crisis eliminates climate capacity. Survival needs consume all resources — environment abandoned.'}},
+      {target:'simulation',label:'SimulationOS',
+        aggressive:{weight:0.06,effect:'Strong civilizational outcomes validate simulation utility. Public demand for data-driven governance grows.'},
+        moderate:{weight:0.02,effect:'Mixed civilizational outcomes produce moderate confidence in simulation models.'},
+        bau:{weight:-0.03,effect:'Worsening conditions reduce public interest in simulation. Fatalism replaces evidence-based planning.'},
+        worst:{weight:-0.08,effect:'Civilizational decline makes simulation feel irrelevant. Populations abandon data-driven approaches for reactive survival.'}}
     ]
   },
   governance:{
@@ -291,7 +321,17 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.15,effect:'Policy mandates fund universal reskilling, regulate automation pace, and guarantee transition support.'},
         moderate:{weight:0.08,effect:'Some policy support for workforce transition. Reskilling funded but not mandated.'},
         bau:{weight:-0.02,effect:'No policy framework for workforce transition. Market forces alone determine outcomes.'},
-        worst:{weight:-0.12,effect:'Governance collapse means no labor protections. Workers face automation with zero institutional support.'}}
+        worst:{weight:-0.12,effect:'Governance collapse means no labor protections. Workers face automation with zero institutional support.'}},
+      {target:'strategy',label:'StrategyOS',
+        aggressive:{weight:0.14,effect:'Strong institutional frameworks legitimize and amplify grassroots strategies. Policy creates fertile ground for civic action.'},
+        moderate:{weight:0.06,effect:'Some institutional support for strategy adoption. Advocacy channels exist but compete for attention.'},
+        bau:{weight:-0.02,effect:'Weak institutions provide no framework for organized strategy. Individual action remains disconnected.'},
+        worst:{weight:-0.10,effect:'Institutional collapse delegitimizes organized strategy. Advocacy seen as futile against captured systems.'}},
+      {target:'simulation',label:'SimulationOS',
+        aggressive:{weight:0.12,effect:'Strong governance enables transparent simulation infrastructure. Public trust in modeling underpins policy decisions.'},
+        moderate:{weight:0.06,effect:'Moderate governance supports simulation credibility. Some transparency gaps limit full public confidence.'},
+        bau:{weight:-0.04,effect:'Weak governance undermines simulation independence. Models perceived as politically influenced.'},
+        worst:{weight:-0.14,effect:'Governance failure makes simulation impossible. No institutional capacity to maintain or trust modeling infrastructure.'}}
     ]
   },
   strategy:{
@@ -311,7 +351,17 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.14,effect:'Proactive organizational reskilling and individual upskilling reduce displacement severity. Companies invest ahead of automation.'},
         moderate:{weight:0.08,effect:'Some organizations invest in reskilling. Individual upskilling growing but unevenly distributed.'},
         bau:{weight:0.02,effect:'Negligible proactive reskilling. Organizations automate first, address displacement later (if at all).'},
-        worst:{weight:-0.04,effect:'No organizational investment in transition. Workers abandoned to market forces.'}}
+        worst:{weight:-0.04,effect:'No organizational investment in transition. Workers abandoned to market forces.'}},
+      {target:'civilization',label:'CivilizationOS',
+        aggressive:{weight:0.10,effect:'Widespread strategy adoption improves quality of life. Communities organized around shared goals see measurable wellbeing gains.'},
+        moderate:{weight:0.05,effect:'Moderate strategy adoption benefits engaged communities. Wellbeing improvements concentrated in organized populations.'},
+        bau:{weight:0.01,effect:'Scattered strategy adoption produces negligible civilization-scale impact. Benefits limited to individuals.'},
+        worst:{weight:-0.06,effect:'Strategy collapse removes last buffer against declining wellbeing. No grassroots resilience to offset systemic failures.'}},
+      {target:'simulation',label:'SimulationOS',
+        aggressive:{weight:0.08,effect:'High strategy adoption generates rich feedback data. Simulation models improve as real-world action validates projections.'},
+        moderate:{weight:0.03,effect:'Some strategy data feeds back into simulation. Model accuracy improves incrementally.'},
+        bau:{weight:0.00,effect:'Minimal strategy action provides no useful feedback data. Simulation models run without real-world validation.'},
+        worst:{weight:-0.04,effect:'No strategy adoption means no feedback loop. Simulation operates in a vacuum, disconnected from reality.'}}
     ]
   },
   simulation:{
@@ -331,7 +381,17 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.18,effect:'Full transparency and binding AI charter create accountable, participatory governance infrastructure.'},
         moderate:{weight:0.10,effect:'Active charter and moderate transparency support governance but lack universal enforcement.'},
         bau:{weight:-0.03,effect:'No charter, minimal transparency. AI governance is voluntary and toothless.'},
-        worst:{weight:-0.15,effect:'Governance deliberately weakened. AI systems deployed without oversight. Accountability mechanisms dismantled.'}}
+        worst:{weight:-0.15,effect:'Governance deliberately weakened. AI systems deployed without oversight. Accountability mechanisms dismantled.'}},
+      {target:'civilization',label:'CivilizationOS',
+        aggressive:{weight:0.16,effect:'Simulation-driven policy optimizes resource allocation. Civic dividends, healthcare, and education calibrated by predictive models.'},
+        moderate:{weight:0.08,effect:'Partial simulation guidance improves some civilizational outcomes. Policy calibration better than guesswork but incomplete.'},
+        bau:{weight:-0.04,effect:'No simulation guidance for policy. Civilizational outcomes determined by ad-hoc decisions and political convenience.'},
+        worst:{weight:-0.12,effect:'Simulation misuse or collapse leaves civilization flying blind. No evidence base for critical resource decisions.'}},
+      {target:'strategy',label:'StrategyOS',
+        aggressive:{weight:0.14,effect:'Simulation clarity shows citizens exactly which strategies matter. Evidence-based action plans drive adoption at every level.'},
+        moderate:{weight:0.06,effect:'Moderate simulation output informs some strategy choices. Public has partial visibility into what actions work.'},
+        bau:{weight:-0.02,effect:'No simulation insight available to public. Strategy adoption based on intuition, marketing, and ideology.'},
+        worst:{weight:-0.08,effect:'Simulation credibility destroyed. Citizens have no trusted information source for strategic decisions.'}}
     ]
   }
 };
