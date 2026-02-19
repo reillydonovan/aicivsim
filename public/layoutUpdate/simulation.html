@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SimulationOS — 50-Year Branching Futures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260218">
+</head>
+<body>
+
+<!-- ============================================================
+     MASTHEAD
+     ============================================================ -->
+<div class="masthead">
+  <div class="page masthead-inner">
+    <span class="masthead-breadcrumb"><a href="index.html">AI Civ Sim</a> / SimulationOS &mdash; 2026</span>
+    <h1 style="font-family:var(--font-display);font-size:32px;font-weight:700;letter-spacing:-0.02em;color:var(--text-primary);margin-top:12px">50-Year Branching Futures</h1>
+    <p class="body mt-2">Three policy levers. Five structural metrics. Four diverging scenarios from 2027 to 2070.</p>
+    <hr class="rule mt-3">
+  </div>
+</div>
+
+<!-- ============================================================
+     SITE NAV
+     ============================================================ -->
+<nav class="site-nav"><div class="page">
+  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
+  <div class="site-nav-inner">
+    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="about.html">About</a>
+  </div>
+</div></nav>
+<div class="mobile-nav-backdrop"></div>
+
+<!-- ============================================================
+     CONTROL BAR
+     ============================================================ -->
+<div class="control-bar" id="control-bar">
+  <div class="page">
+    <div class="control-bar-inner">
+      <div class="nav-tabs" id="nav-tabs">
+        <button class="nav-tab active" data-section="dashboard">Dashboard</button>
+        <button class="nav-tab" data-section="trajectories">Trajectories</button>
+        <button class="nav-tab" data-section="scenarios">Scenarios</button>
+      </div>
+      <div class="scenario-bar" id="scenario-bar">
+        <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
+        <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
+        <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
+        <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<main class="page">
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: DASHBOARD
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-dashboard">
+    <div class="section" id="sim-hero-section">
+      <span class="section-num">01</span>
+      <h2 class="t2">Trajectory Score</h2>
+      <hr class="rule">
+      <div id="sim-hero-score"></div>
+    </div>
+    <div class="section">
+      <span class="section-num">02</span>
+      <h2 class="t2">Policy Levers</h2>
+      <hr class="rule">
+      <div class="grid grid-5 mt-4" id="slider-grid">
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span class="t3">Civic Dividend Rate</span>
+              <span class="num-md" id="val-dividend" style="color:#4ecdc4">10%</span>
+            </div>
+            <input type="range" class="slider-track mt-2" id="sl-dividend" min="0" max="15" step="1" value="10">
+            <div class="flex justify-between mt-1">
+              <span class="t4">0%</span><span class="t4">15%</span>
+            </div>
+            <p class="t4 mt-2">Share of public revenue distributed as universal civic income.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span class="t3">Climate Capex Share</span>
+              <span class="num-md" id="val-capex" style="color:#4ecdc4">25%</span>
+            </div>
+            <input type="range" class="slider-track mt-2" id="sl-capex" min="0" max="30" step="1" value="25">
+            <div class="flex justify-between mt-1">
+              <span class="t4">0%</span><span class="t4">30%</span>
+            </div>
+            <p class="t4 mt-2">GDP percentage directed to renewable buildout, grid storage, and adaptation.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span class="t3">Reskilling Investment</span>
+              <span class="num-md" id="val-reskill" style="color:#4ecdc4">20%</span>
+            </div>
+            <input type="range" class="slider-track mt-2" id="sl-reskill" min="0" max="25" step="1" value="20">
+            <div class="flex justify-between mt-1">
+              <span class="t4">0%</span><span class="t4">25%</span>
+            </div>
+            <p class="t4 mt-2">Public investment in workforce transition programs and education infrastructure.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span class="t3">Governance Transparency</span>
+              <span class="num-md" id="val-transparency" style="color:#4ecdc4">80%</span>
+            </div>
+            <input type="range" class="slider-track mt-2" id="sl-transparency" min="0" max="100" step="5" value="80">
+            <div class="flex justify-between mt-1">
+              <span class="t4">0%</span><span class="t4">100%</span>
+            </div>
+            <p class="t4 mt-2">Degree of open audit, participatory budgeting, and institutional accountability.</p>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span class="t3">AI Charter</span>
+              <span class="num-md" id="val-charter" style="color:#4ecdc4">On</span>
+            </div>
+            <div class="flex gap-4 mt-2">
+              <button class="tag" id="btn-charter-on" style="border-color:#4ecdc4;color:#4ecdc4">On</button>
+              <button class="tag" id="btn-charter-off">Off</button>
+            </div>
+            <p class="t4 mt-2">Binding AI governance charter with participatory audits and citizen override powers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="section-num">03</span>
+      <h2 class="t2">Year</h2>
+      <hr class="rule">
+      <div class="flex items-baseline gap-8 mt-4">
+        <span class="t1-sm" id="val-year" style="color:var(--text-primary)">2035</span>
+        <span class="t4">of 2027 &ndash; 2070</span>
+      </div>
+      <input type="range" class="slider-track mt-3 w-full" id="sl-year" min="2027" max="2070" step="1" value="2035">
+      <div class="flex justify-between mt-1">
+        <span class="t4">2027</span><span class="t4">2070</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <span class="section-num">04</span>
+      <h2 class="t2">Structural Metrics &mdash; <span id="dash-scenario-label">Aggressive Action</span></h2>
+      <hr class="rule">
+      <div class="grid grid-2 mt-4" id="metrics-grid"></div>
+    </div>
+
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: TRAJECTORIES
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-trajectories" style="display:none">
+    <div class="section">
+      <span class="section-num">05</span>
+      <h2 class="t2">Full Trajectories &mdash; 2027 to 2070</h2>
+      <hr class="rule">
+      <p class="body mt-3">All four scenarios plotted across five structural metrics. The active scenario is emphasized; inactive traces show divergence.</p>
+      <div class="mt-6" id="trajectories-list"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: SCENARIOS
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-scenarios" style="display:none">
+    <div class="section">
+      <span class="section-num">06</span>
+      <h2 class="t2">Scenario Profiles</h2>
+      <hr class="rule">
+      <p class="body mt-3">Four divergent futures defined by policy lever configurations and their projected 2070 endpoints.</p>
+      <div class="grid grid-2 mt-6" id="scenarios-grid"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       ALWAYS VISIBLE: SCENARIO REPORT
+       ────────────────────────────────────────────────────────── -->
+  <div class="section" id="narrative-section" style="border-top:2px solid var(--border);margin-top:32px">
+    <h2 class="t2">Scenario Report &mdash; <span id="narr-title" style="color:#4ecdc4">Aggressive Action, 2035</span></h2>
+    <hr class="rule">
+    <div id="narrative-report" class="mt-4"></div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<div id="page-footer"></div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="js/shared.js?v=20260218"></script>
+<script>
+(function(){
+
+  /* ── Scenario Data ── */
+  var SC = {
+    aggressive: {name:'Aggressive Action',color:'#4ecdc4',div:10,charter:true,capex:25,reskill:20,transparency:80,
+      gini:[.385,.381,.377,.373,.368,.363,.358,.352,.346,.340,.334,.328,.322,.316,.310,.305,.300,.295,.290,.286,.282,.278,.275,.272,.270,.268,.266,.264,.262,.261,.260,.259,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258],
+      trust:[.432,.437,.445,.455,.468,.483,.500,.518,.537,.557,.575,.593,.610,.626,.641,.654,.666,.677,.687,.696,.704,.712,.718,.724,.730,.735,.740,.744,.748,.752,.755,.758,.761,.764,.766,.768,.770,.772,.774,.776,.778,.780,.782,.784],
+      emis:[36.3,35.8,35.0,34.0,32.8,31.5,30.0,28.4,26.8,25.2,23.6,22.1,20.7,19.4,18.2,17.1,16.1,15.2,14.4,13.6,12.9,12.3,11.7,11.2,10.7,10.3,9.9,9.5,9.2,8.9,8.6,8.4,8.2,8.0,7.8,7.6,7.5,7.3,7.2,7.1,7.0,6.9,6.8,6.7],
+      resil:[.355,.360,.368,.378,.390,.404,.420,.437,.455,.473,.491,.509,.527,.544,.560,.575,.589,.602,.614,.625,.635,.644,.652,.660,.667,.673,.679,.684,.689,.693,.697,.701,.704,.707,.710,.713,.715,.717,.719,.721,.723,.725,.727,.729],
+      ai:[.121,.123,.127,.132,.138,.145,.153,.162,.172,.182,.193,.204,.215,.226,.237,.248,.259,.269,.279,.289,.298,.307,.315,.323,.330,.337,.343,.349,.354,.359,.364,.368,.372,.376,.380,.383,.386,.389,.392,.394,.396,.398,.400,.402]},
+    moderate: {name:'Moderate Reform',color:'#5da5da',div:5,charter:true,capex:15,reskill:12,transparency:55,
+      gini:[.385,.384,.382,.380,.377,.374,.371,.367,.364,.360,.356,.352,.348,.344,.341,.337,.334,.331,.328,.326,.324,.322,.320,.319,.317,.316,.315,.315,.314,.314,.314,.314,.314,.314,.314,.315,.315,.315,.316,.316,.316,.317,.317,.317],
+      trust:[.432,.434,.438,.443,.450,.458,.467,.477,.487,.497,.507,.517,.527,.536,.545,.553,.561,.568,.575,.581,.586,.591,.596,.600,.604,.607,.610,.613,.616,.618,.620,.622,.624,.625,.627,.628,.629,.630,.631,.632,.633,.634,.635,.636],
+      emis:[36.3,36.0,35.5,35.0,34.3,33.6,32.8,32.0,31.2,30.4,29.6,28.9,28.2,27.5,26.8,26.2,25.6,25.1,24.6,24.1,23.7,23.3,22.9,22.6,22.3,22.0,21.7,21.5,21.3,21.1,20.9,20.8,20.6,20.5,20.4,20.3,20.2,20.1,20.0,20.0,19.9,19.9,19.8,19.8],
+      resil:[.355,.357,.362,.368,.376,.385,.395,.406,.417,.428,.439,.450,.461,.471,.480,.489,.497,.505,.512,.519,.525,.530,.535,.540,.544,.548,.551,.554,.557,.560,.562,.564,.566,.568,.570,.571,.573,.574,.575,.576,.577,.578,.579,.580],
+      ai:[.121,.124,.129,.136,.145,.155,.166,.178,.191,.205,.219,.234,.248,.263,.277,.291,.305,.318,.331,.343,.354,.365,.375,.385,.394,.403,.411,.418,.425,.432,.438,.444,.449,.454,.459,.463,.467,.471,.475,.478,.481,.484,.487,.490]},
+    bau: {name:'Business as Usual',color:'#e8a838',div:0,charter:false,capex:5,reskill:3,transparency:20,
+      gini:[.385,.387,.391,.396,.402,.409,.417,.426,.435,.444,.453,.462,.470,.478,.485,.492,.498,.504,.509,.513,.517,.521,.524,.527,.529,.531,.533,.534,.536,.537,.538,.539,.540,.541,.541,.542,.542,.543,.543,.543,.543,.544,.544,.544],
+      trust:[.432,.428,.422,.415,.406,.396,.386,.375,.365,.354,.344,.334,.325,.317,.309,.302,.296,.291,.286,.282,.278,.275,.273,.271,.269,.268,.267,.266,.265,.265,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264],
+      emis:[36.3,36.4,36.6,36.8,37.0,37.2,37.4,37.6,37.7,37.8,37.9,38.0,38.0,38.0,38.0,37.9,37.8,37.7,37.6,37.5,37.3,37.2,37.0,36.9,36.7,36.6,36.4,36.3,36.1,36.0,35.9,35.7,35.6,35.5,35.4,35.3,35.2,35.1,35.0,34.9,34.8,34.8,34.7,34.7],
+      resil:[.355,.352,.348,.342,.336,.329,.322,.315,.308,.301,.295,.289,.283,.278,.274,.270,.266,.263,.260,.258,.256,.254,.252,.251,.250,.249,.248,.247,.247,.246,.246,.246,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245],
+      ai:[.121,.127,.136,.148,.163,.180,.199,.220,.242,.265,.289,.313,.336,.359,.381,.402,.422,.441,.458,.474,.489,.502,.515,.526,.536,.545,.553,.560,.567,.573,.578,.583,.587,.591,.595,.598,.601,.604,.606,.608,.610,.612,.614,.615]},
+    worst: {name:'Worst Case',color:'#d4622a',div:0,charter:false,capex:2,reskill:0,transparency:5,
+      gini:[.385,.390,.398,.408,.420,.435,.451,.468,.486,.504,.521,.537,.552,.565,.577,.587,.596,.604,.611,.617,.622,.626,.630,.633,.636,.638,.640,.642,.643,.645,.646,.647,.648,.649,.650,.650,.651,.651,.652,.652,.652,.653,.653,.653],
+      trust:[.432,.424,.412,.398,.382,.364,.345,.326,.308,.291,.275,.261,.248,.237,.228,.220,.214,.209,.205,.202,.199,.197,.195,.194,.193,.192,.191,.190,.190,.190,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189],
+      emis:[36.3,36.8,37.5,38.4,39.4,40.5,41.6,42.7,43.7,44.6,45.4,46.0,46.5,46.8,47.0,47.1,47.1,47.0,46.8,46.6,46.3,46.0,45.7,45.3,45.0,44.6,44.3,44.0,43.7,43.4,43.1,42.8,42.6,42.3,42.1,41.9,41.7,41.5,41.3,41.2,41.0,40.9,40.7,40.6],
+      resil:[.355,.348,.339,.328,.316,.303,.290,.277,.265,.254,.244,.235,.228,.222,.217,.213,.210,.208,.206,.204,.203,.202,.201,.200,.200,.199,.199,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198],
+      ai:[.121,.130,.144,.162,.184,.210,.239,.271,.305,.340,.376,.411,.445,.477,.507,.534,.558,.580,.599,.615,.629,.641,.651,.660,.667,.673,.678,.683,.687,.690,.693,.695,.697,.699,.701,.702,.704,.705,.706,.707,.708,.709,.710,.710]}
+  };
+
+  var KEYS = ['aggressive','moderate','bau','worst'];
+  var SCENARIOS = [
+    {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
+    {id:'moderate',  name:'Moderate',  color:'#5da5da'},
+    {id:'bau',       name:'BAU',       color:'#e8a838'},
+    {id:'worst',     name:'Worst Case',color:'#d4622a'}
+  ];
+
+  var METRICS = [
+    {id:'gini',  label:'GINI',              unit:'',   dec:3, dir:'lower',  baseline:.385,
+     note:'Gini coefficient measuring income inequality. 0 = perfect equality, 1 = maximum. Lower is better.'},
+    {id:'trust', label:'Civic Trust',        unit:'',   dec:3, dir:'higher', baseline:.432,
+     note:'Composite civic trust index. Survey-derived measure of institutional confidence. Higher is better.'},
+    {id:'emis',  label:'Annual Emissions Gt', unit:' Gt', dec:1, dir:'lower',  baseline:36.3,
+     note:'Global annual CO\u2082 emissions in gigatonnes. Lower is better. Baseline: 36.3 Gt (2026).'},
+    {id:'resil', label:'Resilience',          unit:'',   dec:3, dir:'higher', baseline:.355,
+     note:'Adaptive capacity score combining infrastructure, institutional, and social resilience. Higher is better.'},
+    {id:'ai',    label:'AI Influence',        unit:'',   dec:3, dir:'context',baseline:.121,
+     note:'Composite measure of AI\'s role in economic and governance decisions. Context-dependent \u2014 high influence without oversight is negative.'}
+  ];
+
+  var NARRATIVES = {
+    aggressive: 'Under aggressive policy action \u2014 a 10% civic dividend, full AI charter oversight, and 25% climate capex \u2014 inequality drops steadily toward .258 by 2070 while civic trust nearly doubles to .784. Emissions fall from 36.3 Gt to 6.7 Gt, and resilience more than doubles. This pathway demands immediate, coordinated global commitment at unprecedented scale.',
+    moderate: 'Moderate reform with a 5% dividend, active charter, and 15% capex produces meaningful improvement without radical restructuring. Gini stabilizes near .317, trust reaches .636, and emissions decline to 19.8 Gt. Progress is real but several structural risks remain within range.',
+    bau: 'Business as usual \u2014 no dividend, no charter, minimal climate investment \u2014 sees inequality climb to .544, trust erode to .264, and emissions plateau above 34 Gt. Resilience halves while unregulated AI influence reaches .615. Multiple systemic stress points are breached by mid-century.',
+    worst: 'Under worst-case conditions, the absence of corrective policy drives Gini above .650, trust collapses to .189, and emissions peak near 47 Gt before slow decline. Resilience falls to .198 and AI influence reaches .710 with no oversight framework. Cascading institutional failures become virtually certain.'
+  };
+
+  var active = 'aggressive';
+  var charter = true;
+  var currentYear = 2035;
+
+  /* ── Helpers ── */
+  function getIdx(year){ return Math.max(0, Math.min(43, year - 2027)); }
+  function grade(s){return s>=90?'A':s>=80?'A\u2212':s>=70?'B+':s>=60?'B':s>=50?'C+':s>=40?'C':s>=30?'D+':s>=20?'D':'F';}
+
+  function interpVal(arr, year){
+    var idx = year - 2027;
+    if(idx <= 0) return arr[0];
+    if(idx >= 43) return arr[43];
+    var lo = Math.floor(idx), hi = Math.ceil(idx), t = idx - lo;
+    return arr[lo] + (arr[hi] - arr[lo]) * t;
+  }
+
+  function fmtV(val, m){
+    return val.toFixed(m.dec) + m.unit;
+  }
+
+  function dirClr(m, val){
+    if(m.dir === 'context') return SC[active].color;
+    if(m.dir === 'lower')  return val <= m.baseline ? 'var(--green)' : 'var(--red)';
+    return val >= m.baseline ? 'var(--green)' : 'var(--red)';
+  }
+
+  function dirLabel(m, val){
+    if(m.dir === 'context') return val > m.baseline ? 'above baseline' : 'at baseline';
+    if(m.dir === 'lower')  return val < m.baseline ? 'better' : 'worse';
+    return val > m.baseline ? 'better' : 'worse';
+  }
+
+  /* ── Determine scenario from sliders ── */
+  function resolveScenario(){
+    var div = +document.getElementById('sl-dividend').value;
+    var capex = +document.getElementById('sl-capex').value;
+    var reskill = +document.getElementById('sl-reskill').value;
+    var transparency = +document.getElementById('sl-transparency').value;
+    var score = div + capex + reskill + (transparency / 5) + (charter ? 15 : 0);
+    if(score >= 60) return 'aggressive';
+    if(score >= 30) return 'moderate';
+    if(score <= 10) return 'worst';
+    return 'bau';
+  }
+
+  /* ── Build inline comparison SVG with more control ── */
+  function trajectorySVG(metricId, w, h){
+    w = w || 480; h = h || 140;
+    var allVals = [];
+    KEYS.forEach(function(k){ allVals = allVals.concat(SC[k][metricId]); });
+    var mn = Math.min.apply(null, allVals), mx = Math.max.apply(null, allVals);
+    var rng = mx - mn || 1;
+    var pad = 4;
+
+    var svg = '<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="height:'+h+'px;width:100%">';
+
+    /* Grid lines */
+    for(var g = 0; g < 5; g++){
+      var gy = pad + (g / 4) * (h - 2 * pad);
+      svg += '<line x1="0" y1="'+gy+'" x2="'+w+'" y2="'+gy+'" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>';
+    }
+
+    /* Inactive lines first, then active on top */
+    KEYS.forEach(function(k){
+      if(k === active) return;
+      var data = SC[k][metricId];
+      var pts = data.map(function(v, i){
+        return (i / 43) * w + ',' + (h - pad - ((v - mn) / rng) * (h - 2 * pad));
+      }).join(' ');
+      svg += '<polyline points="'+pts+'" fill="none" stroke="'+SC[k].color+'" stroke-width="0.8" opacity="0.18" vector-effect="non-scaling-stroke"/>';
+    });
+
+    var adata = SC[active][metricId];
+    var apts = adata.map(function(v, i){
+      return (i / 43) * w + ',' + (h - pad - ((v - mn) / rng) * (h - 2 * pad));
+    }).join(' ');
+    svg += '<polygon points="0,'+(h - pad)+' '+apts+' '+w+','+(h - pad)+'" fill="'+SC[active].color+'" opacity="0.06"/>';
+    svg += '<polyline points="'+apts+'" fill="none" stroke="'+SC[active].color+'" stroke-width="2" vector-effect="non-scaling-stroke"/>';
+
+    /* Year marker */
+    var xYear = ((currentYear - 2027) / 43) * w;
+    svg += '<line x1="'+xYear+'" y1="0" x2="'+xYear+'" y2="'+h+'" stroke="rgba(255,255,255,0.12)" stroke-width="0.5" stroke-dasharray="2,2"/>';
+
+    /* Axis labels */
+    svg += '<text x="0" y="'+(h - 1)+'" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)">2027</text>';
+    svg += '<text x="'+w+'" y="'+(h - 1)+'" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)" text-anchor="end">2070</text>';
+
+    svg += '</svg>';
+    return svg;
+  }
+
+  /* ── Mini sparkline (single scenario) ── */
+  function miniSpark(data, color, w, h){
+    w = w || 120; h = h || 32;
+    var mn = Math.min.apply(null, data), mx = Math.max.apply(null, data), rng = mx - mn || 1;
+    var pts = data.map(function(v, i){
+      return (i / (data.length - 1)) * w + ',' + (h - 2 - ((v - mn) / rng) * (h - 4));
+    }).join(' ');
+    return '<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="height:'+h+'px">'
+      + '<polygon points="0,'+h+' '+pts+' '+w+','+h+'" fill="'+color+'" opacity="0.08"/>'
+      + '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="1.5" vector-effect="non-scaling-stroke"/>'
+      + '</svg>';
+  }
+
+  /* ── Legend row ── */
+  function buildLegend(){
+    return '<div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:12px">'
+      + SCENARIOS.map(function(s){
+        var isA = s.id === active;
+        return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:9px;font-family:var(--font-body);letter-spacing:0.05em;color:'+(isA ? s.color : 'rgba(255,255,255,0.2)')+'">'
+          + '<span style="width:12px;height:'+(isA ? '2' : '1')+'px;background:'+s.color+';opacity:'+(isA ? 1 : 0.3)+';display:inline-block"></span>'
+          + s.name + '</span>';
+      }).join('') + '</div>';
+  }
+
+  /* ── Update slider value displays ── */
+  function updateSliderDisplays(){
+    var div = +document.getElementById('sl-dividend').value;
+    var capex = +document.getElementById('sl-capex').value;
+    var reskill = +document.getElementById('sl-reskill').value;
+    var transparency = +document.getElementById('sl-transparency').value;
+    var clr = SC[active].color;
+
+    document.getElementById('val-dividend').textContent = div + '%';
+    document.getElementById('val-dividend').style.color = clr;
+    document.getElementById('val-capex').textContent = capex + '%';
+    document.getElementById('val-capex').style.color = clr;
+    document.getElementById('val-reskill').textContent = reskill + '%';
+    document.getElementById('val-reskill').style.color = clr;
+    document.getElementById('val-transparency').textContent = transparency + '%';
+    document.getElementById('val-transparency').style.color = clr;
+    document.getElementById('val-charter').textContent = charter ? 'On' : 'Off';
+    document.getElementById('val-charter').style.color = clr;
+
+    var onBtn = document.getElementById('btn-charter-on');
+    var offBtn = document.getElementById('btn-charter-off');
+    if(charter){
+      onBtn.style.borderColor = clr; onBtn.style.color = clr;
+      offBtn.style.borderColor = ''; offBtn.style.color = '';
+    } else {
+      offBtn.style.borderColor = clr; offBtn.style.color = clr;
+      onBtn.style.borderColor = ''; onBtn.style.color = '';
+    }
+  }
+
+  /* ── Render: Dashboard metrics grid ── */
+  function renderDashboardMetrics(){
+    var el = document.getElementById('metrics-grid');
+    var html = '';
+    var scColors = {}; KEYS.forEach(function(k){ scColors[k]=SC[k].color; });
+
+    METRICS.forEach(function(m, i){
+      var ds = {};
+      KEYS.forEach(function(k){ ds[k]=SC[k][m.id]; });
+      var span = (i === METRICS.length - 1 && METRICS.length % 2 === 1) ? ' style="grid-column:1/-1"' : '';
+      html += '<div class="cell"'+span+'>'
+        + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,markerYear:currentYear})
+        + '</div>';
+    });
+
+    el.innerHTML = html;
+    document.getElementById('dash-scenario-label').textContent = SC[active].name;
+  }
+
+  /* ── Render: Trajectories ── */
+  function renderTrajectories(){
+    var el = document.getElementById('trajectories-list');
+    var html = '';
+    var scColors = {}; KEYS.forEach(function(k){ scColors[k]=SC[k].color; });
+
+    METRICS.forEach(function(m, i){
+      var ds = {};
+      KEYS.forEach(function(k){ ds[k]=SC[k][m.id]; });
+      html += '<div style="padding:32px 0;' + (i > 0 ? 'border-top:1px solid var(--border)' : '') + '">'
+        + '<div class="flex justify-between items-baseline mb-2">'
+        + '<span class="t2-lg">' + m.label + '</span>'
+        + '<span class="num-sm" style="color:' + SC[active].color + '">'
+        + fmtV(SC[active][m.id][43], {dec: m.dec, unit: m.unit}) + ' by 2070</span>'
+        + '</div>'
+        + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:200,markerYear:currentYear})
+        + '</div>';
+    });
+
+    el.innerHTML = html;
+  }
+
+  /* ── Render: Scenario cards ── */
+  function renderScenarios(){
+    var el = document.getElementById('scenarios-grid');
+    var html = '';
+
+    KEYS.forEach(function(k){
+      var s = SC[k];
+      var isA = k === active;
+
+      html += '<div class="cell" style="' + (isA ? 'outline:1px solid ' + s.color + ';outline-offset:-1px' : '') + '">'
+        + '<div class="flex items-center gap-4 mb-3">'
+        + '<span class="dot" style="background:' + s.color + ';width:8px;height:8px"></span>'
+        + '<span class="t2-lg" style="' + (isA ? 'color:' + s.color : '') + '">' + s.name + '</span>'
+        + '</div>';
+
+      /* Policy levers */
+      html += '<div class="flex gap-8 flex-wrap mb-4">'
+        + '<span class="tag">Dividend ' + s.div + '%</span>'
+        + '<span class="tag">Charter ' + (s.charter ? 'On' : 'Off') + '</span>'
+        + '<span class="tag">Capex ' + s.capex + '%</span>'
+        + '</div>';
+
+      /* 2070 outcomes */
+      html += '<div class="t3 mb-2">2070 Projected Outcomes</div>';
+      METRICS.forEach(function(m){
+        var v = s[m.id][43];
+        var delta = v - m.baseline;
+        var dSign = delta > 0 ? '+' : '';
+        var dClr;
+        if(m.dir === 'context') dClr = s.color;
+        else if(m.dir === 'lower') dClr = delta <= 0 ? 'var(--green)' : 'var(--red)';
+        else dClr = delta >= 0 ? 'var(--green)' : 'var(--red)';
+
+        html += '<div class="flex justify-between items-baseline py-2" style="border-bottom:1px solid var(--border)">'
+          + '<span class="t4">' + m.label + '</span>'
+          + '<div class="flex items-baseline gap-6">'
+          + '<span class="num-sm" style="color:' + dClr + '">' + dSign + delta.toFixed(m.dec) + m.unit + '</span>'
+          + '<span class="num-sm">' + fmtV(v, m) + '</span>'
+          + '</div></div>';
+      });
+
+      /* Narrative */
+      html += '<p class="body mt-4">' + NARRATIVES[k] + '</p>'
+        + '</div>';
+    });
+
+    el.innerHTML = html;
+  }
+
+  /* ── Generate era-aware narrative report ── */
+  function generateNarrative(){
+    var s = SC[active];
+    var yr = currentYear;
+    var elapsed = yr - 2026;
+
+    var gini = interpVal(s.gini, yr);
+    var trust = interpVal(s.trust, yr);
+    var emis = interpVal(s.emis, yr);
+    var resil = interpVal(s.resil, yr);
+    var ai = interpVal(s.ai, yr);
+
+    var dGini = gini - .385;
+    var dTrust = trust - .432;
+    var dEmis = emis - 36.3;
+    var dResil = resil - .355;
+
+    var score = Math.round((1 - gini) * 20 + trust * 25 + Math.max(0, (36.3 - emis) / 36.3) * 25 + resil * 20 + (s.charter ? 10 : 0));
+    score = Math.max(0, Math.min(100, score));
+    var scoreLabel = score >= 70 ? 'Recovery trajectory' : score >= 50 ? 'Under stress' : score >= 30 ? 'Systemic strain' : 'Critical failure';
+    var g = grade(score);
+
+    var era, eraFeel;
+    if(elapsed <= 3) {
+      era = 'Dawn';
+      eraFeel = score >= 50
+        ? 'The reforms are new and the world is watching. Hope is cautious. The old systems still dominate daily life, but beneath the surface, something is shifting.'
+        : 'The world feels much as it did before. Headlines cycle. Crises compound. If change is coming, it hasn\u2019t arrived yet.';
+    } else if(elapsed <= 12) {
+      era = 'Divergence';
+      eraFeel = score >= 60
+        ? 'The paths have split. People can feel the difference now \u2014 in their paychecks, in the air, in the tone of public life. The reforms are no longer theoretical; they are part of the texture of daily existence.'
+        : score >= 40
+        ? 'Some things are better. Some are worse. The world is in an awkward middle passage \u2014 too changed to go back, not changed enough to feel safe.'
+        : 'The divergence is visible, and it\u2019s not the good kind. The gap between what was promised and what was delivered is widening. People are tired.';
+    } else if(elapsed <= 30) {
+      era = 'Maturity';
+      eraFeel = score >= 70
+        ? 'A generation has grown up in a different world. The reforms are no longer reforms \u2014 they\u2019re just how things work. Children learn about the old economy the way previous generations learned about coal mines.'
+        : score >= 50
+        ? 'The world has settled into its new shape, and it\u2019s imperfect. Progress is real but uneven. Some communities thrive; others were left behind in the transition and haven\u2019t recovered.'
+        : score >= 30
+        ? 'The structures that were supposed to hold are buckling. What felt like a rough patch in the 2030s has become the new normal. Adaptation is the only strategy left.'
+        : 'The compound failures are now self-reinforcing. Each crisis feeds the next. The institutions that might have intervened have lost the capacity or the legitimacy to act.';
+    } else {
+      era = 'Legacy';
+      eraFeel = score >= 70
+        ? 'This is a world that chose to act and is living with the rewards. It\u2019s not perfect \u2014 no civilization is \u2014 but the foundation is sound, the trajectory is stable, and there is a shared sense that the hardest part is behind us.'
+        : score >= 50
+        ? 'History will call this a partial success. The worst outcomes were avoided. But the world that emerged is smaller, more cautious, and more unequal than it needed to be.'
+        : score >= 30
+        ? 'Historians will debate when the window closed. Was it the 2030s, when the investments stalled? Or the 2040s, when the tipping points crossed? Either way, this is a world managing permanent decline, not building toward recovery.'
+        : 'This is a world that failed. Not in a single dramatic moment, but gradually \u2014 through inaction, distraction, and the slow erosion of every institution that might have changed the outcome.';
+    }
+
+    var html = '';
+
+    /* ── Hero score with grade ── */
+    html += '<div style="display:flex;align-items:baseline;gap:16px;margin-bottom:24px">';
+    html += '<span class="score-hero" style="color:'+s.color+'">'+score+'</span>';
+    html += '<div>';
+    html += '<span class="score-sub">/100</span>';
+    html += '<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
+    html += '<span class="tag" style="font-size:22px;padding:8px 16px;border-color:'+s.color+';color:'+s.color+'">'+g+'</span>';
+    html += '<span class="tag" style="font-size:14px;padding:5px 12px;border-color:'+s.color+';color:'+s.color+';opacity:0.6">'+era+' Era</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    /* ── The world right now ── */
+    html += '<div style="margin-bottom:32px">';
+    html += '<p style="font-family:var(--font-body);font-size:15px;line-height:1.8;color:var(--text-secondary);max-width:680px">';
+
+    /* Opening: set the scene */
+    if(score >= 70) {
+      html += 'It\u2019s '+yr+'. '+elapsed+' years have passed since the <strong style="color:'+s.color+'">'+s.name+'</strong> reforms began, and the world looks fundamentally different from the one that existed in 2026. ';
+      html += 'The score \u2014 <strong style="color:'+s.color+'">'+score+'/100</strong>, a <strong style="color:'+s.color+'">'+g+'</strong> \u2014 tells the statistical story. But the human story is richer.';
+    } else if(score >= 50) {
+      html += 'It\u2019s '+yr+'. The <strong style="color:'+s.color+'">'+s.name+'</strong> scenario is '+elapsed+' years old, and the world is... mixed. ';
+      html += 'A score of <strong style="color:'+s.color+'">'+score+'/100</strong> (<strong style="color:'+s.color+'">'+g+'</strong>) captures the ambiguity: real progress in some domains, stagnation or decline in others.';
+    } else if(score >= 30) {
+      html += 'It\u2019s '+yr+'. '+elapsed+' years under <strong style="color:'+s.color+'">'+s.name+'</strong>, and the score of <strong style="color:'+s.color+'">'+score+'/100</strong> (<strong style="color:'+s.color+'">'+g+'</strong>) doesn\u2019t lie. ';
+      html += 'The systems that were supposed to protect people are under severe strain.';
+    } else {
+      html += 'It\u2019s '+yr+'. <strong style="color:'+s.color+'">'+s.name+'</strong> has been the reality for '+elapsed+' years, and the score of <strong style="color:'+s.color+'">'+score+'/100</strong> (<strong style="color:'+s.color+'">'+g+'</strong>) reflects a world in crisis. ';
+      html += 'The question is no longer how to prevent failure \u2014 it\u2019s how to survive it.';
+    }
+    html += '</p>';
+
+    html += '<p style="font-family:var(--font-body);font-size:14px;line-height:1.8;color:var(--text-faint);max-width:680px;margin-top:12px;font-style:italic">';
+    html += eraFeel;
+    html += '</p>';
+    html += '</div>';
+
+    /* ── People & livelihoods ── */
+    html += '<div style="border-top:1px solid var(--border);padding:24px 0">';
+    html += '<p class="t2-lg" style="color:var(--workforce);margin-bottom:12px">People &amp; Livelihoods</p>';
+    html += '<p style="font-family:var(--font-body);font-size:13px;line-height:1.8;color:var(--text-secondary);max-width:680px">';
+
+    var giniPct = Math.abs(dGini / 0.385 * 100).toFixed(0);
+    if(gini < 0.30) {
+      html += 'Inequality has been transformed. The gap between the wealthiest and poorest has narrowed to levels not seen since the mid-20th century. ';
+      html += 'Civic dividends, funded by compute rents and green tariffs, have created a genuine income floor. Nobody is destitute. ';
+      html += 'The reskilling infrastructure built over the past decade means that when AI displaces a job, the transition feels less like a cliff and more like a bridge.';
+    } else if(gini < 0.35) {
+      html += 'Life is measurably better for most people. The wealth gap has narrowed '+giniPct+'% from its 2026 baseline. ';
+      if(s.div > 0) html += 'Civic dividends of '+s.div+'% aren\u2019t luxury \u2014 they\u2019re the difference between falling behind and keeping pace during career transitions. ';
+      html += 'Reskilling programs have become part of the cultural fabric. Changing careers at 45 no longer feels like failure; it feels like a Tuesday.';
+    } else if(gini < 0.40) {
+      html += 'The economy is functioning, but the gains are unevenly distributed. The GINI index sits at '+gini.toFixed(3)+' \u2014 roughly where it started. ';
+      if(s.div > 0) html += 'Civic dividends help at the margins, but they haven\u2019t changed the fundamental structure. ';
+      else html += 'Without civic dividends, displaced workers fall through the same gaps that existed in 2026. ';
+      html += 'Automation continues to hollow out middle-skill work. The new jobs exist, but they\u2019re concentrated in a handful of metro areas.';
+    } else {
+      html += 'The economy is failing its people. Inequality has worsened to '+gini.toFixed(3)+' \u2014 a '+giniPct+'% deterioration. ';
+      html += 'The promise of a broad-based recovery never materialized. AI-driven productivity gains flow to a shrinking number of firms and individuals. ';
+      html += 'Reskilling programs, where they exist, can\u2019t keep pace with the rate of displacement. Entire communities have been left behind, and they know it.';
+    }
+    html += '</p></div>';
+
+    /* ── Climate & energy ── */
+    html += '<div style="border-top:1px solid var(--border);padding:24px 0">';
+    html += '<p class="t2-lg" style="color:var(--climate);margin-bottom:12px">Climate &amp; Energy</p>';
+    html += '<p style="font-family:var(--font-body);font-size:13px;line-height:1.8;color:var(--text-secondary);max-width:680px">';
+
+    var emisPct = Math.abs(dEmis / 36.3 * 100).toFixed(0);
+    if(emis < 15) {
+      html += 'The energy transition is functionally complete. Emissions have fallen '+emisPct+'% to '+emis.toFixed(1)+' Gt/yr. ';
+      html += 'The last coal plant closed years ago. Solar and wind are cheaper than maintaining existing fossil infrastructure, let alone building new. ';
+      html += 'The air is cleaner. Asthma rates in cities have dropped by a third. Farmers are adapting to the climate that\u2019s already locked in, but the worst scenarios have been avoided.';
+    } else if(emis < 25) {
+      html += 'Emissions are down '+emisPct+'% to '+emis.toFixed(1)+' Gt/yr \u2014 real progress, driven by '+s.capex+'% GDP in climate investment. ';
+      html += 'The renewable transition is well underway, though pockets of fossil dependence remain. ';
+      html += 'People can see the difference in their utility bills and in the skylines of cities where construction cranes are building grid-scale storage instead of gas plants. The curve is bending, but it\u2019s not bent yet.';
+    } else if(emis < 36) {
+      html += 'Emissions have barely moved \u2014 '+emis.toFixed(1)+' Gt/yr, a '+emisPct+'% '+(dEmis <= 0 ? 'reduction' : 'increase')+' from baseline. ';
+      html += 'The fossil economy has proven more resilient than optimists predicted. Stranded asset politics, subsidies, and institutional inertia keep gas flowing and coal burning. ';
+      html += 'Climate impacts are no longer abstract: flooding, heat waves, and crop failures are part of the seasonal rhythm in a growing number of regions.';
+    } else {
+      html += 'Emissions have risen to '+emis.toFixed(1)+' Gt/yr \u2014 up '+emisPct+'% from 2026. ';
+      html += 'The window for a managed energy transition is closing, if it hasn\u2019t already closed. ';
+      html += 'Climate impacts are devastating and accelerating. Coastal communities are being abandoned. Agricultural belts are shifting faster than farming communities can adapt. ';
+      html += 'The conversation has moved from \u201chow do we prevent this\u201d to \u201chow do we survive this.\u201d';
+    }
+    html += '</p></div>';
+
+    /* ── Trust & governance ── */
+    html += '<div style="border-top:1px solid var(--border);padding:24px 0">';
+    html += '<p class="t2-lg" style="color:var(--governance);margin-bottom:12px">Trust &amp; Governance</p>';
+    html += '<p style="font-family:var(--font-body);font-size:13px;line-height:1.8;color:var(--text-secondary);max-width:680px">';
+
+    if(trust > 0.7) {
+      html += 'Something remarkable has happened to public trust: it\u2019s high, and it\u2019s earned. At '+trust.toFixed(3)+', institutional confidence is at levels that seemed impossible in the polarized 2020s. ';
+      html += 'Participatory budgeting, open audits, and transparent AI governance created a virtuous cycle \u2014 people saw their input matter, and engagement deepened. ';
+      html += 'Elections feel less like existential battles and more like genuine choices between competing visions.';
+    } else if(trust > 0.5) {
+      html += 'Trust stands at '+trust.toFixed(3)+' \u2014 improved from the fractured baseline of 0.432. ';
+      html += 'People don\u2019t love their institutions, but they\u2019ve stopped actively distrusting them. The AI charter helped: seeing algorithmic decisions get audited and overturned built credibility. ';
+      html += 'There\u2019s a growing sense that the system, while imperfect, is at least trying to be accountable.';
+    } else if(trust > 0.35) {
+      html += 'Trust at '+trust.toFixed(3)+' is essentially unchanged from 2026\u2019s fragile 0.432. ';
+      html += 'People haven\u2019t given up on institutions, but they haven\u2019t been given a reason to believe in them either. ';
+      html += 'Political discourse is stuck in a loop of outrage and exhaustion. Reforms get announced, partially implemented, then quietly defunded. The cynicism is rational.';
+    } else {
+      html += 'Institutional trust has collapsed to '+trust.toFixed(3)+'. ';
+      html += 'This isn\u2019t just a number \u2014 it\u2019s the lived experience of millions who have stopped believing that any public institution acts in their interest. ';
+      html += 'Voter turnout has cratered. Conspiracy theories fill the vacuum where civic engagement used to be. ';
+      html += 'Without trust, even well-designed policies can\u2019t be implemented \u2014 the social contract that makes governance possible has frayed beyond repair.';
+    }
+    html += '</p></div>';
+
+    /* ── AI & the future ── */
+    html += '<div style="border-top:1px solid var(--border);padding:24px 0">';
+    html += '<p class="t2-lg" style="color:var(--technology);margin-bottom:12px">AI &amp; the Future</p>';
+    html += '<p style="font-family:var(--font-body);font-size:13px;line-height:1.8;color:var(--text-secondary);max-width:680px">';
+
+    if(s.charter && trust > 0.5 && ai < 0.5) {
+      html += 'AI has become deeply integrated into daily life, but it\u2019s AI on society\u2019s terms. The governance charter \u2014 enforced, audited, and updated through citizen assemblies \u2014 ensures that algorithmic power remains subordinate to democratic oversight. ';
+      html += 'The AI influence index of '+ai.toFixed(3)+' is well-governed. People use AI tools daily without the sense that they\u2019re being used by them.';
+    } else if(s.charter && trust > 0.35) {
+      html += 'The AI charter exists and is nominally enforced. At an influence level of '+ai.toFixed(3)+', AI is a significant force in the economy and governance. ';
+      html += 'The guardrails are holding, but they\u2019re creaking. Enforcement is uneven across jurisdictions. Big AI companies comply in letter but push boundaries in spirit. ';
+      html += 'The question is whether governance can keep pace with capability.';
+    } else if(ai > 0.5) {
+      html += 'AI influence has reached '+ai.toFixed(3)+' \u2014 a level where algorithmic systems shape more economic and political outcomes than human deliberation. ';
+      html += (s.charter ? 'The charter exists on paper, but trust is too low for meaningful enforcement. ' : 'Without any governance charter, there are no structural checks on concentrated AI power. ');
+      html += 'The benefits flow to those who own and operate the systems. For everyone else, AI is the invisible hand that decides who gets hired, who gets credit, and whose neighborhood gets investment.';
+    } else {
+      html += 'AI influence remains at '+ai.toFixed(3)+' \u2014 still early in its trajectory. ';
+      html += (s.charter ? 'The governance charter is in place, which is good, because the real test is coming. The next decade will determine whether AI becomes a tool for broad prosperity or concentrated power.' : 'Without governance infrastructure in place, the window to shape AI\u2019s trajectory is narrowing with each deployment cycle.');
+    }
+    html += '</p></div>';
+
+    /* ── The road ahead ── */
+    html += '<div style="border-top:1px solid var(--border);padding:24px 0">';
+    html += '<p class="t2-lg" style="color:'+s.color+';margin-bottom:12px">The Road Ahead</p>';
+    html += '<p style="font-family:var(--font-body);font-size:13px;line-height:1.8;color:var(--text-secondary);max-width:680px">';
+
+    if(score >= 80) {
+      html += 'The trajectory is strong. The compounding effects of early, aggressive investment are now self-reinforcing. Lower inequality funds broader participation, which deepens trust, which enables more ambitious climate policy. ';
+      html += 'The challenge now is maintenance and equity: ensuring the gains reach everyone, not just the early adopters. History shows that even successful systems can calcify into new forms of exclusion.';
+    } else if(score >= 60) {
+      html += 'There\u2019s real momentum, but the job isn\u2019t finished. The gains to date are meaningful but fragile \u2014 a recession, a political reversal, or a climate shock could stall the recovery. ';
+      html += 'The priority is acceleration: deepen the dividend, expand the charter, increase climate capex, and invest in the communities that haven\u2019t felt the benefits yet. Every year of sustained effort compounds.';
+    } else if(score >= 40) {
+      html += 'This is the critical juncture. The score of '+score+' is survivable but not sustainable. Without a course correction in the next 5\u201310 years, structural decline becomes self-reinforcing. ';
+      html += 'The interventions needed are known \u2014 civic dividends, AI governance, climate investment, institutional transparency. The question is whether the political will exists to implement them before the window closes.';
+    } else if(score >= 20) {
+      html += 'Recovery is still possible, but it would require a mobilization unlike anything seen in peacetime. Every lever would need to be pulled simultaneously: emergency dividend deployment, mandatory AI charter, crash climate investment, radical institutional transparency. ';
+      html += 'The longer the delay, the more extreme the intervention required \u2014 and the less likely it is to arrive in time.';
+    } else {
+      html += 'At this point, the conversation shifts from prevention to resilience. How do communities survive cascading institutional failure? How do people maintain solidarity when every system designed to coordinate collective action has broken down? ';
+      html += 'History offers few models for recovering from this depth of systemic crisis. The ones that exist required decades and extraordinary leadership. That leadership has yet to emerge.';
+    }
+    html += '</p></div>';
+
+    /* ── By the numbers (compact reference) ── */
+    html += '<div style="border-top:1px solid var(--border);padding:24px 0">';
+    html += '<p class="t3" style="margin-bottom:12px">By the Numbers</p>';
+    html += '<div class="grid grid-5">';
+    var nums = [
+      {label:'Inequality (GINI)', val:gini.toFixed(3), baseline:'0.385', clr:dGini<=0?'var(--green)':'var(--red)'},
+      {label:'Civic Trust', val:trust.toFixed(3), baseline:'0.432', clr:dTrust>=0?'var(--green)':'var(--red)'},
+      {label:'Emissions', val:emis.toFixed(1)+' Gt', baseline:'36.3 Gt', clr:dEmis<=0?'var(--green)':'var(--red)'},
+      {label:'Resilience', val:resil.toFixed(3), baseline:'0.355', clr:dResil>=0?'var(--green)':'var(--red)'},
+      {label:'AI Influence', val:ai.toFixed(3), baseline:'0.121', clr:s.color}
+    ];
+    nums.forEach(function(n){
+      html += '<div class="cell">';
+      html += '<p class="t4">'+n.label+'</p>';
+      html += '<p class="num-md mt-1" style="color:'+n.clr+'">'+n.val+'</p>';
+      html += '<p class="t4 mt-1" style="color:var(--text-faint)">from '+n.baseline+'</p>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+
+    document.getElementById('narr-title').textContent = s.name + ', ' + yr;
+    document.getElementById('narr-title').style.color = s.color;
+    document.getElementById('narrative-report').innerHTML = html;
+  }
+
+  /* ── Master render ── */
+  function renderSimHero(){
+    var s = SC[active];
+    var yr = currentYear;
+    var gini  = interpVal(s.gini, yr);
+    var trust = interpVal(s.trust, yr);
+    var emis  = interpVal(s.emis, yr);
+    var resil = interpVal(s.resil, yr);
+    var score = Math.round((1 - gini) * 20 + trust * 25 + Math.max(0, (36.3 - emis) / 36.3) * 25 + resil * 20 + (s.charter ? 10 : 0));
+    score = Math.max(0, Math.min(100, score));
+    var lbl = score >= 70 ? 'Recovery trajectory' : score >= 50 ? 'Under stress' : score >= 30 ? 'Systemic strain' : 'Critical failure';
+    var clr = s.color;
+    var el = document.getElementById('sim-hero-score');
+    var h = '';
+    h += '<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
+    h += '<span class="score-hero" style="color:'+clr+'">'+score+'</span>';
+    h += '<div>';
+    h += '<span class="score-sub">/100</span>';
+    h += '<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
+    h += '<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+clr+';color:'+clr+'">'+grade(score)+'</span>';
+    h += '<span class="t4" style="font-size:14px;color:var(--text-muted)">'+lbl+'</span>';
+    h += '</div>';
+    h += '</div>';
+    h += '</div>';
+    h += '<p class="body mt-3">Composite trajectory score under <strong style="color:'+clr+'">'+s.name+'</strong> at year '+yr+'. Derived from inequality, trust, emissions, resilience, and governance metrics.</p>';
+    el.innerHTML = h;
+  }
+
+  function render(){
+    updateScenarioBar('#scenario-bar', active, SCENARIOS);
+    updateSliderDisplays();
+    document.getElementById('val-year').textContent = currentYear;
+    renderSimHero();
+    renderDashboardMetrics();
+    generateNarrative();
+    renderTrajectories();
+    renderScenarios();
+  }
+
+  /* ── Event: sliders change ── */
+  function onPolicyChange(){
+    active = resolveScenario();
+    render();
+  }
+
+  document.getElementById('sl-dividend').addEventListener('input', onPolicyChange);
+  document.getElementById('sl-capex').addEventListener('input', onPolicyChange);
+  document.getElementById('sl-reskill').addEventListener('input', onPolicyChange);
+  document.getElementById('sl-transparency').addEventListener('input', onPolicyChange);
+  document.getElementById('btn-charter-on').addEventListener('click', function(){
+    charter = true; onPolicyChange();
+  });
+  document.getElementById('btn-charter-off').addEventListener('click', function(){
+    charter = false; onPolicyChange();
+  });
+
+  /* Year scrubber */
+  document.getElementById('sl-year').addEventListener('input', function(){
+    currentYear = +this.value;
+    render();
+  });
+
+  /* Scenario bar clicks override sliders to match scenario */
+  initScenarioSelector('#scenario-bar', function(id){
+    active = id;
+    var s = SC[id];
+    document.getElementById('sl-dividend').value = s.div;
+    document.getElementById('sl-capex').value = s.capex;
+    document.getElementById('sl-reskill').value = s.reskill;
+    document.getElementById('sl-transparency').value = s.transparency;
+    charter = s.charter;
+    render();
+  });
+
+  /* Section nav */
+  initSectionNav('#nav-tabs', 'sec-', 'dashboard');
+
+  /* Init */
+  render();
+  document.getElementById('page-footer').innerHTML = renderFooter();
+
+})();
+</script>
+</body>
+</html>

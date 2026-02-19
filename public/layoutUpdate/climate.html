@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClimateOS — Climate Futures 2026-2050</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260218">
+</head>
+<body>
+
+<!-- ============================================================
+     MASTHEAD
+     ============================================================ -->
+<div class="masthead">
+  <div class="page masthead-inner">
+    <span class="masthead-breadcrumb"><a href="index.html">AI Civ Sim</a> / ClimateOS &mdash; 2026</span>
+    <h1 class="t2-xl mt-3">Climate Futures</h1>
+    <p class="body mt-2">Four policy scenarios modeled across eight planetary metrics from 2026 to 2050. Every number is a lever; every scenario a possible world.</p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SITE NAV
+     ============================================================ -->
+<nav class="site-nav"><div class="page">
+  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
+  <div class="site-nav-inner">
+    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="about.html">About</a>
+  </div>
+</div></nav>
+<div class="mobile-nav-backdrop"></div>
+
+<!-- ============================================================
+     CONTROL BAR
+     ============================================================ -->
+<div class="control-bar" id="control-bar">
+  <div class="page">
+    <div class="control-bar-inner">
+      <div class="nav-tabs" id="nav-tabs">
+        <button class="nav-tab active" data-section="overview">Overview</button>
+        <button class="nav-tab" data-section="scenarios">Scenarios</button>
+        <button class="nav-tab" data-section="biodiversity">Biodiversity</button>
+        <button class="nav-tab" data-section="energy">Energy &amp; Emissions</button>
+        <button class="nav-tab" data-section="resources">Resources</button>
+        <button class="nav-tab" data-section="tipping">Tipping Points</button>
+      </div>
+      <div class="scenario-bar" id="scenario-bar">
+        <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
+        <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
+        <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
+        <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<main class="page">
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: OVERVIEW
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-overview">
+    <div class="section">
+      <span class="section-num">01</span>
+      <h2 class="t2">Today&rsquo;s Climate Score</h2>
+      <hr class="rule">
+      <div id="today-score"></div>
+    </div>
+
+    <div class="section">
+      <span class="section-num">02</span>
+      <h2 class="t2">2050 Projection &mdash; <span id="ov-scenario-label">Aggressive</span></h2>
+      <hr class="rule">
+      <div class="grid grid-2 mt-4" id="projection-grid"></div>
+      <div class="mt-6" id="ov-narrative"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: SCENARIOS (was Comparison)
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-scenarios" style="display:none">
+    <div class="section">
+      <span class="section-num">03</span>
+      <h2 class="t2">Scenario Comparison</h2>
+      <hr class="rule">
+      <div class="grid grid-2 mt-4" id="comparison-grid"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: BIODIVERSITY
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-biodiversity" style="display:none">
+    <div class="section">
+      <span class="section-num">04</span>
+      <h2 class="t2">Biodiversity &amp; Ecosystems &mdash; <span id="bio-scenario-label">Aggressive</span></h2>
+      <hr class="rule">
+      <div id="bio-today-score"></div>
+      <p class="body mt-3" id="bio-desc"></p>
+      <div class="grid grid-2 mt-4" id="biodiversity-sparklines"></div>
+      <div class="grid grid-2 mt-4" id="biodiversity-comparison"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: ENERGY & EMISSIONS
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-energy" style="display:none">
+    <div class="section">
+      <span class="section-num">05</span>
+      <h2 class="t2">Energy &amp; Emissions &mdash; <span id="energy-scenario-label">Aggressive</span></h2>
+      <hr class="rule">
+      <div id="energy-today-score"></div>
+      <p class="body mt-3" id="energy-desc"></p>
+      <div class="grid grid-2 mt-4" id="energy-sparklines"></div>
+      <div class="mt-4" id="energy-comparison"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: RESOURCES
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-resources" style="display:none">
+    <div class="section">
+      <span class="section-num">06</span>
+      <h2 class="t2">Resource Security &mdash; <span id="res-scenario-label">Aggressive</span></h2>
+      <hr class="rule">
+      <div id="res-today-score"></div>
+      <p class="body mt-3" id="res-desc"></p>
+      <div class="grid grid-2 mt-4" id="resources-sparklines"></div>
+      <div class="mt-4" id="resources-comparison"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION: TIPPING POINTS
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-tipping" style="display:none">
+    <div class="section">
+      <span class="section-num">07</span>
+      <h2 class="t2">Tipping Points</h2>
+      <hr class="rule">
+      <p class="body mt-3">Critical thresholds in the Earth system. Once crossed, these feedbacks become self-reinforcing and largely irreversible on human timescales.</p>
+      <div class="mt-6" id="tipping-list"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<div id="page-footer"></div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="js/shared.js?v=20260218"></script>
+<script>
+(function(){
+
+  /* ── Interpolation helper ── */
+  function interp(start,end,n,curve){
+    n=n||25;curve=curve||1;
+    var a=[];
+    for(var i=0;i<n;i++) a.push(+(start+(end-start)*Math.pow(i/(n-1),curve)).toFixed(2));
+    return a;
+  }
+
+  /* ── Scenarios ── */
+  var scenarios=[
+    {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
+    {id:'moderate',  name:'Moderate',  color:'#5da5da'},
+    {id:'bau',       name:'BAU',       color:'#e8a838'},
+    {id:'worst',     name:'Worst Case',color:'#d4622a'}
+  ];
+  var scColors={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
+  var active='aggressive';
+
+  /* ── Climate Data (25 pts, 2026-2050) ── */
+  var D={
+    temp:{
+      aggressive:[1.1,1.12,1.14,1.15,1.16,1.17,1.18,1.18,1.19,1.19,1.2,1.2,1.2,1.2,1.2,1.2,1.19,1.19,1.18,1.18,1.17,1.16,1.15,1.14,1.13],
+      moderate:  interp(1.1,1.79,25,1.1),
+      bau:       interp(1.1,2.95,25,1.3),
+      worst:     interp(1.1,4.6,25,1.5)
+    },
+    sea:{
+      aggressive:interp(0,49,25,1.8),
+      moderate:  interp(0,136,25,1.8),
+      bau:       interp(0,332,25,2.0),
+      worst:     interp(0,1072,25,2.2)
+    },
+    co2:{
+      aggressive:interp(421,366,25,0.7),
+      moderate:  interp(421,395,25,0.8),
+      bau:       interp(421,551,25,1.3),
+      worst:     interp(421,790,25,1.5)
+    },
+    biodiversity:{
+      aggressive:interp(100,125,25,0.8),
+      moderate:  interp(100,94,25,1.2),
+      bau:       interp(100,52,25,1.4),
+      worst:     interp(100,19,25,1.6)
+    },
+    renewable:{
+      aggressive:interp(30,99,25,0.6),
+      moderate:  interp(30,88,25,0.7),
+      bau:       interp(30,64,25,1.2),
+      worst:     interp(30,42,25,1.4)
+    },
+    crop:{
+      aggressive:interp(100,123,25,0.8),
+      moderate:  interp(100,102,25,1.0),
+      bau:       interp(100,69,25,1.4),
+      worst:     interp(100,30,25,1.6)
+    },
+    water:{
+      aggressive:interp(26,15,25,0.8),
+      moderate:  interp(26,25,25,1.0),
+      bau:       interp(26,56,25,1.3),
+      worst:     interp(26,88,25,1.5)
+    },
+    forest:{
+      aggressive:interp(31,42.3,25,0.7),
+      moderate:  interp(31,35.3,25,0.9),
+      bau:       interp(31,21.3,25,1.2),
+      worst:     interp(31,8.5,25,1.4)
+    }
+  };
+
+  /* ── Metric metadata ── */
+  var metrics=[
+    {id:'temp', label:'Temperature Rise', unit:'\u00b0C', prefix:'+', baseline:1.1, dec:2, dir:'lower',
+     notes:{
+       aggressive:'Under aggressive action, warming peaks at +1.2\u00b0C then declines to +1.13\u00b0C by 2050 \u2014 the only pathway that stays below 1.5\u00b0C. Deep decarbonization and carbon capture bend the curve.',
+       moderate:'Moderate reform limits warming to +1.79\u00b0C by 2050. Above the 1.5\u00b0C target but below 2\u00b0C. Adaptation is required for the overshoot period.',
+       bau:'Business as usual pushes warming to +2.95\u00b0C by 2050. Multiple tipping points come into range. Severe impacts on agriculture, water, and coastal infrastructure.',
+       worst:'Worst case reaches +4.6\u00b0C by 2050. Catastrophic and largely irreversible. Large parts of the tropics become uninhabitable.'}},
+    {id:'sea', label:'Sea Level Rise', unit:'mm', prefix:'+', baseline:0, dec:0, dir:'lower',
+     notes:{
+       aggressive:'Sea levels rise only +49mm by 2050 under aggressive action. Ice sheet stabilization and thermal expansion limits keep coastal impacts manageable.',
+       moderate:'Moderate reform sees +136mm rise \u2014 manageable with investment in coastal defenses but already threatening low-lying nations.',
+       bau:'+332mm rise by 2050 under business as usual. Major coastal cities face regular flooding. Hundreds of millions displaced.',
+       worst:'Over 1 meter of rise by 2050. Catastrophic for coastal populations. Small island nations face existential threat.'}},
+    {id:'co2', label:'CO\u2082 Concentration', unit:'ppm', prefix:'', baseline:421, dec:0, dir:'lower',
+     notes:{
+       aggressive:'CO\u2082 drops from 421 to 366 ppm by 2050 through aggressive decarbonization and carbon removal \u2014 the first sustained decline in human history.',
+       moderate:'CO\u2082 stabilizes around 395 ppm. No longer rising but not declining either. Carbon removal insufficient to draw down the existing stock.',
+       bau:'CO\u2082 climbs to 551 ppm under business as usual, locking in dangerous warming for centuries.',
+       worst:'CO\u2082 reaches 708 ppm \u2014 nearly double pre-industrial levels. Earth system feedbacks begin releasing additional carbon autonomously.'}},
+    {id:'biodiversity', label:'Biodiversity Index', unit:'', prefix:'', baseline:100, dec:0, dir:'higher',
+     notes:{
+       aggressive:'Biodiversity index recovers to 125 by 2050. Habitat restoration at unprecedented scale, rewilding corridors reconnecting fragmented ecosystems. The extinction rate begins declining.',
+       moderate:'Index stabilizes at 94 \u2014 decline slowed but not reversed. Protected areas expand but fragmentation persists.',
+       bau:'Index falls to 52 \u2014 nearly half of baseline biodiversity lost. Ecosystem services degraded. Pollinator collapse threatens agriculture.',
+       worst:'Index crashes to 19. Mass extinction event underway. Functional collapse of terrestrial and marine ecosystems.'}},
+    {id:'renewable', label:'Renewable Share', unit:'%', prefix:'', baseline:30, dec:0, dir:'higher',
+     notes:{
+       aggressive:'Renewable energy reaches 99% of generation by 2050. Complete phase-out of fossil fuels for electricity. Grid storage solves intermittency.',
+       moderate:'88% renewable by 2050. Most fossil generation replaced but residual gas and industrial heat remain.',
+       bau:'Only 42% renewable by 2050. Coal and gas persist due to lack of policy pressure and stranded asset inertia.',
+       worst:'25% renewable \u2014 the transition has stalled. Fossil fuel interests maintain market dominance as institutional capacity collapses.'}},
+    {id:'crop', label:'Crop Yield Index', unit:'', prefix:'', baseline:100, dec:0, dir:'higher',
+     notes:{
+       aggressive:'Crop yields rise to 116 \u2014 climate-adaptive agriculture, reduced heat stress, and CO\u2082 fertilization boost production.',
+       moderate:'Yields hold at 96 \u2014 near baseline but increasingly dependent on irrigation and soil management.',
+       bau:'Yields fall to 69 \u2014 heat stress, water scarcity, and extreme weather drive a 31% decline. Food price volatility becomes the norm.',
+       worst:'Yields crash to 30 \u2014 agricultural systems fail across major breadbaskets. Widespread food insecurity and famine.'}},
+    {id:'water', label:'Water Stress', unit:'%', prefix:'', baseline:26, dec:0, dir:'lower',
+     notes:{
+       aggressive:'Water stress drops to 15% \u2014 conservation, desalination, and reduced thermal demand cut population exposure nearly in half.',
+       moderate:'Water stress holds at 28% \u2014 roughly flat. Efficiency gains offset rising demand from population growth.',
+       bau:'Water stress doubles to 52% under business as usual. Half the global population faces chronic water shortages.',
+       worst:'73% water-stressed by 2050. Aquifer depletion, glacial loss, and altered precipitation patterns create cascading crises.'}},
+    {id:'forest', label:'Forest Cover', unit:'%', prefix:'', baseline:31, dec:1, dir:'higher',
+     notes:{
+       aggressive:'Forest cover expands to 42.3% through massive reforestation, agroforestry, and deforestation bans. Carbon sink capacity grows substantially.',
+       moderate:'Forest cover reaches 35.3% \u2014 modest gains from targeted reforestation but ongoing pressure from agriculture.',
+       bau:'Forest cover declines to 21.3% \u2014 continued deforestation for agriculture and development. Amazon tipping point at risk.',
+       worst:'Only 8.5% forest cover remains. Widespread deforestation plus climate-driven dieback. The Amazon has flipped from carbon sink to source.'}}
+  ];
+
+  /* ── Scenario narratives ── */
+  var narratives={
+    aggressive:'Under Aggressive Action, the planet in 2050 is on a recovery trajectory. Temperature has stabilized and is beginning to decline. CO\u2082 is falling. Forests are expanding. Biodiversity is recovering. The energy transition is complete. Every tipping point has been avoided. This future requires unprecedented coordination but is physically and economically achievable.',
+    moderate:'Moderate reform limits warming to +1.79\u00b0C. CO\u2082 stabilizes but doesn\u2019t decline. Biodiversity loss slows. The energy transition reaches 88%. Meaningful progress, but several tipping-point thresholds remain within range.',
+    bau:'Business-as-usual pushes warming past +2.95\u00b0C by 2050. CO\u2082 climbs to 551 ppm, crop yields fall 31%, water stress doubles. Multiple planetary tipping points are likely breached.',
+    worst:'Under worst-case emissions, warming reaches +4.6\u00b0C. Sea levels rise over a meter, crop yields crash to 30% of baseline. Catastrophic, cascading tipping points become virtually certain.'
+  };
+
+  /* ── Tipping points data ── */
+  var tippingPoints=[
+    {name:'Amazon Rainforest Dieback',threshold:'+2.5\u00b0C',risk:'high',riskColor:'#e8a838',
+     desc:'Prolonged drought and rising temperatures convert large swathes of the Amazon from carbon sink to carbon source. Feedback loops accelerate regional drying and global CO\u2082 release.'},
+    {name:'West Antarctic Ice Sheet Collapse',threshold:'+1.5 \u2013 2\u00b0C',risk:'critical',riskColor:'#d4622a',
+     desc:'Marine ice-sheet instability triggers irreversible grounding-line retreat. Commits 3\u20135 meters of long-term sea level rise over centuries.'},
+    {name:'Permafrost Carbon Release',threshold:'+1.5\u00b0C',risk:'critical',riskColor:'#d4622a',
+     desc:'Thawing permafrost releases methane and CO\u2082 stored for millennia. Acts as an amplifying feedback, adding 0.1\u20130.3\u00b0C of additional warming by 2100.'},
+    {name:'Atlantic Meridional Overturning',threshold:'Freshwater threshold',risk:'high',riskColor:'#e8a838',
+     desc:'Greenland melt and altered precipitation weaken the AMOC, disrupting heat transport. Northern Europe cools while tropics overheat; monsoon patterns shift.'},
+    {name:'Boreal Forest Shift',threshold:'+3\u00b0C',risk:'moderate',riskColor:'#5da5da',
+     desc:'Warming pushes the boreal treeline northward while southern margins succumb to wildfire and drought. Net carbon balance flips negative at high warming.'},
+    {name:'Coral Reef Die-Off',threshold:'+1.5\u00b0C',risk:'critical',riskColor:'#d4622a',
+     desc:'Mass bleaching events become annual above +1.5\u00b0C. Functional extinction of tropical coral reefs eliminates habitat for 25% of marine species and coastal protection for 500 million people.'}
+  ];
+
+  /* ── Climate domains — today + per-scenario projected ── */
+  var CLIMATE_DOMAINS=[
+    {name:'Temperature Control', today:58, color:'#4ecdc4',
+     todayDetail:'+1.1\u00b0C of 1.5\u00b0C budget used',
+     projected:{aggressive:92, moderate:68, bau:35, worst:15},
+     details:{aggressive:'Warming held to +1.13\u00b0C \u2014 below 1.5\u00b0C target',moderate:'Warming limited to +1.79\u00b0C \u2014 above target but manageable',bau:'Warming reaches +2.95\u00b0C \u2014 dangerous overshoot',worst:'Warming hits +4.6\u00b0C \u2014 catastrophic'}},
+    {name:'Emissions', today:32, color:'#d4622a',
+     todayDetail:'36.3 Gt/yr \u2014 need <25 Gt by 2030',
+     projected:{aggressive:95, moderate:60, bau:22, worst:8},
+     details:{aggressive:'Emissions fall to 6.7 Gt \u2014 deep decarbonization achieved',moderate:'Emissions stabilize at ~18 Gt \u2014 insufficient but improving',bau:'Emissions rise to 42 Gt \u2014 no meaningful reduction',worst:'Emissions soar to 55+ Gt \u2014 runaway trajectory'}},
+    {name:'Energy Transition', today:45, color:'#5da5da',
+     todayDetail:'~30% of global electricity from renewables',
+     projected:{aggressive:96, moderate:72, bau:38, worst:18},
+     details:{aggressive:'99% renewable \u2014 energy transition complete',moderate:'88% renewable \u2014 fossil holdouts remain',bau:'42% renewable \u2014 slow progress',worst:'25% renewable \u2014 transition stalled'}},
+    {name:'Biodiversity', today:40, color:'#4ecdc4',
+     todayDetail:'Index 100, declining corridor coverage',
+     projected:{aggressive:88, moderate:58, bau:20, worst:8},
+     details:{aggressive:'Index 125 \u2014 ecosystem recovery underway, corridors expanding',moderate:'Index 94 \u2014 decline slowed, partial stabilization',bau:'Index 52 \u2014 ongoing biodiversity loss',worst:'Index 19 \u2014 mass extinction accelerating'}},
+    {name:'Ocean Health', today:35, color:'#9b87f5',
+     todayDetail:'pH 8.07, 50% coral under stress',
+     projected:{aggressive:80, moderate:52, bau:18, worst:6},
+     details:{aggressive:'pH stabilized, coral recovery beginning',moderate:'Acidification slowed, 60% coral degraded',bau:'pH 7.95, most coral reefs functionally extinct',worst:'pH below 7.9, marine ecosystem collapse'}},
+    {name:'Resource Security', today:42, color:'#e8a838',
+     todayDetail:'26% water-stressed, 30% food waste',
+     projected:{aggressive:85, moderate:62, bau:25, worst:10},
+     details:{aggressive:'Water stress halved, food systems resilient',moderate:'Water stress stable, partial food system reform',bau:'40% water-stressed, crop yields falling',worst:'60% water-stressed, widespread food insecurity'}}
+  ];
+  var PROJECTED_SCORE={aggressive:88, moderate:62, bau:28, worst:12};
+  var PROJECTED_GRADE={aggressive:'A\u2212', moderate:'C+', bau:'F', worst:'F'};
+
+  var BIO_SCORE={today:38, projected:{aggressive:82, moderate:55, bau:22, worst:10}};
+  var ENERGY_SCORE={today:45, projected:{aggressive:90, moderate:64, bau:30, worst:14}};
+  var RES_SCORE={today:42, projected:{aggressive:85, moderate:60, bau:26, worst:11}};
+
+  /* ── Helpers ── */
+  function scName(id){ var s=scenarios.find(function(x){return x.id===id}); return s?s.name:id; }
+  function last(arr){ return arr[arr.length-1]; }
+  function fmtV(val,m){ return (m.prefix||'')+val.toFixed(m.dec)+' '+m.unit; }
+  function dirLabel(m,val){
+    if(m.dir==='lower')  return val<m.baseline?'better':'worse';
+    return val>m.baseline?'better':'worse';
+  }
+  function dirClr(m,val){
+    if(m.dir==='lower')  return val<=m.baseline?'var(--green)':'var(--red)';
+    return val>=m.baseline?'var(--green)':'var(--red)';
+  }
+  function trendArrow(t){ return t==='up'?'\u2191':t==='down'?'\u2193':'\u2192'; }
+  function trendCls(t){ return t==='up'?'delta delta-up':t==='down'?'delta delta-down':'delta delta-flat'; }
+  function metricById(id){ return metrics.find(function(m){return m.id===id}); }
+
+  /* ── Render: Today's Climate Score ── */
+  function renderTodayScore(){
+    var el=document.getElementById('today-score');
+    var compositeToday=42;
+    var projScore=PROJECTED_SCORE[active];
+    var projClr=gClr(projScore);
+
+    var html='';
+
+    /* Today's score */
+    var cClr=gClr(compositeToday);
+    html+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
+    html+='<span class="score-hero" style="color:'+cClr+'">'+compositeToday+'</span>';
+    html+='<div>';
+    html+='<span class="score-sub">/100</span>';
+    html+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
+    html+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+cClr+';color:'+cClr+'">'+grade(compositeToday)+'</span>';
+    html+='<span class="delta delta-down" style="font-size:13px">declining</span>';
+    html+='</div>';
+    html+='</div>';
+    html+='</div>';
+
+    html+='<p class="body mt-3">A composite assessment of Earth\u2019s climate health across 6 domains, graded on current data (2026 baseline). Overall trend: declining.</p>';
+    html+='<p class="t4 mt-2" style="color:var(--text-muted)">If trends continue: <span style="color:#d4622a">F (28/100)</span> by 2050</p>';
+
+    /* Projected score */
+    html+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
+    html+='<span class="t3">Projected 2050 ('+scName(active)+'):</span> ';
+    html+='<span class="score-projected" style="color:'+projClr+'">'+projScore+'</span>';
+    html+='<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
+    html+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+projClr+';color:'+projClr+'">'+grade(projScore)+'</span>';
+    html+='</div>';
+
+    /* Domain cards — show projected values under active scenario */
+    html+='<div class="grid grid-3 mt-6">';
+    CLIMATE_DOMAINS.forEach(function(d){
+      var sc=d.projected[active];
+      var clr=gClr(sc);
+      var todayClr=gClr(d.today);
+      var trend=sc>d.today?'up':sc<d.today?'down':'flat';
+      var detail=d.details[active];
+      html+='<div class="cell">';
+      html+='<span class="t3">'+d.name+'</span>';
+      html+='<div class="num-lg mt-2" style="color:'+clr+'">'+sc+'<span class="t4" style="margin-left:4px;color:var(--text-faint)">/ 100</span></div>';
+      html+='<div class="flex gap-4 items-baseline mt-1">';
+      html+='<span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(sc)+'</span>';
+      html+='<span class="'+trendCls(trend)+'">'+trendArrow(trend)+' vs today</span>';
+      html+='</div>';
+      html+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+sc+'%;background:'+clr+'"></div></div>';
+      html+='<p class="t4 mt-2" style="color:var(--text-secondary)">'+detail+'</p>';
+      html+='<p class="t4 mt-1" style="color:var(--text-faint)">Today: '+d.today+'/100 ('+grade(d.today)+')</p>';
+      html+='</div>';
+    });
+    html+='</div>';
+
+    el.innerHTML=html;
+  }
+
+  /* ── Render: Overview projections ── */
+  function renderProjections(){
+    var el=document.getElementById('projection-grid');
+    var html='';
+    metrics.forEach(function(m){
+      var ds={};
+      scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
+      html+='<div class="cell">'
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:140})
+        +'</div>';
+    });
+    el.innerHTML=html;
+  }
+
+  /* ── Render: Climate narrative ── */
+  function renderClimateNarrative(){
+    document.getElementById('ov-narrative').innerHTML=
+      '<blockquote class="pullquote">'+narratives[active]+'</blockquote>';
+  }
+
+  /* ── Render: Scenario comparison (all metrics) ── */
+  function renderComparison(){
+    var el=document.getElementById('comparison-grid');
+    var html='';
+    metrics.forEach(function(m){
+      var ds={};
+      scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
+      html+='<div class="cell">'
+        +'<span class="t3" style="margin-bottom:8px;display:block">'+m.label+'</span>'
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +'</div>';
+    });
+    el.innerHTML=html;
+  }
+
+  /* ── Render: Sub-section today scores ── */
+  function renderSubScore(elId,label,scoreObj,domains){
+    var el=document.getElementById(elId);
+    if(!el) return;
+    var ps=scoreObj.projected[active];
+    var pClr=gClr(ps);
+    var h='';
+
+    h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:16px;margin-bottom:16px">';
+    h+='<span class="score-hero" style="color:'+pClr+'">'+ps+'</span>';
+    h+='<div>';
+    h+='<span class="score-sub">/100</span>';
+    h+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
+    h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+pClr+';color:'+pClr+'">'+grade(ps)+'</span>';
+    h+='<span class="t4" style="font-size:13px;color:var(--text-muted)">2050 under '+scName(active)+'</span>';
+    h+='</div>';
+    h+='</div>';
+    h+='</div>';
+
+    if(domains&&domains.length){
+      h+='<div class="grid grid-'+Math.min(domains.length,3)+' mt-4 mb-4">';
+      domains.forEach(function(d){
+        var sc=d.projected[active];
+        var clr=gClr(sc);
+        var todayClr=gClr(d.today);
+        var trend=sc>d.today?'up':sc<d.today?'down':'flat';
+        var detail=d.details[active];
+        h+='<div class="cell">';
+        h+='<span class="t3">'+d.name+'</span>';
+        h+='<div class="num-lg mt-2" style="color:'+clr+'">'+sc+'<span class="t4" style="margin-left:4px;color:var(--text-faint)">/ 100</span></div>';
+        h+='<div class="flex gap-4 items-baseline mt-1">';
+        h+='<span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(sc)+'</span>';
+        h+='<span class="'+trendCls(trend)+'">'+trendArrow(trend)+'</span>';
+        h+='</div>';
+        h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+sc+'%;background:'+clr+'"></div></div>';
+        h+='<p class="t4 mt-2" style="color:var(--text-secondary)">'+detail+'</p>';
+        h+='<p class="t4 mt-1" style="color:var(--text-faint)">Today: '+d.today+'/100 ('+grade(d.today)+')</p>';
+        h+='</div>';
+      });
+      h+='</div>';
+    }
+    el.innerHTML=h;
+  }
+
+  function renderBioScore(){
+    renderSubScore('bio-today-score','Biodiversity & Ecosystems',BIO_SCORE,[
+      CLIMATE_DOMAINS[3],
+      CLIMATE_DOMAINS[4]
+    ]);
+  }
+  function renderEnergyScore(){
+    renderSubScore('energy-today-score','Energy & Emissions',ENERGY_SCORE,[
+      CLIMATE_DOMAINS[0],
+      CLIMATE_DOMAINS[1],
+      CLIMATE_DOMAINS[2]
+    ]);
+  }
+  function renderResScore(){
+    renderSubScore('res-today-score','Resource Security',RES_SCORE,[
+      CLIMATE_DOMAINS[5]
+    ]);
+  }
+
+  /* ── Render: Biodiversity tab ── */
+  function renderBiodiversity(){
+    var bioMetrics=['biodiversity','forest'];
+    var el=document.getElementById('biodiversity-sparklines');
+    var html='';
+    bioMetrics.forEach(function(id){
+      var m=metricById(id);
+      if(!m) return;
+      var ds={};
+      scenarios.forEach(function(s){ ds[s.id]=D[id][s.id]; });
+      html+='<div class="cell">'
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +'</div>';
+    });
+    el.innerHTML=html;
+    document.getElementById('biodiversity-comparison').innerHTML='';
+  }
+
+  /* ── Render: Energy & Emissions tab ── */
+  function renderEnergy(){
+    var energyMetrics=['temp','co2','renewable'];
+    var el=document.getElementById('energy-sparklines');
+    var html='';
+    energyMetrics.forEach(function(id,i){
+      var m=metricById(id);
+      if(!m) return;
+      var ds={};
+      scenarios.forEach(function(s){ ds[s.id]=D[id][s.id]; });
+      var span=(i===energyMetrics.length-1 && energyMetrics.length%2===1)?' style="grid-column:1/-1"':'';
+      html+='<div class="cell"'+span+'>'
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +'</div>';
+    });
+    el.innerHTML=html;
+    document.getElementById('energy-comparison').innerHTML='';
+  }
+
+  /* ── Render: Resources tab ── */
+  function renderResources(){
+    var resMetrics=['crop','water','sea'];
+    var el=document.getElementById('resources-sparklines');
+    var html='';
+    resMetrics.forEach(function(id,i){
+      var m=metricById(id);
+      if(!m) return;
+      var ds={};
+      scenarios.forEach(function(s){ ds[s.id]=D[id][s.id]; });
+      var span=(i===resMetrics.length-1 && resMetrics.length%2===1)?' style="grid-column:1/-1"':'';
+      html+='<div class="cell"'+span+'>'
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
+        +'</div>';
+    });
+    el.innerHTML=html;
+    document.getElementById('resources-comparison').innerHTML='';
+  }
+
+  /* ── Render: Tipping points ── */
+  function renderTipping(){
+    var el=document.getElementById('tipping-list');
+    var tempEnd=last(D.temp[active]);
+    var html='';
+    tippingPoints.forEach(function(tp,i){
+      html+='<div style="padding:20px 0;border-top:1px solid var(--border)">'
+        +'<div class="flex justify-between items-start">'
+        +'<div>'
+        +'<span class="t2-lg">'+tp.name+'</span>'
+        +'<div class="flex gap-8 items-center mt-2">'
+        +'<span class="t3">Threshold: '+tp.threshold+'</span>'
+        +'<span class="tag" style="border-color:'+tp.riskColor+';color:'+tp.riskColor+'">'+tp.risk+'</span>'
+        +'</div>'
+        +'</div>'
+        +'</div>'
+        +'<p class="body mt-3">'+tp.desc+'</p>'
+        +'</div>';
+    });
+    el.innerHTML=html;
+  }
+
+  /* ── Master render ── */
+  var TAB_DESC={
+    bio:{aggressive:'Under aggressive action, biodiversity recovers to 125% of baseline by 2050. Rewilding corridors expand, forest cover grows to 42%, and ecosystem restoration reverses decades of decline.',
+         moderate:'Moderate reform slows biodiversity loss. The index stabilizes near 94, forest cover grows slightly, but fragmentation and habitat pressure persist.',
+         bau:'Under business as usual, biodiversity falls to 52% of baseline. Deforestation continues, corridors shrink, and ecosystem services degrade across major biomes.',
+         worst:'Worst case sees biodiversity collapse to 19% of baseline. Mass extinction accelerates, forests shrink to 8.5%, and ecosystem function fails.'},
+    energy:{aggressive:'Aggressive decarbonization transforms the energy system. Temperature peaks at +1.2\u00b0C then declines, CO\u2082 drops to 366 ppm, and renewables reach 99% of generation.',
+            moderate:'Moderate policy limits warming to +1.79\u00b0C. CO\u2082 stabilizes around 395 ppm and renewables reach 88%. Progress is real but insufficient to avoid all tipping points.',
+            bau:'Without policy change, warming reaches +2.95\u00b0C, CO\u2082 climbs to 551 ppm, and renewables stall at 42%. Multiple dangerous thresholds are crossed.',
+            worst:'Under worst-case emissions, warming hits +4.6\u00b0C, CO\u2082 reaches 708 ppm, and the energy transition stalls at 25%. Catastrophic and largely irreversible.'},
+    res:{aggressive:'Aggressive climate action secures resources: crop yields rise 16%, water stress drops to 15%, and sea level rise is held to just 49mm.',
+         moderate:'Moderate reform keeps resource security roughly stable. Crop yields hold near baseline but water stress persists and sea levels rise 136mm.',
+         bau:'Business as usual threatens resource security: crop yields fall 31%, water stress doubles to 52%, and sea levels rise 332mm by 2050.',
+         worst:'Worst case devastates resources: crop yields crash 70%, 73% water-stressed, sea levels rise over 1 meter. Global supply chains fracture.'}
+  };
+
+  function render(){
+    document.getElementById('ov-scenario-label').textContent=scName(active);
+    document.getElementById('bio-scenario-label').textContent=scName(active);
+    document.getElementById('energy-scenario-label').textContent=scName(active);
+    document.getElementById('res-scenario-label').textContent=scName(active);
+    document.getElementById('bio-desc').textContent=TAB_DESC.bio[active];
+    document.getElementById('energy-desc').textContent=TAB_DESC.energy[active];
+    document.getElementById('res-desc').textContent=TAB_DESC.res[active];
+    updateScenarioBar('#scenario-bar',active,scenarios);
+    renderTodayScore();
+    renderProjections();
+    renderClimateNarrative();
+    renderComparison();
+    renderBioScore();
+    renderBiodiversity();
+    renderEnergyScore();
+    renderEnergy();
+    renderResScore();
+    renderResources();
+    renderTipping();
+  }
+
+  /* ── Init ── */
+  initSectionNav('#nav-tabs','sec-','overview');
+  initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
+  render();
+
+  document.getElementById('page-footer').innerHTML=renderFooter();
+
+})();
+</script>
+</body>
+</html>

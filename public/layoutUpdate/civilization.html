@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CivilizationOS — AI Civilization Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260218">
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+<div class="page masthead-inner">
+  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / CivilizationOS</p>
+  <p class="t3" style="color:#e8a838;letter-spacing:0.3em;margin-bottom:8px">CIVILIZATIONOS &mdash; 2026</p>
+  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">Civilization Health Index</h1>
+  <p class="body mt-3" style="max-width:480px">Aggregate civilizational score across six interconnected domains. Scenario-aware projections from 2026 through 2035 with civic dividend modeling.</p>
+  <hr class="rule">
+</div>
+</header>
+
+<!-- SITE NAV -->
+<nav class="site-nav"><div class="page">
+  <button class="mobile-nav-toggle" aria-label="Toggle navigation"><span class="hamburger"><span></span><span></span><span></span></span></button>
+  <div class="site-nav-inner">
+    <a href="index.html">Home</a><a href="climate.html">ClimateOS</a><a href="simulation.html">Simulation</a><a href="transition.html">TransitionOS</a><a href="civilization.html">CivilizationOS</a><a href="governance.html">GovernanceOS</a><a href="strategy.html">StrategyOS</a><a href="about.html">About</a>
+  </div>
+</div></nav>
+<div class="mobile-nav-backdrop"></div>
+
+<!-- CONTROL BAR -->
+<div class="control-bar">
+<div class="page">
+  <div class="control-bar-inner">
+    <div class="nav-tabs" id="tabs">
+      <button class="nav-tab active" data-section="overview">Overview</button>
+      <button class="nav-tab" data-section="trajectories">Trajectories</button>
+      <button class="nav-tab" data-section="funding">Funding</button>
+      <button class="nav-tab" data-section="timeline">Timeline</button>
+    </div>
+    <div class="scenario-bar" id="scbar">
+      <button class="scenario-btn" data-sc="aggressive"><span class="dot"></span>Aggressive</button>
+      <button class="scenario-btn" data-sc="moderate"><span class="dot"></span>Moderate</button>
+      <button class="scenario-btn" data-sc="bau"><span class="dot"></span>BAU</button>
+      <button class="scenario-btn" data-sc="worst"><span class="dot"></span>Worst</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<main>
+
+<!-- ═══ OVERVIEW ═══ -->
+<div id="sec-overview">
+  <div class="section"><div class="page">
+    <span class="section-num">01</span>
+    <p class="t2">Composite Score</p>
+    <hr class="rule">
+    <div id="hero-score"></div>
+  </div></div>
+  <div class="chapter-divider"><div class="page">
+    <span class="section-num">02</span>
+    <p class="t2">Domain Breakdown</p>
+  </div></div>
+  <div class="section" style="padding-top:24px"><div class="page">
+    <div id="domain-grid"></div>
+    <div id="overview-quote" class="mt-6"></div>
+  </div></div>
+</div>
+
+<!-- ═══ TRAJECTORIES ═══ -->
+<div id="sec-trajectories" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">03</span>
+    <p class="t2">KPI Sparklines &mdash; Active Scenario</p>
+    <hr class="rule">
+    <p class="body mb-6">Each sparkline tracks a single KPI from 2026 to 2035 under the selected scenario. Upward slopes indicate improvement for higher-is-better metrics, and worsening for lower-is-better metrics.</p>
+    <div id="spark-grid"></div>
+  </div></div>
+  <div class="chapter-divider"><div class="page">
+    <span class="section-num">04</span>
+    <p class="t2">Scenario Comparisons</p>
+  </div></div>
+  <div class="section" style="padding-top:24px"><div class="page">
+    <p class="body mb-6">All four scenarios on the same axes. The active scenario is highlighted; inactive lines are dimmed. Watch for divergence points where aggressive intervention separates most sharply from inaction.</p>
+    <div id="comparison-grid"></div>
+    <div id="traj-legend" class="mt-4"></div>
+  </div></div>
+</div>
+
+<!-- ═══ FUNDING ═══ -->
+<div id="sec-funding" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">05</span>
+    <p class="t2">Civic Dividend Model</p>
+    <hr class="rule">
+    <p class="body mb-6">Funding pool size, per-capita distributions, and escalation timeline under the selected scenario. Modeled on the Alaska Permanent Fund mechanism extended to AI-generated productivity gains.</p>
+    <div id="funding-stats"></div>
+  </div></div>
+  <div class="chapter-divider"><div class="page">
+    <span class="section-num">06</span>
+    <p class="t2">Revenue Sources</p>
+  </div></div>
+  <div class="section" style="padding-top:24px"><div class="page">
+    <p class="body mb-4" id="funding-source-desc">Source allocations for the active scenario. Proportions shift under lower-investment scenarios as smaller pools attract less diversified revenue streams.</p>
+    <div id="funding-sources"></div>
+  </div></div>
+  <div class="chapter-divider"><div class="page">
+    <span class="section-num">07</span>
+    <p class="t2">Poverty Trajectory</p>
+  </div></div>
+  <div class="section" style="padding-top:24px"><div class="page">
+    <p class="body mb-4">Poverty rate (2026&ndash;2035) under all four scenarios. Civic dividend scale directly maps to poverty reduction velocity. The gap between aggressive and worst case widens from zero to 27 percentage points over nine years.</p>
+    <div id="funding-chart"></div>
+    <div id="funding-legend" class="mt-4"></div>
+  </div></div>
+</div>
+
+<!-- ═══ TIMELINE ═══ -->
+<div id="sec-timeline" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">08</span>
+    <p class="t2">Implementation Timeline</p>
+    <hr class="rule">
+    <p class="body mb-6" id="timeline-desc">Milestone phases under the active scenario. Each phase builds compounding institutional capacity. Under less ambitious scenarios, timelines extend and later phases may not be reached within the projection window.</p>
+    <div id="timeline-list"></div>
+  </div></div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+<div class="page">
+  <hr class="rule-long" style="margin-bottom:32px">
+  <div class="flex justify-between items-end flex-wrap gap-8">
+    <div>
+      <p class="t3" style="color:#e8a838;margin-bottom:8px">CIVILIZATIONOS</p>
+      <p class="t4">AI Civilization Simulator &middot; Clawcode Research &middot; 2026</p>
+    </div>
+    <div class="text-right">
+      <p class="t4" style="color:var(--text-faint)">Data: simulated projections, not real-time</p>
+      <p class="t4" style="color:var(--text-faint)">Design: Feltron-inspired editorial data report</p>
+    </div>
+  </div>
+</div>
+</footer>
+
+<script src="js/shared.js?v=20260218"></script>
+<script>
+(function(){
+var SC=[
+  {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
+  {id:'moderate',name:'Moderate',color:'#5da5da'},
+  {id:'bau',name:'Business as Usual',color:'#e8a838'},
+  {id:'worst',name:'Worst Case',color:'#d4622a'}
+];
+var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
+
+var DOMAINS=[
+  {name:'Climate',color:'#4ecdc4',today:42},
+  {name:'Governance',color:'#9b87f5',today:40},
+  {name:'Workforce',color:'#5da5da',today:43},
+  {name:'Equity',color:'#e8a838',today:38},
+  {name:'Technology',color:'#45b7d1',today:55},
+  {name:'Wellbeing',color:'#d4622a',today:45}
+];
+var PROJECTED={
+  aggressive:[88,85,82,75,80,78],
+  moderate:[62,65,63,55,62,58],
+  bau:[28,30,35,22,40,25],
+  worst:[12,10,15,8,20,10]
+};
+
+var KPI={
+  poverty:{label:'Poverty Rate',unit:'%',dir:'lower',
+    aggressive:[13,12.4,11.5,10.2,9.2,8.1,7,6.1,5.4,5],
+    moderate:[13,12.8,12.3,11.6,10.8,10.1,9.5,9,8.6,8.2],
+    bau:[13,13.2,13.5,13.9,14.4,15,15.8,16.5,17.2,18],
+    worst:[13,14,15.5,17.5,19.8,22,24.5,27,29.5,32]},
+  reskill:{label:'Avg Reskill Time',unit:' mo',dir:'lower',
+    aggressive:[18,16.5,14.5,12.5,11,9.5,8.5,7.5,6.5,6],
+    moderate:[18,17.2,16.5,15.5,14.5,13.5,12.5,12,11.2,10.5],
+    bau:[18,18.5,19,19.5,20,20.5,21,21.5,22.5,23],
+    worst:[18,20,22.5,25,27.5,29.5,31.5,33.5,36,38]},
+  emissions:{label:'Emissions per Capita',unit:' kg',dir:'lower',
+    aggressive:[0.65,0.60,0.55,0.48,0.42,0.38,0.34,0.30,0.27,0.25],
+    moderate:[0.65,0.63,0.60,0.57,0.54,0.51,0.48,0.45,0.42,0.40],
+    bau:[0.65,0.66,0.67,0.68,0.69,0.70,0.71,0.72,0.72,0.73],
+    worst:[0.65,0.69,0.73,0.78,0.83,0.88,0.92,0.95,0.98,1.00]},
+  biodiversity:{label:'Biodiversity Corridors',unit:'%',dir:'higher',
+    aggressive:[22,28,35,42,50,55,60,65,70,75],
+    moderate:[22,25,28,31,34,37,39,42,45,48],
+    bau:[22,21,20,19,18,17,16,15,14,13],
+    worst:[22,20,17,14,12,10,8,7,5,4]},
+  charter:{label:'Charter Adoption',unit:'%',dir:'higher',
+    aggressive:[10,20,32,45,58,70,80,88,95,100],
+    moderate:[10,16,22,28,35,42,48,54,60,65],
+    bau:[10,11,11.5,12,12.5,13,13.5,14,15,16],
+    worst:[10,9,8,7,6,5,4,3.5,3,2]}
+};
+
+var FUNDING={
+  aggressive:{pool:'$2.5B',bw:'$192',yr:'$4,992',pop:'10M',esc:'24 mo'},
+  moderate:{pool:'$1.5B',bw:'$115',yr:'$2,990',pop:'10M',esc:'36 mo'},
+  bau:{pool:'$400M',bw:'$31',yr:'$806',pop:'10M',esc:'None'},
+  worst:{pool:'$80M',bw:'$6',yr:'$156',pop:'10M',esc:'None'}
+};
+
+var FUND_SOURCES={
+  aggressive:[
+    {name:'AI Compute Rents',pct:35,color:'#4ecdc4'},
+    {name:'Green Tariffs',pct:25,color:'#5da5da'},
+    {name:'Data Commons',pct:20,color:'#9b87f5'},
+    {name:'Philanthropy',pct:15,color:'#e8a838'},
+    {name:'Cooperative',pct:5,color:'#d4622a'}],
+  moderate:[
+    {name:'AI Compute Rents',pct:28,color:'#4ecdc4'},
+    {name:'Green Tariffs',pct:22,color:'#5da5da'},
+    {name:'Data Commons',pct:18,color:'#9b87f5'},
+    {name:'Philanthropy',pct:22,color:'#e8a838'},
+    {name:'Cooperative',pct:10,color:'#d4622a'}],
+  bau:[
+    {name:'AI Compute Rents',pct:12,color:'#4ecdc4'},
+    {name:'Green Tariffs',pct:8,color:'#5da5da'},
+    {name:'Data Commons',pct:15,color:'#9b87f5'},
+    {name:'Philanthropy',pct:42,color:'#e8a838'},
+    {name:'Cooperative',pct:23,color:'#d4622a'}],
+  worst:[
+    {name:'AI Compute Rents',pct:5,color:'#4ecdc4'},
+    {name:'Green Tariffs',pct:3,color:'#5da5da'},
+    {name:'Data Commons',pct:8,color:'#9b87f5'},
+    {name:'Philanthropy',pct:55,color:'#e8a838'},
+    {name:'Cooperative',pct:29,color:'#d4622a'}]
+};
+
+var MILESTONES=[
+  {year:'2026',title:'Discovery',items:['Initial scenario modeling','Stakeholder mapping','Baseline data collection']},
+  {year:'2027',title:'Scale',items:['Pilot programs in 3 regions','First civic dividend trials','Charter v1.0 ratification']},
+  {year:'2028-29',title:'Codify',items:['Legislative frameworks established','Standardized metrics adopted','Cross-system integration']},
+  {year:'2030-32',title:'Regional',items:['Continental rollout begins','Regional adaptation protocols','Feedback loop calibration']},
+  {year:'2033-34',title:'Continental',items:['Full-scale deployment','Inter-regional coordination','Performance benchmarking']},
+  {year:'2035',title:'Targets Met',items:['Assessment against 2035 goals','Course correction planning','Next-decade target setting']}
+];
+
+var KPI_ANNOTATIONS={
+  poverty:'Poverty rate measures the share of the population below the adjusted threshold. Under aggressive intervention, civic dividends cut poverty in half by 2031. Without action, compounding inequality pushes rates past 30%.',
+  reskill:'Average months required for a displaced worker to complete reskilling and re-enter employment. Aggressive investment in TransitionOS infrastructure cuts reskill time by two-thirds.',
+  emissions:'Per-capita carbon emissions in kilograms. Aggressive decarbonization creates a steep downward curve. Business as usual maintains a slow upward drift.',
+  biodiversity:'Percentage of land area covered by connected biodiversity corridors. The gap between aggressive (75%) and worst case (4%) represents a near-total divergence in ecological outcomes.',
+  charter:'Percentage of AI systems operating under ratified governance charters. Full adoption under aggressive scenario versus near-abandonment under worst case.'
+};
+
+var activeSc='aggressive';
+
+function render(sc){
+  activeSc=sc;
+  var clr=SC_COLORS[sc];
+  var scLabel=SC.find(function(s){return s.id===sc}).name;
+  updateScenarioBar('#scbar',sc,SC);
+  renderHero();
+  renderDomains();
+  renderSparks();
+  renderComparisons();
+  renderFunding();
+  document.getElementById('timeline-desc').innerHTML='Milestone phases under <strong style="color:'+clr+'">'+scLabel+'</strong>. '+(sc==='aggressive'?'Each phase builds compounding institutional capacity on an accelerated timeline.':sc==='moderate'?'Progress is steady but timelines extend. Later phases may not be reached within the projection window.':sc==='bau'?'Without structural investment, only the discovery phase is likely to complete. Later milestones remain theoretical.':'Institutional failure prevents any milestone from advancing past initial planning. Timelines collapse.');
+}
+
+function renderHero(){
+  var proj=PROJECTED[activeSc];
+  var sc=avg(proj);
+  var today=avg(DOMAINS.map(function(d){return d.today}));
+  var delta=sc-today;
+  var clr=SC_COLORS[activeSc];
+  var tClr='var(--text-muted)';
+  var h='';
+  h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
+  h+='<span class="score-hero" style="color:'+tClr+'">'+today+'</span>';
+  h+='<div>';
+  h+='<span class="score-sub">/100</span>';
+  h+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
+  h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+tClr+';color:'+tClr+'">'+grade(today)+'</span>';
+  h+='<span class="delta delta-down" style="font-size:13px">declining</span>';
+  h+='</div>';
+  h+='</div>';
+  h+='</div>';
+
+  h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
+  h+='<span class="t3">Projected 2035 ('+SC.find(function(s){return s.id===activeSc}).name+'):</span> ';
+  h+='<span class="score-projected" style="color:'+clr+'">'+sc+'</span>';
+  h+='<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
+  h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(sc)+'</span>';
+  h+='<span class="delta '+(delta>=0?'delta-up':'delta-down')+'" style="font-size:13px;margin-left:8px">'+(delta>=0?'+':'')+delta+' pts</span>';
+  h+='</div>';
+
+  h+='<p class="body mt-4">Weighted average across six domains under the <strong style="color:'+clr+'">'+SC.find(function(s){return s.id===activeSc}).name+'</strong> scenario. '+(sc>=70?'Trajectory indicates systemic recovery with compounding gains across all domains.':sc>=50?'Moderate improvement across most domains, though equity and wellbeing lag behind.':sc>=30?'Current trajectory shows continued decline. Scores fall below baseline across most domains.':'Systemic failure across all domains. Feedback loops accelerate decline with no recovery path within the projection window.')+'</p>';
+  document.getElementById('hero-score').innerHTML=h;
+}
+
+function renderDomains(){
+  var proj=PROJECTED[activeSc];
+  var clr=SC_COLORS[activeSc];
+  var h='<div class="grid grid-6">';
+  DOMAINS.forEach(function(d,i){
+    var p=proj[i];
+    var delta=p-d.today;
+    h+='<div class="cell">';
+    h+='<p class="t3" style="color:'+d.color+'">'+d.name+'</p>';
+    h+='<p class="num-lg mt-2">'+p+'</p>';
+    h+='<div class="flex items-baseline gap-4 mt-1">';
+    h+='<span class="tag" style="border-color:'+d.color+';color:'+d.color+'">'+grade(p)+'</span>';
+    h+='<span class="delta '+(delta>=0?'delta-up':'delta-down')+'">'+(delta>=0?'+':'')+delta+'</span>';
+    h+='</div>';
+    h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:'+p+'%;background:'+d.color+'"></div></div>';
+    h+='<p class="t4 mt-2">Today: '+d.today+' &rarr; 2035: '+p+'</p>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('domain-grid').innerHTML=h;
+
+  var s=avg(proj);
+  document.getElementById('overview-quote').innerHTML='<div class="pullquote">'+(s>=70?'Under aggressive intervention, civilizational health recovers to a B-range composite. Every domain shows double-digit gains, with Climate and Governance leading the recovery. The key driver is the civic dividend mechanism, which creates a positive feedback loop between equity improvements and institutional trust.':s>=50?'Moderate reform produces measurable improvement but leaves structural vulnerabilities. Equity and Wellbeing remain below the C threshold, indicating that partial intervention creates uneven recovery across interconnected systems.':s>=30?'Business as usual produces a declining composite score. Without structural intervention, the six domains enter negative feedback loops where declining governance undermines climate response, which erodes workforce readiness, which deepens inequality.':'Systemic failure cascades across all six domains. Governance collapse prevents coordinated climate response. Workforce displacement accelerates without reskilling infrastructure. Equity gaps compound into institutional distrust. No domain scores above 20.')+'</div>';
+}
+
+function renderSparks(){
+  var keys=Object.keys(KPI);
+  var h='<div class="grid grid-2">';
+  keys.forEach(function(k,i){
+    var kpi=KPI[k];
+    var ds={aggressive:kpi.aggressive,moderate:kpi.moderate,bau:kpi.bau,worst:kpi.worst};
+    var span=(i===keys.length-1 && keys.length%2===1)?' style="grid-column:1/-1"':'';
+    h+='<div class="cell"'+span+'>';
+    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:kpi.unit,dec:1,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160});
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('spark-grid').innerHTML=h;
+}
+
+function renderComparisons(){
+  document.getElementById('comparison-grid').innerHTML='';
+  document.getElementById('traj-legend').innerHTML='';
+}
+
+function renderFunding(){
+  var f=FUNDING[activeSc];
+  var clr=SC_COLORS[activeSc];
+  var h='<div class="grid grid-4">';
+  var stats=[
+    {label:'Annual Pool',val:f.pool},
+    {label:'Biweekly / Person',val:f.bw},
+    {label:'Annual / Person',val:f.yr},
+    {label:'Escalation',val:f.esc}
+  ];
+  stats.forEach(function(s){
+    h+='<div class="cell">';
+    h+='<p class="t3">'+s.label+'</p>';
+    h+='<p class="num-lg mt-2" style="color:'+clr+'">'+s.val+'</p>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('funding-stats').innerHTML=h;
+
+  var sources=FUND_SOURCES[activeSc];
+  var poolAmt=FUNDING[activeSc].pool;
+  h='<div class="flex flex-col gap-6" style="max-width:500px">';
+  sources.forEach(function(s){
+    h+='<div>';
+    h+='<div class="flex justify-between items-baseline mb-1">';
+    h+='<span class="t4">'+s.name+'</span>';
+    h+='<span class="num-sm" style="color:'+s.color+'">'+s.pct+'%</span>';
+    h+='</div>';
+    h+='<div class="bar-track"><div class="bar-fill" style="width:'+s.pct+'%;background:'+s.color+'"></div></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('funding-sources').innerHTML=h;
+  var scLabel=SC.find(function(s){return s.id===activeSc}).name;
+  document.getElementById('funding-source-desc').innerHTML='Revenue mix under <strong style="color:'+clr+'">'+scLabel+'</strong> ('+poolAmt+'/yr pool). '+(activeSc==='aggressive'?'Diversified revenue base with AI compute rents as the largest contributor.':activeSc==='moderate'?'Moderately diversified, with philanthropy filling gaps left by lower compute rent capture.':activeSc==='bau'?'Philanthropy-dependent. Without policy infrastructure, AI compute rents are minimal and public revenue streams are not established.':'Near-total reliance on philanthropy and cooperatives. Institutional funding mechanisms have collapsed.');
+
+  var datasets={aggressive:KPI.poverty.aggressive,moderate:KPI.poverty.moderate,bau:KPI.poverty.bau,worst:KPI.poverty.worst};
+  document.getElementById('funding-chart').innerHTML=scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160});
+  document.getElementById('funding-legend').innerHTML='';
+}
+
+function renderTimeline(){
+  var h='<div class="flex flex-col">';
+  MILESTONES.forEach(function(m,i){
+    h+='<div style="display:flex;gap:32px;padding:24px 0;border-top:1px solid var(--border)">';
+    h+='<div style="flex-shrink:0;width:80px">';
+    h+='<p class="num-md" style="color:var(--text-primary)">'+m.year+'</p>';
+    h+='</div>';
+    h+='<div>';
+    h+='<p class="t2-lg" style="margin-bottom:8px">'+m.title+'</p>';
+    m.items.forEach(function(item){
+      h+='<p class="t4" style="padding:2px 0;color:var(--text-secondary)">&mdash; '+item+'</p>';
+    });
+    h+='</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('timeline-list').innerHTML=h;
+}
+
+initSectionNav('#tabs','sec-','overview');
+initScenarioSelector('#scbar',render);
+renderTimeline();
+render('aggressive');
+})();
+</script>
+</body>
+</html>
