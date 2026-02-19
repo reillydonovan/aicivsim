@@ -238,12 +238,42 @@ var FUND_SOURCES={
 };
 
 var MILESTONES=[
-  {year:'2026',title:'Discovery',items:['Initial scenario modeling','Stakeholder mapping','Baseline data collection']},
-  {year:'2027',title:'Scale',items:['Pilot programs in 3 regions','First civic dividend trials','Charter v1.0 ratification']},
-  {year:'2028-29',title:'Codify',items:['Legislative frameworks established','Standardized metrics adopted','Cross-system integration']},
-  {year:'2030-32',title:'Regional',items:['Continental rollout begins','Regional adaptation protocols','Feedback loop calibration']},
-  {year:'2033-34',title:'Continental',items:['Full-scale deployment','Inter-regional coordination','Performance benchmarking']},
-  {year:'2035',title:'Targets Met',items:['Assessment against 2035 goals','Course correction planning','Next-decade target setting']}
+  {year:'2026',title:'Discovery',goalScore:50,
+    items:['Initial scenario modeling','Stakeholder mapping','Baseline data collection'],
+    aggressive:{score:52,status:'Complete',note:'Foundations laid rapidly with full institutional buy-in. All baseline datasets collected and published.'},
+    moderate:{score:48,status:'Complete',note:'Foundations laid with moderate investment. Core datasets collected, some gaps remain.'},
+    bau:{score:40,status:'Partial',note:'Minimal investment. Modeling started but stakeholder engagement is shallow and data collection incomplete.'},
+    worst:{score:25,status:'Stalled',note:'No institutional commitment. Discovery phase attempted but defunded before completion.'}},
+  {year:'2027',title:'Scale',goalScore:58,
+    items:['Pilot programs in 3 regions','First civic dividend trials','Charter v1.0 ratification'],
+    aggressive:{score:62,status:'Complete',note:'Pilots exceeded targets in all 3 regions. Civic dividend trials reached 200K participants. Charter ratified unanimously.'},
+    moderate:{score:54,status:'On track',note:'Pilots launched in 2 of 3 regions. Dividend trials underway at reduced scale. Charter in committee review.'},
+    bau:{score:35,status:'Delayed',note:'One pilot region launched with limited scope. No dividend infrastructure. Charter drafted but not introduced.'},
+    worst:{score:15,status:'Not started',note:'No pilots launched. Institutional collapse prevents any scaling activity. Charter effort abandoned.'}},
+  {year:'2028-29',title:'Codify',goalScore:68,
+    items:['Legislative frameworks established','Standardized metrics adopted','Cross-system integration'],
+    aggressive:{score:72,status:'Complete',note:'Legislative frameworks passed in 8 jurisdictions. Standardized metrics adopted internationally. Full cross-system API integration.'},
+    moderate:{score:60,status:'On track',note:'Frameworks established in 4 jurisdictions. Metrics standardized regionally. Integration underway but fragmented.'},
+    bau:{score:30,status:'Stalled',note:'No legislative progress. Voluntary metrics adopted by a handful of organizations. No system integration.'},
+    worst:{score:10,status:'Not started',note:'Legislative efforts blocked. No standardization. Systems remain siloed and ungoverned.'}},
+  {year:'2030-32',title:'Regional',goalScore:78,
+    items:['Continental rollout begins','Regional adaptation protocols','Feedback loop calibration'],
+    aggressive:{score:82,status:'Complete',note:'Continental rollout achieved across 4 continents. Regional adaptation protocols tuned with live feedback. Calibration cycles running quarterly.'},
+    moderate:{score:65,status:'On track',note:'Rollout in 2 continents. Adaptation protocols in development. Feedback loops established but cycle time is 6 months.'},
+    bau:{score:28,status:'Not started',note:'No rollout beyond original pilots. Regional protocols theoretical. Feedback infrastructure does not exist.'},
+    worst:{score:8,status:'Not started',note:'Total institutional failure. No regional infrastructure. Original pilot programs have been defunded.'}},
+  {year:'2033-34',title:'Continental',goalScore:85,
+    items:['Full-scale deployment','Inter-regional coordination','Performance benchmarking'],
+    aggressive:{score:88,status:'Complete',note:'Full deployment across all participating regions. Inter-regional coordination mature. Benchmark reports published semi-annually.'},
+    moderate:{score:62,status:'Partial',note:'Deployment at 60% of planned scale. Coordination protocols functional but inconsistent. First benchmarks in progress.'},
+    bau:{score:25,status:'Not started',note:'No deployment beyond advisory capacity. Coordination absent. No benchmarking infrastructure.'},
+    worst:{score:5,status:'Not started',note:'Infrastructure collapsed. No governance systems operational at continental scale.'}},
+  {year:'2035',title:'Targets Met',goalScore:90,
+    items:['Assessment against 2035 goals','Course correction planning','Next-decade target setting'],
+    aggressive:{score:92,status:'Complete',note:'2035 targets exceeded. Course corrections minor and forward-looking. 2045 targets set with high confidence.'},
+    moderate:{score:58,status:'Partial',note:'Approximately 65% of 2035 targets met. Significant course correction needed. 2045 targets set conservatively.'},
+    bau:{score:22,status:'Not started',note:'Targets largely unmet. No institutional mechanism for course correction. Future planning is speculative.'},
+    worst:{score:5,status:'Not started',note:'No targets met. No planning infrastructure exists. The decade is a lost opportunity.'}}
 ];
 
 var KPI_ANNOTATIONS={
@@ -267,6 +297,7 @@ function render(sc){
   renderComparisons();
   renderFunding();
   document.getElementById('timeline-desc').innerHTML='Milestone phases under <strong style="color:'+clr+'">'+scLabel+'</strong>. '+(sc==='aggressive'?'Each phase builds compounding institutional capacity on an accelerated timeline.':sc==='moderate'?'Progress is steady but timelines extend. Later phases may not be reached within the projection window.':sc==='bau'?'Without structural investment, only the discovery phase is likely to complete. Later milestones remain theoretical.':'Institutional failure prevents any milestone from advancing past initial planning. Timelines collapse.');
+  renderTimeline();
 }
 
 function renderHero(){
@@ -394,17 +425,38 @@ function renderFunding(){
 }
 
 function renderTimeline(){
+  var clr=SC_COLORS[activeSc];
   var h='<div class="flex flex-col">';
-  MILESTONES.forEach(function(m,i){
+  MILESTONES.forEach(function(m){
+    var d=m[activeSc];
+    var sc=d.score;
+    var g=grade(sc);
+    var gClr=sc>=80?'var(--green)':sc>=60?clr:sc>=40?'#e8a838':'var(--red)';
+    var goalMet=sc>=m.goalScore;
+    var gap=sc-m.goalScore;
+    var gapLabel=goalMet?('+'+gap+' above goal'):((gap)+' below goal');
+    var gapClr=goalMet?'var(--green)':'var(--red)';
+    var statusClr=d.status==='Complete'?'var(--green)':d.status==='On track'?clr:d.status==='Partial'?'#e8a838':'var(--red)';
     h+='<div style="display:flex;gap:32px;padding:24px 0;border-top:1px solid var(--border)">';
-    h+='<div style="flex-shrink:0;width:80px">';
+    h+='<div style="flex-shrink:0;width:100px">';
     h+='<p class="num-md" style="color:var(--text-primary)">'+m.year+'</p>';
+    h+='<p class="t4 mt-1" style="color:var(--text-faint)">Goal: '+m.goalScore+'</p>';
     h+='</div>';
-    h+='<div>';
-    h+='<p class="t2-lg" style="margin-bottom:8px">'+m.title+'</p>';
+    h+='<div style="flex:1">';
+    h+='<div class="flex items-baseline gap-8 mb-2">';
+    h+='<p class="t2-lg">'+m.title+'</p>';
+    h+='<span class="num-lg" style="color:'+gClr+'">'+sc+'</span>';
+    h+='<span class="tag" style="border-color:'+gClr+';color:'+gClr+'">'+g+'</span>';
+    h+='<span class="tag" style="border-color:'+statusClr+';color:'+statusClr+'">'+d.status+'</span>';
+    h+='</div>';
+    h+='<div class="flex items-baseline gap-12 mb-3">';
+    h+='<span class="t4" style="color:'+gapClr+'">'+gapLabel+'</span>';
+    h+='<div class="bar-track" style="flex:1;max-width:200px"><div class="bar-fill" style="width:'+sc+'%;background:'+gClr+';transition:width 0.4s ease"></div></div>';
+    h+='</div>';
     m.items.forEach(function(item){
       h+='<p class="t4" style="padding:2px 0;color:var(--text-secondary)">&mdash; '+item+'</p>';
     });
+    h+='<p class="body mt-2" style="font-size:13px;color:var(--text-muted)">'+d.note+'</p>';
     h+='</div>';
     h+='</div>';
   });
@@ -414,7 +466,6 @@ function renderTimeline(){
 
 initSectionNav('#tabs','sec-','overview');
 initScenarioSelector('#scbar',render);
-renderTimeline();
 render('aggressive');
 })();
 </script>

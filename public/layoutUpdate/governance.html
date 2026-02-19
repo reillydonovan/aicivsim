@@ -72,36 +72,7 @@
     </div>
     <p class="body mt-3">Composite governance score across institutional trust, AI charter adoption, civic participation, and democratic infrastructure. Measured 2026 baseline &mdash; before any scenario intervention.</p>
     <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="gov-projected"></div>
-    <div class="grid grid-4 mt-6">
-      <div class="cell">
-        <p class="t3" style="color:var(--governance)">Civic Participation</p>
-        <p class="num-lg mt-2">42<span class="t4" style="margin-left:2px">%</span></p>
-        <span class="delta delta-down">declining</span>
-        <div class="bar-track mt-2"><div class="bar-fill" style="width:42%;background:var(--governance)"></div></div>
-        <p class="t4 mt-2">Registered residents who actively participate in governance.</p>
-      </div>
-      <div class="cell">
-        <p class="t3" style="color:#4ecdc4">Charter Adoption</p>
-        <p class="num-lg mt-2">10<span class="t4" style="margin-left:2px">%</span></p>
-        <span class="delta delta-flat">emerging</span>
-        <div class="bar-track mt-2"><div class="bar-fill" style="width:10%;background:#4ecdc4"></div></div>
-        <p class="t4 mt-2">AI systems operating under ratified governance charters.</p>
-      </div>
-      <div class="cell">
-        <p class="t3" style="color:#5da5da">Institutional Trust</p>
-        <p class="num-lg mt-2">43<span class="t4" style="margin-left:2px">%</span></p>
-        <span class="delta delta-down">eroding</span>
-        <div class="bar-track mt-2"><div class="bar-fill" style="width:43%;background:#5da5da"></div></div>
-        <p class="t4 mt-2">Survey-derived composite of confidence in public institutions.</p>
-      </div>
-      <div class="cell">
-        <p class="t3" style="color:#e8a838">Audit Coverage</p>
-        <p class="num-lg mt-2">10<span class="t4" style="margin-left:2px">%</span></p>
-        <span class="delta delta-flat">baseline</span>
-        <div class="bar-track mt-2"><div class="bar-fill" style="width:10%;background:#e8a838"></div></div>
-        <p class="t4 mt-2">High-risk AI systems that have been safety-audited.</p>
-      </div>
-    </div>
+    <div class="grid grid-4 mt-6" id="gov-metric-cards"></div>
   </div></div>
 
   <div class="section"><div class="page">
@@ -194,6 +165,21 @@ var SCENARIOS=[
 var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
 var active='aggressive';
 var GOV_SCORES={aggressive:85, moderate:65, bau:30, worst:10};
+
+var GOV_METRICS=[
+  {id:'civic',   label:'Civic Participation',  color:GOV,      unit:'%', baseline:42, dir:'higher',
+    note:'Registered residents who actively participate in governance.',
+    aggressive:78, moderate:58, bau:35, worst:12},
+  {id:'charter', label:'Charter Adoption',     color:'#4ecdc4', unit:'%', baseline:10, dir:'higher',
+    note:'AI systems operating under ratified governance charters.',
+    aggressive:92, moderate:55, bau:8, worst:0},
+  {id:'trust',   label:'Institutional Trust',  color:'#5da5da', unit:'%', baseline:43, dir:'higher',
+    note:'Survey-derived composite of confidence in public institutions.',
+    aggressive:72, moderate:56, bau:32, worst:18},
+  {id:'audit',   label:'Audit Coverage',       color:'#e8a838', unit:'%', baseline:10, dir:'higher',
+    note:'High-risk AI systems that have been safety-audited.',
+    aggressive:96, moderate:68, bau:15, worst:3}
+];
 
 /* ── PER-SCENARIO DATA ── */
 
@@ -582,6 +568,27 @@ function renderAudit(){
   document.getElementById('audit-table').innerHTML=t;
 }
 
+function renderGovMetricCards(){
+  var el=document.getElementById('gov-metric-cards');
+  var h='';
+  GOV_METRICS.forEach(function(m){
+    var v=m[active];
+    var better=v>m.baseline;
+    var worse=v<m.baseline;
+    var trendLabel=better?'improving':worse?'declining':'stable';
+    var trendCls=better?'delta delta-up':worse?'delta delta-down':'delta delta-flat';
+    var barW=Math.min(100,v);
+    h+='<div class="cell">';
+    h+='<p class="t3" style="color:'+m.color+'">'+m.label+'</p>';
+    h+='<p class="num-lg mt-2">'+v+'<span class="t4" style="margin-left:2px">'+m.unit+'</span></p>';
+    h+='<span class="'+trendCls+'">'+trendLabel+'</span>';
+    h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+barW+'%;background:'+m.color+';transition:width 0.4s ease"></div></div>';
+    h+='<p class="t4 mt-2">'+m.note+'</p>';
+    h+='</div>';
+  });
+  el.innerHTML=h;
+}
+
 /* ── MASTER RENDER ── */
 function render(){
   updateScenarioBar('#scenario-bar',active,SCENARIOS);
@@ -595,6 +602,7 @@ function render(){
     +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
     +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
     +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
+  renderGovMetricCards();
   renderParticipation();
   renderCharter();
   renderFundingStack();

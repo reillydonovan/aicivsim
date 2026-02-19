@@ -18,7 +18,7 @@
   <div class="page masthead-inner">
     <span class="masthead-breadcrumb"><a href="index.html">AI Civ Sim</a> / TransitionOS &mdash; 2026</span>
     <h1 class="t2-xl mt-3">Workforce Transition Dashboard</h1>
-    <p class="body mt-2">Reskilling pathways, income bridges, and employment projections for the automation wave. Three policy scenarios modeled from 2025 to 2035.</p>
+    <p class="body mt-2">Reskilling pathways, income bridges, and employment projections for the automation wave. Four policy scenarios modeled from 2025 to 2035.</p>
     <hr class="rule">
   </div>
 </div>
@@ -46,9 +46,10 @@
         <button class="nav-tab" data-section="projections">Projections</button>
       </div>
       <div class="scenario-bar" id="scenario-bar">
-        <button class="scenario-btn" data-sc="baseline"><span class="dot" style="background:#e8a838"></span>Baseline</button>
-        <button class="scenario-btn" data-sc="transition_os"><span class="dot" style="background:#5da5da"></span>TransitionOS</button>
-        <button class="scenario-btn" data-sc="full_stack"><span class="dot" style="background:#4ecdc4"></span>Full Stack</button>
+        <button class="scenario-btn" data-sc="aggressive"><span class="dot" style="background:#4ecdc4"></span>Aggressive</button>
+        <button class="scenario-btn" data-sc="moderate"><span class="dot" style="background:#5da5da"></span>Moderate</button>
+        <button class="scenario-btn" data-sc="bau"><span class="dot" style="background:#e8a838"></span>BAU</button>
+        <button class="scenario-btn" data-sc="worst"><span class="dot" style="background:#d4622a"></span>Worst</button>
       </div>
     </div>
   </div>
@@ -131,35 +132,40 @@
 (function(){
 
   var scenarios=[
-    {id:'baseline',      name:'Baseline',     color:'#e8a838'},
-    {id:'transition_os', name:'TransitionOS',  color:'#5da5da'},
-    {id:'full_stack',    name:'Full Stack',    color:'#4ecdc4'}
+    {id:'aggressive', name:'Aggressive', color:'#4ecdc4'},
+    {id:'moderate',   name:'Moderate',   color:'#5da5da'},
+    {id:'bau',        name:'BAU',        color:'#e8a838'},
+    {id:'worst',      name:'Worst',      color:'#d4622a'}
   ];
-  var scColors={baseline:'#e8a838',transition_os:'#5da5da',full_stack:'#4ecdc4'};
-  var active='baseline';
+  var scColors={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
+  var active='aggressive';
 
   var years=[2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
 
   var D={
     poverty:{
-      baseline:      [13,13.2,13.5,13.9,14.4,15,15.8,16.5,17.2,18,18.5],
-      transition_os: [13,12.5,12,11.3,10.5,9.8,9.2,8.5,8,7.5,7],
-      full_stack:    [13,12,10.8,9.5,8.2,7,6,5.2,4.5,4,3.5]
+      aggressive: [13,12,10.8,9.5,8.2,7,6,5.2,4.5,4,3.5],
+      moderate:   [13,12.5,12,11.3,10.5,9.8,9.2,8.5,8,7.5,7],
+      bau:        [13,13.2,13.5,13.9,14.4,15,15.8,16.5,17.2,18,18.5],
+      worst:      [13,14,15.2,16.8,18.5,20.5,22.5,24.5,26.5,28,30]
     },
     reskill:{
-      baseline:      [18,18,18.2,18.5,19,19.5,20,20.5,21,21.5,22],
-      transition_os: [18,16.5,15,13.5,12,11,10,9.2,8.5,8,7.5],
-      full_stack:    [18,15.5,13,11,9.5,8,7,6.2,5.5,5,4.5]
+      aggressive: [18,15.5,13,11,9.5,8,7,6.2,5.5,5,4.5],
+      moderate:   [18,16.5,15,13.5,12,11,10,9.2,8.5,8,7.5],
+      bau:        [18,18,18.2,18.5,19,19.5,20,20.5,21,21.5,22],
+      worst:      [18,19,20.5,22,24,26,28,30,32,34,36]
     },
     placement:{
-      baseline:      [62,61,60,59,58,57,56,55,54,53,52],
-      transition_os: [62,65,68,71,74,76,78,80,82,83,84],
-      full_stack:    [62,67,72,77,81,84,87,89,91,92,93]
+      aggressive: [62,67,72,77,81,84,87,89,91,92,93],
+      moderate:   [62,65,68,71,74,76,78,80,82,83,84],
+      bau:        [62,61,60,59,58,57,56,55,54,53,52],
+      worst:      [62,59,55,51,47,43,39,36,33,30,28]
     },
     employment:{
-      baseline:      [94,93.8,93.5,93.1,92.6,92,91.3,90.5,89.7,88.8,88],
-      transition_os: [94,94.2,94.5,94.8,95.1,95.4,95.6,95.8,96,96.2,96.3],
-      full_stack:    [94,94.5,95.2,95.8,96.3,96.7,97,97.2,97.4,97.5,97.6]
+      aggressive: [94,94.5,95.2,95.8,96.3,96.7,97,97.2,97.4,97.5,97.6],
+      moderate:   [94,94.2,94.5,94.8,95.1,95.4,95.6,95.8,96,96.2,96.3],
+      bau:        [94,93.8,93.5,93.1,92.6,92,91.3,90.5,89.7,88.8,88],
+      worst:      [94,93,91.5,89.8,87.5,85,82.5,80,77.5,75,72]
     }
   };
 
@@ -174,15 +180,16 @@
      note:'Overall employment rate including gig/cooperative work. Higher is better.'}
   ];
 
-  var TRANS_SCORES={baseline:28, transition_os:68, full_stack:88};
+  var TRANS_SCORES={aggressive:88, moderate:68, bau:28, worst:12};
 
   var narratives={
-    baseline:'Under baseline conditions, automation displacement accelerates without compensating policy. Poverty rises from 13% to 18.5% by 2035, median reskilling time drifts upward to 22 months, and placement rates decline steadily. The workforce bears the full cost of structural transformation.',
-    transition_os:'TransitionOS deploys targeted reskilling pipelines and civic dividend income bridges. Poverty drops to 7%, median reskill time compresses to 7.5 months, and placement rates climb to 84%. The dividend mechanism covers gap income during transitions, reducing dropout rates by more than half.',
-    full_stack:'Full Stack integration layers TransitionOS onto universal basic services and cooperative employment networks. Poverty falls to 3.5%, reskill time compresses to 4.5 months, and placement reaches 93%. Employment rises to 97.6% as gig, cooperative, and traditional pathways converge into a unified labor market.'
+    aggressive:'Full-stack integration layers universal basic services, cooperative employment networks, and civic dividend income bridges. Poverty falls to 3.5%, reskill time compresses to 4.5 months, and placement reaches 93%. Employment rises to 97.6% as gig, cooperative, and traditional pathways converge into a unified labor market.',
+    moderate:'Targeted reskilling pipelines and civic dividend income bridges cushion the automation wave. Poverty drops to 7%, median reskill time compresses to 7.5 months, and placement rates climb to 84%. The dividend mechanism covers gap income during transitions, reducing dropout rates by more than half.',
+    bau:'Under business-as-usual conditions, automation displacement accelerates without compensating policy. Poverty rises from 13% to 18.5% by 2035, median reskilling time drifts upward to 22 months, and placement rates decline steadily. The workforce bears the full cost of structural transformation.',
+    worst:'Active deregulation and austerity compound automation displacement. Poverty surges to 30%, reskilling time doubles to 36 months as public programs collapse, and placement rates crater to 28%. Employment drops to 72% as gig protections erode and cooperative networks are defunded. A lost generation of workers is stranded without viable transition pathways.'
   };
 
-  var DIV_RATE={baseline:0, transition_os:115, full_stack:192};
+  var DIV_RATE={aggressive:192, moderate:115, bau:0, worst:0};
 
   var bridges=[
     {from:'Truck Driver',   to:'Logistics Coordinator',  loss:2800, trainMo:8,  trainCost:12000, post:52000, payback_base:18, net10yr_base:85000},
@@ -195,10 +202,10 @@
 
   var CARD_COLORS={poverty:'#d4622a',reskill:'#e8a838',placement:'#5da5da',employment:'#4ecdc4'};
   var CARD_DESCS={
-    poverty:{baseline:'Rising without intervention.',transition_os:'Declining via income bridges and reskilling.',full_stack:'Near-elimination through universal services.'},
-    reskill:{baseline:'Increasing as pathways fragment.',transition_os:'Compressed via structured pipelines.',full_stack:'Minimized through integrated systems.'},
-    placement:{baseline:'Declining as displaced workers compete.',transition_os:'Growing as reskilling programs mature.',full_stack:'Near-universal placement via cooperative networks.'},
-    employment:{baseline:'Eroding under automation pressure.',transition_os:'Stabilized with new sector growth.',full_stack:'Expanding through diversified labor markets.'}
+    poverty:{aggressive:'Near-elimination through universal services.',moderate:'Declining via income bridges and reskilling.',bau:'Rising without intervention.',worst:'Surging as safety nets collapse under austerity.'},
+    reskill:{aggressive:'Minimized through integrated systems.',moderate:'Compressed via structured pipelines.',bau:'Increasing as pathways fragment.',worst:'Doubling as public programs are defunded.'},
+    placement:{aggressive:'Near-universal placement via cooperative networks.',moderate:'Growing as reskilling programs mature.',bau:'Declining as displaced workers compete.',worst:'Cratering as transition support disappears.'},
+    employment:{aggressive:'Expanding through diversified labor markets.',moderate:'Stabilized with new sector growth.',bau:'Eroding under automation pressure.',worst:'Collapsing as gig protections and cooperatives are dismantled.'}
   };
 
   function scName(id){ var s=scenarios.find(function(x){return x.id===id}); return s?s.name:id; }
@@ -355,7 +362,7 @@
       +'<span class="score-projected" style="color:'+pc+'">'+ps+'</span>'
       +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
       +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+pc+';color:'+pc+'">'+grade(ps)+'</span>'
-      +(active==='baseline'?' <span class="t4" style="color:var(--red)">If trends continue</span>':'');
+      +(active==='bau'?' <span class="t4" style="color:var(--red)">If trends continue</span>':active==='worst'?' <span class="t4" style="color:var(--red)">Accelerated decline</span>':'');
     renderMetricCards();
     renderOverview();
     renderNarrative();
