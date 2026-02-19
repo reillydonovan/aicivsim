@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260218">
+<link rel="stylesheet" href="css/style.css?v=20260219b">
 </head>
 <body>
 
@@ -162,7 +162,7 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260218"></script>
+<script src="js/shared.js?v=20260219b"></script>
 <script>
 (function(){
 
@@ -427,7 +427,9 @@
     metrics.forEach(function(m){
       var ds={};
       scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
+      var endVal=ds[active][ds[active].length-1];
       html+='<div class="cell">'
+        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
         +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:140})
         +'</div>';
     });
@@ -447,8 +449,9 @@
     metrics.forEach(function(m){
       var ds={};
       scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
+      var endVal2=ds[active][ds[active].length-1];
       html+='<div class="cell">'
-        +'<span class="t3" style="margin-bottom:8px;display:block">'+m.label+'</span>'
+        +chartHeader({label:m.label,value:endVal2,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
         +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
         +'</div>';
     });
@@ -459,19 +462,31 @@
   function renderSubScore(elId,label,scoreObj,domains){
     var el=document.getElementById(elId);
     if(!el) return;
+    var today=scoreObj.today;
     var ps=scoreObj.projected[active];
+    var tClr=gClr(today);
     var pClr=gClr(ps);
+    var delta=ps-today;
+    var scLabel=scName(active);
     var h='';
 
-    h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:16px;margin-bottom:16px">';
-    h+='<span class="score-hero" style="color:'+pClr+'">'+ps+'</span>';
+    h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:16px">';
+    h+='<span class="score-hero" style="color:'+tClr+'">'+today+'</span>';
     h+='<div>';
     h+='<span class="score-sub">/100</span>';
     h+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
-    h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+pClr+';color:'+pClr+'">'+grade(ps)+'</span>';
-    h+='<span class="t4" style="font-size:13px;color:var(--text-muted)">2050 under '+scName(active)+'</span>';
+    h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+tClr+';color:'+tClr+'">'+grade(today)+'</span>';
+    h+='<span class="t4" style="font-size:13px;color:var(--text-muted)">Today\'s Score</span>';
     h+='</div>';
     h+='</div>';
+    h+='</div>';
+
+    h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px;margin-bottom:16px">';
+    h+='<span class="t3">Projected 2050 ('+scLabel+'):</span> ';
+    h+='<span class="score-projected" style="color:'+pClr+'">'+ps+'</span>';
+    h+='<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
+    h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+pClr+';color:'+pClr+'">'+grade(ps)+'</span>';
+    h+='<span class="delta '+(delta>=0?'delta-up':'delta-down')+'" style="font-size:13px;margin-left:8px">'+(delta>=0?'+':'')+delta+' pts</span>';
     h+='</div>';
 
     if(domains&&domains.length){
@@ -479,7 +494,6 @@
       domains.forEach(function(d){
         var sc=d.projected[active];
         var clr=gClr(sc);
-        var todayClr=gClr(d.today);
         var trend=sc>d.today?'up':sc<d.today?'down':'flat';
         var detail=d.details[active];
         h+='<div class="cell">';
@@ -523,12 +537,15 @@
     var bioMetrics=['biodiversity','forest'];
     var el=document.getElementById('biodiversity-sparklines');
     var html='';
-    bioMetrics.forEach(function(id){
+    bioMetrics.forEach(function(id,i){
       var m=metricById(id);
       if(!m) return;
       var ds={};
       scenarios.forEach(function(s){ ds[s.id]=D[id][s.id]; });
-      html+='<div class="cell">'
+      var endVal=ds[active][ds[active].length-1];
+      var span=(i===bioMetrics.length-1 && bioMetrics.length%2===1)?' style="grid-column:1/-1"':'';
+      html+='<div class="cell"'+span+'>'
+        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
         +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
         +'</div>';
     });
@@ -546,8 +563,10 @@
       if(!m) return;
       var ds={};
       scenarios.forEach(function(s){ ds[s.id]=D[id][s.id]; });
+      var endVal=ds[active][ds[active].length-1];
       var span=(i===energyMetrics.length-1 && energyMetrics.length%2===1)?' style="grid-column:1/-1"':'';
       html+='<div class="cell"'+span+'>'
+        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
         +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
         +'</div>';
     });
@@ -565,8 +584,10 @@
       if(!m) return;
       var ds={};
       scenarios.forEach(function(s){ ds[s.id]=D[id][s.id]; });
+      var endVal=ds[active][ds[active].length-1];
       var span=(i===resMetrics.length-1 && resMetrics.length%2===1)?' style="grid-column:1/-1"':'';
       html+='<div class="cell"'+span+'>'
+        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
         +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,prefix:m.prefix||'',dir:m.dir,baseline:m.baseline,notes:m.notes,height:180})
         +'</div>';
     });

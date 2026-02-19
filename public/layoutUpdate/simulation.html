@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260218">
+<link rel="stylesheet" href="css/style.css?v=20260219">
 </head>
 <body>
 
@@ -211,7 +211,7 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260218"></script>
+<script src="js/shared.js?v=20260219"></script>
 <script>
 (function(){
 
@@ -425,8 +425,10 @@
     METRICS.forEach(function(m, i){
       var ds = {};
       KEYS.forEach(function(k){ ds[k]=SC[k][m.id]; });
+      var endVal = ds[active][ds[active].length-1];
       var span = (i === METRICS.length - 1 && METRICS.length % 2 === 1) ? ' style="grid-column:1/-1"' : '';
       html += '<div class="cell"'+span+'>'
+        + chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:SC[active].color,endYear:2070})
         + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,markerYear:currentYear})
         + '</div>';
     });
@@ -444,12 +446,9 @@
     METRICS.forEach(function(m, i){
       var ds = {};
       KEYS.forEach(function(k){ ds[k]=SC[k][m.id]; });
+      var endVal = SC[active][m.id][43];
       html += '<div style="padding:32px 0;' + (i > 0 ? 'border-top:1px solid var(--border)' : '') + '">'
-        + '<div class="flex justify-between items-baseline mb-2">'
-        + '<span class="t2-lg">' + m.label + '</span>'
-        + '<span class="num-sm" style="color:' + SC[active].color + '">'
-        + fmtV(SC[active][m.id][43], {dec: m.dec, unit: m.unit}) + ' by 2070</span>'
-        + '</div>'
+        + chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:SC[active].color,endYear:2070})
         + scenarioChart({datasets:ds,colors:scColors,scenarios:SCENARIOS,activeKey:active,startYear:2027,endYear:2070,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:200,markerYear:currentYear})
         + '</div>';
     });

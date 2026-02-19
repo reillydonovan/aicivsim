@@ -9,6 +9,38 @@ function avg(arr){return Math.round(arr.reduce((a,b)=>a+b,0)/arr.length)}
 function fmtK(n){return n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(0)}K`:String(n)}
 function fmtPct(n,d=1){return n.toFixed(d)+'%'}
 
+/* ── Chart header — matches Biodiversity domain-card style ──
+   opts = { label, value, unit, dec, prefix, dir, baseline, color, endYear }
+*/
+function chartHeader(opts){
+  var v=opts.value, dec=opts.dec!=null?opts.dec:0, pfx=opts.prefix||'', unit=opts.unit||'';
+  if(v==null||isNaN(v)) return '<div style="margin-bottom:12px"><span class="t3">'+opts.label+'</span></div>';
+  var formatted=pfx+v.toFixed(dec)+unit;
+  var clr=opts.color||'var(--text-primary)';
+  var dir=opts.dir||'higher';
+  var base=opts.baseline;
+  var wentUp=(base!=null)?(v>base):false;
+  var wentDown=(base!=null)?(v<base):false;
+  var trend=wentUp?'up':wentDown?'down':'flat';
+  var trendSym=trend==='up'?'\u2191':trend==='down'?'\u2193':'\u2192';
+  var good=(dir==='higher'&&wentUp)||(dir==='lower'&&wentDown);
+  var bad=(dir==='higher'&&wentDown)||(dir==='lower'&&wentUp);
+  var trendClr=good?'var(--green)':bad?'var(--red)':'var(--text-muted)';
+  if(dir==='context') trendClr=clr;
+  var h='<div style="margin-bottom:12px">';
+  h+='<span class="t3">'+opts.label+'</span>';
+  h+='<div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">';
+  h+='<span class="num-lg" style="color:'+clr+'">'+formatted+'</span>';
+  h+='<span style="font-size:14px;color:'+trendClr+'">'+trendSym+'</span>';
+  if(opts.endYear) h+='<span class="t4">by '+opts.endYear+'</span>';
+  h+='</div>';
+  if(base!=null){
+    h+='<p class="t4" style="color:var(--text-faint);margin-top:2px">Baseline: '+pfx+(typeof base==='number'?base.toFixed(dec):base)+unit+'</p>';
+  }
+  h+='</div>';
+  return h;
+}
+
 /* ── SVG Sparkline (legacy — still used by governance audit) ── */
 function sparkSVG(data, color, w, h, fill){
   w=w||120; h=h||36; fill=fill!==false;

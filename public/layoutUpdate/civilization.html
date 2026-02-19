@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260218">
+<link rel="stylesheet" href="css/style.css?v=20260219">
 </head>
 <body>
 
@@ -149,7 +149,7 @@
 </div>
 </footer>
 
-<script src="js/shared.js?v=20260218"></script>
+<script src="js/shared.js?v=20260219"></script>
 <script>
 (function(){
 var SC=[
@@ -332,7 +332,10 @@ function renderSparks(){
     var kpi=KPI[k];
     var ds={aggressive:kpi.aggressive,moderate:kpi.moderate,bau:kpi.bau,worst:kpi.worst};
     var span=(i===keys.length-1 && keys.length%2===1)?' style="grid-column:1/-1"':'';
+    var endVal=ds[activeSc][ds[activeSc].length-1];
+    var baseVal=ds[activeSc][0];
     h+='<div class="cell"'+span+'>';
+    h+=chartHeader({label:kpi.label,value:endVal,unit:kpi.unit,dec:1,dir:kpi.dir,baseline:baseVal,color:SC_COLORS[activeSc],endYear:2035});
     h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:kpi.unit,dec:1,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160});
     h+='</div>';
   });
@@ -382,7 +385,11 @@ function renderFunding(){
   document.getElementById('funding-source-desc').innerHTML='Revenue mix under <strong style="color:'+clr+'">'+scLabel+'</strong> ('+poolAmt+'/yr pool). '+(activeSc==='aggressive'?'Diversified revenue base with AI compute rents as the largest contributor.':activeSc==='moderate'?'Moderately diversified, with philanthropy filling gaps left by lower compute rent capture.':activeSc==='bau'?'Philanthropy-dependent. Without policy infrastructure, AI compute rents are minimal and public revenue streams are not established.':'Near-total reliance on philanthropy and cooperatives. Institutional funding mechanisms have collapsed.');
 
   var datasets={aggressive:KPI.poverty.aggressive,moderate:KPI.poverty.moderate,bau:KPI.poverty.bau,worst:KPI.poverty.worst};
-  document.getElementById('funding-chart').innerHTML=scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160});
+  var povEnd=datasets[activeSc][datasets[activeSc].length-1];
+  var povBase=datasets[activeSc][0];
+  document.getElementById('funding-chart').innerHTML=
+    chartHeader({label:'Poverty Rate',value:povEnd,unit:'%',dec:1,dir:'lower',baseline:povBase,color:SC_COLORS[activeSc],endYear:2035})
+    +scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160});
   document.getElementById('funding-legend').innerHTML='';
 }
 
