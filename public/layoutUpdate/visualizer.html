@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visualizer — AI Civilization Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260220g">
+</head>
+<body>
+
+<!-- ── MASTHEAD ── -->
+<header class="masthead">
+<div class="page masthead-inner">
+  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Visualizer</p>
+  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">3D Network Visualizer</h1>
+  <p class="body mt-3" style="max-width:480px">An interactive 3D experience that renders the six operating systems as a living network &mdash; responsive to scenarios, time, and policy decisions.</p>
+  <hr class="rule">
+</div>
+</header>
+
+<div id="site-nav-mount"></div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     01 — WHAT IT IS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="page">
+  <span class="section-num">01</span>
+  <h2 class="t2">What It Is</h2>
+  <hr class="rule">
+  <div class="pullquote mt-4" style="max-width:640px">
+    A real-time 3D network graph that maps the six civilizational operating systems &mdash; their health, their interdependencies, and their response to four divergent policy futures.
+  </div>
+  <p class="body mt-4" style="max-width:640px">The AI Civilization Simulator models six domains: climate, governance, workforce transition, civilization health, simulation engine, and strategy. Each page on this site explores one domain in depth. The Visualizer renders all six simultaneously as an interconnected 3D network &mdash; a single view of the entire system.</p>
+  <p class="body mt-3" style="max-width:640px">Nodes orbit a central Civilization Index. Connections between them carry weighted influence &mdash; a governance failure propagates differently than a climate tipping point. The visualization makes these dynamics tangible.</p>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     02 — WHAT YOU CAN DO
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider">
+<div class="page">
+  <span class="section-num">02</span>
+  <p class="t2">What You Can Do</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="num-lg" style="color:var(--accent)">4</p>
+      <p class="t3 mt-1">Scenarios</p>
+      <p class="t4 mt-2">Switch between Aggressive Action, Moderate Reform, Business as Usual, and Worst Case. Watch every node scale, pulse, and recolor in response. The ambient soundscape shifts from harmonic consonance to dissonant drift.</p>
+    </div>
+    <div class="cell">
+      <p class="num-lg" style="color:var(--accent)">50</p>
+      <p class="t3 mt-1">Year Timeline</p>
+      <p class="t4 mt-2">Scrub from 2026 to 2075. Charts split into solid past and dashed future. Scores interpolate year-by-year. A narrative panel summarizes the state of the world at any point on the timeline.</p>
+    </div>
+    <div class="cell">
+      <p class="num-lg" style="color:var(--accent)">6</p>
+      <p class="t3 mt-1">System Overrides</p>
+      <p class="t4 mt-2">Lock any individual system to its own scenario &mdash; independent of the global state. See how one domain in crisis (or in recovery) shifts the aggregate score and the health of every connected system.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     03 — HOW IT WORKS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider">
+<div class="page">
+  <span class="section-num">03</span>
+  <p class="t2">How It Works</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">3D Network</p>
+      <p class="t4 mt-2">Six system nodes orbit a central composite index. Each node&rsquo;s size, spin speed, color saturation, and opacity are driven by its health score. Connections between nodes carry directional, weighted influence &mdash; brighter and thicker when the link is strong, faded when weak.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">Cosmic Symphony</p>
+      <p class="t4 mt-2">Each system has a unique audio voice tuned to a note in a Cmaj9 chord. When healthy, the voices synchronize into a consonant, harmonized soundscape. As systems deteriorate, vibrato increases, pitch drifts, and rhythmic pulses desynchronize &mdash; an auditory signal that the system is fracturing.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">Smooth Transitions</p>
+      <p class="t4 mt-2">All visual and audio changes use exponential easing. Switching scenarios doesn&rsquo;t snap &mdash; it morphs. Node scales, colors, bloom intensity, fog, rotation speed, and audio parameters all interpolate continuously toward their targets.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">Data-Driven</p>
+      <p class="t4 mt-2">The visualizer pulls its metrics and timeseries data from the same shared data layer that powers every dashboard on this site. Update a scenario projection in the data source and the 3D view, charts, and world-state narratives all reflect the change automatically.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     04 — CONTROLS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider">
+<div class="page">
+  <span class="section-num">04</span>
+  <p class="t2">Controls Reference</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-2">
+    <div class="cell">
+      <p class="t3" style="margin-bottom:8px">Mouse / Touch</p>
+      <p class="t4"><strong style="color:var(--text-primary)">Click a node</strong> &mdash; fly the camera in and open the system detail panel with charts, scores, and override controls.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Click again</strong> &mdash; deselect and fly back to overview.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Double-click a node</strong> &mdash; navigate to its full dashboard page.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Drag</strong> &mdash; orbit the camera freely around the scene.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Scroll</strong> &mdash; zoom in and out.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="margin-bottom:8px">Keyboard Shortcuts</p>
+      <p class="t4"><strong style="color:var(--text-primary)">1 &ndash; 4</strong> &mdash; switch scenario (Aggressive, Moderate, BAU, Worst).</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">M</strong> &mdash; toggle sound on/off.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Esc</strong> &mdash; deselect node and return to overview.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Left / Right arrows</strong> &mdash; step through the timeline year by year.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LAUNCH CTA
+     ═══════════════════════════════════════════════════════════ -->
+<div class="section" style="padding-top:12px;padding-bottom:48px">
+<div class="page" style="text-align:center">
+  <div style="border:1px solid rgba(78,205,196,0.15);border-radius:8px;padding:40px 36px;background:rgba(78,205,196,0.03);max-width:560px;margin:0 auto">
+    <p style="font-family:var(--font-mono);font-size:56px;font-weight:700;color:var(--accent);line-height:1">3D</p>
+    <p class="t3 mt-2" style="color:var(--text-muted)">Interactive Network Visualization</p>
+    <p class="t4 mt-3" style="max-width:380px;margin-left:auto;margin-right:auto;line-height:1.7">Sound on recommended. Works on desktop and mobile. Requires a WebGL-capable browser. Best experienced in fullscreen.</p>
+    <a href="viz.html" style="display:inline-block;margin-top:24px;padding:14px 36px;background:var(--accent);color:#080810;font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Enter the Visualizer &rarr;</a>
+  </div>
+</div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<div id="page-footer"></div>
+
+<script src="js/shared.js?v=20260220g"></script>
+<script>
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('page-footer').innerHTML=renderFooter();
+</script>
+</body>
+</html>

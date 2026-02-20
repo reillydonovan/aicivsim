@@ -183,7 +183,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div>
       <p class="brand"><strong>AICIVSIM</strong> &mdash; 2026</p>
       <p class="site-title">Civilization Systems Network</p>
-      <a href="index.html" class="back-link">&larr; Back to dashboard</a>
+      <a href="visualizer.html" class="back-link">&larr; Back to Visualizer</a>
     </div>
     <div class="top-right">
       <div class="sc-bar" id="sc-bar">
@@ -202,7 +202,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <select class="compare-sel" id="compare-sel" style="display:none"></select>
       <div class="agg" id="agg">
         <div class="agg-score" id="agg-score">44</div>
-        <div class="agg-sub">Civilization Index</div>
+        <div class="agg-sub">CivilizationOS</div>
         <div class="agg-grade" id="agg-grade"></div>
         <div class="agg-status" id="agg-status"></div>
       </div>
@@ -272,8 +272,8 @@ const SYS=[
    desc:'The interactive engine \u2014 5 policy levers, 50-year timeline, era-phased narrative reports from possible futures.'},
   {id:'transition',  label:'TransitionOS',   color:0x95cf95, today:43, proj:{aggressive:88,moderate:68,bau:28,worst:12},  href:'transition.html',
    desc:'Workforce readiness \u2014 reskilling rates, poverty trajectories, income bridge calculator, employment metrics.'},
-  {id:'civilization',label:'CivilizationOS', color:0xe8a838, today:44, proj:{aggressive:81,moderate:61,bau:30,worst:13},  href:'civilization.html',
-   desc:'Aggregate civilizational health \u2014 equity, wellbeing, composite index, funding pools, implementation timeline.'},
+  {id:'ai',          label:'AI',             color:0xe8a838, today:48, proj:{aggressive:92,moderate:68,bau:32,worst:10},  href:'ai.html',
+   desc:'Artificial intelligence \u2014 alignment progress, autonomy risk, compute governance, model transparency, and deployment safety.'},
   {id:'governance',  label:'GovernanceOS',   color:0xb0a0d0, today:40, proj:{aggressive:85,moderate:65,bau:30,worst:10},  href:'governance.html',
    desc:'Institutional infrastructure \u2014 civic participation, AI charter adoption, citizen assemblies, safety audit coverage.'},
   {id:'strategy',    label:'StrategyOS',     color:0xe8636e, today:35, proj:{aggressive:88,moderate:62,bau:22,worst:8},   href:'strategy.html',
@@ -498,7 +498,7 @@ function mkLabel(node,isCenter){
   const el=document.createElement('div');el.className='nlabel';
   const col=isCenter?'#ffffff':'#'+node.color.getHexString();
   const colFade=isCenter?'rgba(255,255,255,0.45)':col+'88';
-  el.innerHTML='<div class="nlabel-score" style="color:'+col+'"></div><div class="nlabel-name" style="color:'+colFade+'">'+(isCenter?'CIVILIZATION':node.data.label)+'</div>';
+  el.innerHTML='<div class="nlabel-score" style="color:'+col+'"></div><div class="nlabel-name" style="color:'+colFade+'">'+(isCenter?'CIVILIZATIONOS':node.data.label)+'</div>';
   labelBox.appendChild(el);
   return{el,node:isCenter?centerNode:node,mesh:isCenter?cMesh:node.mesh,isCenter,scoreEl:el.querySelector('.nlabel-score')};
 }
@@ -551,7 +551,7 @@ const VOICE_FREQ=[
   130.81,  /* Climate    — C3  (root) */
   164.81,  /* Simulation — E3  (major 3rd) */
   196.00,  /* Transition — G3  (5th) */
-  246.94,  /* Civilization— B3 (major 7th) */
+  246.94,  /* AI          — B3 (major 7th) */
   293.66,  /* Governance — D4  (9th) */
   220.00   /* Strategy   — A3  (6th) */
 ];
@@ -1056,7 +1056,7 @@ function updateInfo(){
   p.classList.remove('hidden');
   let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt,nodeSc;
   if(selNode.isCenter){
-    name='Civilization Index';sc=mixedAgg();g=grade(sc);
+    name='CivilizationOS';sc=mixedAgg();g=grade(sc);
     const anyOvr=Object.values(overrides).some(v=>v!==null);
     nodeSc=anyOvr?'mixed':active;
     const scMeta=SC_META[active];
@@ -1252,7 +1252,8 @@ function applyScenario(sc){
     if(c.toC){
       const nSc=eff(c.a.data.id);
       const sA=scAt(c.a.data.today,c.a.data.proj[nSc],year);
-      ct.opacity=(sA/100)*0.14;ct.color.set(SC_META[nSc].color);
+      const h=sA/100;
+      ct.opacity=0.06+h*0.3;ct.color.set(SC_META[nSc].color);
     }else{
       const idA=c.a.data.id,idB=c.b.data.id;
       const scA=eff(idA),scB=eff(idB);
@@ -1318,11 +1319,11 @@ updateVis();
    ================================================================ */
 const connTip=document.getElementById('conn-tip');
 function updateConnTooltip(){
-  if(!selNode||selNode.isCenter||comparing){connTip.classList.add('hidden');return}
+  if(!selNode||comparing){connTip.classList.add('hidden');return}
+  if(selNode.isCenter){connTip.classList.add('hidden');return}
   const sId=selNode.data.id;
   let bestConn=null,bestDist=Infinity;
   conns.forEach(c=>{
-    if(c.toC)return;
     const linked=(c.a===selNode||c.b===selNode);if(!linked)return;
     const mid3=c.curve.getPoint(0.5).clone().project(camera);
     const mx=(mid3.x*0.5+0.5)*W(),my=(-mid3.y*0.5+0.5)*H();
@@ -1331,16 +1332,25 @@ function updateConnTooltip(){
   });
   if(!bestConn||bestDist>80){connTip.classList.add('hidden');return}
   const other=bestConn.a===selNode?bestConn.b:bestConn.a;
-  if(other.isCenter){connTip.classList.add('hidden');return}
-  const oId=other.data.id;
-  const ab=xw(sId,oId,eff(sId)),ba=xw(oId,sId,eff(oId));
-  const pctAB=(ab.w*100).toFixed(0),pctBA=(ba.w*100).toFixed(0);
-  const clrAB=ab.w>=0?'#4ecdc4':'#d4622a',clrBA=ba.w>=0?'#4ecdc4':'#d4622a';
-  connTip.innerHTML='<div class="conn-tip-head">'+selNode.data.label+' \u2194 '+other.data.label+'</div>'
-    +'<div style="margin:6px 0"><span class="conn-tip-pct" style="color:'+clrAB+'">'+(ab.w>0?'+':'')+pctAB+'%</span> '+selNode.data.label+' \u2192 '+other.data.label+'</div>'
-    +'<div style="color:rgba(255,255,255,0.45);margin-bottom:6px">'+ab.e+'</div>'
-    +'<div><span class="conn-tip-pct" style="color:'+clrBA+'">'+(ba.w>0?'+':'')+pctBA+'%</span> '+other.data.label+' \u2192 '+selNode.data.label+'</div>'
-    +'<div style="color:rgba(255,255,255,0.45)">'+ba.e+'</div>';
+  if(other.isCenter){
+    const nSc=eff(sId);
+    const sNow=scAt(selNode.data.today,selNode.data.proj[nSc],year);
+    const contrib=Math.round(sNow/SYS.length);
+    const clrC=sNow>=50?'#4ecdc4':'#d4622a';
+    connTip.innerHTML='<div class="conn-tip-head">'+selNode.data.label+' \u2194 CivilizationOS</div>'
+      +'<div style="margin:6px 0"><span class="conn-tip-pct" style="color:'+clrC+'">'+sNow+'</span> system health ('+grade(sNow)+')</div>'
+      +'<div style="color:rgba(255,255,255,0.45)">Contributes ~'+contrib+' pts to aggregate score. '+(sNow>=70?'Strong positive contributor.':sNow>=50?'Moderate contributor.':sNow>=30?'Underperforming \u2014 dragging aggregate down.':'Critical weakness \u2014 major drag on civilization index.')+'</div>';
+  }else{
+    const oId=other.data.id;
+    const ab=xw(sId,oId,eff(sId)),ba=xw(oId,sId,eff(oId));
+    const pctAB=(ab.w*100).toFixed(0),pctBA=(ba.w*100).toFixed(0);
+    const clrAB=ab.w>=0?'#4ecdc4':'#d4622a',clrBA=ba.w>=0?'#4ecdc4':'#d4622a';
+    connTip.innerHTML='<div class="conn-tip-head">'+selNode.data.label+' \u2194 '+other.data.label+'</div>'
+      +'<div style="margin:6px 0"><span class="conn-tip-pct" style="color:'+clrAB+'">'+(ab.w>0?'+':'')+pctAB+'%</span> '+selNode.data.label+' \u2192 '+other.data.label+'</div>'
+      +'<div style="color:rgba(255,255,255,0.45);margin-bottom:6px">'+ab.e+'</div>'
+      +'<div><span class="conn-tip-pct" style="color:'+clrBA+'">'+(ba.w>0?'+':'')+pctBA+'%</span> '+other.data.label+' \u2192 '+selNode.data.label+'</div>'
+      +'<div style="color:rgba(255,255,255,0.45)">'+ba.e+'</div>';
+  }
   connTip.classList.remove('hidden');
   connTip.style.left=Math.min(mouseScreen.x+16,W()-300)+'px';
   connTip.style.top=Math.min(mouseScreen.y-10,H()-200)+'px';
@@ -1504,7 +1514,7 @@ function tick(){
 
   /* Connection highlights */
   conns.forEach(c=>{
-    if(selNode&&!c.toC){
+    if(selNode){
       const linked=c.a===selNode||c.b===selNode;
       if(linked)c.mat.opacity=Math.max(c.mat.opacity,0.3);
     }
@@ -1521,7 +1531,7 @@ function tick(){
   if(hovNode&&hovNode!==selNode){
     let tipName,tipScore,tipGrade,tipColor,tipSub,ovrTag='';
     if(hovNode.isCenter){
-      tipName='Civilization Index';tipScore=mixedAgg();tipGrade=grade(tipScore);
+      tipName='CivilizationOS';tipScore=mixedAgg();tipGrade=grade(tipScore);
       tipColor=Object.values(overrides).some(v=>v!==null)?'#fff':SC_META[active].css;
       tipSub='Aggregate of all 6 systems &middot; Click to inspect';
     }else{

@@ -12,9 +12,11 @@ function fmtPct(n,d){d=d||1;return n.toFixed(d)+'%'}
 /* ── Global constants ── */
 var PAGE_ORDER=[
   {href:'index.html',label:'Home'},
+  {href:'visualizer.html',label:'Visualizer'},
   {href:'climate.html',label:'ClimateOS'},
   {href:'simulation.html',label:'SimulationOS'},
   {href:'transition.html',label:'TransitionOS'},
+  {href:'ai.html',label:'AI'},
   {href:'civilization.html',label:'CivilizationOS'},
   {href:'governance.html',label:'GovernanceOS'},
   {href:'strategy.html',label:'StrategyOS'},
@@ -241,7 +243,12 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.08,effect:'Positive climate data validates simulation models. Public trust in projections increases, strengthening evidence-based policy.'},
         moderate:{weight:0.03,effect:'Mixed climate results create uncertainty in simulation accuracy. Model credibility holds but confidence is tepid.'},
         bau:{weight:-0.05,effect:'Worsening climate outcomes undermine confidence in simulation models. Policy-makers question projection value.'},
-        worst:{weight:-0.12,effect:'Climate reality far exceeds worst projections. Simulation credibility collapses — models seen as dangerously optimistic.'}}
+        worst:{weight:-0.12,effect:'Climate reality far exceeds worst projections. Simulation credibility collapses — models seen as dangerously optimistic.'}},
+      {target:'ai',label:'AI',
+        aggressive:{weight:0.12,effect:'Climate stability enables long-horizon AI research. Resources shift from crisis management to alignment work and safety infrastructure.'},
+        moderate:{weight:0.05,effect:'Moderate climate pressure allows some AI safety investment but competes with adaptation spending.'},
+        bau:{weight:-0.06,effect:'Climate emergencies redirect AI development toward short-term disaster response, crowding out alignment research.'},
+        worst:{weight:-0.15,effect:'Climate collapse forces AI into triage mode. No bandwidth for alignment — all compute devoted to survival logistics.'}}
     ]
   },
   transition:{
@@ -271,7 +278,12 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.10,effect:'Successful transition validates simulation projections. Public trust in modeling strengthens evidence-based governance.'},
         moderate:{weight:0.04,effect:'Partial transition results provide mixed validation of simulation models. Credibility holds in some sectors.'},
         bau:{weight:-0.03,effect:'Stalled transition outcomes cast doubt on simulation accuracy. Policy-makers question model assumptions.'},
-        worst:{weight:-0.10,effect:'Catastrophic workforce outcomes discredit simulation models entirely. Projections seen as meaningless in crisis.'}}
+        worst:{weight:-0.10,effect:'Catastrophic workforce outcomes discredit simulation models entirely. Projections seen as meaningless in crisis.'}},
+      {target:'ai',label:'AI',
+        aggressive:{weight:0.14,effect:'Reskilled workforce includes AI safety and alignment talent. Broad technical literacy supports informed governance of AI systems.'},
+        moderate:{weight:0.06,effect:'Some reskilling pathways include AI skills. Technical literacy growing but unevenly distributed.'},
+        bau:{weight:-0.04,effect:'No AI literacy in reskilling programs. Public unable to participate meaningfully in AI governance debates.'},
+        worst:{weight:-0.12,effect:'Workforce collapse means no pipeline for AI safety talent. AI development concentrated in a shrinking, unaccountable elite.'}}
     ]
   },
   civilization:{
@@ -301,7 +313,12 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.06,effect:'Strong civilizational outcomes validate simulation utility. Public demand for data-driven governance grows.'},
         moderate:{weight:0.02,effect:'Mixed civilizational outcomes produce moderate confidence in simulation models.'},
         bau:{weight:-0.03,effect:'Worsening conditions reduce public interest in simulation. Fatalism replaces evidence-based planning.'},
-        worst:{weight:-0.08,effect:'Civilizational decline makes simulation feel irrelevant. Populations abandon data-driven approaches for reactive survival.'}}
+        worst:{weight:-0.08,effect:'Civilizational decline makes simulation feel irrelevant. Populations abandon data-driven approaches for reactive survival.'}},
+      {target:'ai',label:'AI',
+        aggressive:{weight:0.16,effect:'Thriving civilization demands responsible AI. Public engagement drives alignment mandates, safety audits, and transparent deployment at scale.'},
+        moderate:{weight:0.08,effect:'Moderate civilizational health supports baseline AI governance. Safety norms emerging but enforcement is inconsistent.'},
+        bau:{weight:-0.05,effect:'Declining wellbeing makes AI safety a luxury concern. Development prioritizes economic extraction over alignment.'},
+        worst:{weight:-0.14,effect:'Civilizational collapse makes AI an instrument of control rather than a tool for flourishing. Alignment abandoned entirely.'}}
     ]
   },
   governance:{
@@ -331,7 +348,12 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.12,effect:'Strong governance enables transparent simulation infrastructure. Public trust in modeling underpins policy decisions.'},
         moderate:{weight:0.06,effect:'Moderate governance supports simulation credibility. Some transparency gaps limit full public confidence.'},
         bau:{weight:-0.04,effect:'Weak governance undermines simulation independence. Models perceived as politically influenced.'},
-        worst:{weight:-0.14,effect:'Governance failure makes simulation impossible. No institutional capacity to maintain or trust modeling infrastructure.'}}
+        worst:{weight:-0.14,effect:'Governance failure makes simulation impossible. No institutional capacity to maintain or trust modeling infrastructure.'}},
+      {target:'ai',label:'AI',
+        aggressive:{weight:0.22,effect:'Binding AI charters, mandatory safety audits, and transparent deployment frameworks create the strongest foundation for aligned AI development.'},
+        moderate:{weight:0.12,effect:'Partial governance frameworks cover major AI systems. Safety norms exist but enforcement varies by jurisdiction.'},
+        bau:{weight:-0.04,effect:'No binding AI governance. Voluntary principles are widely ignored. Development outpaces any regulatory capacity.'},
+        worst:{weight:-0.20,effect:'Governance capture by AI interests eliminates oversight entirely. AI development is unregulated and opaque.'}}
     ]
   },
   strategy:{
@@ -361,7 +383,12 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.08,effect:'High strategy adoption generates rich feedback data. Simulation models improve as real-world action validates projections.'},
         moderate:{weight:0.03,effect:'Some strategy data feeds back into simulation. Model accuracy improves incrementally.'},
         bau:{weight:0.00,effect:'Minimal strategy action provides no useful feedback data. Simulation models run without real-world validation.'},
-        worst:{weight:-0.04,effect:'No strategy adoption means no feedback loop. Simulation operates in a vacuum, disconnected from reality.'}}
+        worst:{weight:-0.04,effect:'No strategy adoption means no feedback loop. Simulation operates in a vacuum, disconnected from reality.'}},
+      {target:'ai',label:'AI',
+        aggressive:{weight:0.10,effect:'Organized advocacy drives AI transparency mandates. Grassroots pressure creates accountability infrastructure for AI deployment.'},
+        moderate:{weight:0.05,effect:'Some public advocacy for AI safety. Awareness growing but action concentrated among technical communities.'},
+        bau:{weight:0.01,effect:'Minimal public attention to AI governance. Development proceeds without organized public input.'},
+        worst:{weight:-0.06,effect:'Public disengagement from AI governance enables unchecked development. No grassroots accountability mechanism exists.'}}
     ]
   },
   simulation:{
@@ -391,7 +418,47 @@ var CROSS_SYSTEM={
         aggressive:{weight:0.14,effect:'Simulation clarity shows citizens exactly which strategies matter. Evidence-based action plans drive adoption at every level.'},
         moderate:{weight:0.06,effect:'Moderate simulation output informs some strategy choices. Public has partial visibility into what actions work.'},
         bau:{weight:-0.02,effect:'No simulation insight available to public. Strategy adoption based on intuition, marketing, and ideology.'},
-        worst:{weight:-0.08,effect:'Simulation credibility destroyed. Citizens have no trusted information source for strategic decisions.'}}
+        worst:{weight:-0.08,effect:'Simulation credibility destroyed. Citizens have no trusted information source for strategic decisions.'}},
+      {target:'ai',label:'AI',
+        aggressive:{weight:0.20,effect:'Simulation infrastructure directly powers AI safety testing. Scenario modeling validates alignment approaches before deployment at scale.'},
+        moderate:{weight:0.10,effect:'Some simulation resources applied to AI evaluation. Safety testing exists but does not cover frontier models comprehensively.'},
+        bau:{weight:-0.03,effect:'No simulation infrastructure for AI safety. Models deployed without scenario testing or impact projection.'},
+        worst:{weight:-0.14,effect:'Simulation collapse eliminates the only tool capable of projecting AI risk at scale. Development proceeds without foresight.'}}
+    ]
+  },
+  ai:{
+    label:'AI',color:'#e8a838',
+    impacts:[
+      {target:'climate',label:'ClimateOS',
+        aggressive:{weight:0.18,effect:'Aligned AI optimizes energy grids, accelerates materials science for renewables, and models climate interventions with unprecedented accuracy.'},
+        moderate:{weight:0.08,effect:'AI contributes to climate modeling and some optimization. Deployment is helpful but not transformative.'},
+        bau:{weight:-0.06,effect:'AI compute demands increase energy consumption. No alignment mandate means AI optimizes for profit, not sustainability.'},
+        worst:{weight:-0.18,effect:'Unaligned AI massively increases compute energy demand. AI-driven resource extraction accelerates environmental collapse.'}},
+      {target:'simulation',label:'SimulationOS',
+        aggressive:{weight:0.22,effect:'Aligned AI dramatically improves simulation fidelity. Predictive models achieve unprecedented accuracy through AI-augmented scenario analysis.'},
+        moderate:{weight:0.10,effect:'AI moderately improves simulation capabilities. Some models benefit but integration is incomplete.'},
+        bau:{weight:-0.04,effect:'AI development proceeds without simulation integration. Models remain static while AI capabilities outpace them.'},
+        worst:{weight:-0.15,effect:'Unaligned AI produces adversarial outputs that actively corrupt simulation integrity. Model trust collapses.'}},
+      {target:'transition',label:'TransitionOS',
+        aggressive:{weight:-0.08,effect:'Even aligned AI automates roles, but strong governance ensures reskilling keeps pace. Net displacement minimal with civic dividend buffers.'},
+        moderate:{weight:-0.14,effect:'AI automation displaces workers faster than reskilling absorbs. Moderate support reduces but does not eliminate disruption.'},
+        bau:{weight:-0.25,effect:'Rapid AI automation without workforce support creates mass displacement. No reskilling infrastructure to absorb the shock.'},
+        worst:{weight:-0.35,effect:'Unregulated AI eliminates jobs at scale. No safety net, no reskilling, no transition pathway. Permanent structural unemployment.'}},
+      {target:'civilization',label:'CivilizationOS',
+        aggressive:{weight:0.20,effect:'Aligned AI serves as a tool for human flourishing — optimizing healthcare, education, and resource distribution equitably.'},
+        moderate:{weight:0.08,effect:'AI provides some civilizational benefits but gains are unevenly distributed. Equity gaps persist in access to AI services.'},
+        bau:{weight:-0.08,effect:'AI concentrates wealth and power. Productivity gains flow to capital owners. Inequality accelerates.'},
+        worst:{weight:-0.22,effect:'Unaligned AI becomes an instrument of surveillance and control. Civilizational wellbeing collapses as autonomy erodes.'}},
+      {target:'governance',label:'GovernanceOS',
+        aggressive:{weight:0.15,effect:'Transparent AI systems strengthen democratic institutions. Algorithmic audits, open models, and participatory AI governance become the norm.'},
+        moderate:{weight:0.06,effect:'Some AI governance frameworks emerge. Transparency improving but regulatory capture remains a risk.'},
+        bau:{weight:-0.08,effect:'AI outpaces governance capacity. Institutions cannot regulate what they do not understand. Democratic oversight erodes.'},
+        worst:{weight:-0.22,effect:'AI actively undermines democratic governance through deepfakes, manipulation, and surveillance. Institutional legitimacy destroyed.'}},
+      {target:'strategy',label:'StrategyOS',
+        aggressive:{weight:0.14,effect:'AI-powered analysis helps citizens identify the highest-leverage strategies. Personalized action plans drive adoption at every level.'},
+        moderate:{weight:0.06,effect:'Some AI tools available for strategy planning. Adoption aided by technology but limited by access inequality.'},
+        bau:{weight:-0.03,effect:'AI tools exist but are proprietary and inaccessible. Strategy adoption gains no benefit from AI capabilities.'},
+        worst:{weight:-0.10,effect:'AI-generated misinformation actively undermines strategy adoption. Citizens cannot distinguish real from synthetic guidance.'}}
     ]
   }
 };
@@ -438,6 +505,18 @@ var VIZ_METRICS={
            moderate:[11,10.8,10.6,10.3,10.1,9.8,9.5,9.2,8.9,8.6,8.3,8.1,7.8,7.6,7.4,7.2,7.0,6.9,6.7,6.6,6.5,6.4,6.3,6.2,6.1],
            bau:[11,11.2,11.5,11.9,12.3,12.8,13.3,13.9,14.4,15.0,15.5,16.0,16.5,17.0,17.4,17.8,18.2,18.5,18.8,19.1,19.3,19.5,19.7,19.9,20],
            worst:[11,11.5,12.2,13.1,14.2,15.5,17.0,18.6,20.3,22.0,23.7,25.3,26.8,28.2,29.4,30.5,31.5,32.3,33.0,33.6,34.1,34.5,34.8,35.0,35.2]}}
+  ],
+  ai:[
+    {id:'alignment',label:'Alignment Index',unit:'/100',dir:'higher',
+     data:{aggressive:[48,52,56,60,64,68,72,75,78,80,82,84,86,87,88,89,90,90,91,91,91,92,92,92,92],
+           moderate:[48,50,52,54,56,58,60,61,62,63,64,65,65,66,66,67,67,67,68,68,68,68,68,68,68],
+           bau:[48,47,46,44,43,42,40,39,38,37,36,35,34,34,33,33,32,32,32,32,32,32,32,32,32],
+           worst:[48,45,42,38,35,31,27,24,21,18,16,14,12,11,10,10,10,10,10,10,10,10,10,10,10]}},
+    {id:'transparency',label:'Model Transparency',unit:'%',dir:'higher',
+     data:{aggressive:[15,20,26,33,40,48,55,62,68,73,78,82,85,88,90,92,93,94,95,95,96,96,96,97,97],
+           moderate:[15,18,21,24,28,32,36,39,42,45,48,50,52,54,55,56,57,58,59,59,60,60,60,61,61],
+           bau:[15,15,14,14,14,13,13,13,13,13,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12],
+           worst:[15,13,11,10,8,7,6,5,5,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3]}}
   ],
   civilization:[
     {id:'health',label:'Health Index',unit:'/100',dir:'higher',

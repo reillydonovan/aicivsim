@@ -53,7 +53,7 @@
 <div class="chapter-divider">
 <div class="page">
   <span class="section-num">02</span>
-  <p class="t2">Six Systems Index &mdash; <span id="idx-scenario-label" style="color:#4ecdc4">Aggressive</span></p>
+  <p class="t2">Systems Index &mdash; <span id="idx-scenario-label" style="color:#4ecdc4">Aggressive</span></p>
 </div>
 </div>
 
@@ -79,15 +79,15 @@
     A data-driven simulation framework that models the interconnected forces shaping long-term civilizational outcomes &mdash; climate, governance, workforce, equity, technology, and wellbeing.
   </div>
   <p class="body mt-4" style="max-width:640px">The world&rsquo;s most critical systems &mdash; climate, economy, governance, technology &mdash; don&rsquo;t operate in isolation. A policy decision about AI regulation ripples through labor markets. A failure in climate adaptation compounds inequality. A collapse in institutional trust undermines every other reform.</p>
-  <p class="body mt-3" style="max-width:640px">This simulator maps those interdependencies. It takes six civilizational systems, connects them through feedback loops, and projects how different levels of policy intervention produce radically different outcomes over 50 years.</p>
+  <p class="body mt-3" style="max-width:640px">This simulator maps those interdependencies. It takes seven civilizational systems &mdash; including AI itself &mdash; connects them through feedback loops, and projects how different levels of policy intervention produce radically different outcomes over 50 years.</p>
   <p class="body mt-3" style="max-width:640px"><strong style="color:var(--text-primary)">This is not a prediction engine.</strong> It is a planning tool &mdash; a structured way to reason about systemic tradeoffs, compounding effects, and the consequences of acting (or failing to act) at civilizational scale.</p>
   <p class="body mt-3" style="max-width:640px">All data is modeled from scenario projections, calibrated against IPCC pathways, labor economics research, and institutional governance literature. Nothing here is real-time sensor data.</p>
 
   <div class="grid grid-3 mt-8">
     <div class="cell">
-      <p class="num-lg" style="color:var(--accent)">6</p>
-      <p class="t3 mt-1">Operating Systems</p>
-      <p class="t4 mt-2">Climate, Governance, Workforce Transition, Civilization Health, Simulation Engine, and Strategy Catalog. Each models one dimension. Changes in one propagate across all others through feedback loops.</p>
+      <p class="num-lg" style="color:var(--accent)">7</p>
+      <p class="t3 mt-1">Systems</p>
+      <p class="t4 mt-2">AI, Climate, Governance, Workforce Transition, Civilization Health, Simulation Engine, and Strategy Catalog. Each models one dimension. Changes in one propagate across all others through feedback loops.</p>
     </div>
     <div class="cell">
       <p class="num-lg" style="color:var(--accent)">4</p>
@@ -137,6 +137,25 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
+     VISUALIZER CTA
+     ═══════════════════════════════════════════════════════════ -->
+<div class="section" style="padding-top:0;padding-bottom:0">
+<div class="page">
+  <div style="border:1px solid rgba(78,205,196,0.15);border-radius:8px;padding:32px 36px;background:rgba(78,205,196,0.03);display:flex;align-items:center;gap:32px;flex-wrap:wrap">
+    <div style="flex:1;min-width:260px">
+      <p class="t3" style="color:var(--accent);margin-bottom:8px">Experience the Systems in 3D</p>
+      <p class="t4" style="max-width:480px;line-height:1.7">See all six operating systems as an interactive network. Switch scenarios and scrub through 50 years of projections while the nodes, connections, and ambient soundscape respond in real time. Each system is a voice in a chord &mdash; when aligned, they harmonize; when fractured, they drift apart.</p>
+      <a href="visualizer.html" class="tag mt-4" style="display:inline-block;border-color:var(--accent);color:var(--accent);font-size:12px;padding:10px 20px;text-decoration:none;letter-spacing:0.06em">Launch the Visualizer &rarr;</a>
+    </div>
+    <div style="text-align:center;min-width:140px">
+      <p style="font-family:var(--font-mono);font-size:48px;font-weight:700;color:var(--accent);line-height:1">3D</p>
+      <p class="t4 mt-1" style="color:var(--text-muted)">Interactive<br>Network Graph</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
      05 — THE FOUR SCENARIOS
      ═══════════════════════════════════════════════════════════ -->
 <div class="chapter-divider">
@@ -159,7 +178,7 @@
 <div class="chapter-divider">
 <div class="page">
   <span class="section-num">06</span>
-  <p class="t2">The Six Systems</p>
+  <p class="t2">The Seven Systems</p>
 </div>
 </div>
 
@@ -173,6 +192,12 @@
         <p class="t3" style="color:var(--climate)">ClimateOS &rarr;</p>
       </a>
       <p class="t4 mt-2">Planetary systems: temperature trajectories, emissions pathways, biodiversity indices, ocean health, renewable energy transition, crop yields, water stress, sea level rise, and tipping point risk assessment. 8 core metrics across 6 sub-domains.</p>
+    </div>
+    <div class="cell">
+      <a href="ai.html" style="text-decoration:none">
+        <p class="t3" style="color:#e8a838">AI &rarr;</p>
+      </a>
+      <p class="t4 mt-2">Artificial intelligence: alignment progress, autonomy risk, compute governance, model transparency, deployment safety, and public trust. 6 core metrics tracking whether AI capability growth is converging with &mdash; or diverging from &mdash; governance capacity.</p>
     </div>
     <div class="cell">
       <a href="simulation.html" style="text-decoration:none">
@@ -289,6 +314,9 @@ var SYSTEMS=[
   {id:'climate',   label:'ClimateOS',      href:'climate.html',      color:'var(--climate)',    today:42,
    desc:'Climate resilience, emissions trajectories, biodiversity corridors',
    projected:{aggressive:85,moderate:58,bau:28,worst:12}},
+  {id:'ai',        label:'AI',             href:'ai.html',           color:'#e8a838',           today:48,
+   desc:'Alignment progress, autonomy risk, compute governance, model transparency, deployment safety',
+   projected:{aggressive:92,moderate:68,bau:32,worst:10}},
   {id:'simulation',label:'SimulationOS',    href:'simulation.html',   color:'var(--technology)', today:null,
    desc:'Interactive engine with 5 policy levers and 50-year narrative projections',
    meta:'12 branches',projected:null},
@@ -296,7 +324,7 @@ var SYSTEMS=[
    desc:'Workforce readiness, reskilling rates, income bridge calculator',
    projected:{aggressive:88,moderate:68,bau:28,worst:12}},
   {id:'civilization',label:'CivilizationOS',href:'civilization.html', color:'var(--equity)',     today:44,
-   desc:'Aggregate civilizational health across all six domains',
+   desc:'Aggregate civilizational health across all domains',
    projected:{aggressive:81,moderate:61,bau:30,worst:13}},
   {id:'governance',label:'GovernanceOS',    href:'governance.html',   color:'var(--governance)', today:40,
    desc:'Institutional trust, AI governance charters, civic participation',
@@ -391,7 +419,7 @@ function renderHeroScore(){
   h+='</div>';
   h+='</div>';
 
-  h+='<p class="body mt-3">Aggregate score across climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today \u2014 before any of the four scenarios are applied.</p>';
+  h+='<p class="body mt-3">Aggregate score across AI alignment, climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today \u2014 before any of the four scenarios are applied.</p>';
   h+='<p class="t4 mt-2" style="color:var(--text-muted)">If trends continue: <span style="color:#d4622a">'+grade(bauScore)+' ('+bauScore+'/100)</span> by 2050</p>';
 
   h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
