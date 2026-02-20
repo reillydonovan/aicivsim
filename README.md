@@ -37,7 +37,7 @@ public/layoutUpdate/
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
-├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, dark/light mode, localStorage persistence, CSV export, cross-system feedback, comparison mode, animated transitions, ARIA, renderFooter
+├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries), SIM_ENGINE (simulation data + narrative), simWorldState, dark/light mode, localStorage persistence, CSV export, cross-system feedback, comparison mode, animated transitions, ARIA, renderFooter
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
@@ -67,7 +67,7 @@ public/layoutUpdate/
 - **3D network visualization** — `viz.html` renders all six operating systems as an interactive Three.js node graph orbiting a central "Aggregate" node. Features include:
   - **Scenario-aware connections** — Lines between nodes are colored (green positive / red negative) and opacity-scaled by cross-system influence weights from `shared.js` CROSS_SYSTEM data.
   - **Directional particles** — Flow along connections in the direction of stronger influence; scatter under low aggregate health.
-  - **Camera fly-to** — Clicking a node smoothly animates the camera to center on it; Escape returns to overview.
+  - **Camera fly-to** — Clicking a node smoothly animates the camera to center on it; clicking the same node again flies back to the overview. Escape also returns to overview. Dragging to orbit preserves your camera position — the view never resets on accidental clicks.
   - **Hover tooltips** — Cursor-following tooltip shows system name, score, grade, and interaction hints on all nodes including the center aggregate.
   - **Connection tooltips** — Hovering highlighted connections (when a node is selected) shows bidirectional impact percentages and effect descriptions.
   - **Node detail panel** — Clicking any node (including the center aggregate) opens a detail card showing current score, grade, projected 2050 score for the active scenario, description, and navigation hint. The projected score updates live when switching scenarios.
@@ -75,13 +75,22 @@ public/layoutUpdate/
   - **Timeline playback** — Year slider (2026–2050) with play/pause; scores, node sizes, and connection weights interpolate over time.
   - **Timeline trail** — Small spheres mark the central node's position each year during playback, color-coded by health.
   - **Scenario comparison panel** — "Compare" toggle opens a right-side data panel showing all 6 system scores + aggregate for two scenarios side-by-side with color-coded deltas. Updates live with the year slider.
-  - **Globe mode** — Toggle switches from hexagonal network to positions on a wireframe icosphere with great-circle arc connections.
+  - **Globe mode** — *(Currently disabled; listed in roadmap for revisit.)* Toggle switches from hexagonal network to positions on a wireframe icosphere with great-circle arc connections. JS infrastructure remains in place.
   - **Health-driven node behavior (per-system)** — Each node independently responds to its scenario score: wireframe spin speed scales with health (fast when healthy, near-stop when critical); bob amplitude and frequency shift from gentle to erratic with high-frequency jitter below 35%; individual alarm pulse rings appear below 55% health, pulsing faster and shifting from system color to alarm orange as severity increases; glow aura scales from large/bright to small/dim; color desaturates toward gray as health drops; opacity fades on sick nodes.
   - **Collective atmosphere** — Aggregate health drives global scene state: orbit auto-rotate slows from 0.6 to 0.1; bloom dims from 1.25 to 0.25; fog thickens; ground grid shifts from cool blue to warning red; central pulse ring accelerates and reddens; center node shrinks and fades.
-  - **Per-node audio** — Each of the 6 systems has a dedicated oscillator at a unique pitch (C3–A3). Healthy systems play clean sine tones; moderately sick shift to triangle wave; critically sick become harsh sawtooth. Sick systems detune with wobbling vibrato that accelerates with severity.
-  - **Collective audio** — Base drone drops pitch as aggregate health falls; harmonic chord shifts from major intervals to dissonant tritone clustering; a low sawtooth alarm throb emerges below 40% health, pulsing faster as it worsens; filtered white noise hiss fades in below 50% health.
-  - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects.
-  - **Double-click navigation** — Double-clicking a system node opens its dashboard page.
+  - **Cosmic symphony audio** — Each of the 6 systems is a voice in a Cmaj9 chord (C3, E3, G3, B3, D4, A3). When all systems are healthy, the voices form a consonant, slowly-breathing harmonic unity — a quiet shimmer pad with each voice pulsing in sync. As individual systems deteriorate, their pitch drifts toward dissonant microtonal intervals (semitone rubs, tritones), vibrato widens and speeds up, their rhythmic pulse desyncs from the collective, and a lowpass filter muffles them. Each voice also has a quiet fifth-above shimmer that fades with health. The result: at Aggressive Action the visualization hums with a warm, unified chord; at Worst Case the chord fractures into an uneasy, beating polytonal texture — subtle enough to be ambient, expressive enough to feel the difference.
+  - **Collective atmosphere audio** — Sub-bass drone sinks in pitch as aggregate health drops. Upper shimmer pad (3 partials) detunes toward minor intervals. A sub-bass alarm throb emerges gently below 35% aggregate health. Filtered noise hiss fades in below 45%. Master volume kept deliberately low (0.3) for non-intrusive ambience. Sound defaults to on, auto-initializing on the first user gesture.
+  - **Smooth scenario transitions** — Switching scenarios or scrubbing the year slider never causes instant visual jumps. A per-frame lerp system (`lerpScenario`) smoothly interpolates all node sizes, colors, opacities, connection weights, bloom, fog, grid color, and auto-rotate speed toward their target values using exponential easing (~80% in 0.35s). Audio follows the same smooth path since `updateAudio()` runs every frame and reads the continuously-lerping health values.
+  - **Timeline-aware sparkline charts** — When a system node is selected, the detail panel shows multi-scenario sparkline charts (via `timelineSVG()` from `shared.js`) for 2–3 headline metrics — e.g., Temperature Rise, Renewable Share, CO₂ for ClimateOS. The chart distinguishes past from projected future: solid line up to the current year, dashed line for the remainder, with a vertical year marker and a dot on the active scenario at the current position. All four scenarios are visible; the active line is highlighted. When the center aggregate is selected, a summary sparkline per system is shown instead.
+  - **Floating chart overlays** — "Charts" toggle projects mini sparkline cards onto each 3D node in screen-space, tracking node positions as the camera orbits. Each card uses the same timeline-aware chart with solid past / dashed future split, updating live with scenario and year changes.
+  - **`timelineSVG()` in shared.js** — A new SVG chart function that extends `comparisonSVG` with year-index awareness: splits each scenario line into solid (past) and dashed (future) segments, draws a vertical year marker, places a dot at the current position on the active line, and fills only the past area. Used by `viz.html` for all sparkline displays.
+  - **Drag-safe click handling** — Pointer-down position is tracked and compared to click position; movements greater than 6px are treated as orbit drags and ignored by the selection logic, preventing accidental node selection/deselection while rotating the scene.
+  - **Centralized VIZ_METRICS data** — A new `VIZ_METRICS` object in `shared.js` provides 25-point (2026–2050) timeseries for 2–3 headline metrics per system across all 4 scenarios. This single data source is referenced by both `viz.html` and is available to all dashboard pages for cross-referencing, ensuring consistency.
+  - **World State panel** — "World State" toggle opens a scrollable left-side panel showing a condensed SimulationOS-style narrative for the current year and scenario. Includes simulation score with grade, era label (Dawn/Divergence/Maturity/Legacy), era feel text, and five narrative sections (People & Livelihoods, Climate & Energy, Trust & Governance, AI & the Future, The Road Ahead) with a compact "by the numbers" grid showing GINI, Trust, Emissions, Resilience, and AI Influence vs baselines. Updates live as you scrub the year slider or switch scenarios. Data and narrative logic are sourced from `SIM_ENGINE` in `shared.js` — the same canonical data that powers `simulation.html` — so edits to the simulation page propagate automatically.
+  - **SIM_ENGINE in shared.js** — The simulation's 44-point timeseries (2027–2070) for GINI, Trust, Emissions, Resilience, and AI Influence across all 4 scenarios, plus narrative generation functions (`simWorldState`, `simScore`, `simEra`, `simInterp`), now live in `shared.js` as a single source of truth. `simulation.html` references this instead of a local copy.
+  - **Compact mode bar** — Compare, Charts, World, and Sound toggles styled as an inline button group matching the scenario bar pattern. Globe hidden pending redesign.
+  - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects and returns to overview.
+  - **Double-click navigation** — Double-clicking an unselected system node opens its dashboard page. Guarded against accidental triggers during deselect.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
 - **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`.
@@ -92,7 +101,7 @@ public/layoutUpdate/
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., ClimateOS with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220f`) to prevent stale browser caches after deployment.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220g`) to prevent stale browser caches after deployment.
 
 ### Scenario system
 
@@ -173,6 +182,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
 - [ ] **Data source integration** — Connect to real-world data APIs (World Bank, NOAA, ILO) to ground baseline values in actual measurements.
 - [ ] **Scenario builder** — Allow users to create custom scenarios beyond the four presets by defining their own policy lever configurations.
+- [ ] **Globe view (viz.html)** — Revisit the globe mode that remaps the network onto a wireframe icosphere. Currently hidden; JS infrastructure remains in place for re-enabling.
 - [ ] **Accessibility audit** — Full WCAG 2.1 AA compliance review, focus management, screen reader testing.
 
 ### Deploying to Hostinger

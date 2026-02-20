@@ -396,6 +396,220 @@ var CROSS_SYSTEM={
   }
 };
 
+/* ================================================================
+   VIZ_METRICS — summary timeseries for the 3D visualization and
+   any page that needs a quick per-system metric overview.
+   Each system has 2-3 headline metrics with 25-point (2026-2050)
+   data arrays per scenario. Keep in sync with dashboard pages.
+   ================================================================ */
+var VIZ_METRICS={
+  climate:[
+    {id:'temp',label:'Temperature Rise',unit:'\u00b0C',prefix:'+',dir:'lower',
+     data:{aggressive:[1.1,1.12,1.14,1.15,1.16,1.17,1.18,1.18,1.19,1.19,1.2,1.2,1.2,1.2,1.2,1.2,1.19,1.19,1.18,1.18,1.17,1.16,1.15,1.14,1.13],
+           moderate:[1.1,1.13,1.16,1.2,1.24,1.28,1.33,1.37,1.42,1.46,1.5,1.54,1.57,1.6,1.63,1.66,1.69,1.71,1.73,1.74,1.75,1.76,1.77,1.78,1.79],
+           bau:[1.1,1.18,1.28,1.4,1.53,1.67,1.82,1.97,2.12,2.27,2.4,2.5,2.58,2.65,2.7,2.74,2.78,2.81,2.84,2.87,2.89,2.91,2.92,2.94,2.95],
+           worst:[1.1,1.24,1.42,1.64,1.89,2.16,2.44,2.71,2.97,3.2,3.4,3.55,3.68,3.79,3.89,3.98,4.08,4.17,4.27,4.36,4.43,4.49,4.53,4.57,4.6]}},
+    {id:'renewable',label:'Renewable Share',unit:'%',dir:'higher',
+     data:{aggressive:[30,33,37,41,46,51,56,61,66,71,75,79,82,85,87,89,91,93,94,95,96,97,97,98,99],
+           moderate:[30,32,35,38,41,44,48,52,56,60,63,67,70,73,75,78,80,82,83,85,86,87,87,88,88],
+           bau:[30,31,33,35,37,39,41,43,45,47,49,50,52,53,55,56,57,58,59,60,61,62,63,63,64],
+           worst:[30,31,32,33,34,35,36,37,37,38,38,39,39,40,40,40,41,41,41,41,42,42,42,42,42]}},
+    {id:'co2',label:'CO\u2082 Concentration',unit:'ppm',dir:'lower',
+     data:{aggressive:[421,418,414,410,406,402,398,394,390,387,384,381,378,376,374,372,371,370,369,368,368,367,367,366,366],
+           moderate:[421,420,419,418,417,416,414,413,411,409,408,406,404,403,402,401,400,399,398,397,397,396,396,395,395],
+           bau:[421,424,428,433,439,446,454,462,470,479,487,495,503,510,517,523,529,534,538,542,545,547,549,550,551],
+           worst:[421,428,438,450,464,480,498,518,539,560,581,601,621,639,656,672,687,701,714,727,740,753,766,779,790]}}
+  ],
+  simulation:[
+    {id:'score',label:'Simulation Score',unit:'/100',dir:'higher',
+     data:{aggressive:[50,52,54,57,60,63,66,69,72,74,76,78,80,82,83,84,86,87,88,88,89,89,89,90,90],
+           moderate:[50,51,52,54,56,58,60,61,63,64,65,66,67,67,68,68,69,69,69,70,70,70,70,70,70],
+           bau:[50,49,48,47,46,45,44,43,42,41,40,40,39,39,38,38,37,37,36,36,36,35,35,35,35],
+           worst:[50,48,46,43,40,37,34,31,29,27,25,24,22,21,20,19,18,18,17,17,16,16,15,15,15]}}
+  ],
+  transition:[
+    {id:'reskill',label:'Reskill Completion',unit:'%',dir:'higher',
+     data:{aggressive:[8,12,17,23,29,36,42,49,55,61,66,70,74,77,79,81,83,84,86,87,88,89,89,90,90],
+           moderate:[8,10,13,16,20,24,28,32,36,40,43,46,49,52,54,56,58,60,62,63,64,65,66,67,68],
+           bau:[8,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,24,25,26,26,27,27,28],
+           worst:[8,8,8,8,8,8,8,9,9,9,9,10,10,10,10,10,11,11,11,11,11,12,12,12,12]}},
+    {id:'poverty',label:'Poverty Rate',unit:'%',dir:'lower',
+     data:{aggressive:[11,10.5,10,9.4,8.8,8.2,7.6,7.0,6.5,6.0,5.5,5.1,4.7,4.3,4.0,3.7,3.4,3.2,3.0,2.8,2.6,2.5,2.4,2.3,2.2],
+           moderate:[11,10.8,10.6,10.3,10.1,9.8,9.5,9.2,8.9,8.6,8.3,8.1,7.8,7.6,7.4,7.2,7.0,6.9,6.7,6.6,6.5,6.4,6.3,6.2,6.1],
+           bau:[11,11.2,11.5,11.9,12.3,12.8,13.3,13.9,14.4,15.0,15.5,16.0,16.5,17.0,17.4,17.8,18.2,18.5,18.8,19.1,19.3,19.5,19.7,19.9,20],
+           worst:[11,11.5,12.2,13.1,14.2,15.5,17.0,18.6,20.3,22.0,23.7,25.3,26.8,28.2,29.4,30.5,31.5,32.3,33.0,33.6,34.1,34.5,34.8,35.0,35.2]}}
+  ],
+  civilization:[
+    {id:'health',label:'Health Index',unit:'/100',dir:'higher',
+     data:{aggressive:[44,46,49,52,55,58,61,64,66,68,70,72,74,75,76,77,78,79,79,80,80,80,81,81,81],
+           moderate:[44,45,46,47,49,50,52,53,54,55,56,57,57,58,59,59,60,60,60,60,61,61,61,61,61],
+           bau:[44,43,42,41,40,39,38,37,36,36,35,34,34,33,33,32,32,31,31,31,30,30,30,30,30],
+           worst:[44,42,40,37,35,32,30,27,25,23,21,20,19,18,17,16,15,15,14,14,14,13,13,13,13]}},
+    {id:'equity',label:'Equity Score',unit:'/100',dir:'higher',
+     data:{aggressive:[38,40,43,46,49,52,55,58,61,63,66,68,70,72,73,75,76,77,78,79,79,80,80,81,81],
+           moderate:[38,39,40,41,42,43,44,46,47,48,49,50,51,52,53,53,54,55,55,56,56,57,57,57,58],
+           bau:[38,37,36,35,34,33,32,31,31,30,29,29,28,28,27,27,26,26,26,25,25,25,25,24,24],
+           worst:[38,36,34,31,29,26,24,22,20,18,17,15,14,13,12,12,11,11,10,10,10,9,9,9,9]}}
+  ],
+  governance:[
+    {id:'participation',label:'Civic Participation',unit:'%',dir:'higher',
+     data:{aggressive:[12,15,19,23,28,33,38,43,48,53,57,61,64,67,70,72,74,76,77,78,79,80,81,82,82],
+           moderate:[12,13,15,17,19,22,24,27,29,32,34,36,38,40,42,44,45,47,48,49,50,51,52,53,53],
+           bau:[12,12,12,12,12,12,12,12,13,13,13,13,13,14,14,14,14,14,14,15,15,15,15,15,15],
+           worst:[12,11,11,10,10,9,9,8,8,7,7,7,6,6,6,6,5,5,5,5,5,5,5,5,5]}},
+    {id:'trust',label:'Institutional Trust',unit:'%',dir:'higher',
+     data:{aggressive:[28,31,34,38,42,46,50,54,57,60,63,65,67,69,71,73,74,75,76,77,78,78,79,79,80],
+           moderate:[28,29,30,31,33,34,36,37,39,40,42,43,44,46,47,48,49,50,51,52,52,53,54,54,55],
+           bau:[28,27,27,26,26,25,25,24,24,23,23,23,22,22,22,21,21,21,21,20,20,20,20,20,20],
+           worst:[28,26,24,22,20,18,16,15,13,12,11,10,10,9,9,8,8,7,7,7,7,6,6,6,6]}}
+  ],
+  strategy:[
+    {id:'adoption',label:'Action Adoption',unit:'%',dir:'higher',
+     data:{aggressive:[15,19,24,29,35,41,47,53,58,63,67,71,74,77,79,81,83,84,85,86,87,87,88,88,88],
+           moderate:[15,17,19,22,25,28,31,34,37,40,42,44,46,48,50,51,53,54,55,56,57,58,58,59,59],
+           bau:[15,15,15,15,15,16,16,16,16,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,20],
+           worst:[15,14,13,12,11,10,10,9,9,8,8,7,7,7,6,6,6,6,6,5,5,5,5,5,5]}},
+    {id:'score',label:'Strategy Score',unit:'/100',dir:'higher',
+     data:{aggressive:[35,38,42,46,50,54,58,62,66,69,72,74,76,78,80,81,83,84,85,86,87,87,88,88,88],
+           moderate:[35,36,38,40,42,44,46,48,49,51,52,54,55,56,57,58,59,59,60,61,61,61,62,62,62],
+           bau:[35,34,33,32,31,30,29,28,28,27,27,26,26,25,25,24,24,23,23,23,22,22,22,22,22],
+           worst:[35,33,30,28,25,22,20,18,16,14,13,12,11,10,10,9,9,8,8,8,8,8,8,8,8]}}
+  ]
+};
+
+/* ================================================================
+   SIM_ENGINE — Simulation timeseries & narrative generation
+   Canonical data source shared by simulation.html and viz.html.
+   44-point arrays cover 2027–2070; use simInterp(arr, year) to sample.
+   ================================================================ */
+var SIM_ENGINE={
+  scenarios:{
+    aggressive:{name:'Aggressive Action',css:'#4ecdc4',div:10,charter:true,capex:25,reskill:20,transparency:80,
+      gini:[.385,.381,.377,.373,.368,.363,.358,.352,.346,.340,.334,.328,.322,.316,.310,.305,.300,.295,.290,.286,.282,.278,.275,.272,.270,.268,.266,.264,.262,.261,.260,.259,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258],
+      trust:[.432,.437,.445,.455,.468,.483,.500,.518,.537,.557,.575,.593,.610,.626,.641,.654,.666,.677,.687,.696,.704,.712,.718,.724,.730,.735,.740,.744,.748,.752,.755,.758,.761,.764,.766,.768,.770,.772,.774,.776,.778,.780,.782,.784],
+      emis:[36.3,35.8,35.0,34.0,32.8,31.5,30.0,28.4,26.8,25.2,23.6,22.1,20.7,19.4,18.2,17.1,16.1,15.2,14.4,13.6,12.9,12.3,11.7,11.2,10.7,10.3,9.9,9.5,9.2,8.9,8.6,8.4,8.2,8.0,7.8,7.6,7.5,7.3,7.2,7.1,7.0,6.9,6.8,6.7],
+      resil:[.355,.360,.368,.378,.390,.404,.420,.437,.455,.473,.491,.509,.527,.544,.560,.575,.589,.602,.614,.625,.635,.644,.652,.660,.667,.673,.679,.684,.689,.693,.697,.701,.704,.707,.710,.713,.715,.717,.719,.721,.723,.725,.727,.729],
+      ai:[.121,.123,.127,.132,.138,.145,.153,.162,.172,.182,.193,.204,.215,.226,.237,.248,.259,.269,.279,.289,.298,.307,.315,.323,.330,.337,.343,.349,.354,.359,.364,.368,.372,.376,.380,.383,.386,.389,.392,.394,.396,.398,.400,.402]},
+    moderate:{name:'Moderate Reform',css:'#5da5da',div:5,charter:true,capex:15,reskill:12,transparency:55,
+      gini:[.385,.384,.382,.380,.377,.374,.371,.367,.364,.360,.356,.352,.348,.344,.341,.337,.334,.331,.328,.326,.324,.322,.320,.319,.317,.316,.315,.315,.314,.314,.314,.314,.314,.314,.314,.315,.315,.315,.316,.316,.316,.317,.317,.317],
+      trust:[.432,.434,.438,.443,.450,.458,.467,.477,.487,.497,.507,.517,.527,.536,.545,.553,.561,.568,.575,.581,.586,.591,.596,.600,.604,.607,.610,.613,.616,.618,.620,.622,.624,.625,.627,.628,.629,.630,.631,.632,.633,.634,.635,.636],
+      emis:[36.3,36.0,35.5,35.0,34.3,33.6,32.8,32.0,31.2,30.4,29.6,28.9,28.2,27.5,26.8,26.2,25.6,25.1,24.6,24.1,23.7,23.3,22.9,22.6,22.3,22.0,21.7,21.5,21.3,21.1,20.9,20.8,20.6,20.5,20.4,20.3,20.2,20.1,20.0,20.0,19.9,19.9,19.8,19.8],
+      resil:[.355,.357,.362,.368,.376,.385,.395,.406,.417,.428,.439,.450,.461,.471,.480,.489,.497,.505,.512,.519,.525,.530,.535,.540,.544,.548,.551,.554,.557,.560,.562,.564,.566,.568,.570,.571,.573,.574,.575,.576,.577,.578,.579,.580],
+      ai:[.121,.124,.129,.136,.145,.155,.166,.178,.191,.205,.219,.234,.248,.263,.277,.291,.305,.318,.331,.343,.354,.365,.375,.385,.394,.403,.411,.418,.425,.432,.438,.444,.449,.454,.459,.463,.467,.471,.475,.478,.481,.484,.487,.490]},
+    bau:{name:'Business as Usual',css:'#e8a838',div:0,charter:false,capex:5,reskill:3,transparency:20,
+      gini:[.385,.387,.391,.396,.402,.409,.417,.426,.435,.444,.453,.462,.470,.478,.485,.492,.498,.504,.509,.513,.517,.521,.524,.527,.529,.531,.533,.534,.536,.537,.538,.539,.540,.541,.541,.542,.542,.543,.543,.543,.543,.544,.544,.544],
+      trust:[.432,.428,.422,.415,.406,.396,.386,.375,.365,.354,.344,.334,.325,.317,.309,.302,.296,.291,.286,.282,.278,.275,.273,.271,.269,.268,.267,.266,.265,.265,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264],
+      emis:[36.3,36.4,36.6,36.8,37.0,37.2,37.4,37.6,37.7,37.8,37.9,38.0,38.0,38.0,38.0,37.9,37.8,37.7,37.6,37.5,37.3,37.2,37.0,36.9,36.7,36.6,36.4,36.3,36.1,36.0,35.9,35.7,35.6,35.5,35.4,35.3,35.2,35.1,35.0,34.9,34.8,34.8,34.7,34.7],
+      resil:[.355,.352,.348,.342,.336,.329,.322,.315,.308,.301,.295,.289,.283,.278,.274,.270,.266,.263,.260,.258,.256,.254,.252,.251,.250,.249,.248,.247,.247,.246,.246,.246,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245],
+      ai:[.121,.127,.136,.148,.163,.180,.199,.220,.242,.265,.289,.313,.336,.359,.381,.402,.422,.441,.458,.474,.489,.502,.515,.526,.536,.545,.553,.560,.567,.573,.578,.583,.587,.591,.595,.598,.601,.604,.606,.608,.610,.612,.614,.615]},
+    worst:{name:'Worst Case',css:'#d4622a',div:0,charter:false,capex:2,reskill:0,transparency:5,
+      gini:[.385,.390,.398,.408,.420,.435,.451,.468,.486,.504,.521,.537,.552,.565,.577,.587,.596,.604,.611,.617,.622,.626,.630,.633,.636,.638,.640,.642,.643,.645,.646,.647,.648,.649,.650,.650,.651,.651,.652,.652,.652,.653,.653,.653],
+      trust:[.432,.424,.412,.398,.382,.364,.345,.326,.308,.291,.275,.261,.248,.237,.228,.220,.214,.209,.205,.202,.199,.197,.195,.194,.193,.192,.191,.190,.190,.190,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189],
+      emis:[36.3,36.8,37.5,38.4,39.4,40.5,41.6,42.7,43.7,44.6,45.4,46.0,46.5,46.8,47.0,47.1,47.1,47.0,46.8,46.6,46.3,46.0,45.7,45.3,45.0,44.6,44.3,44.0,43.7,43.4,43.1,42.8,42.6,42.3,42.1,41.9,41.7,41.5,41.3,41.2,41.0,40.9,40.7,40.6],
+      resil:[.355,.348,.339,.328,.316,.303,.290,.277,.265,.254,.244,.235,.228,.222,.217,.213,.210,.208,.206,.204,.203,.202,.201,.200,.200,.199,.199,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198],
+      ai:[.121,.130,.144,.162,.184,.210,.239,.271,.305,.340,.376,.411,.445,.477,.507,.534,.558,.580,.599,.615,.629,.641,.651,.660,.667,.673,.678,.683,.687,.690,.693,.695,.697,.699,.701,.702,.704,.705,.706,.707,.708,.709,.710,.710]}
+  },
+  metrics:[
+    {id:'gini',  label:'Inequality (GINI)',  unit:'',    dec:3, dir:'lower',  baseline:.385},
+    {id:'trust', label:'Civic Trust',        unit:'',    dec:3, dir:'higher', baseline:.432},
+    {id:'emis',  label:'Emissions',          unit:' Gt', dec:1, dir:'lower',  baseline:36.3},
+    {id:'resil', label:'Resilience',         unit:'',    dec:3, dir:'higher', baseline:.355},
+    {id:'ai',    label:'AI Influence',       unit:'',    dec:3, dir:'context',baseline:.121}
+  ],
+  narratives:{
+    aggressive:'Under aggressive policy action \u2014 a 10% civic dividend, full AI charter oversight, and 25% climate capex \u2014 inequality drops steadily toward .258 by 2070 while civic trust nearly doubles to .784. Emissions fall from 36.3 Gt to 6.7 Gt, and resilience more than doubles.',
+    moderate:'Moderate reform with a 5% dividend, active charter, and 15% capex produces meaningful improvement without radical restructuring. Gini stabilizes near .317, trust reaches .636, and emissions decline to 19.8 Gt.',
+    bau:'Business as usual sees inequality climb to .544, trust erode to .264, and emissions plateau above 34 Gt. Resilience halves while unregulated AI influence reaches .615.',
+    worst:'Under worst case, Gini exceeds .650, trust collapses to .189, and emissions peak near 47 Gt. Resilience falls to .198 and unregulated AI influence reaches .710.'
+  }
+};
+
+function simInterp(arr,year){
+  var idx=year-2027;
+  if(idx<=0)return arr[0];if(idx>=43)return arr[43];
+  var lo=Math.floor(idx),hi=Math.ceil(idx),t=idx-lo;
+  return arr[lo]+(arr[hi]-arr[lo])*t;
+}
+
+function simScore(sc,year){
+  var s=SIM_ENGINE.scenarios[sc];if(!s)return 0;
+  var gini=simInterp(s.gini,year);
+  var trust=simInterp(s.trust,year);
+  var emis=simInterp(s.emis,year);
+  var resil=simInterp(s.resil,year);
+  var score=Math.round((1-gini)*20+trust*25+Math.max(0,(36.3-emis)/36.3)*25+resil*20+(s.charter?10:0));
+  return Math.max(0,Math.min(100,score));
+}
+
+function simEra(elapsed){
+  if(elapsed<=3)return'Dawn';
+  if(elapsed<=12)return'Divergence';
+  if(elapsed<=30)return'Maturity';
+  return'Legacy';
+}
+
+function simWorldState(sc,year){
+  var s=SIM_ENGINE.scenarios[sc];if(!s)return{};
+  var elapsed=year-2026;
+  var gini=simInterp(s.gini,year);
+  var trust=simInterp(s.trust,year);
+  var emis=simInterp(s.emis,year);
+  var resil=simInterp(s.resil,year);
+  var ai=simInterp(s.ai,year);
+  var score=simScore(sc,year);
+  var era=simEra(elapsed);
+  var g=grade(score);
+
+  var livelihoods,climate,governance,aiText,outlook;
+
+  /* Livelihoods */
+  if(gini<0.30)livelihoods='Inequality transformed. Income floor via dividends; reskilling is cultural norm.';
+  else if(gini<0.35)livelihoods='Wealth gap narrowing. Dividends cushion transitions; changing careers feels normal.';
+  else if(gini<0.40)livelihoods='Economy functioning but uneven. Gains concentrated; middle-skill jobs hollowed.';
+  else livelihoods='Economy failing people. GINI at '+gini.toFixed(3)+'; displaced workers fall through gaps.';
+
+  /* Climate */
+  if(emis<15)climate='Energy transition complete. Emissions down to '+emis.toFixed(1)+' Gt. Air cleaner, worst avoided.';
+  else if(emis<25)climate='Emissions down to '+emis.toFixed(1)+' Gt. Renewable transition underway but pockets of fossil remain.';
+  else if(emis<36)climate='Emissions barely moved at '+emis.toFixed(1)+' Gt. Fossil economy resilient; impacts visible.';
+  else climate='Emissions risen to '+emis.toFixed(1)+' Gt. Window for managed transition closing. Communities abandoned.';
+
+  /* Trust */
+  if(trust>0.7)governance='Trust at '+trust.toFixed(3)+' \u2014 earned through transparency and participation.';
+  else if(trust>0.5)governance='Trust improving at '+trust.toFixed(3)+'. Institutions not loved but no longer distrusted.';
+  else if(trust>0.35)governance='Trust stagnant at '+trust.toFixed(3)+'. Reforms announced, partially funded, quietly abandoned.';
+  else governance='Trust collapsed to '+trust.toFixed(3)+'. Voter turnout cratered. Conspiracy fills the vacuum.';
+
+  /* AI */
+  if(s.charter&&trust>0.5&&ai<0.5)aiText='AI integrated on society\u2019s terms. Charter enforced. Influence at '+ai.toFixed(3)+'.';
+  else if(s.charter&&trust>0.35)aiText='Charter exists but guardrails creaking. AI influence at '+ai.toFixed(3)+'.';
+  else if(ai>0.5)aiText='AI influence at '+ai.toFixed(3)+' \u2014 shaping more outcomes than human deliberation.'+(s.charter?'':' No charter.');
+  else aiText='AI influence at '+ai.toFixed(3)+' \u2014 still early.'+(s.charter?' Charter in place for the test ahead.':' No governance framework.');
+
+  /* Outlook */
+  if(score>=80)outlook='Trajectory strong. Compounding returns from early investment are self-reinforcing.';
+  else if(score>=60)outlook='Real momentum but fragile. Acceleration needed \u2014 deepen dividends, expand charter, increase climate capex.';
+  else if(score>=40)outlook='Critical juncture. Without course correction in 5\u201310 years, structural decline becomes self-reinforcing.';
+  else if(score>=20)outlook='Recovery requires peacetime mobilization. Every lever simultaneously. Window shrinking.';
+  else outlook='Prevention stage passed. Focus shifts to resilience and survival of cascading failures.';
+
+  var eraFeel;
+  if(elapsed<=3){
+    eraFeel=score>=50?'Reforms are new. Hope is cautious.':'World feels much as before. Crises compound.';
+  }else if(elapsed<=12){
+    eraFeel=score>=60?'Paths have split. People feel the difference.':score>=40?'Awkward middle passage \u2014 changed but not safe.':'Divergence visible, and not the good kind.';
+  }else if(elapsed<=30){
+    eraFeel=score>=70?'A generation grew up different. Reforms are just how things work.':score>=50?'Imperfect new shape. Progress real but uneven.':score>=30?'Structures buckling. Rough patch is the new normal.':'Compound failures self-reinforcing.';
+  }else{
+    eraFeel=score>=70?'A world that chose to act. Foundation sound.':score>=50?'Partial success. Worst avoided but world smaller.':score>=30?'Historians debate when the window closed.':'A world that failed \u2014 gradually, through inaction.';
+  }
+
+  return{score:score,grade:g,era:era,eraFeel:eraFeel,elapsed:elapsed,
+    gini:gini,trust:trust,emis:emis,resil:resil,ai:ai,
+    livelihoods:livelihoods,climate:climate,governance:governance,aiText:aiText,outlook:outlook,
+    scenarioName:s.name,scenarioCss:s.css,charter:s.charter};
+}
+
 function renderCrossSystem(systemId,scenario){
   var sys=CROSS_SYSTEM[systemId];
   if(!sys) return '';
@@ -487,6 +701,68 @@ function comparisonSVG(datasets,colors,activeKey,w,h,labels){
   if(labels){
     s+='<text x="0" y="'+h+'" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)">'+labels[0]+'</text>';
     s+='<text x="'+w+'" y="'+h+'" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)" text-anchor="end">'+labels[1]+'</text>';
+  }
+  s+='</svg>';
+  return s;
+}
+
+/* ================================================================
+   timelineSVG — multi-scenario chart with solid past / dashed future
+   yearIdx: 0-based index of the current year within the data arrays
+   Same signature as comparisonSVG plus yearIdx parameter.
+   ================================================================ */
+function timelineSVG(datasets,colors,activeKey,w,h,labels,yearIdx){
+  w=w||260;h=h||120;
+  var allVals=[];for(var k in datasets)allVals=allVals.concat(datasets[k]);
+  var mn=Math.min.apply(null,allVals),mx=Math.max.apply(null,allVals),rng=mx-mn||1;
+  var pad=4;
+  function px(i,n){return(i/(n-1))*w}
+  function py(v){return h-pad-((v-mn)/rng)*(h-2*pad)}
+  var s='<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="height:'+h+'px">';
+  /* Year marker line */
+  if(yearIdx!=null&&yearIdx>=0){
+    var n0=datasets[Object.keys(datasets)[0]];
+    if(n0){
+      var xM=px(Math.min(yearIdx,n0.length-1),n0.length);
+      s+='<line x1="'+xM+'" y1="0" x2="'+xM+'" y2="'+h+'" stroke="rgba(255,255,255,0.18)" stroke-width="0.5" stroke-dasharray="2,2"/>';
+    }
+  }
+  for(var k in datasets){
+    var data=datasets[k];
+    var isActive=k===activeKey;
+    var clr=colors[k]||'#888';
+    var sw=isActive?2:0.7;
+    var op=isActive?1:0.15;
+    var n=data.length;
+    var yi=yearIdx!=null?Math.min(Math.max(0,yearIdx),n-1):n-1;
+    /* Build point arrays for past (0..yi) and future (yi..n-1) */
+    var pastPts=[],futurePts=[];
+    for(var i=0;i<n;i++){
+      var pt=px(i,n)+','+py(data[i]);
+      if(i<=yi)pastPts.push(pt);
+      if(i>=yi)futurePts.push(pt);
+    }
+    /* Solid past line */
+    if(pastPts.length>1){
+      s+='<polyline points="'+pastPts.join(' ')+'" fill="none" stroke="'+clr+'" stroke-width="'+sw+'" opacity="'+op+'" vector-effect="non-scaling-stroke"/>';
+    }
+    /* Dashed future line */
+    if(futurePts.length>1){
+      s+='<polyline points="'+futurePts.join(' ')+'" fill="none" stroke="'+clr+'" stroke-width="'+(sw*0.7)+'" opacity="'+(op*0.45)+'" stroke-dasharray="3,3" vector-effect="non-scaling-stroke"/>';
+    }
+    /* Filled area under active line (past only) */
+    if(isActive&&pastPts.length>1){
+      s+='<polygon points="'+px(0,n)+','+py(mn)+' '+pastPts.join(' ')+' '+px(yi,n)+','+py(mn)+'" fill="'+clr+'" opacity="0.06"/>';
+    }
+    /* Dot at current year on active line */
+    if(isActive){
+      var cx=px(yi,n),cy=py(data[yi]);
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="2.5" fill="'+clr+'" opacity="'+op+'"/>';
+    }
+  }
+  if(labels){
+    s+='<text x="0" y="'+(h-1)+'" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)">'+labels[0]+'</text>';
+    s+='<text x="'+w+'" y="'+(h-1)+'" fill="rgba(255,255,255,0.15)" font-size="8" font-family="var(--font-mono)" text-anchor="end">'+labels[1]+'</text>';
   }
   s+='</svg>';
   return s;

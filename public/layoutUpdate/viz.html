@@ -31,13 +31,11 @@ canvas{display:block}
 .sc-btn:hover{color:rgba(255,255,255,0.65)}
 .sc-btn.active{color:#fff;background:rgba(255,255,255,0.08)}
 
-.mode-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.mode-btn{font-family:'Space Grotesk',sans-serif;font-size:10px;padding:5px 10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.35);border-radius:3px;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em}
-.mode-btn:hover{color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2)}
-.mode-btn.on{color:#4ecdc4;border-color:#4ecdc480}
-.mode-group{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
-.mode-hint{font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:0.02em;padding-left:1px}
-.compare-sel{font-family:'Space Grotesk',sans-serif;font-size:10px;padding:4px 8px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:3px;outline:none}
+.mode-bar{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2px}
+.mode-btn{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.04em;padding:8px 14px;border:none;background:transparent;color:rgba(255,255,255,0.35);cursor:pointer;border-radius:3px;transition:all 0.3s;white-space:nowrap}
+.mode-btn:hover{color:rgba(255,255,255,0.65)}
+.mode-btn.on{color:#4ecdc4;background:rgba(78,205,196,0.08)}
+.compare-sel{font-family:'Space Grotesk',sans-serif;font-size:10px;padding:4px 8px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:3px;outline:none;margin-left:4px}
 
 .agg{text-align:right}
 .agg-score{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;line-height:1;transition:color 0.6s}
@@ -65,6 +63,55 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .info-bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease,background 0.5s}
 .info-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-top:12px;line-height:1.55}
 .info-nav{font-size:10px;color:rgba(255,255,255,0.25);margin-top:10px;font-style:italic}
+.world-panel{position:absolute;left:28px;bottom:80px;width:340px;max-height:calc(100vh - 200px);background:rgba(10,10,25,0.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;pointer-events:auto;z-index:12;display:flex;flex-direction:column}
+.world-panel-head{padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:baseline}
+.world-panel-title{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.world-panel-year{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
+.world-panel-body{padding:12px 16px 16px;overflow-y:auto;flex:1}
+.ws-hero{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.ws-score{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:800;line-height:1}
+.ws-grade{font-size:18px;font-weight:600;border:1px solid;padding:2px 8px;border-radius:3px}
+.ws-era{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;border:1px solid rgba(255,255,255,0.15);padding:2px 8px;border-radius:3px;margin-left:4px}
+.ws-feel{font-size:12px;line-height:1.7;color:rgba(255,255,255,0.45);font-style:italic;margin-bottom:14px}
+.ws-section{border-top:1px solid rgba(255,255,255,0.05);padding:10px 0}
+.ws-section-label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+.ws-section p{font-size:11px;line-height:1.65;color:rgba(255,255,255,0.55);margin:0}
+.ws-nums{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.ws-num{text-align:center}
+.ws-num .lbl{font-size:7px;letter-spacing:0.05em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+.ws-num .val{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-top:2px}
+.ws-num .base{font-size:7px;color:rgba(255,255,255,0.2)}
+.world-panel.hidden{opacity:0;pointer-events:none!important;transform:translateY(12px)}
+.world-panel{transition:opacity 0.3s,transform 0.3s}
+@media(max-width:680px){.world-panel{left:8px;right:8px;width:auto;max-height:50vh;bottom:60px}}
+.node-charts{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;transition:opacity 0.3s}
+.node-charts.hidden{opacity:0}
+.node-chart-card{position:absolute;pointer-events:auto;background:rgba(10,10,25,0.85);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:6px 8px;font-size:9px;letter-spacing:0.04em;min-width:140px;max-width:180px;transform:translate(-50%,-100%);transition:opacity 0.3s}
+.node-chart-card .spark{width:100%;height:22px;display:block;margin-top:2px}
+.node-chart-title{color:rgba(255,255,255,0.5);text-transform:uppercase;font-size:8px;margin-bottom:3px;text-align:center;white-space:nowrap}
+.node-chart-metric{display:flex;justify-content:space-between;align-items:baseline;margin-top:3px}
+.node-chart-metric .val{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10px}
+.info-charts{margin-top:12px;border-top:1px solid rgba(255,255,255,0.06);padding-top:8px}
+.info-chart-row{margin-bottom:10px}
+.info-chart-label{font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:flex;justify-content:space-between;align-items:baseline}
+.info-chart-val{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+.info-chart-row .spark{width:100%;height:28px;display:block;margin-top:2px}
+.info-override{margin-top:12px;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px}
+.info-override-label{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px}
+.info-override-btns{display:flex;gap:3px;flex-wrap:wrap}
+.ovr-btn{font-family:'Space Grotesk',sans-serif;font-size:9px;padding:3px 8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.3);border-radius:2px;cursor:pointer;transition:all 0.2s;letter-spacing:0.02em}
+.ovr-btn:hover{color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2)}
+.ovr-btn.ovr-active{font-weight:600}
+.ovr-btn.ovr-global{border-style:dashed}
+
+.override-bar{position:absolute;top:50%;left:28px;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;pointer-events:auto}
+.override-chip{display:flex;align-items:center;gap:6px;font-size:10px;background:rgba(6,6,14,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:3px;padding:4px 10px;backdrop-filter:blur(8px);cursor:pointer;transition:all 0.2s;pointer-events:auto}
+.override-chip:hover{border-color:rgba(255,255,255,0.2)}
+.override-chip .chip-dot{width:8px;height:8px;border-radius:50%}
+.override-chip .chip-name{color:rgba(255,255,255,0.5);letter-spacing:0.04em;text-transform:uppercase;font-size:9px}
+.override-chip .chip-sc{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:10px}
+.override-chip .chip-reset{font-size:9px;color:rgba(255,255,255,0.25);cursor:pointer;margin-left:4px}
+.override-chip .chip-reset:hover{color:#d4622a}
 
 #labels{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
 .nlabel{position:absolute;text-align:center;pointer-events:none;transition:opacity 0.2s}
@@ -116,7 +163,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   .yr-val{font-size:14px;min-width:40px}
   .info{display:none}
   .hint{display:none}
-  .mode-bar .mode-btn{font-size:9px;padding:4px 7px}
+  .mode-bar{flex-wrap:wrap}
+  .mode-bar .mode-btn{font-size:9px;padding:5px 8px}
 }
 </style>
 </head>
@@ -127,6 +175,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <div id="conn-tip" class="conn-tip hidden"></div>
 <div id="tip-event" class="tip-event hidden"></div>
 <div id="hover-tip" class="hover-tip hidden"></div>
+<div id="node-charts" class="node-charts hidden"></div>
 
 <div id="ui">
 <div id="compare-panel" class="compare-panel hidden"></div>
@@ -144,17 +193,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
         <button class="sc-btn" data-id="worst">Worst Case</button>
       </div>
       <div class="mode-bar">
-        <div class="mode-group">
-          <button class="mode-btn" id="compare-btn">Compare Scenarios</button>
-          <select class="compare-sel" id="compare-sel" style="display:none"></select>
-          <div class="mode-hint">Score all 6 systems under two scenarios</div>
-        </div>
-        <div class="mode-group">
-          <button class="mode-btn" id="globe-btn">Globe View</button>
-          <div class="mode-hint">Remap the network onto a sphere</div>
-        </div>
-        <button class="mode-btn" id="mute-btn">Sound Off</button>
+        <button class="mode-btn" id="compare-btn">Compare</button>
+        <button class="mode-btn" id="globe-btn" style="display:none">Globe</button>
+        <button class="mode-btn" id="charts-btn">Charts</button>
+        <button class="mode-btn" id="world-btn">World</button>
+        <button class="mode-btn on" id="mute-btn">Sound On</button>
       </div>
+      <select class="compare-sel" id="compare-sel" style="display:none"></select>
       <div class="agg" id="agg">
         <div class="agg-score" id="agg-score">44</div>
         <div class="agg-sub">Civilization Index</div>
@@ -182,14 +227,26 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div class="info-bar"><div class="info-bar-fill" id="info-fill"></div></div>
     <div class="info-proj" id="info-proj" style="font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:10px"></div>
     <div class="info-desc" id="info-desc"></div>
+    <div class="info-charts" id="info-charts"></div>
+    <div class="info-override" id="info-override"></div>
     <div class="info-nav" id="info-nav"></div>
+  </div>
+
+  <div class="override-bar" id="override-bar"></div>
+
+  <div class="world-panel hidden" id="world-panel">
+    <div class="world-panel-head">
+      <span class="world-panel-title">State of the World</span>
+      <span class="world-panel-year" id="world-year"></span>
+    </div>
+    <div class="world-panel-body" id="world-body"></div>
   </div>
 
   <div class="hint">Drag to orbit &middot; Scroll to zoom &middot; Click a node<br>
   1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260220f"></script>
+<script src="js/shared.js?v=20260220g"></script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -199,6 +256,11 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+/* shared.js globals accessible from ES module */
+const sparkSVG=window.sparkSVG;
+const comparisonSVG=window.comparisonSVG;
+const timelineSVG=window.timelineSVG;
 
 /* ================================================================
    DATA
@@ -246,7 +308,16 @@ const TIPPING=[
 let active='aggressive',year=2026,playing=false,selNode=null,hovNode=null;
 let comparing=false,compareWith='moderate';
 let globeActive=false;
-let audioMuted=true,audioCtx=null,masterGain=null,baseOsc=null,chordOscs=[],audioInited=false;
+let audioMuted=false,audioCtx=null,masterGain=null,baseOsc=null,chordOscs=[],audioInited=false;
+const overrides={};
+SYS.forEach(s=>{overrides[s.id]=null});
+function eff(sysId){return overrides[sysId]||active}
+function effScore(d,yr){return scAt(d.today,d.proj[eff(d.id)],yr||year)}
+function mixedAgg(yr){
+  const y=yr||year;
+  let sum=0;nodes.forEach(n=>{sum+=scAt(n.data.today,n.data.proj[eff(n.data.id)],y)});
+  return Math.round(sum/nodes.length);
+}
 const DEFAULT_CAM=new THREE.Vector3(5,7,11);
 let flyTarget=null,flyPos=null,flyProgress=1;
 let tipFired={};
@@ -466,87 +537,199 @@ const trailGeo=new THREE.SphereGeometry(0.08,6,6);
 function clearTrail(){trailSpheres.forEach(s=>{scene.remove(s.mesh);s.mesh.geometry.dispose()});trailSpheres=[]}
 
 /* ================================================================
-   SOUND — Per-node + collective audio feedback
+   SOUND — Cosmic symphony: consonant when aligned, dissonant when fractured
+   Each system is a voice in a chord. Healthy = harmonic unity.
+   Sick = drift, microtonal beating, rhythmic desync.
+   Kept deliberately quiet and ambient throughout.
    ================================================================ */
-let nodeOscs=[];
+let voices=[];
 let alarmOsc=null,alarmGain=null;
 let noiseNode=null,noiseGain=null;
-const NODE_FREQS=[130.81,146.83,164.81,174.61,196.00,220.00];
+
+/* Harmonic voices — a warm Cmaj9 spread when fully aligned */
+const VOICE_FREQ=[
+  130.81,  /* Climate    — C3  (root) */
+  164.81,  /* Simulation — E3  (major 3rd) */
+  196.00,  /* Transition — G3  (5th) */
+  246.94,  /* Civilization— B3 (major 7th) */
+  293.66,  /* Governance — D4  (9th) */
+  220.00   /* Strategy   — A3  (6th) */
+];
+/* Where each voice drifts when that system is sick — dissonant intervals */
+const VOICE_SICK=[
+  138.59,  /* C#3 — semitone rub */
+  155.56,  /* Eb3 — minor 3rd clash */
+  207.65,  /* Ab3 — tritone area */
+  233.08,  /* Bb3 — minor 7th */
+  311.13,  /* Eb4 — minor tension */
+  207.65   /* Ab3 — tritone */
+];
+
 function initAudio(){
   if(audioInited)return;
   audioCtx=new(window.AudioContext||window.webkitAudioContext)();
   masterGain=audioCtx.createGain();masterGain.gain.value=0;masterGain.connect(audioCtx.destination);
-  /* Base drone */
+
+  /* Base drone — sub-bass anchor */
   baseOsc=audioCtx.createOscillator();baseOsc.type='sine';baseOsc.frequency.value=55;
-  const bg=audioCtx.createGain();bg.gain.value=0.10;baseOsc.connect(bg);bg.connect(masterGain);baseOsc.start();
-  /* Harmonic chord */
-  [220,277,330].forEach(f=>{
+  const bg=audioCtx.createGain();bg.gain.value=0.06;baseOsc.connect(bg);bg.connect(masterGain);baseOsc.start();
+
+  /* Harmonic shimmer pad — 3 quiet upper partials */
+  [440,554,660].forEach(f=>{
     const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;
-    const g=audioCtx.createGain();g.gain.value=0.02;o.connect(g);g.connect(masterGain);o.start();
+    const g=audioCtx.createGain();g.gain.value=0.006;o.connect(g);g.connect(masterGain);o.start();
     chordOscs.push({osc:o,gain:g});
   });
-  /* Per-node oscillators — each system has its own tone */
+
+  /* Per-system voices — the core of the symphony */
   nodes.forEach((n,i)=>{
-    const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=NODE_FREQS[i];
-    const g=audioCtx.createGain();g.gain.value=0;
-    o.connect(g);g.connect(masterGain);o.start();
-    nodeOscs.push({osc:o,gain:g,baseFreq:NODE_FREQS[i]});
+    const primary=audioCtx.createOscillator();
+    primary.type='sine';primary.frequency.value=VOICE_FREQ[i];
+    /* Quiet fifth above for shimmer (only when healthy) */
+    const shimmer=audioCtx.createOscillator();
+    shimmer.type='sine';shimmer.frequency.value=VOICE_FREQ[i]*1.5;
+    const pGain=audioCtx.createGain();pGain.gain.value=0;
+    const sGain=audioCtx.createGain();sGain.gain.value=0;
+    /* Gentle lowpass to keep voices warm, not harsh */
+    const filter=audioCtx.createBiquadFilter();
+    filter.type='lowpass';filter.frequency.value=1200;filter.Q.value=0.7;
+    primary.connect(filter);shimmer.connect(sGain);
+    filter.connect(pGain);pGain.connect(masterGain);sGain.connect(masterGain);
+    primary.start();shimmer.start();
+    voices.push({primary,shimmer,pGain,sGain,filter,
+      baseFreq:VOICE_FREQ[i],sickFreq:VOICE_SICK[i],shimmerBase:VOICE_FREQ[i]*1.5,
+      phase:i*(Math.PI*2/6)});
   });
-  /* Alarm pulse — low rhythmic throb for critical states */
-  alarmOsc=audioCtx.createOscillator();alarmOsc.type='sawtooth';alarmOsc.frequency.value=55;
+
+  /* Alarm pulse — sub-bass throb for critical aggregate */
+  alarmOsc=audioCtx.createOscillator();alarmOsc.type='sawtooth';alarmOsc.frequency.value=45;
   alarmGain=audioCtx.createGain();alarmGain.gain.value=0;
-  const alarmFilter=audioCtx.createBiquadFilter();alarmFilter.type='lowpass';alarmFilter.frequency.value=120;
-  alarmOsc.connect(alarmFilter);alarmFilter.connect(alarmGain);alarmGain.connect(masterGain);alarmOsc.start();
-  /* Noise bed — filtered white noise for tension */
+  const af=audioCtx.createBiquadFilter();af.type='lowpass';af.frequency.value=100;
+  alarmOsc.connect(af);af.connect(alarmGain);alarmGain.connect(masterGain);alarmOsc.start();
+
+  /* Noise bed — filtered breath for tension */
   const bufSize=audioCtx.sampleRate*2;
   const buf=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);
-  const data=buf.getChannelData(0);
-  for(let i=0;i<bufSize;i++)data[i]=(Math.random()*2-1)*0.5;
+  const d=buf.getChannelData(0);
+  for(let j=0;j<bufSize;j++)d[j]=(Math.random()*2-1)*0.3;
   noiseNode=audioCtx.createBufferSource();noiseNode.buffer=buf;noiseNode.loop=true;
-  const nFilter=audioCtx.createBiquadFilter();nFilter.type='bandpass';nFilter.frequency.value=400;nFilter.Q.value=2;
+  const nf=audioCtx.createBiquadFilter();nf.type='bandpass';nf.frequency.value=350;nf.Q.value=1.5;
   noiseGain=audioCtx.createGain();noiseGain.gain.value=0;
-  noiseNode.connect(nFilter);nFilter.connect(noiseGain);noiseGain.connect(masterGain);noiseNode.start();
+  noiseNode.connect(nf);nf.connect(noiseGain);noiseGain.connect(masterGain);noiseNode.start();
   audioInited=true;
 }
+
 function updateAudio(){
   if(!audioInited||audioMuted)return;
   const now=audioCtx.currentTime;
   const h=aggHealth;
-  /* Base drone — drops pitch when sick */
-  baseOsc.frequency.setTargetAtTime(40+h*40,now,0.4);
-  /* Chord — detunes toward dissonance when sick */
-  const healthy=[1,1.25,1.5],sick=[1,1.059,1.414];
+  const ramp=0.6;
+
+  /* Base drone — pitch sinks slightly when world is sick */
+  baseOsc.frequency.setTargetAtTime(50+h*10,now,ramp);
+
+  /* Upper shimmer pad — brighter when healthy, muted when sick */
+  const padTargets=[440,554,660];
+  const padSick=[466,523,622];
   chordOscs.forEach((o,i)=>{
-    o.osc.frequency.setTargetAtTime(220*lerp(sick[i],healthy[i],h),now,0.4);
-    o.gain.gain.setTargetAtTime(0.008+h*0.025,now,0.3);
+    o.osc.frequency.setTargetAtTime(lerp(padSick[i],padTargets[i],h),now,ramp);
+    o.gain.gain.setTargetAtTime(h*0.008,now,ramp);
   });
-  /* Per-node audio — each system independently */
+
+  /* The symphony: per-system voices */
+  const baseRate=0.15;
   nodes.forEach((n,idx)=>{
-    if(!nodeOscs[idx])return;
-    const no=nodeOscs[idx];
+    const v=voices[idx];if(!v)return;
     const nh=n.health;
-    const detune=(1-nh)*30*Math.sin(now*4+idx*2);
-    no.osc.frequency.setTargetAtTime(no.baseFreq+detune,now,0.15);
-    no.osc.type=nh>0.5?'sine':nh>0.3?'triangle':'sawtooth';
-    const vol=0.008+nh*0.018;
-    const wobble=nh<0.45?Math.abs(Math.sin(now*(3+(1-nh)*8)+idx))*0.012:0;
-    no.gain.gain.setTargetAtTime(vol+wobble,now,0.1);
+
+    /* Pitch: healthy = consonant chord tone, sick = drifts toward dissonant interval */
+    const freq=lerp(v.sickFreq,v.baseFreq,nh);
+    /* Subtle vibrato that widens as health drops — like an instrument losing control */
+    const vibratoDepth=(1-nh)*6;
+    const vibratoRate=lerp(0.5,4,1-nh);
+    const vibrato=vibratoDepth*Math.sin(now*vibratoRate*Math.PI*2+v.phase);
+    v.primary.frequency.setTargetAtTime(freq+vibrato,now,0.12);
+
+    /* Shimmer fifth: present when healthy, fades when sick */
+    v.shimmer.frequency.setTargetAtTime(freq*1.5+vibrato*0.5,now,0.12);
+    v.sGain.gain.setTargetAtTime(nh*nh*0.005,now,ramp);
+
+    /* Volume with rhythmic pulse — synchronized when healthy, drifting when sick */
+    const syncRate=baseRate;
+    const drift=(1-nh)*0.08;
+    const nodeRate=syncRate+drift;
+    const syncPhase=now*syncRate*Math.PI*2;
+    const nodePhase=now*nodeRate*Math.PI*2+v.phase*(1-nh);
+    const pulse=0.5+0.5*Math.sin(lerp(nodePhase,syncPhase,nh));
+
+    const baseVol=0.012;
+    const healthVol=baseVol+nh*0.008;
+    v.pGain.gain.setTargetAtTime(healthVol*pulse,now,0.08);
+
+    /* Filter opens when healthy, closes when sick — muffled distress */
+    v.filter.frequency.setTargetAtTime(400+nh*1600,now,ramp);
   });
-  /* Alarm pulse — throbs when aggregate health < 0.4 */
-  const alarmAmt=Math.max(0,(0.4-h)/0.4);
-  const alarmVol=alarmAmt*0.06*Math.abs(Math.sin(now*(2+alarmAmt*4)));
-  alarmGain.gain.setTargetAtTime(alarmVol,now,0.05);
-  alarmOsc.frequency.setTargetAtTime(40+alarmAmt*30,now,0.2);
-  /* Noise bed — hiss rises with distress */
-  const noiseVol=Math.max(0,(0.5-h)/0.5)*0.025;
-  noiseGain.gain.setTargetAtTime(noiseVol,now,0.3);
+
+  /* Alarm: gentle sub-bass pulse below 35% aggregate */
+  const alarmAmt=Math.max(0,(0.35-h)/0.35);
+  const alarmPulse=alarmAmt*0.03*Math.abs(Math.sin(now*(1.5+alarmAmt*2)));
+  alarmGain.gain.setTargetAtTime(alarmPulse,now,0.08);
+  alarmOsc.frequency.setTargetAtTime(38+alarmAmt*20,now,0.3);
+
+  /* Noise bed: faint hiss when things deteriorate */
+  const noiseAmt=Math.max(0,(0.45-h)/0.45)*0.012;
+  noiseGain.gain.setTargetAtTime(noiseAmt,now,0.4);
 }
 function pingNode(idx){
   if(!audioInited||audioMuted)return;
-  const freqs=[220,277,330,370,440,554];
-  const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=freqs[idx]||440;
-  const g=audioCtx.createGain();g.gain.value=0.1;g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.6);
-  o.connect(g);g.connect(masterGain);o.start();o.stop(audioCtx.currentTime+0.6);
+  const f=VOICE_FREQ[idx]||220;
+  const now=audioCtx.currentTime;
+  const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f*2;
+  const g=audioCtx.createGain();g.gain.value=0.06;g.gain.exponentialRampToValueAtTime(0.001,now+0.5);
+  o.connect(g);g.connect(masterGain);o.start();o.stop(now+0.5);
+}
+function sfx(type){
+  if(!audioInited||audioMuted)return;
+  const now=audioCtx.currentTime;
+  const o=audioCtx.createOscillator();
+  const g=audioCtx.createGain();
+  o.connect(g);g.connect(masterGain);
+  switch(type){
+    case 'hover':
+      o.type='sine';o.frequency.value=880;o.frequency.exponentialRampToValueAtTime(1100,now+0.06);
+      g.gain.value=0.04;g.gain.exponentialRampToValueAtTime(0.001,now+0.08);
+      o.start(now);o.stop(now+0.08);break;
+    case 'unhover':
+      o.type='sine';o.frequency.value=660;o.frequency.exponentialRampToValueAtTime(440,now+0.06);
+      g.gain.value=0.025;g.gain.exponentialRampToValueAtTime(0.001,now+0.07);
+      o.start(now);o.stop(now+0.07);break;
+    case 'select':
+      o.type='sine';o.frequency.value=440;
+      g.gain.value=0.08;g.gain.exponentialRampToValueAtTime(0.001,now+0.25);
+      o.start(now);o.stop(now+0.25);
+      const o2=audioCtx.createOscillator();const g2=audioCtx.createGain();
+      o2.type='sine';o2.frequency.value=660;o2.connect(g2);g2.connect(masterGain);
+      g2.gain.value=0.06;g2.gain.exponentialRampToValueAtTime(0.001,now+0.3);
+      o2.start(now+0.05);o2.stop(now+0.3);break;
+    case 'deselect':
+      o.type='sine';o.frequency.value=550;o.frequency.exponentialRampToValueAtTime(330,now+0.15);
+      g.gain.value=0.05;g.gain.exponentialRampToValueAtTime(0.001,now+0.18);
+      o.start(now);o.stop(now+0.18);break;
+    case 'scenario':
+      o.type='triangle';o.frequency.value=300;o.frequency.exponentialRampToValueAtTime(600,now+0.12);
+      g.gain.value=0.06;g.gain.linearRampToValueAtTime(0.03,now+0.06);g.gain.exponentialRampToValueAtTime(0.001,now+0.2);
+      o.start(now);o.stop(now+0.2);break;
+    case 'override':
+      o.type='square';o.frequency.value=520;o.frequency.exponentialRampToValueAtTime(780,now+0.08);
+      const bf=audioCtx.createBiquadFilter();bf.type='lowpass';bf.frequency.value=2000;
+      o.disconnect();o.connect(bf);bf.connect(g);g.connect(masterGain);
+      g.gain.value=0.035;g.gain.exponentialRampToValueAtTime(0.001,now+0.15);
+      o.start(now);o.stop(now+0.15);break;
+    default:
+      o.type='sine';o.frequency.value=440;
+      g.gain.value=0.04;g.gain.exponentialRampToValueAtTime(0.001,now+0.1);
+      o.start(now);o.stop(now+0.1);
+  }
 }
 
 /* ================================================================
@@ -566,30 +749,59 @@ function flyToOverview(){
 
 /* ================================================================
    RAYCASTER + INTERACTION
+   Drag vs click: only fire selection logic if pointer barely moved.
    ================================================================ */
 const ray=new THREE.Raycaster();
 const mouse=new THREE.Vector2();
 let mouseScreen={x:0,y:0};
+let pointerDownPos={x:0,y:0};
+const CLICK_THRESHOLD=6;
 function setMouse(e){mouse.x=(e.clientX/W())*2-1;mouse.y=-(e.clientY/H())*2+1;mouseScreen={x:e.clientX,y:e.clientY}}
 document.addEventListener('mousemove',setMouse);
-renderer.domElement.addEventListener('click',()=>{
+
+renderer.domElement.addEventListener('pointerdown',e=>{pointerDownPos={x:e.clientX,y:e.clientY}});
+let lastDeselectTime=0;
+renderer.domElement.addEventListener('click',e=>{
+  const dx=e.clientX-pointerDownPos.x,dy=e.clientY-pointerDownPos.y;
+  if(dx*dx+dy*dy>CLICK_THRESHOLD*CLICK_THRESHOLD)return;
   if(hovNode){
-    const prev=selNode;selNode=selNode===hovNode?null:hovNode;
-    if(selNode&&!selNode.isCenter){flyTo(selNode);pingNode(selNode.idx||0)}
-    else flyToOverview();
-    updateInfo();
-  }else{selNode=null;flyToOverview();updateInfo()}
+    const wasSelected=selNode===hovNode;
+    selNode=wasSelected?null:hovNode;
+    if(selNode){sfx('select');flyTo(selNode);if(!selNode.isCenter)pingNode(selNode.idx||0)}
+    else{sfx('deselect');lastDeselectTime=performance.now();flyToOverview()}
+    updateInfo();renderOverrideBar();
+  }else if(selNode){
+    sfx('deselect');selNode=null;lastDeselectTime=performance.now();updateInfo();renderOverrideBar();
+  }
 });
 renderer.domElement.addEventListener('dblclick',()=>{
+  if(performance.now()-lastDeselectTime<400)return;
   if(hovNode&&!hovNode.isCenter&&hovNode.data.href) window.location.href=hovNode.data.href;
 });
+
+let touchStartPos={x:0,y:0};
+renderer.domElement.addEventListener('touchstart',e=>{
+  if(e.touches.length)touchStartPos={x:e.touches[0].clientX,y:e.touches[0].clientY};
+},{passive:true});
 renderer.domElement.addEventListener('touchend',e=>{
   if(e.changedTouches.length){
-    setMouse(e.changedTouches[0]);
+    const t0=e.changedTouches[0];
+    const dx=t0.clientX-touchStartPos.x,dy=t0.clientY-touchStartPos.y;
+    if(dx*dx+dy*dy>CLICK_THRESHOLD*CLICK_THRESHOLD)return;
+    setMouse(t0);
     ray.setFromCamera(mouse,camera);
     const hits=ray.intersectObjects(allHitMeshes);
-    if(hits.length){const t=hitTargets.find(h=>h.mesh===hits[0].object);if(t){selNode=selNode===t.node?null:t.node;if(selNode&&!selNode.isCenter)flyTo(selNode);else flyToOverview();updateInfo()}}
-    else{selNode=null;flyToOverview();updateInfo()}
+    if(hits.length){
+      const t=hitTargets.find(h=>h.mesh===hits[0].object);
+      if(t){
+        selNode=selNode===t.node?null:t.node;
+        if(selNode){sfx('select');flyTo(selNode)}
+        else{sfx('deselect');flyToOverview()}
+        updateInfo();renderOverrideBar();
+      }
+    }else if(selNode){
+      sfx('deselect');selNode=null;updateInfo();renderOverrideBar();
+    }
   }
 },{passive:true});
 
@@ -603,7 +815,7 @@ document.addEventListener('keydown',e=>{
   if(e.key===' '){togglePlay();e.preventDefault()}
   if(e.key==='ArrowLeft'){stepYear(-1);e.preventDefault()}
   if(e.key==='ArrowRight'){stepYear(1);e.preventDefault()}
-  if(e.key==='Escape'){selNode=null;flyToOverview();updateInfo();e.preventDefault()}
+  if(e.key==='Escape'){sfx('deselect');selNode=null;flyToOverview();updateInfo();renderOverrideBar();e.preventDefault()}
 });
 function stepYear(d){year=Math.max(2026,Math.min(2050,year+d));yrSlider.value=year;yrVal.textContent=year;updateVis()}
 function togglePlay(){playing=!playing;playBtn.innerHTML=playing?'&#9646;&#9646; Pause':'&#9654; Play'}
@@ -627,7 +839,7 @@ function switchScenario(id){
   document.querySelectorAll('.sc-btn').forEach(x=>x.classList.remove('active'));
   const btn=document.querySelector('.sc-btn[data-id="'+id+'"]');if(btn)btn.classList.add('active');
   rebuildCompareSel();
-  clearTrail();tipFired={};updateVis();
+  sfx('scenario');clearTrail();tipFired={};updateVis();renderOverrideBar();
 }
 document.querySelectorAll('.sc-btn').forEach(b=>b.addEventListener('click',()=>switchScenario(b.dataset.id)));
 const yrSlider=document.getElementById('yr-slider'),yrVal=document.getElementById('yr-val');
@@ -654,24 +866,29 @@ function updateComparePanel(){
   if(!comparing){comparePanel.classList.add('hidden');return}
   const scA=SC_META[active],scB=SC_META[compareWith];
   let h='<div class="compare-panel-head"><span class="compare-panel-title">Scenario Comparison &mdash; '+year+'</span></div>';
-  h+='<table><tr><th></th><th style="color:'+scA.css+'">'+scA.name+'</th><th style="color:'+scB.css+'">'+scB.name+'</th></tr>';
+  h+='<table><tr><th></th><th style="color:'+scA.css+'">Current</th><th style="color:'+scB.css+'">'+scB.name+'</th></tr>';
+  let sumCur=0,sumAlt=0;
   nodes.forEach(n=>{
     const d=n.data;
-    const sA=scAt(d.today,d.proj[active],year),sB=scAt(d.today,d.proj[compareWith],year);
+    const curSc=eff(d.id);
+    const sA=scAt(d.today,d.proj[curSc],year),sB=scAt(d.today,d.proj[compareWith],year);
+    sumCur+=sA;sumAlt+=sB;
     const gA=grade(sA),gB=grade(sB);
     const diff=sB-sA;
     const diffStr=diff>0?'<span style="color:#4ecdc4;font-size:9px">+'+diff+'</span>':diff<0?'<span style="color:#d4622a;font-size:9px">'+diff+'</span>':'<span style="color:rgba(255,255,255,0.25);font-size:9px">0</span>';
-    h+='<tr><td class="sys-name" style="color:#'+n.color.getHexString()+'">'+d.label+'</td>';
-    h+='<td style="color:'+scA.css+'">'+sA+' <span class="grade-tag" style="color:'+scA.css+';border-color:'+scA.css+'">'+gA+'</span></td>';
+    const curMeta=SC_META[curSc];
+    const ovrDot=overrides[d.id]?'<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+curMeta.css+';margin-right:3px"></span>':'';
+    h+='<tr><td class="sys-name" style="color:#'+n.color.getHexString()+'">'+ovrDot+d.label+'</td>';
+    h+='<td style="color:'+curMeta.css+'">'+sA+' <span class="grade-tag" style="color:'+curMeta.css+';border-color:'+curMeta.css+'">'+gA+'</span></td>';
     h+='<td style="color:'+scB.css+'">'+sB+' <span class="grade-tag" style="color:'+scB.css+';border-color:'+scB.css+'">'+gB+'</span> '+diffStr+'</td>';
     h+='</tr>';
   });
-  const aggA=scAt(AGG.today,AGG.proj[active],year),aggB=scAt(AGG.today,AGG.proj[compareWith],year);
-  const aggDiff=aggB-aggA;
+  const aggCur=Math.round(sumCur/nodes.length),aggAlt=Math.round(sumAlt/nodes.length);
+  const aggDiff=aggAlt-aggCur;
   const aggDiffStr=aggDiff>0?'<span style="color:#4ecdc4;font-size:9px">+'+aggDiff+'</span>':aggDiff<0?'<span style="color:#d4622a;font-size:9px">'+aggDiff+'</span>':'<span style="color:rgba(255,255,255,0.25);font-size:9px">0</span>';
   h+='<tr class="agg-row"><td class="sys-name">Aggregate</td>';
-  h+='<td style="color:'+scA.css+'">'+aggA+' <span class="grade-tag" style="color:'+scA.css+';border-color:'+scA.css+'">'+grade(aggA)+'</span></td>';
-  h+='<td style="color:'+scB.css+'">'+aggB+' <span class="grade-tag" style="color:'+scB.css+';border-color:'+scB.css+'">'+grade(aggB)+'</span> '+aggDiffStr+'</td>';
+  h+='<td>'+aggCur+' <span class="grade-tag">'+grade(aggCur)+'</span></td>';
+  h+='<td style="color:'+scB.css+'">'+aggAlt+' <span class="grade-tag" style="color:'+scB.css+';border-color:'+scB.css+'">'+grade(aggAlt)+'</span> '+aggDiffStr+'</td>';
   h+='</tr></table>';
   comparePanel.innerHTML=h;
 }
@@ -695,6 +912,130 @@ globeBtn.addEventListener('click',()=>{
   updateVis();
 });
 
+/* Floating charts on nodes */
+let chartsActive=false;
+const chartsBtn=document.getElementById('charts-btn');
+const nodeChartsEl=document.getElementById('node-charts');
+chartsBtn.addEventListener('click',()=>{
+  chartsActive=!chartsActive;
+  chartsBtn.classList.toggle('on',chartsActive);
+  nodeChartsEl.classList.toggle('hidden',!chartsActive);
+  sfx(chartsActive?'select':'deselect');
+  if(chartsActive)renderNodeCharts();
+});
+
+function renderNodeCharts(){
+  const VM=window.VIZ_METRICS;if(!VM){nodeChartsEl.innerHTML='';return}
+  let html='';
+  nodes.forEach(n=>{
+    const sysId=n.data.id;
+    const metrics=VM[sysId];if(!metrics||!metrics.length)return;
+    const m=metrics[0];
+    const nSc=eff(sysId);
+    const yi=Math.min(24,Math.max(0,year-2026));
+    const d=m.data[nSc];
+    const curVal=d[yi];
+    const clr='#'+new THREE.Color(n.data.color).getHexString();
+    const scClr=SC_META[nSc].css;
+    html+='<div class="node-chart-card" data-sys="'+sysId+'">';
+    html+='<div class="node-chart-title" style="color:'+clr+'">'+n.data.label+'</div>';
+    html+=timelineSVG(m.data,{aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'},nSc,160,24,['\'26','\'50'],yi);
+    html+='<div class="node-chart-metric"><span style="color:rgba(255,255,255,0.4)">'+m.label+'</span><span class="val" style="color:'+scClr+'">'+curVal.toFixed(m.unit==='%'||m.unit==='/100'?0:1)+m.unit+'</span></div>';
+    html+='</div>';
+  });
+  nodeChartsEl.innerHTML=html;
+}
+
+function positionNodeCharts(){
+  if(!chartsActive)return;
+  const cards=nodeChartsEl.querySelectorAll('.node-chart-card');
+  cards.forEach(card=>{
+    const sysId=card.dataset.sys;
+    const n=nodes.find(x=>x.data.id===sysId);if(!n)return;
+    const v=n.mesh.position.clone();
+    v.project(camera);
+    const hw=window.innerWidth/2,hh=window.innerHeight/2;
+    const sx=(v.x*hw)+hw;
+    const sy=-(v.y*hh)+hh;
+    const behind=v.z>1;
+    card.style.left=sx+'px';
+    card.style.top=(sy-30)+'px';
+    card.style.opacity=behind?'0':'1';
+  });
+}
+
+/* World State panel */
+let worldActive=false;
+const worldBtn=document.getElementById('world-btn');
+const worldPanel=document.getElementById('world-panel');
+const worldYear=document.getElementById('world-year');
+const worldBody=document.getElementById('world-body');
+
+worldBtn.addEventListener('click',()=>{
+  worldActive=!worldActive;
+  worldBtn.classList.toggle('on',worldActive);
+  worldPanel.classList.toggle('hidden',!worldActive);
+  sfx(worldActive?'select':'deselect');
+  if(worldActive)updateWorldPanel();
+});
+
+function updateWorldPanel(){
+  if(!worldActive||!window.simWorldState)return;
+  const sc=active;
+  const yr=Math.max(2027,year);
+  const w=window.simWorldState(sc,yr);
+  worldYear.textContent=yr;
+  worldYear.style.color=w.scenarioCss;
+
+  const sColors={livelihoods:'#95cf95',climate:'#4ecdc4',governance:'#b0a0d0',ai:'#5da5da',outlook:w.scenarioCss};
+  const anyOvr=Object.values(overrides).some(v=>v!==null);
+  let h='';
+  h+='<div class="ws-hero"><span class="ws-score" style="color:'+w.scenarioCss+'">'+w.score+'</span><div><span class="ws-grade" style="color:'+w.scenarioCss+';border-color:'+w.scenarioCss+'">'+w.grade+'</span><span class="ws-era">'+w.era+' Era</span></div></div>';
+  if(anyOvr)h+='<div style="font-size:9px;color:rgba(255,255,255,0.25);margin-bottom:6px;letter-spacing:0.05em">Based on global <span style="color:'+w.scenarioCss+'">'+w.scenarioName+'</span>. System overrides apply to the network above.</div>';
+  h+='<div class="ws-feel">'+w.eraFeel+'</div>';
+
+  const sections=[
+    {label:'People & Livelihoods',text:w.livelihoods,color:sColors.livelihoods},
+    {label:'Climate & Energy',text:w.climate,color:sColors.climate},
+    {label:'Trust & Governance',text:w.governance,color:sColors.governance},
+    {label:'AI & the Future',text:w.aiText,color:sColors.ai},
+    {label:'The Road Ahead',text:w.outlook,color:sColors.outlook}
+  ];
+  sections.forEach(s=>{
+    h+='<div class="ws-section"><div class="ws-section-label" style="color:'+s.color+'">'+s.label+'</div><p>'+s.text+'</p></div>';
+  });
+
+  h+='<div class="ws-nums">';
+  const simE=window.SIM_ENGINE;
+  const nums=[
+    {lbl:'GINI',val:w.gini.toFixed(3),base:'0.385',clr:w.gini<=.385?'#4ecdc4':'#d4622a'},
+    {lbl:'Trust',val:w.trust.toFixed(3),base:'0.432',clr:w.trust>=.432?'#4ecdc4':'#d4622a'},
+    {lbl:'Emis',val:w.emis.toFixed(1)+'Gt',base:'36.3Gt',clr:w.emis<=36.3?'#4ecdc4':'#d4622a'},
+    {lbl:'Resil',val:w.resil.toFixed(3),base:'0.355',clr:w.resil>=.355?'#4ecdc4':'#d4622a'},
+    {lbl:'AI',val:w.ai.toFixed(3),base:'0.121',clr:w.scenarioCss}
+  ];
+  nums.forEach(n=>{
+    h+='<div class="ws-num"><div class="lbl">'+n.lbl+'</div><div class="val" style="color:'+n.clr+'">'+n.val+'</div><div class="base">from '+n.base+'</div></div>';
+  });
+  h+='</div>';
+
+  worldBody.innerHTML=h;
+}
+
+/* Auto-init audio on first user gesture (browser policy) */
+function autoInitAudio(){
+  if(audioInited)return;
+  initAudio();
+  if(!audioMuted&&masterGain)masterGain.gain.setTargetAtTime(0.3,audioCtx.currentTime,0.4);
+  updateAudio();
+  document.removeEventListener('click',autoInitAudio);
+  document.removeEventListener('touchstart',autoInitAudio);
+  document.removeEventListener('keydown',autoInitAudio);
+}
+document.addEventListener('click',autoInitAudio);
+document.addEventListener('touchstart',autoInitAudio,{passive:true});
+document.addEventListener('keydown',autoInitAudio);
+
 /* Mute */
 const muteBtn=document.getElementById('mute-btn');
 muteBtn.addEventListener('click',()=>{
@@ -702,7 +1043,7 @@ muteBtn.addEventListener('click',()=>{
   audioMuted=!audioMuted;
   muteBtn.textContent=audioMuted?'Sound Off':'Sound On';
   muteBtn.classList.toggle('on',!audioMuted);
-  if(masterGain)masterGain.gain.setTargetAtTime(audioMuted?0:0.4,audioCtx.currentTime,0.1);
+  if(masterGain)masterGain.gain.setTargetAtTime(audioMuted?0:0.3,audioCtx.currentTime,0.2);
   if(!audioMuted)updateAudio();
 });
 
@@ -713,20 +1054,25 @@ function updateInfo(){
   const p=document.getElementById('info');
   if(!selNode){p.classList.add('hidden');return}
   p.classList.remove('hidden');
-  let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt;
-  const scMeta=SC_META[active];
+  let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt,nodeSc;
   if(selNode.isCenter){
-    name='Civilization Index';sc=scAt(AGG.today,AGG.proj[active],year);g=grade(sc);
-    proj2050=AGG.proj[active];projG=grade(proj2050);
-    c=scMeta.css;
-    desc='Weighted aggregate across all six operating systems \u2014 climate, simulation, transition, civilization health, governance, and strategy.';
+    name='Civilization Index';sc=mixedAgg();g=grade(sc);
+    const anyOvr=Object.values(overrides).some(v=>v!==null);
+    nodeSc=anyOvr?'mixed':active;
+    const scMeta=SC_META[active];
+    proj2050=mixedAgg(2050);projG=grade(proj2050);
+    c=anyOvr?'#fff':scMeta.css;
+    desc='Weighted aggregate across all six operating systems. '+(anyOvr?'Mixed scenario state \u2014 systems running independent scenarios.':'All systems under '+scMeta.name+'.');
     navTxt='Click a surrounding node to explore a system';
   }else{
-    const d=selNode.data;sc=scAt(d.today,d.proj[active],year);g=grade(sc);
-    proj2050=d.proj[active];projG=grade(proj2050);
+    const d=selNode.data;nodeSc=eff(d.id);
+    const scMeta=SC_META[nodeSc];
+    sc=scAt(d.today,d.proj[nodeSc],year);g=grade(sc);
+    proj2050=d.proj[nodeSc];projG=grade(proj2050);
     c='#'+selNode.color.getHexString();desc=d.desc;navTxt='Double-click to open '+d.label;
   }
-  whenTxt=year===2026?"Today\u2019s baseline":'Projected '+year+' ('+scMeta.name+')';
+  const effMeta=SC_META[typeof nodeSc==='string'&&SC_META[nodeSc]?nodeSc:active];
+  whenTxt=year===2026?"Today\u2019s baseline":'Projected '+year+' ('+effMeta.name+')';
   document.getElementById('info-name').textContent=name;
   document.getElementById('info-name').style.color=c;
   document.getElementById('info-sc').textContent=sc;
@@ -741,70 +1087,229 @@ function updateInfo(){
   document.getElementById('info-nav').textContent=navTxt;
   const projEl=document.getElementById('info-proj');
   if(projEl){
-    projEl.innerHTML='<span style="color:rgba(255,255,255,0.35)">2050 ('+scMeta.name+'):</span> <span style="color:'+scMeta.css+';font-weight:600">'+proj2050+'</span> <span style="color:rgba(255,255,255,0.25)">/100</span> <span style="border:1px solid '+scMeta.css+';color:'+scMeta.css+';padding:1px 5px;border-radius:2px;font-size:10px">'+projG+'</span>';
+    projEl.innerHTML='<span style="color:rgba(255,255,255,0.35)">2050 ('+effMeta.name+'):</span> <span style="color:'+effMeta.css+';font-weight:600">'+proj2050+'</span> <span style="color:rgba(255,255,255,0.25)">/100</span> <span style="border:1px solid '+effMeta.css+';color:'+effMeta.css+';padding:1px 5px;border-radius:2px;font-size:10px">'+projG+'</span>';
   }
+  /* Sparkline charts */
+  const chartsEl=document.getElementById('info-charts');
+  if(chartsEl){
+    const VM=window.VIZ_METRICS;
+    if(selNode&&!selNode.isCenter&&VM&&VM[selNode.data.id]){
+      const metrics=VM[selNode.data.id];
+      const nSc=eff(selNode.data.id);
+      const scClr=SC_META[nSc].css;
+      const yi=Math.min(24,Math.max(0,year-2026));
+      let ch='';
+      metrics.forEach(m=>{
+        const d=m.data[nSc];
+        const curVal=d[yi];
+        const endVal=d[24];
+        const arrow=m.dir==='higher'?(endVal>d[0]?'\u2197':'\u2198'):(endVal<d[0]?'\u2197':'\u2198');
+        const arClr=m.dir==='higher'?(endVal>=d[0]?'#4ecdc4':'#d4622a'):(endVal<=d[0]?'#4ecdc4':'#d4622a');
+        ch+='<div class="info-chart-row">';
+        ch+='<div class="info-chart-label"><span>'+m.label+'</span><span class="info-chart-val" style="color:'+scClr+'">'+curVal.toFixed(m.unit==='%'||m.unit==='/100'?0:1)+m.unit+' <span style="color:'+arClr+'">'+arrow+'</span></span></div>';
+        ch+=timelineSVG(m.data,{aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'},nSc,220,28,['2026','2050'],yi);
+        ch+='</div>';
+      });
+      chartsEl.innerHTML=ch;
+    }else if(selNode&&selNode.isCenter&&VM){
+      let ch='';
+      SYS.forEach(s=>{
+        const metrics=VM[s.id];if(!metrics||!metrics.length)return;
+        const m=metrics[0];
+        const nSc=eff(s.id);
+        const sysClr='#'+new THREE.Color(s.color).getHexString();
+        const yi=Math.min(24,Math.max(0,year-2026));
+        const curVal=m.data[nSc][yi];
+        const scClr=SC_META[nSc].css;
+        ch+='<div class="info-chart-row">';
+        ch+='<div class="info-chart-label"><span style="color:'+sysClr+'">'+s.label+'</span><span class="info-chart-val" style="color:'+scClr+'">'+curVal.toFixed(m.unit==='%'||m.unit==='/100'?0:1)+m.unit+'</span></div>';
+        const singleDs={};singleDs[nSc]=m.data[nSc];
+        ch+=timelineSVG(singleDs,{aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'},nSc,220,22,null,yi);
+        ch+='</div>';
+      });
+      chartsEl.innerHTML=ch;
+    }else{chartsEl.innerHTML=''}
+  }
+  /* Override scenario picker */
+  const ovrEl=document.getElementById('info-override');
+  if(ovrEl&&selNode&&!selNode.isCenter){
+    const sid=selNode.data.id;
+    const cur=overrides[sid];
+    let oh='<div class="info-override-label">Scenario Override</div><div class="info-override-btns">';
+    oh+='<button class="ovr-btn ovr-global'+(cur===null?' ovr-active':'')+'" data-ovr="__global" style="'+(cur===null?'color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.3)':'')+'">Global ('+SC_META[active].name.split(' ')[0]+')</button>';
+    ['aggressive','moderate','bau','worst'].forEach(k=>{
+      const m=SC_META[k];
+      const isA=cur===k;
+      oh+='<button class="ovr-btn'+(isA?' ovr-active':'')+'" data-ovr="'+k+'" style="'+(isA?'color:'+m.css+';border-color:'+m.css:'')+'">'+m.name.split(' ')[0]+'</button>';
+    });
+    oh+='</div>';
+    ovrEl.innerHTML=oh;
+    ovrEl.querySelectorAll('.ovr-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const v=btn.dataset.ovr;
+        overrides[sid]=v==='__global'?null:v;
+        sfx('override');updateVis();updateInfo();renderOverrideBar();
+      });
+    });
+  }else if(ovrEl&&selNode&&selNode.isCenter){
+    const anyOvr=Object.values(overrides).some(v=>v!==null);
+    ovrEl.innerHTML=anyOvr?'<button class="ovr-btn" id="reset-all-ovr" style="margin-top:8px;color:#d4622a;border-color:#d4622a">Reset All to Global</button>':'';
+    const rb=document.getElementById('reset-all-ovr');
+    if(rb)rb.addEventListener('click',()=>{Object.keys(overrides).forEach(k=>{overrides[k]=null});sfx('override');updateVis();updateInfo();renderOverrideBar()});
+  }else if(ovrEl){ovrEl.innerHTML=''}
 }
 function updateAgg(){
-  const sc=scAt(AGG.today,AGG.proj[active],year),c=SC_META[active].css;
+  const anyOvr=Object.values(overrides).some(v=>v!==null);
+  const sc=anyOvr?mixedAgg():scAt(AGG.today,AGG.proj[active],year);
+  const c=anyOvr?'#fff':SC_META[active].css;
   document.getElementById('agg-score').textContent=sc;
   document.getElementById('agg-score').style.color=c;
   document.getElementById('agg-grade').textContent=grade(sc);
   document.getElementById('agg-grade').style.color=c;
-  document.getElementById('agg-status').textContent=SC_META[active].outcome;
+  document.getElementById('agg-status').textContent=anyOvr?'Mixed scenario — systems running independently':SC_META[active].outcome;
+}
+function renderOverrideBar(){
+  const bar=document.getElementById('override-bar');if(!bar)return;
+  const active_ovrs=Object.entries(overrides).filter(([k,v])=>v!==null);
+  if(!active_ovrs.length){bar.innerHTML='';return}
+  let h='';
+  active_ovrs.forEach(([sid,sc])=>{
+    const sys=SYS.find(s=>s.id===sid);if(!sys)return;
+    const m=SC_META[sc];
+    h+='<div class="override-chip" data-sid="'+sid+'">';
+    h+='<span class="chip-dot" style="background:#'+new THREE.Color(sys.color).getHexString()+'"></span>';
+    h+='<span class="chip-name">'+sys.label.replace('OS','')+'</span>';
+    h+='<span class="chip-sc" style="color:'+m.css+'">'+m.name.split(' ')[0]+'</span>';
+    h+='<span class="chip-reset" title="Reset to global">&times;</span>';
+    h+='</div>';
+  });
+  bar.innerHTML=h;
+  bar.querySelectorAll('.chip-reset').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.stopPropagation();
+      const sid=el.closest('.override-chip').dataset.sid;
+      overrides[sid]=null;sfx('override');updateVis();updateInfo();renderOverrideBar();
+    });
+  });
 }
 
 const sickColor=new THREE.Color(0x444455);
 const alarmColor=new THREE.Color(0xd4622a);
 let aggHealth=0.44;
+
+/* ================================================================
+   TRANSITION SYSTEM — smooth lerp between scenario states
+   applyScenario sets TARGETS; tick() lerps current values toward them.
+   ================================================================ */
+const LERP_SPEED=4.5;
+const tgt={
+  aggHealth:0.44,
+  centerColor:new THREE.Color(0x4ecdc4),
+  cScale:1,cEmissive:new THREE.Color(),cOpacity:0.8,
+  bloomStr:1,fogDen:0.035,autoSpd:0.5,gridColor:new THREE.Color(0x111122),
+  pulseColor:new THREE.Color(),ringColor:new THREE.Color(),
+  nodes:[],conns:[]
+};
+nodes.forEach(n=>tgt.nodes.push({
+  health:n.today/100||0.5,scale:1,emissiveI:0.3,opacity:0.8,
+  emissive:new THREE.Color().copy(n.baseColor),spriteColor:new THREE.Color().copy(n.baseColor),
+  spriteOp:0.1,glowScale:3,connOp:0,connColor:new THREE.Color()
+}));
+conns.forEach(()=>tgt.conns.push({opacity:0.05,color:new THREE.Color(0x444466)}));
+
 function applyScenario(sc){
   const scC=new THREE.Color(SC_META[sc].color);
-  const aggSc=scAt(AGG.today,AGG.proj[sc],year);
-  aggHealth=aggSc/100;
-  /* Center node */
-  ringM.color.copy(scC);
-  pulseM.color.lerpColors(alarmColor,scC,aggHealth);
-  const cScale=0.3+aggHealth*0.9;
-  cMesh.scale.setScalar(cScale);
-  cMat.emissive.copy(scC).multiplyScalar(0.15+aggHealth*0.2);
-  cMat.opacity=0.25+aggHealth*0.6;
-  /* Per-node health-driven visuals */
-  nodes.forEach(n=>{
-    const s=scAt(n.data.today,n.data.proj[sc],year)/100;
-    n.health=s;
-    const scl=0.3+s*1.0;
-    n.mesh.scale.setScalar(scl);
-    n.mesh.material.emissiveIntensity=0.05+s*0.6;
-    n.mesh.material.opacity=0.5+s*0.5;
+  const anyOvr=Object.values(overrides).some(v=>v!==null);
+  const aggSc=anyOvr?mixedAgg():scAt(AGG.today,AGG.proj[sc],year);
+  tgt.aggHealth=aggSc/100;
+  /* Center node targets */
+  const centerC=anyOvr?new THREE.Color(0xaaaacc):scC;
+  tgt.ringColor.copy(centerC);
+  tgt.pulseColor.lerpColors(alarmColor,centerC,tgt.aggHealth);
+  tgt.cScale=0.3+tgt.aggHealth*0.9;
+  tgt.cEmissive.copy(centerC).multiplyScalar(0.15+tgt.aggHealth*0.2);
+  tgt.cOpacity=0.25+tgt.aggHealth*0.6;
+  tgt.centerColor.copy(centerC);
+  /* Per-node targets */
+  nodes.forEach((n,i)=>{
+    const nSc=eff(n.data.id);
+    const s=scAt(n.data.today,n.data.proj[nSc],year)/100;
+    n.effSc=nSc;
+    const nt=tgt.nodes[i];
+    nt.health=s;
+    nt.scale=0.3+s*1.0;
+    nt.emissiveI=0.05+s*0.6;
+    nt.opacity=0.5+s*0.5;
     const desat=new THREE.Color().lerpColors(sickColor,n.baseColor,Math.pow(s,0.6));
-    n.mesh.material.emissive.copy(desat);
-    n.spriteMat.color.copy(desat);
-    n.spriteMat.opacity=0.02+s*0.2;
-    const glowScale=1.5+s*2.5;
-    n.mesh.children.forEach(ch=>{if(ch.isSprite)ch.scale.set(glowScale,glowScale,1)});
+    nt.emissive.copy(desat);
+    nt.spriteColor.copy(desat);
+    nt.spriteOp=0.02+s*0.2;
+    nt.glowScale=1.5+s*2.5;
   });
-  /* Connections */
-  conns.forEach(c=>{
+  /* Connection targets */
+  conns.forEach((c,i)=>{
+    const ct=tgt.conns[i];
     if(c.toC){
-      const sA=scAt(c.a.data.today,c.a.data.proj[sc],year);
-      c.mat.opacity=(sA/100)*0.14;c.mat.color.set(scC);
+      const nSc=eff(c.a.data.id);
+      const sA=scAt(c.a.data.today,c.a.data.proj[nSc],year);
+      ct.opacity=(sA/100)*0.14;ct.color.set(SC_META[nSc].color);
     }else{
       const idA=c.a.data.id,idB=c.b.data.id;
-      const wAB=xw(idA,idB,sc).w,wBA=xw(idB,idA,sc).w;
+      const scA=eff(idA),scB=eff(idB);
+      const wAB=xw(idA,idB,scA).w,wBA=xw(idB,idA,scB).w;
       const net=wAB+wBA;const mag=Math.max(Math.abs(wAB),Math.abs(wBA));
-      c.mat.color.set(net>0.01?0x4ecdc4:net<-0.01?0xd4622a:0x444466);
-      c.mat.opacity=0.02+mag*0.6;
+      ct.color.set(net>0.01?0x4ecdc4:net<-0.01?0xd4622a:0x444466);
+      ct.opacity=0.02+mag*0.6;
     }
   });
-  /* Global atmosphere */
-  bloom.strength=0.25+aggHealth*1.0;
-  scene.fog.density=0.055-aggHealth*0.035;
-  ctrl.autoRotateSpeed=0.1+aggHealth*0.5;
-  gridM.color.lerpColors(new THREE.Color(0x331111),new THREE.Color(0x111122),aggHealth);
+  /* Global atmosphere targets */
+  tgt.bloomStr=0.25+tgt.aggHealth*1.0;
+  tgt.fogDen=0.055-tgt.aggHealth*0.035;
+  tgt.autoSpd=0.1+tgt.aggHealth*0.5;
+  tgt.gridColor.lerpColors(new THREE.Color(0x331111),new THREE.Color(0x111122),tgt.aggHealth);
+}
+
+function lerpScenario(dt){
+  const a=1-Math.exp(-LERP_SPEED*dt);
+  aggHealth=lerp(aggHealth,tgt.aggHealth,a);
+  /* Center node */
+  ringM.color.lerp(tgt.ringColor,a);
+  pulseM.color.lerp(tgt.pulseColor,a);
+  const cs=lerp(cMesh.scale.x,tgt.cScale,a);cMesh.scale.setScalar(cs);
+  cMat.emissive.lerp(tgt.cEmissive,a);
+  cMat.opacity=lerp(cMat.opacity,tgt.cOpacity,a);
+  /* Per-node */
+  nodes.forEach((n,i)=>{
+    const nt=tgt.nodes[i];
+    n.health=lerp(n.health,nt.health,a);
+    const ns=lerp(n.mesh.scale.x,nt.scale,a);n.mesh.scale.setScalar(ns);
+    n.mesh.material.emissiveIntensity=lerp(n.mesh.material.emissiveIntensity,nt.emissiveI,a);
+    n.mesh.material.opacity=lerp(n.mesh.material.opacity,nt.opacity,a);
+    n.mesh.material.emissive.lerp(nt.emissive,a);
+    n.spriteMat.color.lerp(nt.spriteColor,a);
+    n.spriteMat.opacity=lerp(n.spriteMat.opacity,nt.spriteOp,a);
+    const gCur=n.mesh.children[0]&&n.mesh.children[0].isSprite?n.mesh.children[0].scale.x:nt.glowScale;
+    const g=lerp(gCur,nt.glowScale,a);
+    n.mesh.children.forEach(ch=>{if(ch.isSprite)ch.scale.set(g,g,1)});
+  });
+  /* Connections */
+  conns.forEach((c,i)=>{
+    const ct=tgt.conns[i];
+    c.mat.opacity=lerp(c.mat.opacity,ct.opacity,a);
+    c.mat.color.lerp(ct.color,a);
+  });
+  /* Atmosphere */
+  bloom.strength=lerp(bloom.strength,tgt.bloomStr,a);
+  scene.fog.density=lerp(scene.fog.density,tgt.fogDen,a);
+  ctrl.autoRotateSpeed=lerp(ctrl.autoRotateSpeed,tgt.autoSpd,a);
+  gridM.color.lerp(tgt.gridColor,a);
 }
 
 function updateVis(){
   applyScenario(active);
   updateAgg();updateInfo();updateAudio();
+  if(chartsActive)renderNodeCharts();
+  updateWorldPanel();
 }
 updateVis();
 
@@ -828,7 +1333,7 @@ function updateConnTooltip(){
   const other=bestConn.a===selNode?bestConn.b:bestConn.a;
   if(other.isCenter){connTip.classList.add('hidden');return}
   const oId=other.data.id;
-  const ab=xw(sId,oId,active),ba=xw(oId,sId,active);
+  const ab=xw(sId,oId,eff(sId)),ba=xw(oId,sId,eff(oId));
   const pctAB=(ab.w*100).toFixed(0),pctBA=(ba.w*100).toFixed(0);
   const clrAB=ab.w>=0?'#4ecdc4':'#d4622a',clrBA=ba.w>=0?'#4ecdc4':'#d4622a';
   connTip.innerHTML='<div class="conn-tip-head">'+selNode.data.label+' \u2194 '+other.data.label+'</div>'
@@ -871,6 +1376,9 @@ function tick(){
   requestAnimationFrame(tick);
   const dt=clock.getDelta(),t=clock.getElapsedTime();
   ctrl.update();
+
+  /* Smooth transition between scenario states */
+  lerpScenario(dt);
 
   /* Camera fly-to */
   if(flyProgress<1){
@@ -923,6 +1431,14 @@ function tick(){
     n.alarmRing.scale.set(aScale,aScale,aScale);
     n.alarmMat.color.lerpColors(n.baseColor,alarmColor,alarmIntensity);
     n.wire.material.opacity=(n===hovNode||n===selNode)?0.45:0.08+h*0.16;
+    /* Override indicator — colored wireframe tint */
+    if(overrides[n.data.id]){
+      const ovrC=new THREE.Color(SC_META[overrides[n.data.id]].color);
+      n.wire.material.color.lerp(ovrC,0.5+Math.sin(t*3+n.idx)*0.2);
+      n.wire.material.opacity=Math.max(n.wire.material.opacity,0.25+Math.sin(t*2+n.idx)*0.08);
+    }else{
+      n.wire.material.color.copy(n.baseColor);
+    }
   });
   const cH=aggHealth;
   const cSpinSpd=0.04+cH*0.22;
@@ -962,7 +1478,7 @@ function tick(){
     const conn=conns[d.ci];
     let dir=1;
     if(!conn.toC&&conn.a.data&&conn.b.data){
-      const w=xw(conn.a.data.id,conn.b.data.id,active).w;
+      const w=xw(conn.a.data.id,conn.b.data.id,eff(conn.a.data.id)).w;
       dir=w>=0?1:-1;
     }
     d.t+=d.spd*spdMul*dir;
@@ -980,9 +1496,11 @@ function tick(){
   /* Raycaster */
   ray.setFromCamera(mouse,camera);
   const hits=ray.intersectObjects(allHitMeshes);
+  const prevHov=hovNode;
   hovNode=null;
   if(hits.length){const ht=hitTargets.find(h=>h.mesh===hits[0].object);if(ht)hovNode=ht.node;renderer.domElement.style.cursor='pointer'}
   else{renderer.domElement.style.cursor='default'}
+  if(hovNode!==prevHov){if(hovNode)sfx('hover');else if(prevHov)sfx('unhover')}
 
   /* Connection highlights */
   conns.forEach(c=>{
@@ -1001,16 +1519,19 @@ function tick(){
   /* Hover tooltip */
   const hTip=document.getElementById('hover-tip');
   if(hovNode&&hovNode!==selNode){
-    let tipName,tipScore,tipGrade,tipColor,tipSub;
+    let tipName,tipScore,tipGrade,tipColor,tipSub,ovrTag='';
     if(hovNode.isCenter){
-      tipName='Civilization Index';tipScore=scAt(AGG.today,AGG.proj[active],year);tipGrade=grade(tipScore);
-      tipColor=SC_META[active].css;tipSub='Aggregate of all 6 systems &middot; Click to inspect';
+      tipName='Civilization Index';tipScore=mixedAgg();tipGrade=grade(tipScore);
+      tipColor=Object.values(overrides).some(v=>v!==null)?'#fff':SC_META[active].css;
+      tipSub='Aggregate of all 6 systems &middot; Click to inspect';
     }else{
-      const d=hovNode.data;tipScore=scAt(d.today,d.proj[active],year);tipGrade=grade(tipScore);
+      const d=hovNode.data;const nSc=eff(d.id);
+      tipScore=scAt(d.today,d.proj[nSc],year);tipGrade=grade(tipScore);
       tipColor='#'+hovNode.color.getHexString();tipName=d.label;
       tipSub='Click to inspect &middot; Double-click to open';
+      if(overrides[d.id])ovrTag=' <span style="font-size:8px;color:'+SC_META[nSc].css+';border:1px solid '+SC_META[nSc].css+';padding:1px 4px;border-radius:2px">'+SC_META[nSc].name.split(' ')[0]+'</span>';
     }
-    hTip.innerHTML='<div class="hover-tip-name" style="color:'+tipColor+'">'+tipName+'</div><div class="hover-tip-score" style="color:'+tipColor+'">'+tipScore+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+tipGrade+'</div><div class="hover-tip-sub">'+tipSub+'</div>';
+    hTip.innerHTML='<div class="hover-tip-name" style="color:'+tipColor+'">'+tipName+ovrTag+'</div><div class="hover-tip-score" style="color:'+tipColor+'">'+tipScore+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+tipGrade+'</div><div class="hover-tip-sub">'+tipSub+'</div>';
     hTip.style.left=(mouseScreen.x+16)+'px';hTip.style.top=(mouseScreen.y-10)+'px';
     hTip.classList.remove('hidden');
   }else{hTip.classList.add('hidden')}
@@ -1025,12 +1546,18 @@ function tick(){
     lb.el.style.left=(v.x*hw+hw)+'px';
     lb.el.style.top=(-v.y*hh+hh)+'px';
     lb.el.style.transform='translate(-50%,-100%)';
-    if(lb.isCenter){const s=scAt(AGG.today,AGG.proj[active],year);lb.scoreEl.textContent=s;lb.scoreEl.style.color=SC_META[active].css}
-    else{const s=scAt(lb.node.data.today,lb.node.data.proj[active],year);lb.scoreEl.textContent=s}
+    if(lb.isCenter){const s=mixedAgg();lb.scoreEl.textContent=s;const anyO=Object.values(overrides).some(v=>v!==null);lb.scoreEl.style.color=anyO?'#fff':SC_META[active].css}
+    else{const nSc=eff(lb.node.data.id);const s=scAt(lb.node.data.today,lb.node.data.proj[nSc],year);lb.scoreEl.textContent=s;if(overrides[lb.node.data.id])lb.scoreEl.style.color=SC_META[nSc].css}
   });
 
   /* Update compare panel if open */
   if(comparing) updateComparePanel();
+
+  /* Keep audio in sync with lerping health values */
+  updateAudio();
+
+  /* Position floating charts in screen space */
+  positionNodeCharts();
 
   /* RENDER */
   composer.render();

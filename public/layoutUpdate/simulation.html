@@ -211,41 +211,19 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260220f"></script>
+<script src="js/shared.js?v=20260220g"></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
 document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
 
-  /* ── Scenario Data ── */
-  var SC = {
-    aggressive: {name:'Aggressive Action',color:'#4ecdc4',div:10,charter:true,capex:25,reskill:20,transparency:80,
-      gini:[.385,.381,.377,.373,.368,.363,.358,.352,.346,.340,.334,.328,.322,.316,.310,.305,.300,.295,.290,.286,.282,.278,.275,.272,.270,.268,.266,.264,.262,.261,.260,.259,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258,.258],
-      trust:[.432,.437,.445,.455,.468,.483,.500,.518,.537,.557,.575,.593,.610,.626,.641,.654,.666,.677,.687,.696,.704,.712,.718,.724,.730,.735,.740,.744,.748,.752,.755,.758,.761,.764,.766,.768,.770,.772,.774,.776,.778,.780,.782,.784],
-      emis:[36.3,35.8,35.0,34.0,32.8,31.5,30.0,28.4,26.8,25.2,23.6,22.1,20.7,19.4,18.2,17.1,16.1,15.2,14.4,13.6,12.9,12.3,11.7,11.2,10.7,10.3,9.9,9.5,9.2,8.9,8.6,8.4,8.2,8.0,7.8,7.6,7.5,7.3,7.2,7.1,7.0,6.9,6.8,6.7],
-      resil:[.355,.360,.368,.378,.390,.404,.420,.437,.455,.473,.491,.509,.527,.544,.560,.575,.589,.602,.614,.625,.635,.644,.652,.660,.667,.673,.679,.684,.689,.693,.697,.701,.704,.707,.710,.713,.715,.717,.719,.721,.723,.725,.727,.729],
-      ai:[.121,.123,.127,.132,.138,.145,.153,.162,.172,.182,.193,.204,.215,.226,.237,.248,.259,.269,.279,.289,.298,.307,.315,.323,.330,.337,.343,.349,.354,.359,.364,.368,.372,.376,.380,.383,.386,.389,.392,.394,.396,.398,.400,.402]},
-    moderate: {name:'Moderate Reform',color:'#5da5da',div:5,charter:true,capex:15,reskill:12,transparency:55,
-      gini:[.385,.384,.382,.380,.377,.374,.371,.367,.364,.360,.356,.352,.348,.344,.341,.337,.334,.331,.328,.326,.324,.322,.320,.319,.317,.316,.315,.315,.314,.314,.314,.314,.314,.314,.314,.315,.315,.315,.316,.316,.316,.317,.317,.317],
-      trust:[.432,.434,.438,.443,.450,.458,.467,.477,.487,.497,.507,.517,.527,.536,.545,.553,.561,.568,.575,.581,.586,.591,.596,.600,.604,.607,.610,.613,.616,.618,.620,.622,.624,.625,.627,.628,.629,.630,.631,.632,.633,.634,.635,.636],
-      emis:[36.3,36.0,35.5,35.0,34.3,33.6,32.8,32.0,31.2,30.4,29.6,28.9,28.2,27.5,26.8,26.2,25.6,25.1,24.6,24.1,23.7,23.3,22.9,22.6,22.3,22.0,21.7,21.5,21.3,21.1,20.9,20.8,20.6,20.5,20.4,20.3,20.2,20.1,20.0,20.0,19.9,19.9,19.8,19.8],
-      resil:[.355,.357,.362,.368,.376,.385,.395,.406,.417,.428,.439,.450,.461,.471,.480,.489,.497,.505,.512,.519,.525,.530,.535,.540,.544,.548,.551,.554,.557,.560,.562,.564,.566,.568,.570,.571,.573,.574,.575,.576,.577,.578,.579,.580],
-      ai:[.121,.124,.129,.136,.145,.155,.166,.178,.191,.205,.219,.234,.248,.263,.277,.291,.305,.318,.331,.343,.354,.365,.375,.385,.394,.403,.411,.418,.425,.432,.438,.444,.449,.454,.459,.463,.467,.471,.475,.478,.481,.484,.487,.490]},
-    bau: {name:'Business as Usual',color:'#e8a838',div:0,charter:false,capex:5,reskill:3,transparency:20,
-      gini:[.385,.387,.391,.396,.402,.409,.417,.426,.435,.444,.453,.462,.470,.478,.485,.492,.498,.504,.509,.513,.517,.521,.524,.527,.529,.531,.533,.534,.536,.537,.538,.539,.540,.541,.541,.542,.542,.543,.543,.543,.543,.544,.544,.544],
-      trust:[.432,.428,.422,.415,.406,.396,.386,.375,.365,.354,.344,.334,.325,.317,.309,.302,.296,.291,.286,.282,.278,.275,.273,.271,.269,.268,.267,.266,.265,.265,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264,.264],
-      emis:[36.3,36.4,36.6,36.8,37.0,37.2,37.4,37.6,37.7,37.8,37.9,38.0,38.0,38.0,38.0,37.9,37.8,37.7,37.6,37.5,37.3,37.2,37.0,36.9,36.7,36.6,36.4,36.3,36.1,36.0,35.9,35.7,35.6,35.5,35.4,35.3,35.2,35.1,35.0,34.9,34.8,34.8,34.7,34.7],
-      resil:[.355,.352,.348,.342,.336,.329,.322,.315,.308,.301,.295,.289,.283,.278,.274,.270,.266,.263,.260,.258,.256,.254,.252,.251,.250,.249,.248,.247,.247,.246,.246,.246,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245,.245],
-      ai:[.121,.127,.136,.148,.163,.180,.199,.220,.242,.265,.289,.313,.336,.359,.381,.402,.422,.441,.458,.474,.489,.502,.515,.526,.536,.545,.553,.560,.567,.573,.578,.583,.587,.591,.595,.598,.601,.604,.606,.608,.610,.612,.614,.615]},
-    worst: {name:'Worst Case',color:'#d4622a',div:0,charter:false,capex:2,reskill:0,transparency:5,
-      gini:[.385,.390,.398,.408,.420,.435,.451,.468,.486,.504,.521,.537,.552,.565,.577,.587,.596,.604,.611,.617,.622,.626,.630,.633,.636,.638,.640,.642,.643,.645,.646,.647,.648,.649,.650,.650,.651,.651,.652,.652,.652,.653,.653,.653],
-      trust:[.432,.424,.412,.398,.382,.364,.345,.326,.308,.291,.275,.261,.248,.237,.228,.220,.214,.209,.205,.202,.199,.197,.195,.194,.193,.192,.191,.190,.190,.190,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189,.189],
-      emis:[36.3,36.8,37.5,38.4,39.4,40.5,41.6,42.7,43.7,44.6,45.4,46.0,46.5,46.8,47.0,47.1,47.1,47.0,46.8,46.6,46.3,46.0,45.7,45.3,45.0,44.6,44.3,44.0,43.7,43.4,43.1,42.8,42.6,42.3,42.1,41.9,41.7,41.5,41.3,41.2,41.0,40.9,40.7,40.6],
-      resil:[.355,.348,.339,.328,.316,.303,.290,.277,.265,.254,.244,.235,.228,.222,.217,.213,.210,.208,.206,.204,.203,.202,.201,.200,.200,.199,.199,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198,.198],
-      ai:[.121,.130,.144,.162,.184,.210,.239,.271,.305,.340,.376,.411,.445,.477,.507,.534,.558,.580,.599,.615,.629,.641,.651,.660,.667,.673,.678,.683,.687,.690,.693,.695,.697,.699,.701,.702,.704,.705,.706,.707,.708,.709,.710,.710]}
-  };
+  /* ── Scenario Data — references SIM_ENGINE from shared.js ── */
+  var SC = SIM_ENGINE.scenarios;
+  /* Map css→color for local compat */
+  var KEYS_RAW = ['aggressive','moderate','bau','worst'];
+  KEYS_RAW.forEach(function(k){ SC[k].color = SC[k].css; });
 
-  var KEYS = ['aggressive','moderate','bau','worst'];
+  var KEYS = KEYS_RAW;
   var SCENARIOS = [
     {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
     {id:'moderate',  name:'Moderate',  color:'#5da5da'},
@@ -266,12 +244,7 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
      note:'Composite measure of AI\'s role in economic and governance decisions. Context-dependent \u2014 high influence without oversight is negative.'}
   ];
 
-  var NARRATIVES = {
-    aggressive: 'Under aggressive policy action \u2014 a 10% civic dividend, full AI charter oversight, and 25% climate capex \u2014 inequality drops steadily toward .258 by 2070 while civic trust nearly doubles to .784. Emissions fall from 36.3 Gt to 6.7 Gt, and resilience more than doubles. This pathway demands immediate, coordinated global commitment at unprecedented scale.',
-    moderate: 'Moderate reform with a 5% dividend, active charter, and 15% capex produces meaningful improvement without radical restructuring. Gini stabilizes near .317, trust reaches .636, and emissions decline to 19.8 Gt. Progress is real but several structural risks remain within range.',
-    bau: 'Business as usual \u2014 no dividend, no charter, minimal climate investment \u2014 sees inequality climb to .544, trust erode to .264, and emissions plateau above 34 Gt. Resilience halves while unregulated AI influence reaches .615. Multiple systemic stress points are breached by mid-century.',
-    worst: 'Under worst-case conditions, the absence of corrective policy drives Gini above .650, trust collapses to .189, and emissions peak near 47 Gt before slow decline. Resilience falls to .198 and AI influence reaches .710 with no oversight framework. Cascading institutional failures become virtually certain.'
-  };
+  var NARRATIVES = SIM_ENGINE.narratives;
 
   var active = 'aggressive';
   var charter = true;
@@ -281,13 +254,7 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
   function getIdx(year){ return Math.max(0, Math.min(43, year - 2027)); }
   function grade(s){return s>=90?'A':s>=80?'A\u2212':s>=70?'B+':s>=60?'B':s>=50?'C+':s>=40?'C':s>=30?'D+':s>=20?'D':'F';}
 
-  function interpVal(arr, year){
-    var idx = year - 2027;
-    if(idx <= 0) return arr[0];
-    if(idx >= 43) return arr[43];
-    var lo = Math.floor(idx), hi = Math.ceil(idx), t = idx - lo;
-    return arr[lo] + (arr[hi] - arr[lo]) * t;
-  }
+  var interpVal = simInterp;
 
   function fmtV(val, m){
     return val.toFixed(m.dec) + m.unit;
