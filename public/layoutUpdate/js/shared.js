@@ -15,11 +15,11 @@ var PAGE_ORDER=[
   {href:'ai.html',label:'AI'},
   {href:'civilization.html',label:'Civilization'},
   {href:'simulation.html',label:'Simulation'},
+  {href:'visualizer.html',label:'Visualizer'},
   {href:'climate.html',label:'Climate'},
   {href:'transition.html',label:'Transition'},
   {href:'governance.html',label:'Governance'},
   {href:'strategy.html',label:'Strategy'},
-  {href:'visualizer.html',label:'Visualizer'},
   {href:'timeline.html',label:'Timeline'},
   {href:'research.html',label:'Research'},
   {href:'about.html',label:'About'}
