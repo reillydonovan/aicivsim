@@ -416,7 +416,7 @@ const cWG=new THREE.IcosahedronGeometry(0.78,1);
 const cWM=new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,transparent:true,opacity:0.12});
 const cWire=new THREE.Mesh(cWG,cWM);cMesh.add(cWire);
 cMesh.position.set(0,0.3,0);scene.add(cMesh);
-const centerNode={mesh:cMesh,wire:cWire,data:null,isCenter:true,bp:new THREE.Vector3(0,0.3,0),netPos:new THREE.Vector3(0,0.3,0),globePos:GLOBE_CENTER.clone()};
+const centerNode={mesh:cMesh,wire:cWire,data:null,isCenter:true,bp:new THREE.Vector3(0,0.3,0),netPos:new THREE.Vector3(0,0.3,0),globePos:GLOBE_CENTER.clone(),bobPhase:0};
 
 const alarmRingGeo=new THREE.RingGeometry(0.5,0.55,32);alarmRingGeo.rotateX(-Math.PI/2);
 SYS.forEach((s,i)=>{
@@ -432,7 +432,7 @@ SYS.forEach((s,i)=>{
   const aRing=new THREE.Mesh(alarmRingGeo.clone(),aRingMat);mesh.add(aRing);
   const bp=new THREE.Vector3(x,0,z);
   mesh.position.copy(bp);scene.add(mesh);
-  nodes.push({mesh,wire,spriteMat:sm,alarmRing:aRing,alarmMat:aRingMat,data:s,isCenter:false,bp:bp.clone(),netPos:bp.clone(),globePos:GLOBE_POS[i].clone(),angle:a,color:new THREE.Color(s.color),baseColor:new THREE.Color(s.color),idx:i,health:1,alarmPhase:Math.random()*Math.PI*2});
+  nodes.push({mesh,wire,spriteMat:sm,alarmRing:aRing,alarmMat:aRingMat,data:s,isCenter:false,bp:bp.clone(),netPos:bp.clone(),globePos:GLOBE_POS[i].clone(),angle:a,color:new THREE.Color(s.color),baseColor:new THREE.Color(s.color),idx:i,health:1,alarmPhase:Math.random()*Math.PI*2,bobPhase:i*1.1,jitterPhase:i*7});
 });
 
 /* ================================================================
@@ -1380,7 +1380,7 @@ function checkTipping(){
    ANIMATION LOOP
    ================================================================ */
 const clock=new THREE.Clock();
-let playAcc=0,pulseT=0;
+let playAcc=0,pulseT=0,ringPhase=0;
 
 function tick(){
   requestAnimationFrame(tick);
@@ -1431,8 +1431,11 @@ function tick(){
     n.wire.rotation.x+=spinSpd*dt*4;
     const bobAmp=h>0.5?0.15:0.15+((0.5-h)*0.6);
     const bobFreq=h>0.5?0.7:0.7+((0.5-h)*3.0);
-    const jitter=h<0.35?(0.35-h)*0.12*Math.sin(t*17+i*7):0;
-    n.mesh.position.y=n.bp.y+Math.sin(t*bobFreq+i*1.1)*bobAmp+jitter;
+    n.bobPhase+=bobFreq*dt;
+    const jitterFreq=17;
+    n.jitterPhase+=jitterFreq*dt;
+    const jitter=h<0.35?(0.35-h)*0.12*Math.sin(n.jitterPhase):0;
+    n.mesh.position.y=n.bp.y+Math.sin(n.bobPhase)*bobAmp+jitter;
     n.alarmPhase+=dt*(1.5+(1-h)*6);
     const alarmIntensity=Math.max(0,(0.55-h)/0.55);
     const alarmPulse=Math.abs(Math.sin(n.alarmPhase));
@@ -1455,7 +1458,8 @@ function tick(){
   cWire.rotation.y+=cSpinSpd*dt*5;cWire.rotation.z+=cSpinSpd*dt*3;
   const cBobAmp=cH>0.5?0.10:0.10+((0.5-cH)*0.4);
   const cBobFreq=cH>0.5?0.45:0.45+((0.5-cH)*2.5);
-  cMesh.position.y=centerNode.bp.y+Math.sin(t*cBobFreq)*cBobAmp;
+  centerNode.bobPhase+=cBobFreq*dt;
+  cMesh.position.y=centerNode.bp.y+Math.sin(centerNode.bobPhase)*cBobAmp;
 
   /* Pulse ring — faster alarm when health is low */
   if(!globeActive){
@@ -1465,7 +1469,9 @@ function tick(){
     const pulseBase=aggHealth>0.5?0.08:0.08+(0.5-aggHealth)*0.25;
     pulseM.opacity=pulseBase*(1-pulseT);
     const ringPulse=aggHealth>0.5?0.012:0.012+(0.5-aggHealth)*0.04;
-    ringM.opacity=0.02+Math.sin(t*(1.5+(1-aggHealth)*3))*ringPulse;
+    const ringFreq=1.5+(1-aggHealth)*3;
+    ringPhase+=ringFreq*dt;
+    ringM.opacity=0.02+Math.sin(ringPhase)*ringPulse;
   }
 
   /* Shockwaves */

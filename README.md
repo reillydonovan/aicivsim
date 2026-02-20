@@ -28,7 +28,7 @@ public/layoutUpdate/
 ├── index.html             # Landing page — project overview, scenario guide, 7-system map
 ├── ai.html                # AI — alignment, transparency, safety, compute governance, autonomy risk, public trust
 ├── climate.html           # Climate — 7 tabs, 9 planetary metrics (incl. ocean pH), tipping points
-├── simulation.html        # Simulation — 5 policy levers, 50-year timeline, narrative reports
+├── simulation.html        # Simulation — 5 policy levers, 50-year timeline, narrative reports, Visualizer CTA
 ├── transition.html        # Transition — workforce reskilling, income bridge calculator
 ├── civilization.html      # Civilization — composite health index, KPI trajectories, funding
 ├── governance.html        # Governance — charter status, assemblies, audit coverage
@@ -47,7 +47,7 @@ public/layoutUpdate/
 
 - **Zero dependencies** — No npm, no build step, no framework. Plain HTML/CSS/JS served as static files.
 - **AI dashboard** — Dedicated `ai.html` page tracking 6 AI-specific domains: Alignment Index, Model Transparency, Safety Protocol Coverage, Compute Governance, Autonomy Safety, and Public Trust in AI. Includes 6 tabs (Overview with policy levers and 6 projection charts, Scenarios comparison grid, Safety sub-domain, Compute sub-domain, Risks with 5 threshold cards and scenario-specific notes, Milestones with 5-phase development timeline), plus always-visible cross-system impact and a 4-scenario summary panel at the bottom. Follows the same Feltron editorial pattern as every other page.
-- **Visualizer landing page** — `visualizer.html` introduces the 3D experience with four editorial sections (What It Is, What You Can Do, How It Works, Controls Reference) before a prominent "Enter the Visualizer" CTA. The main nav links here; `viz.html` is the actual 3D app. A back-link in `viz.html` returns to the landing page.
+- **Visualizer landing page** — `visualizer.html` introduces the 3D experience with four editorial sections (What It Is, What You Can Do, How It Works, Controls Reference) before a prominent "Enter the Visualizer" CTA. The main nav links here; `viz.html` is the actual 3D app. A back-link in `viz.html` returns to the landing page. The Simulation page also includes a direct CTA linking to the Visualizer, since `viz.html` is where the simulation of all system metrics comes to life in 3D.
 - **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair. The index page shows all seven systems with today + projected scores that update with scenario selection.
 - **Standardized 4-scenario system** — All pages now use the same four scenarios (Aggressive, Moderate, BAU, Worst) with consistent colors (#4ecdc4, #5da5da, #e8a838, #d4622a). Transition was migrated from its original 3-scenario system (Baseline/Transition/Full Stack) to match.
 - **Standardized chart headers** — Every graph uses a consistent `chartHeader()` function (defined in `shared.js`) that renders a Feltron domain-card style header: uppercase `t3` metric label, large `num-lg` projected value colored to the active scenario, trend arrow (green/red based on direction preference), end-year target, and baseline reference.
@@ -84,7 +84,7 @@ public/layoutUpdate/
   - **Collective atmosphere** — Aggregate health drives global scene state: orbit auto-rotate slows from 0.6 to 0.1; bloom dims from 1.25 to 0.25; fog thickens; ground grid shifts from cool blue to warning red; central pulse ring accelerates and reddens; center node shrinks and fades.
   - **Cosmic symphony audio** — Each of the 6 perimeter systems is a voice in a Cmaj9 chord (C3, E3, G3, B3, D4, A3). When all systems are healthy, the voices form a consonant, slowly-breathing harmonic unity — a quiet shimmer pad with each voice pulsing in sync. As individual systems deteriorate, their pitch drifts toward dissonant microtonal intervals (semitone rubs, tritones), vibrato widens and speeds up, their rhythmic pulse desyncs from the collective, and a lowpass filter muffles them. Each voice also has a quiet fifth-above shimmer that fades with health. The result: at Aggressive Action the visualization hums with a warm, unified chord; at Worst Case the chord fractures into an uneasy, beating polytonal texture — subtle enough to be ambient, expressive enough to feel the difference.
   - **Collective atmosphere audio** — Sub-bass drone sinks in pitch as aggregate health drops. Upper shimmer pad (3 partials) detunes toward minor intervals. A sub-bass alarm throb emerges gently below 35% aggregate health. Filtered noise hiss fades in below 45%. Master volume kept deliberately low (0.3) for non-intrusive ambience. Sound defaults to on, auto-initializing on the first user gesture.
-  - **Smooth scenario transitions** — Switching scenarios or scrubbing the year slider never causes instant visual jumps. A per-frame lerp system (`lerpScenario`) smoothly interpolates all node sizes, colors, opacities, connection weights, bloom, fog, grid color, and auto-rotate speed toward their target values using exponential easing (~80% in 0.35s). Audio follows the same smooth path since `updateAudio()` runs every frame and reads the continuously-lerping health values.
+  - **Smooth scenario transitions** — Switching scenarios or scrubbing the year slider never causes instant visual jumps. A per-frame lerp system (`lerpScenario`) smoothly interpolates all node sizes, colors, opacities, connection weights, bloom, fog, grid color, and auto-rotate speed toward their target values using exponential easing (~80% in 0.35s). Audio follows the same smooth path since `updateAudio()` runs every frame and reads the continuously-lerping health values. Position animations (bob, jitter, ring pulse) use incremental phase accumulation (`phase += freq * dt`) rather than `t * freq`, preventing discontinuous jumps when health-dependent frequencies change during transitions.
   - **Timeline-aware sparkline charts** — When a system node is selected, the detail panel shows multi-scenario sparkline charts (via `timelineSVG()` from `shared.js`) for 2–3 headline metrics — e.g., Temperature Rise, Renewable Share, CO₂ for Climate. The chart distinguishes past from projected future: solid line up to the current year, dashed line for the remainder, with a vertical year marker and a dot on the active scenario at the current position. All four scenarios are visible; the active line is highlighted. When the center aggregate is selected, a summary sparkline per system is shown instead.
   - **Floating chart overlays** — "Charts" toggle projects mini sparkline cards onto each 3D node in screen-space, tracking node positions as the camera orbits. Each card uses the same timeline-aware chart with solid past / dashed future split, updating live with scenario and year changes.
   - **`timelineSVG()` in shared.js** — A new SVG chart function that extends `comparisonSVG` with year-index awareness: splits each scenario line into solid (past) and dashed (future) segments, draws a vertical year marker, places a dot at the current position on the active line, and fills only the past area. Used by `viz.html` for all sparkline displays.
@@ -97,7 +97,7 @@ public/layoutUpdate/
   - **Double-click navigation** — Double-clicking an unselected system node opens its dashboard page. Guarded against accidental triggers during deselect.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
-- **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`.
+- **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`. The first four items after Home are **AI → Civilization → Simulation → Visualizer**, mirroring the site name.
 - **Dark / light mode** — Theme toggle in the nav bar switches between dark (default) and light mode. Preference persists in localStorage. Light mode overrides CSS custom properties for backgrounds, text, borders, and chart elements.
 - **Data export (CSV)** — Every chart includes a "CSV" download button. Click to export all scenario data for that metric as a CSV file. Powered by `registerChartExport()` + `downloadCSV()` in `shared.js`.
 - **Cross-system feedback loops (scenario-aware)** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence all other operating systems (42 total cross-system relationships across 7 systems). Weights, effect descriptions, and visual impact bars all update dynamically when the user switches scenarios — e.g., Climate's workforce displacement impact ranges from −5% under Aggressive Action to −35% under Worst Case, each with a unique narrative explanation. Every impact carries four distinct scenario texts describing how the relationship plays out under each policy configuration.
@@ -105,7 +105,7 @@ public/layoutUpdate/
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260216b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260216c`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
 
 ### Scenario system
 
@@ -199,13 +199,13 @@ No install, no build. Open any HTML file directly or serve with any static file 
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 
 ```html
-<link rel="stylesheet" href="css/style.css?v=20260216b">
-<script src="js/shared.js?v=20260216b"></script>
+<link rel="stylesheet" href="css/style.css?v=20260216c">
+<script src="js/shared.js?v=20260216c"></script>
 ```
 
 Before deploying, do a **find-and-replace across all 13 HTML files** in `public/layoutUpdate/`:
 
-- Find: `v=20260216b` (or whatever the current value is)
+- Find: `v=20260216c` (or whatever the current value is)
 - Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260217a`
 
 This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.
