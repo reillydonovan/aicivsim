@@ -68,14 +68,18 @@ public/layoutUpdate/
   - **Scenario-aware connections** — Lines between nodes are colored (green positive / red negative) and opacity-scaled by cross-system influence weights from `shared.js` CROSS_SYSTEM data.
   - **Directional particles** — Flow along connections in the direction of stronger influence; scatter under low aggregate health.
   - **Camera fly-to** — Clicking a node smoothly animates the camera to center on it; Escape returns to overview.
-  - **Hover tooltips** — Cursor-following tooltip shows system name, score, grade, and interaction hints.
+  - **Hover tooltips** — Cursor-following tooltip shows system name, score, grade, and interaction hints on all nodes including the center aggregate.
   - **Connection tooltips** — Hovering highlighted connections (when a node is selected) shows bidirectional impact percentages and effect descriptions.
+  - **Node detail panel** — Clicking any node (including the center aggregate) opens a detail card showing current score, grade, projected 2050 score for the active scenario, description, and navigation hint. The projected score updates live when switching scenarios.
   - **Tipping point shockwaves** — Predefined tipping points (Arctic ice-free, governance collapse, etc.) fire red shockwave animations and text overlays when the timeline passes their threshold year.
   - **Timeline playback** — Year slider (2026–2050) with play/pause; scores, node sizes, and connection weights interpolate over time.
   - **Timeline trail** — Small spheres mark the central node's position each year during playback, color-coded by health.
   - **Scenario comparison panel** — "Compare" toggle opens a right-side data panel showing all 6 system scores + aggregate for two scenarios side-by-side with color-coded deltas. Updates live with the year slider.
   - **Globe mode** — Toggle switches from hexagonal network to positions on a wireframe icosphere with great-circle arc connections.
-  - **Ambient sound** — Web Audio API generates a procedural drone + chord that shifts from dissonant (worst case) to harmonious (aggressive) with aggregate health. Node clicks trigger pitched pings. Mute button provided.
+  - **Health-driven node behavior (per-system)** — Each node independently responds to its scenario score: wireframe spin speed scales with health (fast when healthy, near-stop when critical); bob amplitude and frequency shift from gentle to erratic with high-frequency jitter below 35%; individual alarm pulse rings appear below 55% health, pulsing faster and shifting from system color to alarm orange as severity increases; glow aura scales from large/bright to small/dim; color desaturates toward gray as health drops; opacity fades on sick nodes.
+  - **Collective atmosphere** — Aggregate health drives global scene state: orbit auto-rotate slows from 0.6 to 0.1; bloom dims from 1.25 to 0.25; fog thickens; ground grid shifts from cool blue to warning red; central pulse ring accelerates and reddens; center node shrinks and fades.
+  - **Per-node audio** — Each of the 6 systems has a dedicated oscillator at a unique pitch (C3–A3). Healthy systems play clean sine tones; moderately sick shift to triangle wave; critically sick become harsh sawtooth. Sick systems detune with wobbling vibrato that accelerates with severity.
+  - **Collective audio** — Base drone drops pitch as aggregate health falls; harmonic chord shifts from major intervals to dissonant tritone clustering; a low sawtooth alarm throb emerges below 40% health, pulsing faster as it worsens; filtered white noise hiss fades in below 50% health.
   - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects.
   - **Double-click navigation** — Double-clicking a system node opens its dashboard page.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.

@@ -31,10 +31,12 @@ canvas{display:block}
 .sc-btn:hover{color:rgba(255,255,255,0.65)}
 .sc-btn.active{color:#fff;background:rgba(255,255,255,0.08)}
 
-.mode-bar{display:flex;gap:4px;align-items:center}
+.mode-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .mode-btn{font-family:'Space Grotesk',sans-serif;font-size:10px;padding:5px 10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.35);border-radius:3px;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em}
 .mode-btn:hover{color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2)}
 .mode-btn.on{color:#4ecdc4;border-color:#4ecdc480}
+.mode-group{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.mode-hint{font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:0.02em;padding-left:1px}
 .compare-sel{font-family:'Space Grotesk',sans-serif;font-size:10px;padding:4px 8px;background:rgba(0,0,0,0.6);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:3px;outline:none}
 
 .agg{text-align:right}
@@ -142,15 +144,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
         <button class="sc-btn" data-id="worst">Worst Case</button>
       </div>
       <div class="mode-bar">
-        <button class="mode-btn" id="compare-btn" title="Compare scenario scores side by side">Compare</button>
-        <select class="compare-sel" id="compare-sel" style="display:none">
-          <option value="aggressive">Aggressive</option>
-          <option value="moderate" selected>Moderate</option>
-          <option value="bau">BAU</option>
-          <option value="worst">Worst Case</option>
-        </select>
-        <button class="mode-btn" id="globe-btn" title="Toggle globe view">Globe</button>
-        <button class="mode-btn" id="mute-btn" title="Toggle ambient sound">Sound Off</button>
+        <div class="mode-group">
+          <button class="mode-btn" id="compare-btn">Compare Scenarios</button>
+          <select class="compare-sel" id="compare-sel" style="display:none"></select>
+          <div class="mode-hint">Score all 6 systems under two scenarios</div>
+        </div>
+        <div class="mode-group">
+          <button class="mode-btn" id="globe-btn">Globe View</button>
+          <div class="mode-hint">Remap the network onto a sphere</div>
+        </div>
+        <button class="mode-btn" id="mute-btn">Sound Off</button>
       </div>
       <div class="agg" id="agg">
         <div class="agg-score" id="agg-score">44</div>
@@ -177,6 +180,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
     <div class="info-when" id="info-when"></div>
     <div class="info-bar"><div class="info-bar-fill" id="info-fill"></div></div>
+    <div class="info-proj" id="info-proj" style="font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:10px"></div>
     <div class="info-desc" id="info-desc"></div>
     <div class="info-nav" id="info-nav"></div>
   </div>
@@ -343,6 +347,7 @@ const cWire=new THREE.Mesh(cWG,cWM);cMesh.add(cWire);
 cMesh.position.set(0,0.3,0);scene.add(cMesh);
 const centerNode={mesh:cMesh,wire:cWire,data:null,isCenter:true,bp:new THREE.Vector3(0,0.3,0),netPos:new THREE.Vector3(0,0.3,0),globePos:GLOBE_CENTER.clone()};
 
+const alarmRingGeo=new THREE.RingGeometry(0.5,0.55,32);alarmRingGeo.rotateX(-Math.PI/2);
 SYS.forEach((s,i)=>{
   const a=(i/6)*Math.PI*2-Math.PI/2;
   const x=Math.cos(a)*R,z=Math.sin(a)*R;
@@ -352,9 +357,11 @@ SYS.forEach((s,i)=>{
   const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.58,1),wm);mesh.add(wire);
   const sm=new THREE.SpriteMaterial({color:s.color,transparent:true,opacity:0.12,map:glowTex});
   const spr=new THREE.Sprite(sm);spr.scale.set(3,3,1);mesh.add(spr);
+  const aRingMat=new THREE.MeshBasicMaterial({color:s.color,transparent:true,opacity:0,side:THREE.DoubleSide});
+  const aRing=new THREE.Mesh(alarmRingGeo.clone(),aRingMat);mesh.add(aRing);
   const bp=new THREE.Vector3(x,0,z);
   mesh.position.copy(bp);scene.add(mesh);
-  nodes.push({mesh,wire,spriteMat:sm,data:s,isCenter:false,bp:bp.clone(),netPos:bp.clone(),globePos:GLOBE_POS[i].clone(),angle:a,color:new THREE.Color(s.color),idx:i});
+  nodes.push({mesh,wire,spriteMat:sm,alarmRing:aRing,alarmMat:aRingMat,data:s,isCenter:false,bp:bp.clone(),netPos:bp.clone(),globePos:GLOBE_POS[i].clone(),angle:a,color:new THREE.Color(s.color),baseColor:new THREE.Color(s.color),idx:i,health:1,alarmPhase:Math.random()*Math.PI*2});
 });
 
 /* ================================================================
@@ -459,30 +466,80 @@ const trailGeo=new THREE.SphereGeometry(0.08,6,6);
 function clearTrail(){trailSpheres.forEach(s=>{scene.remove(s.mesh);s.mesh.geometry.dispose()});trailSpheres=[]}
 
 /* ================================================================
-   SOUND
+   SOUND — Per-node + collective audio feedback
    ================================================================ */
+let nodeOscs=[];
+let alarmOsc=null,alarmGain=null;
+let noiseNode=null,noiseGain=null;
+const NODE_FREQS=[130.81,146.83,164.81,174.61,196.00,220.00];
 function initAudio(){
   if(audioInited)return;
   audioCtx=new(window.AudioContext||window.webkitAudioContext)();
   masterGain=audioCtx.createGain();masterGain.gain.value=0;masterGain.connect(audioCtx.destination);
-  baseOsc=audioCtx.createOscillator();baseOsc.type='sine';baseOsc.frequency.value=80;
-  const bg=audioCtx.createGain();bg.gain.value=0.12;baseOsc.connect(bg);bg.connect(masterGain);baseOsc.start();
+  /* Base drone */
+  baseOsc=audioCtx.createOscillator();baseOsc.type='sine';baseOsc.frequency.value=55;
+  const bg=audioCtx.createGain();bg.gain.value=0.10;baseOsc.connect(bg);bg.connect(masterGain);baseOsc.start();
+  /* Harmonic chord */
   [220,277,330].forEach(f=>{
     const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;
-    const g=audioCtx.createGain();g.gain.value=0.03;o.connect(g);g.connect(masterGain);o.start();
+    const g=audioCtx.createGain();g.gain.value=0.02;o.connect(g);g.connect(masterGain);o.start();
     chordOscs.push({osc:o,gain:g});
   });
+  /* Per-node oscillators — each system has its own tone */
+  nodes.forEach((n,i)=>{
+    const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=NODE_FREQS[i];
+    const g=audioCtx.createGain();g.gain.value=0;
+    o.connect(g);g.connect(masterGain);o.start();
+    nodeOscs.push({osc:o,gain:g,baseFreq:NODE_FREQS[i]});
+  });
+  /* Alarm pulse — low rhythmic throb for critical states */
+  alarmOsc=audioCtx.createOscillator();alarmOsc.type='sawtooth';alarmOsc.frequency.value=55;
+  alarmGain=audioCtx.createGain();alarmGain.gain.value=0;
+  const alarmFilter=audioCtx.createBiquadFilter();alarmFilter.type='lowpass';alarmFilter.frequency.value=120;
+  alarmOsc.connect(alarmFilter);alarmFilter.connect(alarmGain);alarmGain.connect(masterGain);alarmOsc.start();
+  /* Noise bed — filtered white noise for tension */
+  const bufSize=audioCtx.sampleRate*2;
+  const buf=audioCtx.createBuffer(1,bufSize,audioCtx.sampleRate);
+  const data=buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++)data[i]=(Math.random()*2-1)*0.5;
+  noiseNode=audioCtx.createBufferSource();noiseNode.buffer=buf;noiseNode.loop=true;
+  const nFilter=audioCtx.createBiquadFilter();nFilter.type='bandpass';nFilter.frequency.value=400;nFilter.Q.value=2;
+  noiseGain=audioCtx.createGain();noiseGain.gain.value=0;
+  noiseNode.connect(nFilter);nFilter.connect(noiseGain);noiseGain.connect(masterGain);noiseNode.start();
   audioInited=true;
 }
 function updateAudio(){
   if(!audioInited||audioMuted)return;
-  const h=scAt(AGG.today,AGG.proj[active],year)/100;
-  baseOsc.frequency.setTargetAtTime(60+h*40,audioCtx.currentTime,0.5);
+  const now=audioCtx.currentTime;
+  const h=aggHealth;
+  /* Base drone — drops pitch when sick */
+  baseOsc.frequency.setTargetAtTime(40+h*40,now,0.4);
+  /* Chord — detunes toward dissonance when sick */
   const healthy=[1,1.25,1.5],sick=[1,1.059,1.414];
   chordOscs.forEach((o,i)=>{
-    o.osc.frequency.setTargetAtTime(220*lerp(sick[i],healthy[i],h),audioCtx.currentTime,0.5);
-    o.gain.gain.setTargetAtTime(0.015+h*0.035,audioCtx.currentTime,0.5);
+    o.osc.frequency.setTargetAtTime(220*lerp(sick[i],healthy[i],h),now,0.4);
+    o.gain.gain.setTargetAtTime(0.008+h*0.025,now,0.3);
   });
+  /* Per-node audio — each system independently */
+  nodes.forEach((n,idx)=>{
+    if(!nodeOscs[idx])return;
+    const no=nodeOscs[idx];
+    const nh=n.health;
+    const detune=(1-nh)*30*Math.sin(now*4+idx*2);
+    no.osc.frequency.setTargetAtTime(no.baseFreq+detune,now,0.15);
+    no.osc.type=nh>0.5?'sine':nh>0.3?'triangle':'sawtooth';
+    const vol=0.008+nh*0.018;
+    const wobble=nh<0.45?Math.abs(Math.sin(now*(3+(1-nh)*8)+idx))*0.012:0;
+    no.gain.gain.setTargetAtTime(vol+wobble,now,0.1);
+  });
+  /* Alarm pulse — throbs when aggregate health < 0.4 */
+  const alarmAmt=Math.max(0,(0.4-h)/0.4);
+  const alarmVol=alarmAmt*0.06*Math.abs(Math.sin(now*(2+alarmAmt*4)));
+  alarmGain.gain.setTargetAtTime(alarmVol,now,0.05);
+  alarmOsc.frequency.setTargetAtTime(40+alarmAmt*30,now,0.2);
+  /* Noise bed — hiss rises with distress */
+  const noiseVol=Math.max(0,(0.5-h)/0.5)*0.025;
+  noiseGain.gain.setTargetAtTime(noiseVol,now,0.3);
 }
 function pingNode(idx){
   if(!audioInited||audioMuted)return;
@@ -654,22 +711,38 @@ muteBtn.addEventListener('click',()=>{
    ================================================================ */
 function updateInfo(){
   const p=document.getElementById('info');
-  if(!selNode||selNode.isCenter){p.classList.add('hidden');return}
+  if(!selNode){p.classList.add('hidden');return}
   p.classList.remove('hidden');
-  const d=selNode.data,sc=scAt(d.today,d.proj[active],year),g=grade(sc);
-  const c='#'+selNode.color.getHexString();
-  document.getElementById('info-name').textContent=d.label;
+  let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt;
+  const scMeta=SC_META[active];
+  if(selNode.isCenter){
+    name='Civilization Index';sc=scAt(AGG.today,AGG.proj[active],year);g=grade(sc);
+    proj2050=AGG.proj[active];projG=grade(proj2050);
+    c=scMeta.css;
+    desc='Weighted aggregate across all six operating systems \u2014 climate, simulation, transition, civilization health, governance, and strategy.';
+    navTxt='Click a surrounding node to explore a system';
+  }else{
+    const d=selNode.data;sc=scAt(d.today,d.proj[active],year);g=grade(sc);
+    proj2050=d.proj[active];projG=grade(proj2050);
+    c='#'+selNode.color.getHexString();desc=d.desc;navTxt='Double-click to open '+d.label;
+  }
+  whenTxt=year===2026?"Today\u2019s baseline":'Projected '+year+' ('+scMeta.name+')';
+  document.getElementById('info-name').textContent=name;
   document.getElementById('info-name').style.color=c;
   document.getElementById('info-sc').textContent=sc;
   document.getElementById('info-sc').style.color=c;
   document.getElementById('info-gr').textContent=g;
   document.getElementById('info-gr').style.color=c;
   document.getElementById('info-gr').style.borderColor=c;
-  document.getElementById('info-when').textContent=year===2026?"Today\u2019s baseline":'Projected '+year+' ('+SC_META[active].name+')';
+  document.getElementById('info-when').textContent=whenTxt;
   document.getElementById('info-fill').style.width=sc+'%';
   document.getElementById('info-fill').style.background=c;
-  document.getElementById('info-desc').textContent=d.desc;
-  document.getElementById('info-nav').textContent='Double-click to open '+d.label;
+  document.getElementById('info-desc').textContent=desc;
+  document.getElementById('info-nav').textContent=navTxt;
+  const projEl=document.getElementById('info-proj');
+  if(projEl){
+    projEl.innerHTML='<span style="color:rgba(255,255,255,0.35)">2050 ('+scMeta.name+'):</span> <span style="color:'+scMeta.css+';font-weight:600">'+proj2050+'</span> <span style="color:rgba(255,255,255,0.25)">/100</span> <span style="border:1px solid '+scMeta.css+';color:'+scMeta.css+';padding:1px 5px;border-radius:2px;font-size:10px">'+projG+'</span>';
+  }
 }
 function updateAgg(){
   const sc=scAt(AGG.today,AGG.proj[active],year),c=SC_META[active].css;
@@ -680,19 +753,36 @@ function updateAgg(){
   document.getElementById('agg-status').textContent=SC_META[active].outcome;
 }
 
+const sickColor=new THREE.Color(0x444455);
+const alarmColor=new THREE.Color(0xd4622a);
+let aggHealth=0.44;
 function applyScenario(sc){
   const scC=new THREE.Color(SC_META[sc].color);
   const aggSc=scAt(AGG.today,AGG.proj[sc],year);
-  const health=aggSc/100;
-  ringM.color.copy(scC);pulseM.color.copy(scC);
-  const cScale=0.4+health*0.7;
-  cMesh.scale.setScalar(cScale);cMat.emissive.copy(scC).multiplyScalar(0.25);cMat.opacity=0.35+health*0.5;
+  aggHealth=aggSc/100;
+  /* Center node */
+  ringM.color.copy(scC);
+  pulseM.color.lerpColors(alarmColor,scC,aggHealth);
+  const cScale=0.3+aggHealth*0.9;
+  cMesh.scale.setScalar(cScale);
+  cMat.emissive.copy(scC).multiplyScalar(0.15+aggHealth*0.2);
+  cMat.opacity=0.25+aggHealth*0.6;
+  /* Per-node health-driven visuals */
   nodes.forEach(n=>{
     const s=scAt(n.data.today,n.data.proj[sc],year)/100;
-    n.mesh.scale.setScalar(0.45+s*0.85);
-    n.mesh.material.emissiveIntensity=0.08+s*0.5;
-    n.spriteMat.opacity=0.04+s*0.18;
+    n.health=s;
+    const scl=0.3+s*1.0;
+    n.mesh.scale.setScalar(scl);
+    n.mesh.material.emissiveIntensity=0.05+s*0.6;
+    n.mesh.material.opacity=0.5+s*0.5;
+    const desat=new THREE.Color().lerpColors(sickColor,n.baseColor,Math.pow(s,0.6));
+    n.mesh.material.emissive.copy(desat);
+    n.spriteMat.color.copy(desat);
+    n.spriteMat.opacity=0.02+s*0.2;
+    const glowScale=1.5+s*2.5;
+    n.mesh.children.forEach(ch=>{if(ch.isSprite)ch.scale.set(glowScale,glowScale,1)});
   });
+  /* Connections */
   conns.forEach(c=>{
     if(c.toC){
       const sA=scAt(c.a.data.today,c.a.data.proj[sc],year);
@@ -705,8 +795,11 @@ function applyScenario(sc){
       c.mat.opacity=0.02+mag*0.6;
     }
   });
-  bloom.strength=0.35+health*0.8;
-  scene.fog.density=0.045-health*0.025;
+  /* Global atmosphere */
+  bloom.strength=0.25+aggHealth*1.0;
+  scene.fog.density=0.055-aggHealth*0.035;
+  ctrl.autoRotateSpeed=0.1+aggHealth*0.5;
+  gridM.color.lerpColors(new THREE.Color(0x331111),new THREE.Color(0x111122),aggHealth);
 }
 
 function updateVis(){
@@ -812,19 +905,41 @@ function tick(){
   /* Trail fade */
   trailSpheres.forEach((ts,i)=>{ts.mesh.material.opacity=0.15+0.45*(i/trailSpheres.length)});
 
-  /* Node animation */
+  /* Node animation — per-node health-driven */
   nodes.forEach((n,i)=>{
-    n.mesh.position.y=n.bp.y+Math.sin(t*0.7+i*1.1)*0.18;
-    n.wire.rotation.y=t*0.12+i;n.wire.rotation.x=t*0.08;
+    const h=n.health;
+    const spinSpd=0.02+h*0.2;
+    n.wire.rotation.y+=spinSpd*dt*6+i*0.001;
+    n.wire.rotation.x+=spinSpd*dt*4;
+    const bobAmp=h>0.5?0.15:0.15+((0.5-h)*0.6);
+    const bobFreq=h>0.5?0.7:0.7+((0.5-h)*3.0);
+    const jitter=h<0.35?(0.35-h)*0.12*Math.sin(t*17+i*7):0;
+    n.mesh.position.y=n.bp.y+Math.sin(t*bobFreq+i*1.1)*bobAmp+jitter;
+    n.alarmPhase+=dt*(1.5+(1-h)*6);
+    const alarmIntensity=Math.max(0,(0.55-h)/0.55);
+    const alarmPulse=Math.abs(Math.sin(n.alarmPhase));
+    n.alarmMat.opacity=alarmIntensity*alarmPulse*0.35;
+    const aScale=1+alarmPulse*alarmIntensity*1.8;
+    n.alarmRing.scale.set(aScale,aScale,aScale);
+    n.alarmMat.color.lerpColors(n.baseColor,alarmColor,alarmIntensity);
+    n.wire.material.opacity=(n===hovNode||n===selNode)?0.45:0.08+h*0.16;
   });
-  cMesh.position.y=centerNode.bp.y+Math.sin(t*0.45)*0.12;
-  cWire.rotation.y=t*0.18;cWire.rotation.z=t*0.12;
+  const cH=aggHealth;
+  const cSpinSpd=0.04+cH*0.22;
+  cWire.rotation.y+=cSpinSpd*dt*5;cWire.rotation.z+=cSpinSpd*dt*3;
+  const cBobAmp=cH>0.5?0.10:0.10+((0.5-cH)*0.4);
+  const cBobFreq=cH>0.5?0.45:0.45+((0.5-cH)*2.5);
+  cMesh.position.y=centerNode.bp.y+Math.sin(t*cBobFreq)*cBobAmp;
 
-  /* Pulse ring */
+  /* Pulse ring — faster alarm when health is low */
   if(!globeActive){
-    pulseT+=dt*0.6;if(pulseT>1)pulseT-=1;
-    pulseMesh.scale.setScalar(0.3+pulseT*(R+1));pulseM.opacity=0.10*(1-pulseT);
-    ringM.opacity=0.025+Math.sin(t*1.5)*0.012;
+    const pulseSpd=0.4+((1-aggHealth)*1.2);
+    pulseT+=dt*pulseSpd;if(pulseT>1)pulseT-=1;
+    pulseMesh.scale.setScalar(0.3+pulseT*(R+1));
+    const pulseBase=aggHealth>0.5?0.08:0.08+(0.5-aggHealth)*0.25;
+    pulseM.opacity=pulseBase*(1-pulseT);
+    const ringPulse=aggHealth>0.5?0.012:0.012+(0.5-aggHealth)*0.04;
+    ringM.opacity=0.02+Math.sin(t*(1.5+(1-aggHealth)*3))*ringPulse;
   }
 
   /* Shockwaves */
@@ -877,19 +992,25 @@ function tick(){
     }
   });
 
-  /* Wireframe highlight */
-  nodes.forEach(n=>{n.wire.material.opacity=(n===hovNode||n===selNode)?0.45:0.18});
-  cWM.opacity=(hovNode===centerNode||selNode===centerNode)?0.3:0.12;
+  /* Center wireframe highlight */
+  cWM.opacity=(hovNode===centerNode||selNode===centerNode)?0.3:0.06+aggHealth*0.1;
 
   /* Connection tooltip */
   updateConnTooltip();
 
   /* Hover tooltip */
   const hTip=document.getElementById('hover-tip');
-  if(hovNode&&!hovNode.isCenter&&hovNode!==selNode){
-    const d=hovNode.data,sc=scAt(d.today,d.proj[active],year),g=grade(sc);
-    const c='#'+hovNode.color.getHexString();
-    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+d.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">Click to inspect &middot; Double-click to open</div>';
+  if(hovNode&&hovNode!==selNode){
+    let tipName,tipScore,tipGrade,tipColor,tipSub;
+    if(hovNode.isCenter){
+      tipName='Civilization Index';tipScore=scAt(AGG.today,AGG.proj[active],year);tipGrade=grade(tipScore);
+      tipColor=SC_META[active].css;tipSub='Aggregate of all 6 systems &middot; Click to inspect';
+    }else{
+      const d=hovNode.data;tipScore=scAt(d.today,d.proj[active],year);tipGrade=grade(tipScore);
+      tipColor='#'+hovNode.color.getHexString();tipName=d.label;
+      tipSub='Click to inspect &middot; Double-click to open';
+    }
+    hTip.innerHTML='<div class="hover-tip-name" style="color:'+tipColor+'">'+tipName+'</div><div class="hover-tip-score" style="color:'+tipColor+'">'+tipScore+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+tipGrade+'</div><div class="hover-tip-sub">'+tipSub+'</div>';
     hTip.style.left=(mouseScreen.x+16)+'px';hTip.style.top=(mouseScreen.y-10)+'px';
     hTip.classList.remove('hidden');
   }else{hTip.classList.add('hidden')}
