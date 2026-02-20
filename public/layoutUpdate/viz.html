@@ -566,6 +566,7 @@ addHit(cMesh,centerNode);nodes.forEach(n=>addHit(n.mesh,n));
    ================================================================ */
 const SUB_RADIUS=1.8;
 const SUB_SIZE=0.18;
+const SUB_CURVE_SEGS=24;
 const subGeo=new THREE.IcosahedronGeometry(SUB_SIZE,1);
 const subWireGeo=new THREE.IcosahedronGeometry(SUB_SIZE*1.35,0);
 nodes.forEach((parentNode,pi)=>{
@@ -588,7 +589,8 @@ nodes.forEach((parentNode,pi)=>{
     const hitS=new THREE.Mesh(new THREE.SphereGeometry(0.6,6,6),hitMat);
     hitS.visible=false;
     mesh.add(hitS);
-    const lineGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);
+    const subInitPts=[];for(let q=0;q<=SUB_CURVE_SEGS;q++)subInitPts.push(new THREE.Vector3());
+    const lineGeo=new THREE.BufferGeometry().setFromPoints(subInitPts);
     const lineMat=new THREE.LineBasicMaterial({color:sColor,transparent:true,opacity:0});
     const line=new THREE.Line(lineGeo,lineMat);
     scene.add(line);
@@ -1596,9 +1598,14 @@ function tick(){
     sn.wire.rotation.x+=spinSpd*dt*3;
     sn.hitMesh.visible=e>0.3;
     sn.lineMat.opacity=e*0.15;
-    const pts=sn.lineGeo.attributes.position.array;
-    pts[0]=pp.x;pts[1]=pp.y;pts[2]=pp.z;
-    pts[3]=sn.mesh.position.x;pts[4]=sn.mesh.position.y;pts[5]=sn.mesh.position.z;
+    const subA=new THREE.Vector3(pp.x,pp.y,pp.z);
+    const subB=new THREE.Vector3(sn.mesh.position.x,sn.mesh.position.y,sn.mesh.position.z);
+    const subM=new THREE.Vector3().addVectors(subA,subB).multiplyScalar(0.5);
+    subM.y+=0.5*e;
+    const subCrv=new THREE.QuadraticBezierCurve3(subA,subM,subB);
+    const subPts=subCrv.getPoints(SUB_CURVE_SEGS);
+    const arr=sn.lineGeo.attributes.position.array;
+    for(let q=0;q<subPts.length;q++){arr[q*3]=subPts[q].x;arr[q*3+1]=subPts[q].y;arr[q*3+2]=subPts[q].z}
     sn.lineGeo.attributes.position.needsUpdate=true;
   });
 
