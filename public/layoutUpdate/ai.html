@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260220g">
+<link rel="stylesheet" href="css/style.css?v=20260216b">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
   <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / AI</p>
   <p class="t3" style="color:#e8a838;letter-spacing:0.3em;margin-bottom:8px">AI &mdash; 2026</p>
   <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">Artificial Intelligence</h1>
-  <p class="body mt-3" style="max-width:480px">Alignment progress, autonomy risk, compute governance, model transparency, and deployment safety. Scenario-aware projections from 2026 through 2050.</p>
+  <p class="body mt-3" style="max-width:480px">Alignment progress, autonomy risk, compute governance, model transparency, deployment safety, and public trust. Scenario-aware projections from 2026 through 2050.</p>
   <hr class="rule">
 </div>
 </header>
@@ -30,9 +30,11 @@
   <div class="control-bar-inner">
     <div class="nav-tabs" id="tabs">
       <button class="nav-tab active" data-section="overview">Overview</button>
-      <button class="nav-tab" data-section="metrics">Key Metrics</button>
-      <button class="nav-tab" data-section="risks">Risks &amp; Milestones</button>
-      <button class="nav-tab" data-section="impacts">Cross-System</button>
+      <button class="nav-tab" data-section="scenarios">Scenarios</button>
+      <button class="nav-tab" data-section="safety">Safety</button>
+      <button class="nav-tab" data-section="governance">Compute</button>
+      <button class="nav-tab" data-section="risks">Risks</button>
+      <button class="nav-tab" data-section="milestones">Milestones</button>
     </div>
     <div class="scenario-bar" id="scbar"></div>
   </div>
@@ -57,47 +59,103 @@
     <div id="domain-grid"></div>
     <div id="overview-quote" class="mt-6"></div>
   </div></div>
-</div>
-
-<!-- ═══ KEY METRICS ═══ -->
-<div id="sec-metrics" style="display:none">
-  <div class="section"><div class="page">
-    <span class="section-num">03</span>
-    <p class="t2">Key Metrics &mdash; Scenario Trajectories</p>
-    <hr class="rule">
-    <p class="body mt-3 mb-6" style="max-width:640px">Core indicators tracking AI alignment, safety, and governance from 2026 through 2050. Each chart shows all four scenarios &mdash; the active scenario is highlighted.</p>
-    <div id="spark-grid"></div>
-  </div></div>
-</div>
-
-<!-- ═══ RISKS & MILESTONES ═══ -->
-<div id="sec-risks" style="display:none">
-  <div class="section"><div class="page">
-    <span class="section-num">04</span>
-    <p class="t2">Risk Thresholds &amp; Milestones</p>
-    <hr class="rule">
-    <p class="body mt-3 mb-3" id="risk-desc" style="max-width:640px"></p>
-    <div id="risk-grid"></div>
-  </div></div>
   <div class="chapter-divider"><div class="page">
-    <span class="section-num">05</span>
-    <p class="t2">Development Timeline</p>
+    <span class="section-num">03</span>
+    <p class="t2">Policy Levers</p>
   </div></div>
   <div class="section" style="padding-top:24px"><div class="page">
-    <p class="body mb-4" id="timeline-desc" style="max-width:640px"></p>
+    <p class="body mb-4" style="max-width:640px">Adjust the three core AI policy levers to see how they shift the projected score. These represent the primary dimensions of AI governance intervention.</p>
+    <div class="grid grid-3" id="lever-mount">
+      <div class="cell"><label class="t4">Alignment Investment</label><input type="range" min="0" max="100" value="80" class="lever" data-lever="alignment" style="width:100%;margin-top:8px"><div class="flex justify-between mt-1"><span class="t4" style="color:var(--text-faint)">0%</span><span class="t4" style="color:var(--text-faint)">100%</span></div></div>
+      <div class="cell"><label class="t4">Safety Mandate</label><input type="range" min="0" max="100" value="80" class="lever" data-lever="safety" style="width:100%;margin-top:8px"><div class="flex justify-between mt-1"><span class="t4" style="color:var(--text-faint)">None</span><span class="t4" style="color:var(--text-faint)">Universal</span></div></div>
+      <div class="cell"><label class="t4">Transparency Mandate</label><input type="range" min="0" max="100" value="80" class="lever" data-lever="transparency" style="width:100%;margin-top:8px"><div class="flex justify-between mt-1"><span class="t4" style="color:var(--text-faint)">Voluntary</span><span class="t4" style="color:var(--text-faint)">Binding</span></div></div>
+    </div>
+    <div id="lever-impact" class="mt-4"></div>
+  </div></div>
+  <div class="chapter-divider"><div class="page">
+    <span class="section-num">04</span>
+    <p class="t2">2050 Projections</p>
+  </div></div>
+  <div class="section" style="padding-top:24px"><div class="page">
+    <div id="overview-charts" class="grid grid-2"></div>
+    <div id="ov-narrative" class="mt-6"></div>
+  </div></div>
+</div>
+
+<!-- ═══ SCENARIOS ═══ -->
+<div id="sec-scenarios" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">05</span>
+    <p class="t2">Scenario Comparison</p>
+    <hr class="rule">
+    <p class="body mt-3 mb-6" style="max-width:640px">All six AI metrics shown under each scenario simultaneously. The active scenario is highlighted &mdash; toggle between them using the scenario bar above.</p>
+    <div id="comparison-grid" class="grid grid-2"></div>
+  </div></div>
+</div>
+
+<!-- ═══ SAFETY & ALIGNMENT ═══ -->
+<div id="sec-safety" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">06</span>
+    <p class="t2">Safety</p>
+    <hr class="rule">
+    <div id="safety-hero"></div>
+    <p class="body mt-3 mb-4" id="safety-desc" style="max-width:640px"></p>
+    <div id="safety-charts" class="grid grid-2"></div>
+  </div></div>
+</div>
+
+<!-- ═══ COMPUTE & GOVERNANCE ═══ -->
+<div id="sec-governance" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">07</span>
+    <p class="t2">Compute</p>
+    <hr class="rule">
+    <div id="gov-hero"></div>
+    <p class="body mt-3 mb-4" id="gov-desc" style="max-width:640px"></p>
+    <div id="gov-charts" class="grid grid-2"></div>
+  </div></div>
+</div>
+
+<!-- ═══ RISKS ═══ -->
+<div id="sec-risks" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">08</span>
+    <p class="t2">Risk Thresholds</p>
+    <hr class="rule">
+    <p class="body mt-3 mb-4" id="risk-desc" style="max-width:640px"></p>
+    <div id="risk-grid"></div>
+  </div></div>
+</div>
+
+<!-- ═══ MILESTONES ═══ -->
+<div id="sec-milestones" style="display:none">
+  <div class="section"><div class="page">
+    <span class="section-num">09</span>
+    <p class="t2">Development Milestones</p>
+    <hr class="rule">
+    <p class="body mt-3 mb-4" id="timeline-desc" style="max-width:640px"></p>
     <div id="timeline-list"></div>
   </div></div>
 </div>
 
-<!-- ═══ CROSS-SYSTEM ═══ -->
-<div id="sec-impacts" style="display:none">
-  <div class="section"><div class="page">
-    <span class="section-num">06</span>
-    <p class="t2">Cross-System Impact</p>
-    <hr class="rule">
-    <p class="body mt-3 mb-6" style="max-width:640px">How AI under the active scenario influences every other operating system. Weights indicate the magnitude and direction of propagated effects.</p>
-    <div id="cross-system-mount"></div>
+<!-- ═══ CROSS-SYSTEM IMPACT (always visible) ═══ -->
+<div class="section"><div class="page">
+  <span class="section-num">10</span>
+  <p class="t2">Cross-System Impact</p>
+  <hr class="rule">
+  <p class="body mt-3 mb-6" style="max-width:640px">How AI under the active scenario influences every other system. Weights indicate the magnitude and direction of propagated effects.</p>
+  <div id="cross-system-mount"></div>
+</div></div>
+
+<!-- ═══ SCENARIO SUMMARY ═══ -->
+<div class="section" style="padding-top:0">
+<div class="page">
+  <div class="chapter-divider" style="margin-bottom:24px"><div>
+    <p class="t2">Scenario Summary</p>
   </div></div>
+  <div id="scenario-summary"></div>
+</div>
 </div>
 
 </main>
@@ -105,7 +163,7 @@
 <!-- FOOTER -->
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260220g"></script>
+<script src="js/shared.js?v=20260216b"></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -120,17 +178,23 @@ var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d46
 
 var DOMAINS=[
   {name:'Alignment',color:'#e8a838',today:48,
-    desc:'Measures the degree to which deployed AI systems act in accordance with human values and intentions.'},
+    desc:'Measures the degree to which deployed AI systems act in accordance with human values and intentions.',
+    details:{aggressive:'Alignment research fully funded. Pre-deployment testing mandated globally. Misaligned models cannot ship.',moderate:'Alignment testing required in major markets. Some models slip through with voluntary compliance.',bau:'Alignment research underfunded. No testing requirements. Models optimized for engagement, not values.',worst:'Alignment abandoned as commercially inconvenient. Misaligned systems deployed in critical infrastructure.'}},
   {name:'Transparency',color:'#4ecdc4',today:15,
-    desc:'Percentage of frontier AI models with publicly auditable decision processes and training data documentation.'},
+    desc:'Percentage of frontier AI models with publicly auditable decision processes and training data documentation.',
+    details:{aggressive:'Full transparency mandated. All frontier models publish training data, evaluation results, and decision audits.',moderate:'Transparency required for largest models. Smaller systems remain opaque. Audit infrastructure growing.',bau:'Transparency is voluntary and widely ignored. Proprietary secrecy is the industry norm.',worst:'Transparency actively opposed. Trade secret protections expanded to prevent any model auditing.'}},
   {name:'Safety',color:'#d4622a',today:35,
-    desc:'Composite of deployment safety protocols, red-team coverage, and incident response infrastructure.'},
+    desc:'Composite of deployment safety protocols, red-team coverage, and incident response infrastructure.',
+    details:{aggressive:'Universal safety protocols. Red-team testing for all frontier models. Incident response tested and proven.',moderate:'Safety coverage at 62%. Major systems covered, gaps in smaller deployments.',bau:'Safety protocols are voluntary. Most systems deployed without red-team testing or incident plans.',worst:'Safety infrastructure dismantled. No testing, no monitoring, no response. Incidents covered up.'}},
   {name:'Compute Gov.',color:'#5da5da',today:20,
-    desc:'Governance coverage over global AI compute infrastructure — allocation fairness, energy accountability, and access policy.'},
+    desc:'Governance coverage over global AI compute infrastructure — allocation fairness, energy accountability, and access policy.',
+    details:{aggressive:'Full compute transparency. Fair allocation policies. Energy accountability mandated. Access equity enforced.',moderate:'Partial compute disclosure. Allocation policies emerging but enforcement varies by jurisdiction.',bau:'Compute allocation opaque. Concentrated in 5 entities. No energy audits. No access policy.',worst:'Compute monopolized. No governance. Energy consumption unreported. Access restricted to extractive entities.'}},
   {name:'Autonomy Risk',color:'#9b87f5',today:62,
-    desc:'Inverse risk score — higher is safer. Measures controls on autonomous decision-making, kill switches, and human-in-the-loop requirements.'},
+    desc:'Inverse risk score — higher is safer. Measures controls on autonomous decision-making, kill switches, and human-in-the-loop requirements.',
+    details:{aggressive:'Strict autonomy boundaries. Kill switches mandatory. Human-in-the-loop for all consequential decisions.',moderate:'Autonomy guidelines published. Kill switches required for military/medical. Other domains voluntary.',bau:'No autonomy boundaries. Fully autonomous systems deployed in finance, infrastructure, hiring.',worst:'Autonomy maximized for efficiency. Kill switches removed. Human oversight seen as a bottleneck.'}},
   {name:'Public Trust',color:'#95cf95',today:30,
-    desc:'Surveyed public confidence in AI systems being deployed responsibly and governed transparently.'}
+    desc:'Surveyed public confidence in AI systems being deployed responsibly and governed transparently.',
+    details:{aggressive:'Trust at 82% by 2050. Transparency and safety track record builds sustained public confidence.',moderate:'Trust at 55%. Mixed signals — some visible wins but incidents undermine broader confidence.',bau:'Trust stagnant at 22%. Opacity and incidents keep public skeptical and disengaged.',worst:'Trust destroyed at 8%. Deepfakes, manipulation scandals, and surveillance shatter remaining confidence.'}}
 ];
 
 var PROJECTED={
@@ -141,58 +205,72 @@ var PROJECTED={
 };
 
 var KPI={
-  alignment:{label:'Alignment Index',unit:'/100',dir:'higher',
+  alignment:{label:'Alignment Index',unit:'/100',dir:'higher',group:'safety',
     aggressive:[48,52,56,60,64,68,72,75,78,80,82,84,86,87,88,89,90,90,91,91,91,92,92,92,92],
     moderate:  [48,50,52,54,56,58,60,61,62,63,64,65,65,66,66,67,67,67,68,68,68,68,68,68,68],
     bau:       [48,47,46,44,43,42,40,39,38,37,36,35,34,34,33,33,32,32,32,32,32,32,32,32,32],
-    worst:     [48,45,42,38,35,31,27,24,21,18,16,14,12,11,10,10,10,10,10,10,10,10,10,10,10]},
-  transparency:{label:'Model Transparency',unit:'%',dir:'higher',
+    worst:     [48,45,42,38,35,31,27,24,21,18,16,14,12,11,10,10,10,10,10,10,10,10,10,10,10],
+    notes:{aggressive:'Alignment mandated pre-deployment. Research funded through compute rents at $2B/yr. Every frontier model passes alignment certification before release.',moderate:'Alignment testing required in G20 nations. Funding grows but lags capability development by 2–3 years.',bau:'Alignment research survives as an unfunded academic niche. No deployment requirements. Labs self-certify.',worst:'Alignment research defunded. Labs view it as a PR exercise at best, a competitive burden at worst.'}},
+  transparency:{label:'Model Transparency',unit:'%',dir:'higher',group:'governance',
     aggressive:[15,20,26,33,40,48,55,62,68,73,78,82,85,88,90,92,93,94,95,95,96,96,96,97,97],
     moderate:  [15,18,21,24,28,32,36,39,42,45,48,50,52,54,55,56,57,58,59,59,60,60,60,61,61],
     bau:       [15,15,14,14,14,13,13,13,13,13,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12],
-    worst:     [15,13,11,10,8,7,6,5,5,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3]},
-  safety:{label:'Safety Protocol Coverage',unit:'%',dir:'higher',
+    worst:     [15,13,11,10,8,7,6,5,5,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3],
+    notes:{aggressive:'Full transparency by law. Training data, evaluation results, and decision processes publicly documented for all frontier models.',moderate:'Transparency required for models above 10^25 FLOPs. Smaller systems exempt. Audit tools improving.',bau:'Transparency voluntary. Industry consensus is that openness harms competitiveness. 88% of models are black boxes.',worst:'Trade secret protections expanded. Auditing frontier models is illegal in key jurisdictions.'}},
+  safety:{label:'Safety Protocol Coverage',unit:'%',dir:'higher',group:'safety',
     aggressive:[35,40,46,52,58,64,70,75,79,82,85,87,88,89,90,90,90,90,90,90,90,90,90,90,90],
     moderate:  [35,37,39,42,44,47,49,51,53,55,57,58,59,60,61,61,62,62,62,62,62,62,62,62,62],
     bau:       [35,34,33,32,31,30,29,29,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28],
-    worst:     [35,32,28,24,20,17,14,12,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]},
-  compute:{label:'Compute Governance',unit:'%',dir:'higher',
+    worst:     [35,32,28,24,20,17,14,12,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10],
+    notes:{aggressive:'Universal safety coverage by 2038. Red-team testing mandatory. Incident response infra tested through 3 major events.',moderate:'Safety protocols cover ~62% of deployed systems. Major models compliant; long tail of smaller systems unregulated.',bau:'Safety is a checkbox, not a culture. Protocols exist on paper; enforcement is nonexistent.',worst:'Safety infrastructure actively dismantled. Testing seen as "innovation-hostile." Incidents suppressed.'}},
+  compute:{label:'Compute Governance',unit:'%',dir:'higher',group:'governance',
     aggressive:[20,26,33,40,48,55,62,68,73,78,82,85,85,85,85,85,85,85,85,85,85,85,85,85,85],
     moderate:  [20,23,26,29,32,35,38,40,42,44,46,48,50,51,52,52,52,52,52,52,52,52,52,52,52],
     bau:       [20,19,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18],
-    worst:     [20,17,14,11,9,7,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]},
-  autonomy:{label:'Autonomy Safety',unit:'/100',dir:'higher',
+    worst:     [20,17,14,11,9,7,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
+    notes:{aggressive:'Full compute transparency. Fair allocation enforced. Energy audits mandatory. Public access tiers established.',moderate:'Compute disclosure for top 10 providers. Allocation guidelines published. Energy reporting voluntary.',bau:'Compute allocation entirely opaque. 5 entities control 80%+ of global AI compute. No public accountability.',worst:'Compute monopolized. Geopolitical compute arms race. Energy consumption classified. Access weaponized.'}},
+  autonomy:{label:'Autonomy Safety',unit:'/100',dir:'higher',group:'safety',
     aggressive:[62,65,68,71,74,76,78,80,82,83,84,85,86,87,87,88,88,88,88,88,88,88,88,88,88],
     moderate:  [62,63,64,65,66,67,67,68,68,69,69,70,70,70,70,70,70,70,70,70,70,70,70,70,70],
     bau:       [62,60,58,56,54,52,50,48,46,44,43,42,41,40,40,40,40,40,40,40,40,40,40,40,40],
-    worst:     [62,58,54,49,44,39,34,30,26,22,20,18,16,15,15,15,15,15,15,15,15,15,15,15,15]},
-  trust:{label:'Public Trust in AI',unit:'%',dir:'higher',
+    worst:     [62,58,54,49,44,39,34,30,26,22,20,18,16,15,15,15,15,15,15,15,15,15,15,15,15],
+    notes:{aggressive:'Strict autonomy limits by international treaty. Kill switches mandatory. Human-in-the-loop for all consequential systems.',moderate:'Autonomy guidelines in G20. Kill switches required for defense/medical. Other domains voluntary.',bau:'No enforceable autonomy limits. Autonomous trading, hiring, and content moderation deployed globally.',worst:'Autonomy maximized. Kill switches removed for "efficiency." Fully autonomous weapons deployed.'}},
+  trust:{label:'Public Trust in AI',unit:'%',dir:'higher',group:'governance',
     aggressive:[30,34,39,44,50,55,60,65,69,72,75,77,79,80,81,82,82,82,82,82,82,82,82,82,82],
     moderate:  [30,32,34,36,38,40,42,44,46,48,49,50,51,52,53,54,55,55,55,55,55,55,55,55,55],
     bau:       [30,28,27,26,25,24,23,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22,22],
-    worst:     [30,26,22,18,15,12,10,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8]}
+    worst:     [30,26,22,18,15,12,10,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8],
+    notes:{aggressive:'Trust earned through a decade of transparent, safe deployment. 82% of the public supports AI governance by 2050.',moderate:'Trust at 55%. Citizens see some wins but high-profile incidents keep skepticism alive.',bau:'Trust stagnant at 22%. Public perceives AI as opaque and unaccountable. Engagement collapses.',worst:'Trust destroyed. Deepfakes, surveillance, manipulation scandals make AI synonymous with institutional failure.'}}
 };
 
-var KPI_ANNOTATIONS={
-  alignment:'Composite index measuring how well deployed AI systems behave in accordance with stated human values. Under aggressive governance, alignment research is funded at scale and mandated before deployment. Under worst case, alignment is abandoned as commercially inconvenient.',
-  transparency:'Share of frontier AI models with publicly documented training data, auditable decision processes, and open evaluation results. Aggressive policy mandates full transparency; worst case sees proprietary opacity become the norm.',
-  safety:'Coverage of deployment safety protocols across active AI systems — red-team testing, incident response plans, and rollback capabilities. Aggressive governance achieves near-universal coverage by 2040.',
-  compute:'Governance coverage of global AI compute infrastructure. Measures allocation fairness, energy auditing, and access equity. Without intervention, compute concentrates in a handful of unaccountable entities.',
-  autonomy:'Inverse risk score for autonomous AI decision-making. Higher means safer — more kill switches, human oversight, and bounded autonomy. Worst case sees fully autonomous systems deployed without safeguards.',
-  trust:'Surveyed public confidence that AI systems are being developed and deployed responsibly. Trust is earned through transparency and safety; it collapses rapidly under opacity and incident mismanagement.'
+var NARRATIVES={
+  aggressive:'Under aggressive governance, AI becomes civilization\u2019s most powerful coordination tool. Alignment research is funded at scale. Safety protocols achieve universal coverage. Transparency is the default, not the exception. Compute is governed as public infrastructure. Autonomy is bounded by international treaty. Public trust, earned through a decade of accountable deployment, reaches 82%. The result: an AI ecosystem that strengthens every system it touches \u2014 from climate modeling to democratic participation.',
+  moderate:'Moderate reform produces real but uneven progress. Alignment testing is required in major markets but gaps remain. Safety covers most frontier models while a long tail of smaller systems operates unregulated. Transparency improves but compute governance lags. Public trust grows slowly. The window for full course correction stays open, but each year of delayed action narrows it further.',
+  bau:'Business as usual means AI capability continues to outpace governance at an accelerating rate. Alignment research is an unfunded academic niche. Transparency is voluntary and ignored. Compute concentrates in five entities with no accountability. Autonomy boundaries don\u2019t exist. Public trust stagnates. The gap between what AI can do and what we can control widens every year \u2014 and the compounding cost of closing it grows exponentially.',
+  worst:'Systemic governance failure. AI development is unregulated, opaque, and misaligned with human values. Fully autonomous systems operate in critical infrastructure without kill switches. Compute is monopolized and weaponized. Transparency is illegal in key jurisdictions. Public trust is destroyed. AI, which could have been civilization\u2019s greatest tool for coordination, becomes its most dangerous instrument of concentration, surveillance, and control.'
+};
+
+var TAB_DESC={
+  safety:{aggressive:'Alignment and safety converging with capability growth. Infrastructure proven at scale.',moderate:'Safety improving but coverage gaps persist. Alignment testing required in major markets only.',bau:'Safety voluntary and declining. No alignment requirements. Systems deployed without testing.',worst:'Safety infrastructure dismantled. Alignment abandoned. No testing, monitoring, or incident response.'},
+  governance:{aggressive:'Compute governed as public infrastructure. Transparency mandated. Trust at historic highs.',moderate:'Partial governance emerging. Transparency required for largest models. Trust growing slowly.',bau:'No governance. Compute concentrated and opaque. Trust stagnant. Public disengaged.',worst:'Governance captured. Compute monopolized. Transparency illegal. Trust destroyed.'}
 };
 
 var RISKS=[
   {label:'Alignment Failure',threshold:30,field:'alignment',
-    desc:'Below 30 on the alignment index, deployed AI systems begin exhibiting systematic value misalignment. Corrective action becomes exponentially harder as misaligned systems proliferate.'},
+    desc:'Below 30 on the alignment index, deployed AI systems begin exhibiting systematic value misalignment. Corrective action becomes exponentially harder as misaligned systems proliferate.',
+    scenarioNote:{aggressive:'Well above threshold. Mandated testing catches misalignment before deployment.',moderate:'Above threshold but margin is thin. One major incident could trigger a confidence crisis.',bau:'Dangerously close. Misaligned systems are already deployed in hiring and content moderation.',worst:'BREACHED. Systemic misalignment across deployed AI. Correction would require full industry reset.'}},
   {label:'Transparency Collapse',threshold:10,field:'transparency',
-    desc:'Below 10% transparency, no external party can meaningfully audit AI behavior. Regulatory capacity approaches zero and public accountability is impossible.'},
+    desc:'Below 10% transparency, no external party can meaningfully audit AI behavior. Regulatory capacity approaches zero and public accountability is impossible.',
+    scenarioNote:{aggressive:'97% transparency. Every frontier model is auditable.',moderate:'61% transparency. Major models auditable but a significant long tail remains opaque.',bau:'12% transparency. The vast majority of AI systems are black boxes.',worst:'BREACHED at 3%. Auditing is effectively impossible. Regulatory capacity is zero.'}},
   {label:'Autonomous Overreach',threshold:35,field:'autonomy',
-    desc:'Below 35 on autonomy safety, AI systems make consequential decisions without human review. Kill switches are absent or deliberately disabled.'},
+    desc:'Below 35 on autonomy safety, AI systems make consequential decisions without human review. Kill switches are absent or deliberately disabled.',
+    scenarioNote:{aggressive:'Well above threshold. Autonomy bounded by treaty. Kill switches universal.',moderate:'Above threshold. Guidelines exist but enforcement is inconsistent.',bau:'At threshold. Autonomous systems operate in finance, infrastructure, hiring with minimal oversight.',worst:'BREACHED. Fully autonomous weapons and infrastructure. No kill switches. No human review.'}},
   {label:'Compute Monopoly',threshold:15,field:'compute',
-    desc:'Below 15% compute governance, global AI infrastructure is controlled by fewer than 5 entities with no public accountability or access policy.'},
+    desc:'Below 15% compute governance, global AI infrastructure is controlled by fewer than 5 entities with no public accountability or access policy.',
+    scenarioNote:{aggressive:'85% compute governance. Fair allocation. Public access tiers. Energy audits.',moderate:'52% governance. Top providers comply. Smaller clusters ungoverned.',bau:'18% governance. Barely above threshold. Concentration accelerating.',worst:'BREACHED at 5%. Compute weaponized. No accountability. Access restricted to extractive entities.'}},
   {label:'Trust Collapse',threshold:15,field:'trust',
-    desc:'Below 15% public trust, democratic AI governance becomes impossible. Citizens disengage entirely, enabling unchecked deployment.'}
+    desc:'Below 15% public trust, democratic AI governance becomes impossible. Citizens disengage entirely, enabling unchecked deployment.',
+    scenarioNote:{aggressive:'82% trust. Earned through transparency and track record.',moderate:'55% trust. Growing but fragile. Vulnerable to high-profile incidents.',bau:'22% trust. Above threshold but declining. Public skepticism is the default.',worst:'BREACHED at 8%. Trust destroyed. Democratic governance of AI is impossible.'}}
 ];
 
 var MILESTONES=[
@@ -229,8 +307,8 @@ var MILESTONES=[
 ];
 
 var activeSc='aggressive';
-
 function avg(arr){var s=0;arr.forEach(function(v){s+=v});return Math.round(s/arr.length)}
+function last(arr){return arr[arr.length-1]}
 
 function render(sc){
   activeSc=sc;
@@ -239,10 +317,15 @@ function render(sc){
   updateScenarioBar('#scbar',sc,SC);
   renderHero();
   renderDomains();
-  renderSparks();
+  renderOverviewCharts();
+  renderComparison();
+  renderSubTab('safety');
+  renderSubTab('governance');
   renderRisks();
   document.getElementById('timeline-desc').innerHTML='AI development milestones under <strong style="color:'+clr+'">'+scLabel+'</strong>. '+(sc==='aggressive'?'Each phase builds compounding safety infrastructure. Governance keeps pace with capability growth.':sc==='moderate'?'Progress is real but uneven. Governance lags capability growth by 2\u20133 years at each phase.':sc==='bau'?'Without structural investment, AI capability races ahead of governance. Each missed milestone widens the gap.':'Governance infrastructure collapses. AI capability growth is unconstrained and unaccountable.');
   renderTimeline();
+  renderSummary();
+  initLevers();
   var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('ai',activeSc);
 }
 
@@ -261,10 +344,7 @@ function renderHero(){
   h+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
   h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:'+tClr+';color:'+tClr+'">'+grade(today)+'</span>';
   h+='<span class="delta delta-down" style="font-size:13px">critical juncture</span>';
-  h+='</div>';
-  h+='</div>';
-  h+='</div>';
-
+  h+='</div></div></div>';
   h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
   h+='<span class="t3">Projected 2050 ('+SC.find(function(s){return s.id===activeSc}).name+'):</span> ';
   h+='<span class="score-projected" style="color:'+clr+'">'+sc+'</span>';
@@ -272,7 +352,6 @@ function renderHero(){
   h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(sc)+'</span>';
   h+='<span class="delta '+(delta>=0?'delta-up':'delta-down')+'" style="font-size:13px;margin-left:8px">'+(delta>=0?'+':'')+delta+' pts</span>';
   h+='</div>';
-
   h+='<p class="body mt-4">Composite AI score across six domains under <strong style="color:'+clr+'">'+SC.find(function(s){return s.id===activeSc}).name+'</strong>. '+(sc>=70?'Trajectory shows AI development converging with governance capacity. Alignment, transparency, and safety are compounding.':sc>=50?'Mixed outcomes. Some governance infrastructure is in place but capability growth outpaces safety measures.':sc>=30?'AI capability is accelerating without governance. The gap between what AI can do and what we can control is widening.':'Governance has collapsed. AI development is unregulated, opaque, and misaligned. The window for correction is closing.')+'</p>';
   document.getElementById('hero-score').innerHTML=h;
 }
@@ -293,33 +372,78 @@ function renderDomains(){
     h+='</div>';
     h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:'+p+'%;background:'+d.color+'"></div></div>';
     h+='<p class="t4 mt-2">Today: '+d.today+' &rarr; 2050: '+p+'</p>';
-    h+='<p class="t4 mt-1" style="color:var(--text-faint);font-size:11px">'+d.desc+'</p>';
+    h+='<p class="t4 mt-1" style="color:var(--text-faint);font-size:11px">'+d.details[activeSc]+'</p>';
     h+='</div>';
   });
   h+='</div>';
   document.getElementById('domain-grid').innerHTML=h;
-
   var s=avg(proj);
-  document.getElementById('overview-quote').innerHTML='<div class="pullquote">'+(s>=70?'Under aggressive governance, AI becomes civilisation\u2019s most powerful tool for coordination, foresight, and equity. Alignment research is funded. Safety is mandated. Transparency is the default. The result is an AI ecosystem that strengthens every other system it touches.':s>=50?'Moderate reform produces partial safety infrastructure but leaves critical gaps. Transparency and compute governance lag behind. The window for course correction remains open but is narrowing with every deployment cycle.':s>=30?'Business as usual means AI capability continues to outpace every governance mechanism. Alignment research is underfunded. Transparency is voluntary and ignored. Compute concentrates. Autonomy boundaries don\u2019t exist. The gap between capability and control widens every year.':'Systemic governance failure. AI systems operate without oversight, alignment, or transparency. Autonomous decision-making is unconstrained. Public trust is destroyed. The technology that could have been civilisation\u2019s greatest asset becomes its most dangerous liability.')+'</div>';
+  document.getElementById('overview-quote').innerHTML='<div class="pullquote">'+NARRATIVES[activeSc].split('.').slice(0,3).join('.')+'.</div>';
 }
 
-function renderSparks(){
-  var keys=Object.keys(KPI);
-  var h='<div class="grid grid-2">';
+function renderChartGrid(targetId,keys,exportPrefix){
+  var h='';
   keys.forEach(function(k,i){
     var kpi=KPI[k];
     var ds={aggressive:kpi.aggressive,moderate:kpi.moderate,bau:kpi.bau,worst:kpi.worst};
     var span=(i===keys.length-1 && keys.length%2===1)?' style="grid-column:1/-1"':'';
-    var endVal=ds[activeSc][ds[activeSc].length-1];
+    var endVal=last(ds[activeSc]);
     var baseVal=ds[activeSc][0];
     h+='<div class="cell"'+span+'>';
     h+=chartHeader({label:kpi.label,value:endVal,unit:kpi.unit,dec:0,dir:kpi.dir,baseline:baseVal,color:SC_COLORS[activeSc],endYear:2050});
-    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2050,unit:kpi.unit,dec:0,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160,exportId:'ai-'+k});
-    registerChartExport('ai-'+k,ds,2026,2050,kpi.unit,'');
+    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2050,unit:kpi.unit,dec:0,prefix:'',dir:kpi.dir,notes:kpi.notes,height:160,exportId:exportPrefix+k});
+    registerChartExport(exportPrefix+k,ds,2026,2050,kpi.unit,'');
+    h+='</div>';
+  });
+  document.getElementById(targetId).innerHTML=h;
+}
+
+function renderOverviewCharts(){
+  renderChartGrid('overview-charts',Object.keys(KPI),'ai-ov-');
+  document.getElementById('ov-narrative').innerHTML='<div class="pullquote">'+NARRATIVES[activeSc]+'</div>';
+}
+
+function renderComparison(){
+  renderChartGrid('comparison-grid',Object.keys(KPI),'ai-cmp-');
+}
+
+function renderSubTab(group){
+  var keys=Object.keys(KPI).filter(function(k){return KPI[k].group===group});
+  var heroEl=document.getElementById(group==='safety'?'safety-hero':'gov-hero');
+  var descEl=document.getElementById(group==='safety'?'safety-desc':'gov-desc');
+  var chartTarget=group==='safety'?'safety-charts':'gov-charts';
+  var domains=group==='safety'?[DOMAINS[0],DOMAINS[2],DOMAINS[4]]:[DOMAINS[1],DOMAINS[3],DOMAINS[5]];
+  var proj=domains.map(function(d){return PROJECTED[activeSc][DOMAINS.indexOf(d)]});
+  var today=avg(domains.map(function(d){return d.today}));
+  var sc=avg(proj);
+  var delta=sc-today;
+  var clr=SC_COLORS[activeSc];
+  var tClr=today>=70?'var(--green)':today>=50?'#e8a838':today>=30?'#d4622a':'var(--red)';
+  var h='<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
+  h+='<span class="score-hero" style="color:'+tClr+';font-size:48px">'+today+'</span>';
+  h+='<span class="score-sub">/100</span>';
+  h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+tClr+';color:'+tClr+'">'+grade(today)+'</span>';
+  h+='</div>';
+  h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:12px">';
+  h+='<span class="t3">Projected 2050:</span> ';
+  h+='<span class="score-projected" style="color:'+clr+'">'+sc+'</span>';
+  h+='<span class="score-sub" style="font-size:16px">/100</span> ';
+  h+='<span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(sc)+'</span>';
+  h+='<span class="delta '+(delta>=0?'delta-up':'delta-down')+'" style="font-size:13px">'+(delta>=0?'+':'')+delta+'</span>';
+  h+='</div>';
+  h+='<div class="grid grid-3 mt-4">';
+  domains.forEach(function(d){
+    var p=PROJECTED[activeSc][DOMAINS.indexOf(d)];
+    h+='<div class="cell"><p class="t3" style="color:'+d.color+'">'+d.name+'</p>';
+    h+='<p class="num-lg mt-1">'+p+'</p>';
+    h+='<span class="tag" style="border-color:'+d.color+';color:'+d.color+'">'+grade(p)+'</span>';
+    h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+p+'%;background:'+d.color+'"></div></div>';
     h+='</div>';
   });
   h+='</div>';
-  document.getElementById('spark-grid').innerHTML=h;
+  heroEl.innerHTML=h;
+  descEl.innerHTML=TAB_DESC[group][activeSc];
+  renderChartGrid(chartTarget,keys,'ai-'+group+'-');
 }
 
 function renderRisks(){
@@ -327,13 +451,15 @@ function renderRisks(){
   var scLabel=SC.find(function(s){return s.id===activeSc}).name;
   document.getElementById('risk-desc').innerHTML='Critical thresholds under <strong style="color:'+clr+'">'+scLabel+'</strong>. When a metric falls below its risk threshold, systemic failure cascades become likely and correction costs increase exponentially.';
   var h='<div class="grid grid-2" style="gap:20px">';
-  RISKS.forEach(function(r){
+  RISKS.forEach(function(r,i){
     var kpi=KPI[r.field];
-    var endVal=kpi[activeSc][kpi[activeSc].length-1];
+    var endVal=last(kpi[activeSc]);
     var breached=endVal<r.threshold;
     var bClr=breached?'var(--red)':'var(--green)';
     var statusTxt=breached?'BREACHED':'Safe';
-    h+='<div class="cell" style="border-left:3px solid '+bClr+';padding-left:16px">';
+    var margin=endVal-r.threshold;
+    var span=(i===RISKS.length-1 && RISKS.length%2===1)?' style="grid-column:1/-1;border-left:3px solid '+bClr+';padding-left:16px"':' style="border-left:3px solid '+bClr+';padding-left:16px"';
+    h+='<div class="cell"'+span+'>';
     h+='<div class="flex items-baseline gap-8 mb-2">';
     h+='<p class="t3">'+r.label+'</p>';
     h+='<span class="tag" style="border-color:'+bClr+';color:'+bClr+';font-size:10px">'+statusTxt+'</span>';
@@ -341,9 +467,11 @@ function renderRisks(){
     h+='<div class="flex items-baseline gap-8 mb-2">';
     h+='<span class="num-md" style="color:'+clr+'">'+endVal+'</span>';
     h+='<span class="t4" style="color:var(--text-faint)">threshold: '+r.threshold+'</span>';
+    h+='<span class="t4" style="color:'+(margin>=0?'var(--green)':'var(--red)')+'">margin: '+(margin>=0?'+':'')+margin+'</span>';
     h+='</div>';
     h+='<div class="bar-track mb-2"><div class="bar-fill" style="width:'+Math.min(100,endVal)+'%;background:'+bClr+'"></div></div>';
     h+='<p class="t4" style="color:var(--text-muted)">'+r.desc+'</p>';
+    h+='<p class="t4 mt-2" style="color:'+clr+'"><em>'+r.scenarioNote[activeSc]+'</em></p>';
     h+='</div>';
   });
   h+='</div>';
@@ -383,11 +511,56 @@ function renderTimeline(){
       h+='<p class="t4" style="padding:2px 0;color:var(--text-secondary)">&mdash; '+item+'</p>';
     });
     h+='<p class="body mt-2" style="font-size:13px;color:var(--text-muted)">'+d.note+'</p>';
-    h+='</div>';
-    h+='</div>';
+    h+='</div></div>';
   });
   h+='</div>';
   document.getElementById('timeline-list').innerHTML=h;
+}
+
+function renderSummary(){
+  var h='<div class="grid grid-2" style="gap:20px">';
+  SC.forEach(function(s){
+    var isA=s.id===activeSc;
+    var proj=PROJECTED[s.id];
+    var sc=avg(proj);
+    var g=grade(sc);
+    var breachCount=RISKS.filter(function(r){return last(KPI[r.field][s.id])<r.threshold}).length;
+    h+='<div class="cell" style="'+(isA?'border:1px solid '+s.color+';':'opacity:0.55;')+'">';
+    h+='<div class="flex items-center gap-4 mb-3">';
+    h+='<span class="dot" style="background:'+s.color+';width:10px;height:10px"></span>';
+    h+='<p class="t3" style="color:'+s.color+'">'+s.name+'</p>';
+    if(isA)h+='<span class="tag" style="border-color:'+s.color+';color:'+s.color+';font-size:10px;padding:2px 6px">Active</span>';
+    h+='</div>';
+    h+='<div class="flex items-baseline gap-8 mb-3">';
+    h+='<span class="num-lg" style="color:'+s.color+'">'+sc+'</span>';
+    h+='<span class="score-sub">/100</span>';
+    h+='<span class="tag" style="border-color:'+s.color+';color:'+s.color+'">'+g+'</span>';
+    if(breachCount>0)h+='<span class="tag" style="border-color:var(--red);color:var(--red);font-size:10px">'+breachCount+' threshold'+(breachCount>1?'s':'')+' breached</span>';
+    else h+='<span class="tag" style="border-color:var(--green);color:var(--green);font-size:10px">All thresholds safe</span>';
+    h+='</div>';
+    h+='<p class="t4" style="color:var(--text-secondary)">'+NARRATIVES[s.id].split('.').slice(0,2).join('.')+'.</p>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('scenario-summary').innerHTML=h;
+}
+
+function initLevers(){
+  var levers=document.querySelectorAll('.lever');
+  var base=avg(PROJECTED[activeSc]);
+  function update(){
+    var sum=0;
+    levers.forEach(function(l){sum+=parseInt(l.value)});
+    var leverAvg=sum/levers.length/100;
+    var adjusted=Math.round(base*(0.5+leverAvg*0.5));
+    var clr=SC_COLORS[activeSc];
+    document.getElementById('lever-impact').innerHTML='<div class="flex items-baseline gap-12"><span class="t3">Lever-adjusted score:</span><span class="num-lg" style="color:'+clr+'">'+adjusted+'</span><span class="score-sub">/100</span><span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(adjusted)+'</span><span class="t4" style="color:var(--text-muted)">(base: '+base+')</span></div>';
+  }
+  levers.forEach(function(l){l.addEventListener('input',update)});
+  var presets={aggressive:[80,80,80],moderate:[50,50,50],bau:[20,15,15],worst:[5,5,5]};
+  var p=presets[activeSc]||presets.aggressive;
+  levers.forEach(function(l,i){l.value=p[i]});
+  update();
 }
 
 initSectionNav('#tabs','sec-','overview');

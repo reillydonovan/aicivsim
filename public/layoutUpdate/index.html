@@ -130,7 +130,7 @@
     </div>
     <div class="cell">
       <p class="t3" style="color:var(--accent)">4. Explore the Simulation</p>
-      <p class="t4 mt-2">The <a href="simulation.html" style="color:var(--technology)">SimulationOS</a> page has interactive policy levers &mdash; adjust civic dividend rates, climate investment, AI governance, and more. Scrub the timeline from 2027 to 2070 and watch metrics evolve.</p>
+      <p class="t4 mt-2">The <a href="simulation.html" style="color:var(--technology)">Simulation</a> page has interactive policy levers &mdash; adjust civic dividend rates, climate investment, AI governance, and more. Scrub the timeline from 2027 to 2070 and watch metrics evolve.</p>
     </div>
   </div>
 </div>
@@ -188,46 +188,46 @@
 
   <div class="grid grid-2">
     <div class="cell">
-      <a href="climate.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--climate)">ClimateOS &rarr;</p>
-      </a>
-      <p class="t4 mt-2">Planetary systems: temperature trajectories, emissions pathways, biodiversity indices, ocean health, renewable energy transition, crop yields, water stress, sea level rise, and tipping point risk assessment. 8 core metrics across 6 sub-domains.</p>
-    </div>
-    <div class="cell">
       <a href="ai.html" style="text-decoration:none">
         <p class="t3" style="color:#e8a838">AI &rarr;</p>
       </a>
       <p class="t4 mt-2">Artificial intelligence: alignment progress, autonomy risk, compute governance, model transparency, deployment safety, and public trust. 6 core metrics tracking whether AI capability growth is converging with &mdash; or diverging from &mdash; governance capacity.</p>
     </div>
     <div class="cell">
+      <a href="civilization.html" style="text-decoration:none">
+        <p class="t3" style="color:var(--equity)">Civilization &rarr;</p>
+      </a>
+      <p class="t4 mt-2">The aggregate view: composite scores across all seven systems, KPI trajectory comparisons, funding pool breakdowns, revenue source modeling, and the implementation timeline from discovery through continental-scale deployment.</p>
+    </div>
+    <div class="cell">
       <a href="simulation.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--technology)">SimulationOS &rarr;</p>
+        <p class="t3" style="color:var(--technology)">Simulation &rarr;</p>
       </a>
       <p class="t4 mt-2">The interactive engine. Adjust 5 policy levers (dividends, climate capex, reskilling, transparency, AI charter), scrub the timeline from 2027 to 2070, and watch structural metrics evolve. Generates detailed narrative reports for every year and scenario.</p>
     </div>
     <div class="cell">
+      <a href="climate.html" style="text-decoration:none">
+        <p class="t3" style="color:var(--climate)">Climate &rarr;</p>
+      </a>
+      <p class="t4 mt-2">Planetary systems: temperature trajectories, emissions pathways, biodiversity indices, ocean health, renewable energy transition, crop yields, water stress, sea level rise, and tipping point risk assessment. 8 core metrics across 6 sub-domains.</p>
+    </div>
+    <div class="cell">
       <a href="transition.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--workforce)">TransitionOS &rarr;</p>
+        <p class="t3" style="color:var(--workforce)">Transition &rarr;</p>
       </a>
       <p class="t4 mt-2">Workforce and economic transition: poverty rates, reskilling timelines, placement rates, employment metrics, and the income bridge calculator &mdash; modeling how civic dividends offset career transition costs under each scenario.</p>
     </div>
     <div class="cell">
-      <a href="civilization.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--equity)">CivilizationOS &rarr;</p>
-      </a>
-      <p class="t4 mt-2">The aggregate view: composite scores across all six domains, KPI trajectory comparisons, funding pool breakdowns, revenue source modeling, and the implementation timeline from discovery through continental-scale deployment.</p>
-    </div>
-    <div class="cell">
       <a href="governance.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--governance)">GovernanceOS &rarr;</p>
+        <p class="t3" style="color:var(--governance)">Governance &rarr;</p>
       </a>
       <p class="t4 mt-2">Institutional infrastructure: civic participation rates, AI charter adoption, citizen assemblies, governance modules (participatory budgeting, open audits, algorithmic transparency), and safety audit coverage tracking.</p>
     </div>
     <div class="cell">
       <a href="strategy.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--accent)">StrategyOS &rarr;</p>
+        <p class="t3" style="color:var(--accent)">Strategy &rarr;</p>
       </a>
-      <p class="t4 mt-2">The action catalog: 50+ concrete intervention strategies organized across individual, institutional, and systemic implementation levels. Each strategy maps to the operating systems it would affect.</p>
+      <p class="t4 mt-2">The action catalog: 50+ concrete intervention strategies organized across individual, institutional, and systemic implementation levels. Each strategy maps to the systems it would affect.</p>
     </div>
   </div>
 </div>
@@ -295,7 +295,7 @@
 
 </main>
 
-<script src="js/shared.js?v=20260220g"></script>
+<script src="js/shared.js?v=20260216b"></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -311,25 +311,25 @@ var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d46
 var active='aggressive';
 
 var SYSTEMS=[
-  {id:'climate',   label:'ClimateOS',      href:'climate.html',      color:'var(--climate)',    today:42,
-   desc:'Climate resilience, emissions trajectories, biodiversity corridors',
-   projected:{aggressive:85,moderate:58,bau:28,worst:12}},
   {id:'ai',        label:'AI',             href:'ai.html',           color:'#e8a838',           today:48,
    desc:'Alignment progress, autonomy risk, compute governance, model transparency, deployment safety',
    projected:{aggressive:92,moderate:68,bau:32,worst:10}},
-  {id:'simulation',label:'SimulationOS',    href:'simulation.html',   color:'var(--technology)', today:null,
-   desc:'Interactive engine with 5 policy levers and 50-year narrative projections',
-   meta:'12 branches',projected:null},
-  {id:'transition',label:'TransitionOS',    href:'transition.html',   color:'var(--workforce)',  today:43,
-   desc:'Workforce readiness, reskilling rates, income bridge calculator',
-   projected:{aggressive:88,moderate:68,bau:28,worst:12}},
-  {id:'civilization',label:'CivilizationOS',href:'civilization.html', color:'var(--equity)',     today:44,
+  {id:'civilization',label:'Civilization',href:'civilization.html', color:'var(--equity)',     today:44,
    desc:'Aggregate civilizational health across all domains',
    projected:{aggressive:81,moderate:61,bau:30,worst:13}},
-  {id:'governance',label:'GovernanceOS',    href:'governance.html',   color:'var(--governance)', today:40,
+  {id:'simulation',label:'Simulation',    href:'simulation.html',   color:'var(--technology)', today:null,
+   desc:'Interactive engine with 5 policy levers and 50-year narrative projections',
+   meta:'12 branches',projected:null},
+  {id:'climate',   label:'Climate',      href:'climate.html',      color:'var(--climate)',    today:42,
+   desc:'Climate resilience, emissions trajectories, biodiversity corridors',
+   projected:{aggressive:85,moderate:58,bau:28,worst:12}},
+  {id:'transition',label:'Transition',    href:'transition.html',   color:'var(--workforce)',  today:43,
+   desc:'Workforce readiness, reskilling rates, income bridge calculator',
+   projected:{aggressive:88,moderate:68,bau:28,worst:12}},
+  {id:'governance',label:'Governance',    href:'governance.html',   color:'var(--governance)', today:40,
    desc:'Institutional trust, AI governance charters, civic participation',
    projected:{aggressive:85,moderate:65,bau:30,worst:10}},
-  {id:'strategy',  label:'StrategyOS',      href:'strategy.html',     color:'var(--accent)',     today:35,
+  {id:'strategy',  label:'Strategy',      href:'strategy.html',     color:'var(--accent)',     today:35,
    desc:'20 intervention strategies across 3 implementation levels',
    projected:{aggressive:88,moderate:62,bau:22,worst:8}}
 ];

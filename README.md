@@ -27,12 +27,12 @@ A complete redesign built as vanilla HTML/CSS/JS with no framework dependencies.
 public/layoutUpdate/
 ├── index.html             # Landing page — project overview, scenario guide, 7-system map
 ├── ai.html                # AI — alignment, transparency, safety, compute governance, autonomy risk, public trust
-├── climate.html           # ClimateOS — 7 tabs, 9 planetary metrics (incl. ocean pH), tipping points
-├── simulation.html        # SimulationOS — 5 policy levers, 50-year timeline, narrative reports
-├── transition.html        # TransitionOS — workforce reskilling, income bridge calculator
-├── civilization.html      # CivilizationOS — composite health index, KPI trajectories, funding
-├── governance.html        # GovernanceOS — charter status, assemblies, audit coverage
-├── strategy.html          # StrategyOS — 20 actions with scenario-aware status/adoption, Today's Score + projected
+├── climate.html           # Climate — 7 tabs, 9 planetary metrics (incl. ocean pH), tipping points
+├── simulation.html        # Simulation — 5 policy levers, 50-year timeline, narrative reports
+├── transition.html        # Transition — workforce reskilling, income bridge calculator
+├── civilization.html      # Civilization — composite health index, KPI trajectories, funding
+├── governance.html        # Governance — charter status, assemblies, audit coverage
+├── strategy.html          # Strategy — 20 actions with scenario-aware status/adoption, Today's Score + projected
 ├── timeline.html          # Timeline — 200K-year arc of civilization, AI as inflection point, scenario-aware futures
 ├── visualizer.html        # Visualizer landing page — describes the 3D experience before entering
 ├── viz.html               # 3D network visualization — Three.js interactive systems graph
@@ -46,20 +46,20 @@ public/layoutUpdate/
 ### Key features
 
 - **Zero dependencies** — No npm, no build step, no framework. Plain HTML/CSS/JS served as static files.
-- **AI dashboard** — Dedicated `ai.html` page tracking 6 AI-specific domains: Alignment Index, Model Transparency, Safety Protocol Coverage, Compute Governance, Autonomy Safety, and Public Trust in AI. Includes scenario-aware projections (2026–2050), 5 risk thresholds with breach indicators, a 5-phase development milestone timeline, and cross-system impact panel showing how AI influences all other systems. Follows the same Feltron editorial pattern as every other OS page.
+- **AI dashboard** — Dedicated `ai.html` page tracking 6 AI-specific domains: Alignment Index, Model Transparency, Safety Protocol Coverage, Compute Governance, Autonomy Safety, and Public Trust in AI. Includes 6 tabs (Overview with policy levers and 6 projection charts, Scenarios comparison grid, Safety sub-domain, Compute sub-domain, Risks with 5 threshold cards and scenario-specific notes, Milestones with 5-phase development timeline), plus always-visible cross-system impact and a 4-scenario summary panel at the bottom. Follows the same Feltron editorial pattern as every other page.
 - **Visualizer landing page** — `visualizer.html` introduces the 3D experience with four editorial sections (What It Is, What You Can Do, How It Works, Controls Reference) before a prominent "Enter the Visualizer" CTA. The main nav links here; `viz.html` is the actual 3D app. A back-link in `viz.html` returns to the landing page.
 - **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair. The index page shows all seven systems with today + projected scores that update with scenario selection.
-- **Standardized 4-scenario system** — All pages now use the same four scenarios (Aggressive, Moderate, BAU, Worst) with consistent colors (#4ecdc4, #5da5da, #e8a838, #d4622a). TransitionOS was migrated from its original 3-scenario system (Baseline/TransitionOS/Full Stack) to match.
+- **Standardized 4-scenario system** — All pages now use the same four scenarios (Aggressive, Moderate, BAU, Worst) with consistent colors (#4ecdc4, #5da5da, #e8a838, #d4622a). Transition was migrated from its original 3-scenario system (Baseline/Transition/Full Stack) to match.
 - **Standardized chart headers** — Every graph uses a consistent `chartHeader()` function (defined in `shared.js`) that renders a Feltron domain-card style header: uppercase `t3` metric label, large `num-lg` projected value colored to the active scenario, trend arrow (green/red based on direction preference), end-year target, and baseline reference.
 - **Multi-scenario comparison charts** — Every graph displays all four scenarios simultaneously. The active scenario is highlighted with a bold line and filled area; inactive scenarios are dimmed. Implemented via a unified `scenarioChart()` function in `shared.js`.
-- **Narrative simulation reports** — SimulationOS generates natural-language dispatches from the future that evolve across four era phases (Dawn, Divergence, Maturity, Legacy). The narrative tells a human story — not a metrics readout — covering people & livelihoods, climate & energy, trust & governance, AI & the future, and the road ahead. Letter grades update dynamically.
+- **Narrative simulation reports** — Simulation generates natural-language dispatches from the future that evolve across four era phases (Dawn, Divergence, Maturity, Legacy). The narrative tells a human story — not a metrics readout — covering people & livelihoods, climate & energy, trust & governance, AI & the future, and the road ahead. Letter grades update dynamically.
 - **Dynamic scenario-aware data** — Switching scenarios updates every chart, score, description, domain card, and narrative paragraph on every page. No static content remains when scenarios change. This includes:
-  - **GovernanceOS assemblies and modules** — All 5 assemblies and 5 modules persist across scenarios with per-scenario values, grades, and status labels (Active/Limited/Dissolved/Not deployed).
-  - **GovernanceOS overview metric cards** — Civic Participation, Charter Adoption, Institutional Trust, and Audit Coverage update dynamically.
-  - **TransitionOS metric cards** — Poverty Rate, Reskill Time, Placement Rate, and Employment update with scenario-specific values and descriptions.
-  - **CivilizationOS timeline** — Each milestone has per-scenario scores, grades, goal comparison, status tags, and narrative notes.
+  - **Governance assemblies and modules** — All 5 assemblies and 5 modules persist across scenarios with per-scenario values, grades, and status labels (Active/Limited/Dissolved/Not deployed).
+  - **Governance overview metric cards** — Civic Participation, Charter Adoption, Institutional Trust, and Audit Coverage update dynamically.
+  - **Transition metric cards** — Poverty Rate, Reskill Time, Placement Rate, and Employment update with scenario-specific values and descriptions.
+  - **Civilization timeline** — Each milestone has per-scenario scores, grades, goal comparison, status tags, and narrative notes.
   - **Climate tipping points** — Risk levels (low/moderate/high/critical) calculated dynamically from projected temperature vs. threshold, with BREACHED indicators, margin display, and scenario-specific notes.
-  - **StrategyOS** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
+  - **Strategy** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
   - **Index page** — Seven Systems cards (including AI) show today + projected scores, hero projected score, and scenario descriptions all update dynamically. A dedicated CTA section links to the Visualizer landing page.
 - **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
 - **Scenario persistence (hash + localStorage)** — Active scenario is stored in the URL hash (e.g. `#aggressive`) AND in `localStorage`. Sharing a link preserves the selected scenario; navigating between pages automatically maintains the selected scenario via localStorage fallback.
@@ -68,7 +68,7 @@ public/layoutUpdate/
 - **Accessibility** — ARIA `role="tablist"` / `role="tab"` / `aria-selected` on section tabs, `aria-pressed` and `aria-label` on scenario buttons, `role="img"` on chart SVGs.
 - **Skeleton loading styles** — CSS shimmer animation classes (`.skeleton`, `.skeleton-chart`, `.skeleton-score`) for use during JS initialization.
 - **Civilizational Timeline** — A narrative editorial page (`timeline.html`) tracing 200,000 years of human inflection points — fire, agriculture, writing, printing press, industrial revolution, computing, internet — culminating in AI as the current inflection. Three tabs: "The Arc" (visual alternating timeline with population/time-to-next-leap stats), "The Inflection" (why this decade is different, with convergence of climate/labor/democracy/inequality), and "Possible Futures" (scenario-aware era-by-era projections through 2050 with grades and verdicts).
-- **3D network visualization** — `viz.html` renders all seven systems as an interactive Three.js node graph orbiting a central "CivilizationOS" aggregate node. The perimeter nodes are ClimateOS, SimulationOS, TransitionOS, AI, GovernanceOS, and StrategyOS. Every node connects to every other node AND to the center, forming a full hub-and-spoke + mesh network. Features include:
+- **3D network visualization** — `viz.html` renders all seven systems as an interactive Three.js node graph orbiting a central "Civilization" aggregate node. The perimeter nodes are Climate, Simulation, Transition, AI, Governance, and Strategy. Every node connects to every other node AND to the center, forming a full hub-and-spoke + mesh network. Features include:
   - **Scenario-aware connections** — Lines between all node pairs AND from each node to the center are colored (green positive / red negative) and opacity-scaled by cross-system influence weights from `shared.js` CROSS_SYSTEM data. Center connections use system health to scale opacity (0.06–0.36), making the hub-spoke topology clearly visible.
   - **Directional particles** — Flow along connections in the direction of stronger influence; scatter under low aggregate health.
   - **Camera fly-to** — Clicking a node smoothly animates the camera to center on it; clicking the same node again flies back to the overview. Escape also returns to overview. Dragging to orbit preserves your camera position — the view never resets on accidental clicks.
@@ -85,12 +85,12 @@ public/layoutUpdate/
   - **Cosmic symphony audio** — Each of the 6 perimeter systems is a voice in a Cmaj9 chord (C3, E3, G3, B3, D4, A3). When all systems are healthy, the voices form a consonant, slowly-breathing harmonic unity — a quiet shimmer pad with each voice pulsing in sync. As individual systems deteriorate, their pitch drifts toward dissonant microtonal intervals (semitone rubs, tritones), vibrato widens and speeds up, their rhythmic pulse desyncs from the collective, and a lowpass filter muffles them. Each voice also has a quiet fifth-above shimmer that fades with health. The result: at Aggressive Action the visualization hums with a warm, unified chord; at Worst Case the chord fractures into an uneasy, beating polytonal texture — subtle enough to be ambient, expressive enough to feel the difference.
   - **Collective atmosphere audio** — Sub-bass drone sinks in pitch as aggregate health drops. Upper shimmer pad (3 partials) detunes toward minor intervals. A sub-bass alarm throb emerges gently below 35% aggregate health. Filtered noise hiss fades in below 45%. Master volume kept deliberately low (0.3) for non-intrusive ambience. Sound defaults to on, auto-initializing on the first user gesture.
   - **Smooth scenario transitions** — Switching scenarios or scrubbing the year slider never causes instant visual jumps. A per-frame lerp system (`lerpScenario`) smoothly interpolates all node sizes, colors, opacities, connection weights, bloom, fog, grid color, and auto-rotate speed toward their target values using exponential easing (~80% in 0.35s). Audio follows the same smooth path since `updateAudio()` runs every frame and reads the continuously-lerping health values.
-  - **Timeline-aware sparkline charts** — When a system node is selected, the detail panel shows multi-scenario sparkline charts (via `timelineSVG()` from `shared.js`) for 2–3 headline metrics — e.g., Temperature Rise, Renewable Share, CO₂ for ClimateOS. The chart distinguishes past from projected future: solid line up to the current year, dashed line for the remainder, with a vertical year marker and a dot on the active scenario at the current position. All four scenarios are visible; the active line is highlighted. When the center aggregate is selected, a summary sparkline per system is shown instead.
+  - **Timeline-aware sparkline charts** — When a system node is selected, the detail panel shows multi-scenario sparkline charts (via `timelineSVG()` from `shared.js`) for 2–3 headline metrics — e.g., Temperature Rise, Renewable Share, CO₂ for Climate. The chart distinguishes past from projected future: solid line up to the current year, dashed line for the remainder, with a vertical year marker and a dot on the active scenario at the current position. All four scenarios are visible; the active line is highlighted. When the center aggregate is selected, a summary sparkline per system is shown instead.
   - **Floating chart overlays** — "Charts" toggle projects mini sparkline cards onto each 3D node in screen-space, tracking node positions as the camera orbits. Each card uses the same timeline-aware chart with solid past / dashed future split, updating live with scenario and year changes.
   - **`timelineSVG()` in shared.js** — A new SVG chart function that extends `comparisonSVG` with year-index awareness: splits each scenario line into solid (past) and dashed (future) segments, draws a vertical year marker, places a dot at the current position on the active line, and fills only the past area. Used by `viz.html` for all sparkline displays.
   - **Drag-safe click handling** — Pointer-down position is tracked and compared to click position; movements greater than 6px are treated as orbit drags and ignored by the selection logic, preventing accidental node selection/deselection while rotating the scene.
   - **Centralized VIZ_METRICS data** — A `VIZ_METRICS` object in `shared.js` provides 25-point (2026–2050) timeseries for 2–3 headline metrics per system (including AI: Alignment Index + Model Transparency) across all 4 scenarios. This single data source is referenced by `viz.html` and available to all dashboard pages for cross-referencing.
-  - **World State panel** — "World State" toggle opens a scrollable left-side panel showing a condensed SimulationOS-style narrative for the current year and scenario. Includes simulation score with grade, era label (Dawn/Divergence/Maturity/Legacy), era feel text, and five narrative sections (People & Livelihoods, Climate & Energy, Trust & Governance, AI & the Future, The Road Ahead) with a compact "by the numbers" grid showing GINI, Trust, Emissions, Resilience, and AI Influence vs baselines. Updates live as you scrub the year slider or switch scenarios. Data and narrative logic are sourced from `SIM_ENGINE` in `shared.js` — the same canonical data that powers `simulation.html` — so edits to the simulation page propagate automatically.
+  - **World State panel** — "World State" toggle opens a scrollable left-side panel showing a condensed Simulation-style narrative for the current year and scenario. Includes simulation score with grade, era label (Dawn/Divergence/Maturity/Legacy), era feel text, and five narrative sections (People & Livelihoods, Climate & Energy, Trust & Governance, AI & the Future, The Road Ahead) with a compact "by the numbers" grid showing GINI, Trust, Emissions, Resilience, and AI Influence vs baselines. Updates live as you scrub the year slider or switch scenarios. Data and narrative logic are sourced from `SIM_ENGINE` in `shared.js` — the same canonical data that powers `simulation.html` — so edits to the simulation page propagate automatically.
   - **SIM_ENGINE in shared.js** — The simulation's 44-point timeseries (2027–2070) for GINI, Trust, Emissions, Resilience, and AI Influence across all 4 scenarios, plus narrative generation functions (`simWorldState`, `simScore`, `simEra`, `simInterp`), now live in `shared.js` as a single source of truth. `simulation.html` references this instead of a local copy.
   - **Compact mode bar** — Compare, Charts, World, and Sound toggles styled as an inline button group matching the scenario bar pattern. Globe hidden pending redesign.
   - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects and returns to overview.
@@ -100,12 +100,12 @@ public/layoutUpdate/
 - **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`.
 - **Dark / light mode** — Theme toggle in the nav bar switches between dark (default) and light mode. Preference persists in localStorage. Light mode overrides CSS custom properties for backgrounds, text, borders, and chart elements.
 - **Data export (CSV)** — Every chart includes a "CSV" download button. Click to export all scenario data for that metric as a CSV file. Powered by `registerChartExport()` + `downloadCSV()` in `shared.js`.
-- **Cross-system feedback loops (scenario-aware)** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence all other operating systems (42 total cross-system relationships across 7 systems). Weights, effect descriptions, and visual impact bars all update dynamically when the user switches scenarios — e.g., ClimateOS's workforce displacement impact ranges from −5% under Aggressive Action to −35% under Worst Case, each with a unique narrative explanation. Every impact carries four distinct scenario texts describing how the relationship plays out under each policy configuration.
-- **Interactive policy levers** — SimulationOS has 5 sliders; ClimateOS (carbon tax, renewable investment, conservation target), TransitionOS (civic dividend, reskill budget, automation pace), and GovernanceOS (charter enforcement, assembly frequency, audit coverage) each have 3 additional lever controls that adjust projected scores in real time.
+- **Cross-system feedback loops (scenario-aware)** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence all other operating systems (42 total cross-system relationships across 7 systems). Weights, effect descriptions, and visual impact bars all update dynamically when the user switches scenarios — e.g., Climate's workforce displacement impact ranges from −5% under Aggressive Action to −35% under Worst Case, each with a unique narrative explanation. Every impact carries four distinct scenario texts describing how the relationship plays out under each policy configuration.
+- **Interactive policy levers** — Simulation has 5 sliders; Climate (carbon tax, renewable investment, conservation target), Transition (civic dividend, reskill budget, automation pace), and Governance (charter enforcement, assembly frequency, audit coverage) each have 3 additional lever controls that adjust projected scores in real time.
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
-- **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., ClimateOS with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260220g`) to prevent stale browser caches after deployment.
+- **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260216b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
 
 ### Scenario system
 
@@ -118,7 +118,7 @@ Four scenarios model diverging futures across all dashboards:
 | **Business as Usual** | `bau` | 0% dividends, no charter, 5% capex, 3% reskilling, 20% transparency |
 | **Worst Case** | `worst` | 0% dividends, no charter, 2% capex, 1% reskilling, 10% transparency |
 
-SimulationOS has 5 interactive policy levers (sliders for dividend rate, climate capex, reskilling investment, governance transparency; toggle for AI charter) that dynamically resolve to the nearest scenario. ClimateOS, TransitionOS, and GovernanceOS each add 3 page-specific policy levers that adjust projected scores in real time.
+Simulation has 5 interactive policy levers (sliders for dividend rate, climate capex, reskilling investment, governance transparency; toggle for AI charter) that dynamically resolve to the nearest scenario. Climate, Transition, and Governance each add 3 page-specific policy levers that adjust projected scores in real time.
 
 ### Simulation report system
 
@@ -180,7 +180,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [ ] **Scenario comparison mode** — Side-by-side scoring panel comparing two scenarios on all dashboard pages. (Infrastructure built in `shared.js` via `initComparisonMode()`, currently disabled.)
 - [x] ~~Animated transitions~~ — CSS transitions + `fadeSwitch()` / `animateValue()` utilities.
 - [x] ~~Scenario persistence across pages~~ — localStorage fallback added to URL hash persistence.
-- [x] ~~Interactive policy levers on more pages~~ — ClimateOS, TransitionOS, and GovernanceOS each have 3 interactive sliders.
+- [x] ~~Interactive policy levers on more pages~~ — Climate, Transition, and Governance each have 3 interactive sliders.
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
 - [ ] **Real-time cross-system feedback** — Cross-system panels now reflect the active scenario, but adjusting a policy lever on one page does not yet propagate score changes to other pages in real time.
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
@@ -188,13 +188,37 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [ ] **Scenario builder** — Allow users to create custom scenarios beyond the four presets by defining their own policy lever configurations.
 - [ ] **Globe view (viz.html)** — Revisit the globe mode that remaps the network onto a wireframe icosphere. Currently hidden; JS infrastructure remains in place for re-enabling.
 - [ ] **Accessibility audit** — Full WCAG 2.1 AA compliance review, focus management, screen reader testing.
+- [ ] **Operating System (OS) branding** — Each dashboard currently presents metrics and projections. A future iteration may introduce interactive "operating system" functionality (live policy levers, real-time feedback propagation, API-driven data) that would warrant the "OS" suffix (e.g., ClimateOS, GovernanceOS). Until that infrastructure is built, systems use plain names (Climate, Governance, etc.).
 
 ### Deploying to Hostinger
+
+> **Important — cache-busting is required on every deploy.** Browsers and CDN edge caches aggressively cache `shared.js` and `style.css`. If you deploy updated files without bumping the version string, visitors (including you) will see stale content — menus, data, and styles will not update.
+
+#### Step 1 — Bump the cache version
+
+Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
+
+```html
+<link rel="stylesheet" href="css/style.css?v=20260216b">
+<script src="js/shared.js?v=20260216b"></script>
+```
+
+Before deploying, do a **find-and-replace across all 13 HTML files** in `public/layoutUpdate/`:
+
+- Find: `v=20260216b` (or whatever the current value is)
+- Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260217a`
+
+This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.
+
+#### Step 2 — Upload
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
 3. Upload the contents of `public/layoutUpdate/` (13 HTML files + `css/` + `js/` folders) into `public_html/`
-4. If updating: bump the `?v=` query string in each HTML file's CSS/JS references to bust browser caches
+
+#### Step 3 — Verify
+
+Hard-refresh the site (`Ctrl+Shift+R` / `Cmd+Shift+R`) and confirm the new version string appears in the page source.
 
 ---
 
@@ -206,12 +230,12 @@ The original site was built with Next.js 14, React 18, Tailwind CSS 3, and Recha
 
 | Route | Dashboard | What it models |
 |-------|-----------|----------------|
-| `/climate` | **ClimateOS** | Temperature, emissions, biodiversity, energy mix, resources, tipping points with 2050 projections |
-| `/simulation` | **SimulationOS** | 50-year horizon, 3 policy levers, year-by-year metrics with auto-generated narrative reports |
-| `/transition` | **TransitionOS** | Workforce reskilling, automation risk scores, income bridge modeling |
-| `/civilization` | **CivilizationOS** | Unified health index across 6 domains, resident journeys, civic dividend modeling |
-| `/governance` | **GovernanceOS** | Charter frameworks, citizen assemblies, AI audit coverage, participation KPIs |
-| `/strategy` | **StrategyOS** | 50+ policy actions scored by cost, difficulty, and impact |
+| `/climate` | **Climate** | Temperature, emissions, biodiversity, energy mix, resources, tipping points with 2050 projections |
+| `/simulation` | **Simulation** | 50-year horizon, 3 policy levers, year-by-year metrics with auto-generated narrative reports |
+| `/transition` | **Transition** | Workforce reskilling, automation risk scores, income bridge modeling |
+| `/civilization` | **Civilization** | Unified health index across 6 domains, resident journeys, civic dividend modeling |
+| `/governance` | **Governance** | Charter frameworks, citizen assemblies, AI audit coverage, participation KPIs |
+| `/strategy` | **Strategy** | 50+ policy actions scored by cost, difficulty, and impact |
 | `/blog` | **Blog** | 9 posts on build decisions, scenario design, scoring methodology |
 | `/research` | **Research Paper** | Full theory and policy framework |
 

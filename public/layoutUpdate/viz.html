@@ -202,7 +202,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <select class="compare-sel" id="compare-sel" style="display:none"></select>
       <div class="agg" id="agg">
         <div class="agg-score" id="agg-score">44</div>
-        <div class="agg-sub">CivilizationOS</div>
+        <div class="agg-sub">Civilization</div>
         <div class="agg-grade" id="agg-grade"></div>
         <div class="agg-status" id="agg-status"></div>
       </div>
@@ -246,7 +246,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260220g"></script>
+<script src="js/shared.js?v=20260216b"></script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -266,17 +266,17 @@ const timelineSVG=window.timelineSVG;
    DATA
    ================================================================ */
 const SYS=[
-  {id:'climate',     label:'ClimateOS',      color:0x4ecdc4, today:42, proj:{aggressive:85,moderate:58,bau:28,worst:12},  href:'climate.html',
+  {id:'climate',     label:'Climate',      color:0x4ecdc4, today:42, proj:{aggressive:85,moderate:58,bau:28,worst:12},  href:'climate.html',
    desc:'Planetary systems \u2014 temperature, emissions, biodiversity, ocean health, renewable energy, crop yields, water stress, and tipping point risk.'},
-  {id:'simulation',  label:'SimulationOS',   color:0x5da5da, today:50, proj:{aggressive:90,moderate:70,bau:35,worst:15},  href:'simulation.html',
+  {id:'simulation',  label:'Simulation',   color:0x5da5da, today:50, proj:{aggressive:90,moderate:70,bau:35,worst:15},  href:'simulation.html',
    desc:'The interactive engine \u2014 5 policy levers, 50-year timeline, era-phased narrative reports from possible futures.'},
-  {id:'transition',  label:'TransitionOS',   color:0x95cf95, today:43, proj:{aggressive:88,moderate:68,bau:28,worst:12},  href:'transition.html',
+  {id:'transition',  label:'Transition',   color:0x95cf95, today:43, proj:{aggressive:88,moderate:68,bau:28,worst:12},  href:'transition.html',
    desc:'Workforce readiness \u2014 reskilling rates, poverty trajectories, income bridge calculator, employment metrics.'},
   {id:'ai',          label:'AI',             color:0xe8a838, today:48, proj:{aggressive:92,moderate:68,bau:32,worst:10},  href:'ai.html',
    desc:'Artificial intelligence \u2014 alignment progress, autonomy risk, compute governance, model transparency, and deployment safety.'},
-  {id:'governance',  label:'GovernanceOS',   color:0xb0a0d0, today:40, proj:{aggressive:85,moderate:65,bau:30,worst:10},  href:'governance.html',
+  {id:'governance',  label:'Governance',   color:0xb0a0d0, today:40, proj:{aggressive:85,moderate:65,bau:30,worst:10},  href:'governance.html',
    desc:'Institutional infrastructure \u2014 civic participation, AI charter adoption, citizen assemblies, safety audit coverage.'},
-  {id:'strategy',    label:'StrategyOS',     color:0xe8636e, today:35, proj:{aggressive:88,moderate:62,bau:22,worst:8},   href:'strategy.html',
+  {id:'strategy',    label:'Strategy',     color:0xe8636e, today:35, proj:{aggressive:88,moderate:62,bau:22,worst:8},   href:'strategy.html',
    desc:'The action catalog \u2014 20+ strategies across individual, institutional, and systemic implementation levels.'}
 ];
 const AGG={today:44,proj:{aggressive:85,moderate:63,bau:28,worst:11}};
@@ -498,7 +498,7 @@ function mkLabel(node,isCenter){
   const el=document.createElement('div');el.className='nlabel';
   const col=isCenter?'#ffffff':'#'+node.color.getHexString();
   const colFade=isCenter?'rgba(255,255,255,0.45)':col+'88';
-  el.innerHTML='<div class="nlabel-score" style="color:'+col+'"></div><div class="nlabel-name" style="color:'+colFade+'">'+(isCenter?'CIVILIZATIONOS':node.data.label)+'</div>';
+  el.innerHTML='<div class="nlabel-score" style="color:'+col+'"></div><div class="nlabel-name" style="color:'+colFade+'">'+(isCenter?'CIVILIZATION':node.data.label)+'</div>';
   labelBox.appendChild(el);
   return{el,node:isCenter?centerNode:node,mesh:isCenter?cMesh:node.mesh,isCenter,scoreEl:el.querySelector('.nlabel-score')};
 }
@@ -1056,7 +1056,7 @@ function updateInfo(){
   p.classList.remove('hidden');
   let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt,nodeSc;
   if(selNode.isCenter){
-    name='CivilizationOS';sc=mixedAgg();g=grade(sc);
+    name='Civilization';sc=mixedAgg();g=grade(sc);
     const anyOvr=Object.values(overrides).some(v=>v!==null);
     nodeSc=anyOvr?'mixed':active;
     const scMeta=SC_META[active];
@@ -1337,7 +1337,7 @@ function updateConnTooltip(){
     const sNow=scAt(selNode.data.today,selNode.data.proj[nSc],year);
     const contrib=Math.round(sNow/SYS.length);
     const clrC=sNow>=50?'#4ecdc4':'#d4622a';
-    connTip.innerHTML='<div class="conn-tip-head">'+selNode.data.label+' \u2194 CivilizationOS</div>'
+    connTip.innerHTML='<div class="conn-tip-head">'+selNode.data.label+' \u2194 Civilization</div>'
       +'<div style="margin:6px 0"><span class="conn-tip-pct" style="color:'+clrC+'">'+sNow+'</span> system health ('+grade(sNow)+')</div>'
       +'<div style="color:rgba(255,255,255,0.45)">Contributes ~'+contrib+' pts to aggregate score. '+(sNow>=70?'Strong positive contributor.':sNow>=50?'Moderate contributor.':sNow>=30?'Underperforming \u2014 dragging aggregate down.':'Critical weakness \u2014 major drag on civilization index.')+'</div>';
   }else{
@@ -1531,7 +1531,7 @@ function tick(){
   if(hovNode&&hovNode!==selNode){
     let tipName,tipScore,tipGrade,tipColor,tipSub,ovrTag='';
     if(hovNode.isCenter){
-      tipName='CivilizationOS';tipScore=mixedAgg();tipGrade=grade(tipScore);
+      tipName='Civilization';tipScore=mixedAgg();tipGrade=grade(tipScore);
       tipColor=Object.values(overrides).some(v=>v!==null)?'#fff':SC_META[active].css;
       tipSub='Aggregate of all 6 systems &middot; Click to inspect';
     }else{
