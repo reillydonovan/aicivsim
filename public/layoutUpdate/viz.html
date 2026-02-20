@@ -246,7 +246,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260216c"></script>
+<script src="js/shared.js?v=20260216d"></script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -305,7 +305,7 @@ const TIPPING=[
   {node:'governance',label:'Democratic backsliding point',  thresholds:{worst:2033}}
 ];
 
-let active='aggressive',year=2026,playing=false,selNode=null,hovNode=null;
+let active='aggressive',year=2026,playing=false,selNode=null,hovNode=null,hovSub=null;
 let comparing=false,compareWith='moderate';
 let globeActive=false;
 let audioMuted=false,audioCtx=null,masterGain=null,baseOsc=null,chordOscs=[],audioInited=false;
@@ -436,6 +436,54 @@ SYS.forEach((s,i)=>{
 });
 
 /* ================================================================
+   SUB-NODES — domain-level satellites that expand from parent nodes
+   Data mirrors the domain breakdowns on each dashboard page.
+   ================================================================ */
+const SUB_NODE_DATA={
+  climate:[
+    {id:'temp',     label:'Temperature',   color:0x4ecdc4, today:58, proj:{aggressive:92,moderate:68,bau:35,worst:15}},
+    {id:'emissions',label:'Emissions',     color:0xd4622a, today:32, proj:{aggressive:95,moderate:60,bau:22,worst:8}},
+    {id:'energy',   label:'Energy',        color:0x5da5da, today:45, proj:{aggressive:96,moderate:72,bau:38,worst:18}},
+    {id:'bio',      label:'Biodiversity',  color:0x4ecdc4, today:40, proj:{aggressive:88,moderate:58,bau:20,worst:8}},
+    {id:'ocean',    label:'Ocean Health',  color:0x9b87f5, today:35, proj:{aggressive:80,moderate:52,bau:18,worst:6}},
+    {id:'resource', label:'Resources',     color:0x95cf95, today:42, proj:{aggressive:78,moderate:55,bau:30,worst:12}}
+  ],
+  ai:[
+    {id:'alignment',   label:'Alignment',    color:0xe8a838, today:48, proj:{aggressive:92,moderate:68,bau:32,worst:10}},
+    {id:'transparency',label:'Transparency', color:0x4ecdc4, today:15, proj:{aggressive:97,moderate:61,bau:12,worst:3}},
+    {id:'safety',      label:'Safety',       color:0xd4622a, today:35, proj:{aggressive:90,moderate:62,bau:28,worst:10}},
+    {id:'compute',     label:'Compute Gov.', color:0x5da5da, today:20, proj:{aggressive:85,moderate:52,bau:18,worst:5}},
+    {id:'autonomy',    label:'Autonomy',     color:0x9b87f5, today:62, proj:{aggressive:88,moderate:70,bau:40,worst:15}},
+    {id:'trust',       label:'Public Trust', color:0x95cf95, today:30, proj:{aggressive:82,moderate:55,bau:22,worst:8}}
+  ],
+  simulation:[
+    {id:'gini',   label:'Inequality',  color:0x5da5da, today:62, proj:{aggressive:87,moderate:70,bau:38,worst:15}},
+    {id:'trust',  label:'Trust',       color:0x4ecdc4, today:43, proj:{aggressive:78,moderate:64,bau:32,worst:12}},
+    {id:'emis',   label:'Emissions',   color:0xd4622a, today:30, proj:{aggressive:82,moderate:55,bau:22,worst:8}},
+    {id:'resil',  label:'Resilience',  color:0x95cf95, today:36, proj:{aggressive:73,moderate:56,bau:30,worst:10}},
+    {id:'aiinf',  label:'AI Influence',color:0xe8a838, today:12, proj:{aggressive:40,moderate:30,bau:15,worst:5}}
+  ],
+  transition:[
+    {id:'poverty',   label:'Poverty',       color:0xd4622a, today:37, proj:{aggressive:88,moderate:72,bau:28,worst:10}},
+    {id:'reskill',   label:'Reskill Time',  color:0x5da5da, today:32, proj:{aggressive:86,moderate:65,bau:25,worst:8}},
+    {id:'placement', label:'Placement',     color:0x4ecdc4, today:62, proj:{aggressive:93,moderate:78,bau:35,worst:15}},
+    {id:'employment',label:'Employment',    color:0x95cf95, today:45, proj:{aggressive:85,moderate:68,bau:30,worst:12}}
+  ],
+  governance:[
+    {id:'civic',   label:'Civic Partic.',  color:0xb0a0d0, today:42, proj:{aggressive:78,moderate:58,bau:35,worst:12}},
+    {id:'charter', label:'Charter',        color:0x4ecdc4, today:10, proj:{aggressive:92,moderate:55,bau:8,worst:0}},
+    {id:'instrust',label:'Inst. Trust',    color:0x5da5da, today:43, proj:{aggressive:72,moderate:56,bau:32,worst:18}},
+    {id:'audit',   label:'Audit Coverage', color:0xe8a838, today:10, proj:{aggressive:96,moderate:68,bau:15,worst:3}}
+  ],
+  strategy:[
+    {id:'personal',label:'Individual',    color:0xe8636e, today:30, proj:{aggressive:88,moderate:58,bau:18,worst:6}},
+    {id:'org',     label:'Institutional', color:0x5da5da, today:35, proj:{aggressive:90,moderate:62,bau:22,worst:8}},
+    {id:'systemic',label:'Systemic',      color:0x4ecdc4, today:40, proj:{aggressive:86,moderate:65,bau:25,worst:10}}
+  ]
+};
+
+const subNodes=[];
+/* ================================================================
    CONNECTIONS
    ================================================================ */
 const conns=[];
@@ -512,7 +560,60 @@ const hitMat=new THREE.MeshBasicMaterial({visible:false});
 const hitTargets=[];
 function addHit(mesh,node){const h=new THREE.Mesh(new THREE.SphereGeometry(1.2,8,8),hitMat);mesh.add(h);hitTargets.push({mesh:h,node})}
 addHit(cMesh,centerNode);nodes.forEach(n=>addHit(n.mesh,n));
+
+/* ================================================================
+   SUB-NODE MESHES — created after hitTargets is available
+   ================================================================ */
+const SUB_RADIUS=1.8;
+const SUB_SIZE=0.18;
+const subGeo=new THREE.IcosahedronGeometry(SUB_SIZE,1);
+const subWireGeo=new THREE.IcosahedronGeometry(SUB_SIZE*1.35,0);
+nodes.forEach((parentNode,pi)=>{
+  const subs=SUB_NODE_DATA[parentNode.data.id];
+  if(!subs)return;
+  parentNode.subNodes=[];
+  subs.forEach((sd,si)=>{
+    const angle=(si/subs.length)*Math.PI*2-Math.PI/2;
+    const offX=Math.cos(angle)*SUB_RADIUS;
+    const offZ=Math.sin(angle)*SUB_RADIUS;
+    const sColor=new THREE.Color(sd.color);
+    const mat=new THREE.MeshPhongMaterial({color:sColor,emissive:sColor,emissiveIntensity:0.3,transparent:true,opacity:0});
+    const mesh=new THREE.Mesh(subGeo.clone(),mat);
+    const wMat=new THREE.MeshBasicMaterial({color:sColor,wireframe:true,transparent:true,opacity:0});
+    const wire=new THREE.Mesh(subWireGeo.clone(),wMat);
+    mesh.add(wire);
+    mesh.position.copy(parentNode.bp);
+    mesh.scale.setScalar(0.001);
+    scene.add(mesh);
+    const hitS=new THREE.Mesh(new THREE.SphereGeometry(0.6,6,6),hitMat);
+    hitS.visible=false;
+    mesh.add(hitS);
+    const lineGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]);
+    const lineMat=new THREE.LineBasicMaterial({color:sColor,transparent:true,opacity:0});
+    const line=new THREE.Line(lineGeo,lineMat);
+    scene.add(line);
+    const sub={mesh,wire,mat,data:sd,parent:parentNode,parentIdx:pi,
+      offset:new THREE.Vector3(offX,0,offZ),
+      baseColor:sColor.clone(),color:sColor.clone(),
+      health:sd.today/100,bobPhase:si*1.3+pi*0.5,
+      expanded:0,hitMesh:hitS,line,lineMat,lineGeo};
+    hitTargets.push({mesh:hitS,node:sub,isSub:true});
+    parentNode.subNodes.push(sub);
+    subNodes.push(sub);
+  });
+});
 const allHitMeshes=hitTargets.map(h=>h.mesh);
+
+/* Sub-node floating labels */
+subNodes.forEach(sn=>{
+  const el=document.createElement('div');
+  el.className='nlabel';
+  el.style.opacity='0';el.style.transition='opacity 0.3s';
+  const c='#'+sn.baseColor.getHexString();
+  el.innerHTML='<div class="nlabel-score" style="color:'+c+';font-size:10px"></div><div class="nlabel-name" style="color:'+c+'88;font-size:8px;letter-spacing:0.04em">'+sn.data.label+'</div>';
+  labelBox.appendChild(el);
+  sn.labelEl=el;sn.scoreEl=el.querySelector('.nlabel-score');
+});
 
 /* ================================================================
    TIPPING POINT SHOCKWAVES
@@ -1215,6 +1316,8 @@ nodes.forEach(n=>tgt.nodes.push({
   emissive:new THREE.Color().copy(n.baseColor),spriteColor:new THREE.Color().copy(n.baseColor),
   spriteOp:0.1,glowScale:3,connOp:0,connColor:new THREE.Color()
 }));
+tgt.subs=[];
+subNodes.forEach(sn=>tgt.subs.push({health:sn.data.today/100}));
 conns.forEach(()=>tgt.conns.push({opacity:0.05,color:new THREE.Color(0x444466)}));
 
 function applyScenario(sc){
@@ -1245,6 +1348,12 @@ function applyScenario(sc){
     nt.spriteColor.copy(desat);
     nt.spriteOp=0.02+s*0.2;
     nt.glowScale=1.5+s*2.5;
+  });
+  /* Sub-node targets */
+  subNodes.forEach((sn,si)=>{
+    const nSc=eff(sn.parent.data.id);
+    const h=scAt(sn.data.today,sn.data.proj[nSc],year)/100;
+    tgt.subs[si].health=h;
   });
   /* Connection targets */
   conns.forEach((c,i)=>{
@@ -1299,6 +1408,8 @@ function lerpScenario(dt){
     c.mat.opacity=lerp(c.mat.opacity,ct.opacity,a);
     c.mat.color.lerp(ct.color,a);
   });
+  /* Sub-nodes */
+  subNodes.forEach((sn,si)=>{sn.health=lerp(sn.health,tgt.subs[si].health,a)});
   /* Atmosphere */
   bloom.strength=lerp(bloom.strength,tgt.bloomStr,a);
   scene.fog.density=lerp(scene.fog.density,tgt.fogDen,a);
@@ -1453,6 +1564,44 @@ function tick(){
       n.wire.material.color.copy(n.baseColor);
     }
   });
+
+  /* Sub-node expand/collapse + health-driven animation */
+  const SUB_EXPAND_SPEED=3.5;
+  subNodes.forEach(sn=>{
+    const isExpanded=selNode===sn.parent;
+    const expandTarget=isExpanded?1:0;
+    sn.expanded=lerp(sn.expanded,expandTarget,1-Math.exp(-SUB_EXPAND_SPEED*dt));
+    if(sn.expanded<0.005){sn.expanded=0}
+    const e=sn.expanded;
+    const pp=sn.parent.mesh.position;
+    const tX=pp.x+sn.offset.x*e;
+    const tZ=pp.z+sn.offset.z*e;
+    sn.mesh.position.x=lerp(sn.mesh.position.x,tX,1-Math.exp(-6*dt));
+    sn.mesh.position.z=lerp(sn.mesh.position.z,tZ,1-Math.exp(-6*dt));
+    const h=sn.health;
+    const subScale=e*(0.5+h*0.8);
+    sn.mesh.scale.setScalar(Math.max(0.001,subScale));
+    sn.mat.opacity=e*(0.5+h*0.5);
+    sn.wire.material.opacity=e*(0.08+h*0.15);
+    sn.mat.emissiveIntensity=0.05+h*0.5;
+    const desat=new THREE.Color().lerpColors(sickColor,sn.baseColor,Math.pow(h,0.6));
+    sn.mat.emissive.copy(desat);
+    sn.mat.color.copy(desat);
+    const bobAmp=e*(h>0.5?0.08:0.08+((0.5-h)*0.3));
+    const bobFreq=h>0.5?0.9:0.9+((0.5-h)*2.5);
+    sn.bobPhase+=bobFreq*dt;
+    sn.mesh.position.y=pp.y+Math.sin(sn.bobPhase)*bobAmp;
+    const spinSpd=0.03+h*0.15;
+    sn.wire.rotation.y+=spinSpd*dt*5;
+    sn.wire.rotation.x+=spinSpd*dt*3;
+    sn.hitMesh.visible=e>0.3;
+    sn.lineMat.opacity=e*0.15;
+    const pts=sn.lineGeo.attributes.position.array;
+    pts[0]=pp.x;pts[1]=pp.y;pts[2]=pp.z;
+    pts[3]=sn.mesh.position.x;pts[4]=sn.mesh.position.y;pts[5]=sn.mesh.position.z;
+    sn.lineGeo.attributes.position.needsUpdate=true;
+  });
+
   const cH=aggHealth;
   const cSpinSpd=0.04+cH*0.22;
   cWire.rotation.y+=cSpinSpd*dt*5;cWire.rotation.z+=cSpinSpd*dt*3;
@@ -1512,11 +1661,17 @@ function tick(){
   /* Raycaster */
   ray.setFromCamera(mouse,camera);
   const hits=ray.intersectObjects(allHitMeshes);
-  const prevHov=hovNode;
-  hovNode=null;
-  if(hits.length){const ht=hitTargets.find(h=>h.mesh===hits[0].object);if(ht)hovNode=ht.node;renderer.domElement.style.cursor='pointer'}
-  else{renderer.domElement.style.cursor='default'}
-  if(hovNode!==prevHov){if(hovNode)sfx('hover');else if(prevHov)sfx('unhover')}
+  const prevHov=hovNode;const prevHovSub=hovSub;
+  hovNode=null;hovSub=null;
+  if(hits.length){
+    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+    if(ht){
+      if(ht.isSub&&ht.node.expanded>0.3){hovSub=ht.node;renderer.domElement.style.cursor='pointer'}
+      else if(!ht.isSub){hovNode=ht.node;renderer.domElement.style.cursor='pointer'}
+      else{renderer.domElement.style.cursor='default'}
+    }
+  }else{renderer.domElement.style.cursor='default'}
+  if(hovNode!==prevHov||hovSub!==prevHovSub){if(hovNode||hovSub)sfx('hover');else if(prevHov||prevHovSub)sfx('unhover')}
 
   /* Connection highlights */
   conns.forEach(c=>{
@@ -1534,7 +1689,16 @@ function tick(){
 
   /* Hover tooltip */
   const hTip=document.getElementById('hover-tip');
-  if(hovNode&&hovNode!==selNode){
+  if(hovSub){
+    const sd=hovSub.data;
+    const nSc=eff(hovSub.parent.data.id);
+    const sc=scAt(sd.today,sd.proj[nSc],year);
+    const g=grade(sc);const c='#'+hovSub.baseColor.getHexString();
+    const parentLabel=hovSub.parent.data.label;
+    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+sd.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">'+parentLabel+' sub-domain</div>';
+    hTip.style.left=(mouseScreen.x+16)+'px';hTip.style.top=(mouseScreen.y-10)+'px';
+    hTip.classList.remove('hidden');
+  }else if(hovNode&&hovNode!==selNode){
     let tipName,tipScore,tipGrade,tipColor,tipSub,ovrTag='';
     if(hovNode.isCenter){
       tipName='Civilization';tipScore=mixedAgg();tipGrade=grade(tipScore);
@@ -1564,6 +1728,20 @@ function tick(){
     lb.el.style.transform='translate(-50%,-100%)';
     if(lb.isCenter){const s=mixedAgg();lb.scoreEl.textContent=s;const anyO=Object.values(overrides).some(v=>v!==null);lb.scoreEl.style.color=anyO?'#fff':SC_META[active].css}
     else{const nSc=eff(lb.node.data.id);const s=scAt(lb.node.data.today,lb.node.data.proj[nSc],year);lb.scoreEl.textContent=s;if(overrides[lb.node.data.id])lb.scoreEl.style.color=SC_META[nSc].css}
+  });
+
+  /* Sub-node labels */
+  subNodes.forEach(sn=>{
+    if(!sn.labelEl)return;
+    if(sn.expanded<0.15){sn.labelEl.style.opacity='0';sn.labelEl.style.display='none';return}
+    sn.labelEl.style.display='';sn.labelEl.style.opacity=String(Math.min(1,sn.expanded*1.5));
+    const v=new THREE.Vector3().copy(sn.mesh.position);v.y+=0.4;v.project(camera);
+    if(v.z>1){sn.labelEl.style.display='none';return}
+    sn.labelEl.style.left=(v.x*hw+hw)+'px';sn.labelEl.style.top=(-v.y*hh+hh)+'px';
+    sn.labelEl.style.transform='translate(-50%,-100%)';
+    const nSc=eff(sn.parent.data.id);
+    const sc=scAt(sn.data.today,sn.data.proj[nSc],year);
+    sn.scoreEl.textContent=sc;
   });
 
   /* Update compare panel if open */
