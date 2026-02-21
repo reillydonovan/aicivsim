@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Civilization Simulator — WebXR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#080810;color:#fff;font-family:'Space Grotesk',sans-serif}
+#cv{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+canvas{display:block}
+
+#ui{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+#ui>*{pointer-events:auto}
+
+.top-bar{position:absolute;top:0;left:0;right:0;padding:20px 28px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+.top-bar>*{pointer-events:auto}
+.brand{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.brand strong{color:#9b87f5;font-weight:600}
+.site-title{font-size:14px;font-weight:500;color:rgba(255,255,255,0.75);margin-top:3px}
+.back-link{font-size:11px;color:rgba(255,255,255,0.3);text-decoration:none;margin-top:6px;display:inline-block;transition:color 0.2s}
+.back-link:hover{color:#9b87f5}
+
+.top-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.agg{text-align:right}
+.agg-score{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;line-height:1;transition:color 0.6s}
+.agg-sub{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:2px}
+.agg-grade{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;margin-top:3px;transition:color 0.6s}
+.agg-status{font-size:11px;color:rgba(255,255,255,0.35);margin-top:6px;max-width:180px;text-align:right;line-height:1.4}
+
+.sc-bar{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2px}
+.sc-btn{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.04em;padding:8px 16px;border:none;background:transparent;color:rgba(255,255,255,0.35);cursor:pointer;border-radius:3px;transition:all 0.3s;white-space:nowrap}
+.sc-btn:hover{color:rgba(255,255,255,0.65)}
+.sc-btn.active{color:#fff;background:rgba(255,255,255,0.08)}
+
+/* Mode bar */
+.mode-bar{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:2px}
+.mode-btn{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.04em;padding:8px 14px;border:none;background:transparent;color:rgba(255,255,255,0.35);cursor:pointer;border-radius:3px;transition:all 0.3s;white-space:nowrap}
+.mode-btn:hover{color:rgba(255,255,255,0.65)}
+.mode-btn.on{color:#9b87f5;background:rgba(155,135,245,0.08)}
+
+/* Year bar */
+.year-bar{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px 20px;backdrop-filter:blur(8px);pointer-events:auto}
+.yr-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+.yr-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;min-width:48px;text-align:center}
+input[type=range]{-webkit-appearance:none;width:220px;height:2px;background:rgba(255,255,255,0.12);border-radius:1px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;border:2px solid rgba(255,255,255,0.3)}
+.play-btn{font-family:'Space Grotesk',sans-serif;font-size:11px;padding:5px 12px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.5);border-radius:3px;cursor:pointer;transition:all 0.2s}
+.play-btn:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
+
+/* Info panel */
+.info{position:absolute;bottom:28px;right:28px;width:260px;background:rgba(6,6,14,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:18px;backdrop-filter:blur(12px);transition:opacity 0.3s,transform 0.3s;pointer-events:auto}
+.info.hidden{opacity:0;pointer-events:none!important;transform:translateY(8px)}
+.info-name{font-size:13px;font-weight:600;transition:color 0.3s}
+.info-row{display:flex;align-items:baseline;gap:6px;margin-top:8px}
+.info-score{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;line-height:1;transition:color 0.3s}
+.info-100{font-size:13px;color:rgba(255,255,255,0.25)}
+.info-grade{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;border:1px solid;padding:2px 7px;border-radius:2px;margin-left:4px}
+.info-when{font-size:11px;color:rgba(255,255,255,0.3);margin-top:3px}
+.info-bar{height:3px;border-radius:2px;background:rgba(255,255,255,0.05);margin-top:12px}
+.info-bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease,background 0.5s}
+.info-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-top:12px;line-height:1.55}
+.info-nav{font-size:10px;color:rgba(255,255,255,0.25);margin-top:10px;font-style:italic}
+.info-sub{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06)}
+.info-sub-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
+.info-sub-name{font-size:10px;color:rgba(255,255,255,0.4)}
+.info-sub-val{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+
+/* World State panel */
+.world-panel{position:absolute;left:28px;bottom:80px;width:320px;max-height:calc(100vh - 200px);background:rgba(10,10,25,0.88);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.06);border-radius:8px;overflow:hidden;pointer-events:auto;z-index:12;display:flex;flex-direction:column;transition:opacity 0.3s,transform 0.3s}
+.world-panel.hidden{opacity:0;pointer-events:none!important;transform:translateX(-12px)}
+.world-panel-head{padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:baseline}
+.world-panel-title{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.world-panel-year{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
+.world-panel-body{padding:12px 16px 16px;overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent}
+.world-panel-body::-webkit-scrollbar{width:3px}
+.world-panel-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:2px}
+.ws-hero{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.ws-score{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:800;line-height:1}
+.ws-grade{font-size:18px;font-weight:600;border:1px solid;padding:2px 8px;border-radius:3px}
+.ws-era{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;border:1px solid rgba(255,255,255,0.15);padding:2px 8px;border-radius:3px;margin-left:4px}
+.ws-feel{font-size:12px;line-height:1.7;color:rgba(255,255,255,0.45);font-style:italic;margin-bottom:14px}
+.ws-section{border-top:1px solid rgba(255,255,255,0.05);padding:10px 0}
+.ws-section-label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+.ws-section p{font-size:11px;line-height:1.65;color:rgba(255,255,255,0.55);margin:0}
+.ws-nums{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.ws-num{text-align:center}
+.ws-num-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.ws-num-lbl{font-size:7px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+
+/* XR buttons */
+.xr-btns{position:absolute;bottom:28px;right:300px;display:flex;gap:8px;pointer-events:auto}
+.xr-btn{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:8px 16px;border-radius:4px;cursor:pointer;transition:all 0.3s}
+.xr-btn.vr{color:#9b87f5;background:rgba(155,135,245,0.1);border:1px solid rgba(155,135,245,0.25)}
+.xr-btn.vr:hover:not(:disabled){background:rgba(155,135,245,0.2)}
+.xr-btn.ar{color:#4ecdc4;background:rgba(78,205,196,0.1);border:1px solid rgba(78,205,196,0.25)}
+.xr-btn.ar:hover:not(:disabled){background:rgba(78,205,196,0.2)}
+.xr-btn:disabled{opacity:0.2;cursor:not-allowed}
+
+.hint{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.15);text-align:center;line-height:1.6;pointer-events:none}
+
+#labels{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.node-label{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.5);white-space:nowrap;text-align:center;transform:translate(-50%,-100%);transition:opacity 0.3s;text-shadow:0 1px 4px rgba(0,0,0,0.8)}
+
+@media(max-width:768px){
+  .top-bar{padding:12px 16px}
+  .year-bar{width:calc(100vw - 24px);bottom:12px;padding:6px 12px}
+  input[type=range]{width:120px}
+  .info{width:calc(100vw - 24px);left:12px;right:12px;bottom:80px}
+  .world-panel{left:12px;right:12px;width:auto;bottom:80px}
+  .xr-btns{bottom:80px;right:12px}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+<div id="cv"></div>
+<div id="labels"></div>
+
+<div id="ui">
+  <div class="top-bar">
+    <div>
+      <div class="brand"><strong>AICIVSIM</strong> &mdash; WebXR</div>
+      <div class="site-title">Immersive Visualization</div>
+      <a href="visualizer.html" class="back-link">&larr; Back to visualizer</a>
+    </div>
+    <div class="top-right">
+      <div class="sc-bar" id="sc-bar">
+        <button class="sc-btn active" data-sc="aggressive">Aggressive</button>
+        <button class="sc-btn" data-sc="moderate">Moderate</button>
+        <button class="sc-btn" data-sc="bau">BAU</button>
+        <button class="sc-btn" data-sc="worst">Worst</button>
+      </div>
+      <div class="mode-bar" style="margin-top:6px">
+        <button class="mode-btn" id="mode-world">World</button>
+        <button class="mode-btn" id="mode-compare">Compare</button>
+        <button class="mode-btn" id="mode-sound">Sound</button>
+      </div>
+      <div class="agg" style="margin-top:8px">
+        <div class="agg-score" id="agg-score">44</div>
+        <div class="agg-sub">Aggregate Health</div>
+        <div class="agg-grade" id="agg-grade"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="year-bar">
+    <span class="yr-lbl">Year</span>
+    <span class="yr-val" id="yr-val">2026</span>
+    <input type="range" id="yr-slider" min="2026" max="2050" value="2026" step="1">
+    <button class="play-btn" id="play-btn">&#9654; Play</button>
+  </div>
+
+  <div class="info hidden" id="info">
+    <div class="info-name" id="info-name"></div>
+    <div class="info-row">
+      <span class="info-score" id="info-score"></span>
+      <span class="info-100">/100</span>
+      <span class="info-grade" id="info-grade"></span>
+    </div>
+    <div class="info-when" id="info-when"></div>
+    <div class="info-bar"><div class="info-bar-fill" id="info-bar"></div></div>
+    <div class="info-desc" id="info-desc"></div>
+    <div class="info-sub" id="info-sub"></div>
+    <div class="info-nav" id="info-nav"></div>
+  </div>
+
+  <div class="world-panel hidden" id="world-panel">
+    <div class="world-panel-head">
+      <span class="world-panel-title">World State</span>
+      <span class="world-panel-year" id="world-year"></span>
+    </div>
+    <div class="world-panel-body" id="world-body"></div>
+  </div>
+
+  <div class="xr-btns" id="xr-btns">
+    <button class="xr-btn vr" id="vr-btn" disabled>Enter VR</button>
+    <button class="xr-btn ar" id="ar-btn" disabled>Enter AR</button>
+  </div>
+
+  <div class="hint">Click a system to inspect &middot; Click sub-nodes to drill down &middot; Drag to orbit<br>
+  1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
+</div>
+
+<script src="js/shared.js?v=20260221b"></script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {XRControllerModelFactory} from 'three/addons/webxr/XRControllerModelFactory.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+/* ================================================================
+   DATA — mirrors viz.html
+   ================================================================ */
+const SYS=[
+  {id:'climate',label:'Climate',color:0x4ecdc4,today:42,proj:{aggressive:85,moderate:58,bau:28,worst:12},href:'climate.html',
+   desc:'Planetary systems — temperature, emissions, biodiversity, ocean health, renewable energy, crop yields, water stress, and tipping point risk.'},
+  {id:'simulation',label:'Simulation',color:0x5da5da,today:50,proj:{aggressive:90,moderate:70,bau:35,worst:15},href:'simulation.html',
+   desc:'The interactive engine — 5 policy levers, 50-year timeline, era-phased narrative reports from possible futures.'},
+  {id:'transition',label:'Transition',color:0x95cf95,today:43,proj:{aggressive:88,moderate:68,bau:28,worst:12},href:'transition.html',
+   desc:'Workforce readiness — reskilling rates, poverty trajectories, income bridge calculator, employment metrics.'},
+  {id:'ai',label:'AI',color:0xe8a838,today:48,proj:{aggressive:92,moderate:68,bau:32,worst:10},href:'ai.html',
+   desc:'Artificial intelligence — alignment progress, autonomy risk, compute governance, model transparency, deployment safety.'},
+  {id:'governance',label:'Governance',color:0xb0a0d0,today:40,proj:{aggressive:85,moderate:65,bau:30,worst:10},href:'governance.html',
+   desc:'Institutional infrastructure — civic participation, AI charter adoption, citizen assemblies, safety audit coverage.'},
+  {id:'strategy',label:'Strategy',color:0xe8636e,today:35,proj:{aggressive:88,moderate:62,bau:22,worst:8},href:'strategy.html',
+   desc:'The action catalog — 20+ strategies across individual, institutional, and systemic implementation levels.'}
+];
+const AGG={today:44,proj:{aggressive:85,moderate:63,bau:28,worst:11}};
+const SC_META={
+  aggressive:{name:'Aggressive Action',color:0x4ecdc4,css:'#4ecdc4',outcome:'Systemic recovery underway. Compounding gains across every domain.'},
+  moderate:{name:'Moderate Reform',color:0x5da5da,css:'#5da5da',outcome:'Moderate improvement. Meaningful but uneven progress.'},
+  bau:{name:'Business as Usual',color:0xe8a838,css:'#e8a838',outcome:'Systemic decline. The system drifts through inaction.'},
+  worst:{name:'Worst Case',color:0xd4622a,css:'#d4622a',outcome:'Civilizational failure. Feedback loops accelerate collapse.'}
+};
+
+const SUB_NODE_DATA={
+  climate:[
+    {id:'temp',label:'Temperature',color:0x4ecdc4,today:58,proj:{aggressive:92,moderate:68,bau:35,worst:15}},
+    {id:'emissions',label:'Emissions',color:0xd4622a,today:32,proj:{aggressive:95,moderate:60,bau:22,worst:8}},
+    {id:'energy',label:'Energy',color:0x5da5da,today:45,proj:{aggressive:96,moderate:72,bau:38,worst:18}},
+    {id:'bio',label:'Biodiversity',color:0x4ecdc4,today:40,proj:{aggressive:88,moderate:58,bau:20,worst:8}},
+    {id:'ocean',label:'Ocean Health',color:0x9b87f5,today:35,proj:{aggressive:80,moderate:52,bau:18,worst:6}},
+    {id:'resource',label:'Resources',color:0x95cf95,today:42,proj:{aggressive:78,moderate:55,bau:30,worst:12}}
+  ],
+  ai:[
+    {id:'alignment',label:'Alignment',color:0xe8a838,today:48,proj:{aggressive:92,moderate:68,bau:32,worst:10}},
+    {id:'transparency',label:'Transparency',color:0x4ecdc4,today:15,proj:{aggressive:97,moderate:61,bau:12,worst:3}},
+    {id:'safety',label:'Safety',color:0xd4622a,today:35,proj:{aggressive:90,moderate:62,bau:28,worst:10}},
+    {id:'compute',label:'Compute Gov.',color:0x5da5da,today:20,proj:{aggressive:85,moderate:52,bau:18,worst:5}},
+    {id:'autonomy',label:'Autonomy',color:0x9b87f5,today:62,proj:{aggressive:88,moderate:70,bau:40,worst:15}},
+    {id:'trust',label:'Public Trust',color:0x95cf95,today:30,proj:{aggressive:82,moderate:55,bau:22,worst:8}}
+  ],
+  simulation:[
+    {id:'gini',label:'Inequality',color:0x5da5da,today:62,proj:{aggressive:87,moderate:70,bau:38,worst:15}},
+    {id:'trust',label:'Trust',color:0x4ecdc4,today:43,proj:{aggressive:78,moderate:64,bau:32,worst:12}},
+    {id:'emis',label:'Emissions',color:0xd4622a,today:30,proj:{aggressive:82,moderate:55,bau:22,worst:8}},
+    {id:'resil',label:'Resilience',color:0x95cf95,today:36,proj:{aggressive:73,moderate:56,bau:30,worst:10}},
+    {id:'aiinf',label:'AI Influence',color:0xe8a838,today:12,proj:{aggressive:40,moderate:30,bau:15,worst:5}}
+  ],
+  transition:[
+    {id:'poverty',label:'Poverty',color:0xd4622a,today:37,proj:{aggressive:88,moderate:72,bau:28,worst:10}},
+    {id:'reskill',label:'Reskill Time',color:0x5da5da,today:32,proj:{aggressive:86,moderate:65,bau:25,worst:8}},
+    {id:'placement',label:'Placement',color:0x4ecdc4,today:62,proj:{aggressive:93,moderate:78,bau:35,worst:15}},
+    {id:'employment',label:'Employment',color:0x95cf95,today:45,proj:{aggressive:85,moderate:68,bau:30,worst:12}}
+  ],
+  governance:[
+    {id:'civic',label:'Civic Partic.',color:0xb0a0d0,today:42,proj:{aggressive:78,moderate:58,bau:35,worst:12}},
+    {id:'charter',label:'Charter',color:0x4ecdc4,today:10,proj:{aggressive:92,moderate:55,bau:8,worst:0}},
+    {id:'instrust',label:'Inst. Trust',color:0x5da5da,today:43,proj:{aggressive:72,moderate:56,bau:32,worst:18}},
+    {id:'audit',label:'Audit Coverage',color:0xe8a838,today:10,proj:{aggressive:96,moderate:68,bau:15,worst:3}}
+  ],
+  strategy:[
+    {id:'personal',label:'Individual',color:0xe8636e,today:30,proj:{aggressive:88,moderate:58,bau:18,worst:6}},
+    {id:'org',label:'Institutional',color:0x5da5da,today:35,proj:{aggressive:90,moderate:62,bau:22,worst:8}},
+    {id:'systemic',label:'Systemic',color:0x4ecdc4,today:40,proj:{aggressive:86,moderate:65,bau:25,worst:10}}
+  ]
+};
+
+const SUB_SUB_NODE_DATA={
+  climate_temp:[{id:'arctic',label:'Arctic',color:0x4ecdc4,today:45,proj:{aggressive:88,moderate:62,bau:28,worst:10}},{id:'surface',label:'Surface Temp',color:0x5da5da,today:60,proj:{aggressive:90,moderate:70,bau:38,worst:18}},{id:'extremes',label:'Heat Extremes',color:0xd4622a,today:52,proj:{aggressive:85,moderate:60,bau:30,worst:12}}],
+  climate_emissions:[{id:'co2',label:'CO\u2082 Levels',color:0xd4622a,today:28,proj:{aggressive:92,moderate:58,bau:20,worst:6}},{id:'methane',label:'Methane',color:0xe8a838,today:35,proj:{aggressive:90,moderate:55,bau:22,worst:8}},{id:'industrial',label:'Industrial',color:0x5da5da,today:30,proj:{aggressive:88,moderate:52,bau:18,worst:5}}],
+  climate_energy:[{id:'solar',label:'Solar',color:0xe8a838,today:55,proj:{aggressive:98,moderate:78,bau:42,worst:22}},{id:'wind',label:'Wind',color:0x5da5da,today:48,proj:{aggressive:95,moderate:72,bau:38,worst:18}},{id:'storage',label:'Grid Storage',color:0x4ecdc4,today:30,proj:{aggressive:92,moderate:65,bau:32,worst:12}}],
+  climate_bio:[{id:'species',label:'Species Loss',color:0xd4622a,today:35,proj:{aggressive:82,moderate:52,bau:18,worst:5}},{id:'habitat',label:'Habitat',color:0x95cf95,today:42,proj:{aggressive:88,moderate:60,bau:22,worst:10}},{id:'pollinator',label:'Pollinators',color:0xe8a838,today:38,proj:{aggressive:85,moderate:55,bau:15,worst:6}}],
+  climate_ocean:[{id:'acid',label:'Acidification',color:0x9b87f5,today:30,proj:{aggressive:75,moderate:48,bau:15,worst:4}},{id:'coral',label:'Coral Reefs',color:0xd4622a,today:28,proj:{aggressive:72,moderate:45,bau:12,worst:3}},{id:'sealevel',label:'Sea Level',color:0x5da5da,today:40,proj:{aggressive:82,moderate:55,bau:22,worst:8}}],
+  climate_resource:[{id:'water',label:'Water',color:0x5da5da,today:40,proj:{aggressive:75,moderate:52,bau:28,worst:10}},{id:'soil',label:'Soil Health',color:0x95cf95,today:45,proj:{aggressive:80,moderate:58,bau:32,worst:14}},{id:'minerals',label:'Minerals',color:0xe8a838,today:38,proj:{aggressive:72,moderate:50,bau:25,worst:10}}],
+  ai_alignment:[{id:'values',label:'Value Align.',color:0xe8a838,today:42,proj:{aggressive:90,moderate:65,bau:28,worst:8}},{id:'goals',label:'Goal Stability',color:0x5da5da,today:50,proj:{aggressive:92,moderate:68,bau:35,worst:12}},{id:'corrig',label:'Corrigibility',color:0x4ecdc4,today:45,proj:{aggressive:88,moderate:62,bau:30,worst:10}}],
+  ai_transparency:[{id:'weights',label:'Open Weights',color:0x4ecdc4,today:12,proj:{aggressive:95,moderate:58,bau:10,worst:2}},{id:'auditacc',label:'Audit Access',color:0x5da5da,today:18,proj:{aggressive:96,moderate:62,bau:14,worst:4}},{id:'explain',label:'Explainability',color:0xe8a838,today:15,proj:{aggressive:94,moderate:55,bau:10,worst:3}}],
+  ai_safety:[{id:'redteam',label:'Red Teams',color:0xd4622a,today:38,proj:{aggressive:92,moderate:65,bau:30,worst:12}},{id:'killswitch',label:'Kill Switch',color:0xe8a838,today:30,proj:{aggressive:88,moderate:58,bau:25,worst:8}},{id:'contain',label:'Containment',color:0x5da5da,today:32,proj:{aggressive:85,moderate:55,bau:22,worst:8}}],
+  ai_compute:[{id:'chips',label:'Chip Tracking',color:0x5da5da,today:18,proj:{aggressive:82,moderate:50,bau:16,worst:4}},{id:'license',label:'Licensing',color:0x4ecdc4,today:22,proj:{aggressive:88,moderate:55,bau:20,worst:6}},{id:'alloc',label:'Allocation',color:0xe8a838,today:15,proj:{aggressive:80,moderate:48,bau:15,worst:4}}],
+  ai_autonomy:[{id:'weapons',label:'Weapons Ban',color:0xd4622a,today:55,proj:{aggressive:85,moderate:68,bau:38,worst:12}},{id:'decision',label:'Decision Auth.',color:0x9b87f5,today:65,proj:{aggressive:90,moderate:72,bau:42,worst:18}},{id:'oversight',label:'Oversight',color:0x4ecdc4,today:58,proj:{aggressive:88,moderate:70,bau:40,worst:15}}],
+  ai_trust:[{id:'literacy',label:'AI Literacy',color:0x95cf95,today:25,proj:{aggressive:80,moderate:52,bau:20,worst:6}},{id:'sentiment',label:'Sentiment',color:0x5da5da,today:32,proj:{aggressive:82,moderate:55,bau:24,worst:10}},{id:'adoption',label:'Adoption',color:0xe8a838,today:28,proj:{aggressive:78,moderate:50,bau:18,worst:5}}],
+  simulation_gini:[{id:'wealth',label:'Wealth Gap',color:0x5da5da,today:55,proj:{aggressive:85,moderate:68,bau:35,worst:12}},{id:'access',label:'Access',color:0x4ecdc4,today:60,proj:{aggressive:88,moderate:72,bau:40,worst:18}},{id:'mobility',label:'Mobility',color:0x95cf95,today:58,proj:{aggressive:82,moderate:65,bau:32,worst:12}}],
+  simulation_trust:[{id:'media',label:'Media Trust',color:0xd4622a,today:35,proj:{aggressive:72,moderate:58,bau:28,worst:10}},{id:'instit',label:'Institutions',color:0x5da5da,today:45,proj:{aggressive:80,moderate:65,bau:35,worst:15}},{id:'interp',label:'Interpersonal',color:0x4ecdc4,today:48,proj:{aggressive:78,moderate:62,bau:30,worst:12}}],
+  simulation_emis:[{id:'transport',label:'Transport',color:0xd4622a,today:28,proj:{aggressive:80,moderate:52,bau:20,worst:6}},{id:'industry',label:'Industry',color:0xe8a838,today:32,proj:{aggressive:82,moderate:55,bau:25,worst:10}},{id:'agri',label:'Agriculture',color:0x95cf95,today:25,proj:{aggressive:78,moderate:50,bau:18,worst:6}}],
+  simulation_resil:[{id:'infra',label:'Infrastructure',color:0x95cf95,today:38,proj:{aggressive:75,moderate:58,bau:32,worst:12}},{id:'supply',label:'Supply Chain',color:0x5da5da,today:35,proj:{aggressive:72,moderate:55,bau:28,worst:10}},{id:'social',label:'Social',color:0x4ecdc4,today:32,proj:{aggressive:70,moderate:52,bau:25,worst:8}}],
+  simulation_aiinf:[{id:'automate',label:'Automation',color:0xe8a838,today:15,proj:{aggressive:42,moderate:32,bau:18,worst:6}},{id:'decide',label:'Decision AI',color:0x5da5da,today:10,proj:{aggressive:38,moderate:28,bau:12,worst:4}},{id:'creative',label:'Creative AI',color:0x9b87f5,today:8,proj:{aggressive:35,moderate:25,bau:10,worst:3}}],
+  transition_poverty:[{id:'extreme',label:'Extreme',color:0xd4622a,today:30,proj:{aggressive:85,moderate:68,bau:25,worst:8}},{id:'working',label:'Working Poor',color:0xe8a838,today:38,proj:{aggressive:88,moderate:72,bau:30,worst:12}},{id:'aid',label:'Aid Access',color:0x5da5da,today:40,proj:{aggressive:90,moderate:75,bau:28,worst:10}}],
+  transition_reskill:[{id:'digital',label:'Digital',color:0x5da5da,today:35,proj:{aggressive:88,moderate:68,bau:28,worst:10}},{id:'green',label:'Green Skills',color:0x95cf95,today:28,proj:{aggressive:85,moderate:62,bau:22,worst:6}},{id:'duration',label:'Duration',color:0xe8a838,today:30,proj:{aggressive:82,moderate:58,bau:20,worst:5}}],
+  transition_placement:[{id:'match',label:'Match Rate',color:0x4ecdc4,today:58,proj:{aggressive:92,moderate:75,bau:32,worst:12}},{id:'retention',label:'Retention',color:0x5da5da,today:62,proj:{aggressive:90,moderate:78,bau:38,worst:18}},{id:'satisf',label:'Satisfaction',color:0x95cf95,today:55,proj:{aggressive:88,moderate:72,bau:30,worst:12}}],
+  transition_employment:[{id:'formal',label:'Formal',color:0x95cf95,today:48,proj:{aggressive:88,moderate:72,bau:32,worst:14}},{id:'gig',label:'Gig Economy',color:0xe8a838,today:40,proj:{aggressive:80,moderate:62,bau:28,worst:10}},{id:'under',label:'Underemployed',color:0xd4622a,today:42,proj:{aggressive:82,moderate:65,bau:25,worst:8}}],
+  governance_civic:[{id:'voting',label:'Voting',color:0xb0a0d0,today:45,proj:{aggressive:80,moderate:60,bau:38,worst:15}},{id:'deliber',label:'Deliberation',color:0x4ecdc4,today:38,proj:{aggressive:75,moderate:55,bau:30,worst:10}},{id:'digdem',label:'Digital Dem.',color:0x5da5da,today:35,proj:{aggressive:78,moderate:58,bau:32,worst:8}}],
+  governance_charter:[{id:'ratify',label:'Ratification',color:0x4ecdc4,today:8,proj:{aggressive:90,moderate:52,bau:6,worst:0}},{id:'comply',label:'Compliance',color:0x5da5da,today:12,proj:{aggressive:92,moderate:55,bau:10,worst:0}},{id:'enforce',label:'Enforcement',color:0xe8a838,today:10,proj:{aggressive:88,moderate:50,bau:5,worst:0}}],
+  governance_instrust:[{id:'courts',label:'Courts',color:0x5da5da,today:48,proj:{aggressive:75,moderate:58,bau:35,worst:20}},{id:'parliam',label:'Parliament',color:0xb0a0d0,today:40,proj:{aggressive:70,moderate:55,bau:30,worst:16}},{id:'civil',label:'Civil Service',color:0x4ecdc4,today:42,proj:{aggressive:72,moderate:56,bau:32,worst:18}}],
+  governance_audit:[{id:'aiaudit',label:'AI Audits',color:0xe8a838,today:8,proj:{aggressive:95,moderate:65,bau:12,worst:2}},{id:'finance',label:'Finance',color:0x5da5da,today:12,proj:{aggressive:94,moderate:68,bau:18,worst:4}},{id:'environ',label:'Environmental',color:0x95cf95,today:10,proj:{aggressive:92,moderate:62,bau:14,worst:3}}],
+  strategy_personal:[{id:'education',label:'Education',color:0xe8636e,today:32,proj:{aggressive:90,moderate:60,bau:20,worst:8}},{id:'consump',label:'Consumption',color:0x5da5da,today:28,proj:{aggressive:85,moderate:55,bau:16,worst:5}},{id:'advocacy',label:'Advocacy',color:0x4ecdc4,today:25,proj:{aggressive:82,moderate:52,bau:15,worst:4}}],
+  strategy_org:[{id:'corporate',label:'Corporate',color:0x5da5da,today:38,proj:{aggressive:92,moderate:65,bau:25,worst:10}},{id:'university',label:'University',color:0x4ecdc4,today:35,proj:{aggressive:88,moderate:60,bau:20,worst:6}},{id:'ngo',label:'NGO',color:0x95cf95,today:30,proj:{aggressive:85,moderate:55,bau:18,worst:5}}],
+  strategy_systemic:[{id:'regulation',label:'Regulation',color:0x4ecdc4,today:42,proj:{aggressive:88,moderate:68,bau:28,worst:12}},{id:'infrastr',label:'Infrastructure',color:0xe8a838,today:38,proj:{aggressive:85,moderate:62,bau:22,worst:8}},{id:'intl',label:'International',color:0x5da5da,today:35,proj:{aggressive:82,moderate:58,bau:20,worst:8}}]
+};
+
+const TIPPING=[
+  {node:'climate',label:'Arctic ice-free summer',thresholds:{bau:2035,worst:2031}},
+  {node:'climate',label:'Coral reef functional collapse',thresholds:{bau:2034,worst:2030}},
+  {node:'climate',label:'Amazon dieback threshold',thresholds:{bau:2040,worst:2035}},
+  {node:'governance',label:'Governance capacity exceeded',thresholds:{worst:2038}},
+  {node:'transition',label:'Mass displacement threshold',thresholds:{bau:2042,worst:2036}}
+];
+
+let active='aggressive',year=2026,playing=false,selNode=null,selSub=null,selSubSub=null;
+let worldOpen=false,compareOpen=false;
+let audioCtx=null,masterGain=null,audioInited=false,audioMuted=true;
+const voices=[];const VOICE_FREQ=[130.81,164.81,196.00,246.94,293.66,220.00];
+const overviewPos=new THREE.Vector3(0,3,7);
+
+function scAt(today,proj,yr){return Math.round(today+(proj-today)*((yr-2026)/24))}
+function grade(s){return s>=90?'A':s>=85?'A−':s>=80?'B+':s>=70?'B':s>=65?'B−':s>=60?'C+':s>=50?'C':s>=45?'C−':s>=40?'D+':s>=35?'D':s>=30?'D−':'F'}
+function scoreColor(s){return s>=70?'#4ecdc4':s>=50?'#5da5da':s>=35?'#e8a838':'#d4622a'}
+function scoreHex(s){return s>=70?0x4ecdc4:s>=50?0x5da5da:s>=35?0xe8a838:0xd4622a}
+function lerp(a,b,t){return a+(b-a)*t}
+
+/* ================================================================
+   RENDERER + SCENE
+   ================================================================ */
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.xr.enabled=true;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.1;
+document.getElementById('cv').appendChild(renderer.domElement);
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x080810,0.025);
+scene.background=new THREE.Color(0x080810);
+
+const camera=new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,200);
+camera.position.set(0,3,7);
+
+const ctrl=new OrbitControls(camera,renderer.domElement);
+ctrl.enableDamping=true;ctrl.dampingFactor=0.06;
+ctrl.minDistance=2;ctrl.maxDistance=30;
+ctrl.autoRotate=true;ctrl.autoRotateSpeed=0.4;
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight),0.8,0.5,0.3);
+composer.addPass(bloom);
+
+scene.add(new THREE.AmbientLight(0x445566,0.6));
+const dLight=new THREE.DirectionalLight(0xffffff,0.8);dLight.position.set(5,8,5);scene.add(dLight);
+const pLight=new THREE.PointLight(0x9b87f5,0.5,20);pLight.position.set(0,2,0);scene.add(pLight);
+
+/* Ground grid */
+const gridGeo=new THREE.PlaneGeometry(40,40,40,40);gridGeo.rotateX(-Math.PI/2);
+const gridMat=new THREE.MeshBasicMaterial({color:0x1a1a2e,wireframe:true,transparent:true,opacity:0.06});
+const gridMesh=new THREE.Mesh(gridGeo,gridMat);scene.add(gridMesh);
+
+/* Orbit ring */
+const ORBIT_R=3;
+const orbitRingGeo=new THREE.RingGeometry(ORBIT_R-0.02,ORBIT_R+0.02,64);
+orbitRingGeo.rotateX(-Math.PI/2);
+scene.add(new THREE.Mesh(orbitRingGeo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.03,side:THREE.DoubleSide})));
+
+/* ================================================================
+   BUILD NODES
+   ================================================================ */
+const nodes=[];
+const subNodes=[];
+const subSubNodes=[];
+const conns=[];
+const hitTargets=[];
+const SUB_ORBIT_R=1.3;
+const SUB_SIZE=0.12;
+
+/* Center */
+const centerGeo=new THREE.IcosahedronGeometry(0.35,2);
+const centerMat=new THREE.MeshPhongMaterial({color:0x9b87f5,emissive:0x9b87f5,emissiveIntensity:0.25,transparent:true,opacity:0.85});
+const centerMesh=new THREE.Mesh(centerGeo,centerMat);
+centerMesh.position.set(0,1.5,0);scene.add(centerMesh);
+const centerWire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.42,1),new THREE.MeshBasicMaterial({color:0x9b87f5,wireframe:true,transparent:true,opacity:0.12}));
+centerWire.position.copy(centerMesh.position);scene.add(centerWire);
+const centerRing=new THREE.Mesh(new THREE.RingGeometry(0.5,0.53,32),new THREE.MeshBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.08,side:THREE.DoubleSide}));
+centerRing.rotation.x=-Math.PI/2;centerRing.position.copy(centerMesh.position);scene.add(centerRing);
+const centerNode={id:'center',label:'Civilization',data:AGG,mesh:centerMesh,wire:centerWire,ring:centerRing,isCenter:true,
+  desc:'Composite aggregate of all 7 interconnected systems.',phase:0,subNodes:[]};
+const centerHit=new THREE.Mesh(new THREE.SphereGeometry(0.6,8,8),new THREE.MeshBasicMaterial({visible:false}));
+centerHit.position.copy(centerMesh.position);scene.add(centerHit);
+hitTargets.push({mesh:centerHit,node:centerNode});
+
+/* System nodes + sub-nodes */
+SYS.forEach((s,i)=>{
+  const angle=(i/SYS.length)*Math.PI*2-Math.PI/2;
+  const x=Math.cos(angle)*ORBIT_R;
+  const z=Math.sin(angle)*ORBIT_R;
+
+  const mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(0.22,2),new THREE.MeshPhongMaterial({color:s.color,emissive:s.color,emissiveIntensity:0.15,transparent:true,opacity:0.85}));
+  mesh.position.set(x,1.5,z);scene.add(mesh);
+  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.27,1),new THREE.MeshBasicMaterial({color:s.color,wireframe:true,transparent:true,opacity:0.1}));
+  wire.position.copy(mesh.position);scene.add(wire);
+  const ring=new THREE.Mesh(new THREE.RingGeometry(0.3,0.33,24),new THREE.MeshBasicMaterial({color:s.color,transparent:true,opacity:0.06,side:THREE.DoubleSide}));
+  ring.rotation.x=-Math.PI/2;ring.position.copy(mesh.position);scene.add(ring);
+
+  const hit=new THREE.Mesh(new THREE.SphereGeometry(0.4,8,8),new THREE.MeshBasicMaterial({visible:false}));
+  hit.position.copy(mesh.position);scene.add(hit);
+
+  const lbl=document.createElement('div');lbl.className='node-label';lbl.textContent=s.label;
+  document.getElementById('labels').appendChild(lbl);
+
+  const node={id:s.id,label:s.label,data:s,mesh,wire,ring,labelEl:lbl,phase:Math.random()*Math.PI*2,
+    basePos:new THREE.Vector3(x,1.5,z),desc:s.desc,subNodes:[]};
+  nodes.push(node);
+  hitTargets.push({mesh:hit,node});
+
+  /* Connection to center */
+  const pts=[];for(let j=0;j<=20;j++)pts.push(new THREE.Vector3());
+  const geo=new THREE.BufferGeometry().setFromPoints(pts);
+  const mat=new THREE.LineBasicMaterial({color:s.color,transparent:true,opacity:0.1});
+  const line=new THREE.Line(geo,mat);scene.add(line);
+  conns.push({from:centerNode,to:node,line,geo,mat,color:s.color,isCenter:true});
+
+  /* Sub-nodes */
+  const subs=SUB_NODE_DATA[s.id];
+  if(subs){
+    subs.forEach((sd,si)=>{
+      const sAngle=(si/subs.length)*Math.PI*2-Math.PI/2;
+      const sCol=new THREE.Color(sd.color);
+      const sMesh=new THREE.Mesh(new THREE.IcosahedronGeometry(SUB_SIZE,1),new THREE.MeshPhongMaterial({color:sCol,emissive:sCol,emissiveIntensity:0.2,transparent:true,opacity:0}));
+      scene.add(sMesh);
+      const sWire=new THREE.Mesh(new THREE.IcosahedronGeometry(SUB_SIZE*1.35,0),new THREE.MeshBasicMaterial({color:sCol,wireframe:true,transparent:true,opacity:0}));
+      scene.add(sWire);
+      const sHit=new THREE.Mesh(new THREE.SphereGeometry(SUB_SIZE*3,6,6),new THREE.MeshBasicMaterial({visible:false}));
+      scene.add(sHit);
+
+      const sLbl=document.createElement('div');sLbl.className='node-label';sLbl.style.fontSize='8px';sLbl.style.opacity='0';
+      sLbl.textContent=sd.label;document.getElementById('labels').appendChild(sLbl);
+
+      const sPts=[];for(let k=0;k<=16;k++)sPts.push(new THREE.Vector3());
+      const sGeo=new THREE.BufferGeometry().setFromPoints(sPts);
+      const sMat=new THREE.LineBasicMaterial({color:sCol,transparent:true,opacity:0});
+      const sLine=new THREE.Line(sGeo,sMat);scene.add(sLine);
+
+      const subNode={id:sd.id,label:sd.label,data:sd,parent:node,mesh:sMesh,wire:sWire,hitSphere:sHit,labelEl:sLbl,
+        line:sLine,lineGeo:sGeo,lineMat:sMat,
+        angle:sAngle,phase:Math.random()*Math.PI*2,expanded:0,isSub:true,subSubNodes:[]};
+      subNodes.push(subNode);
+      node.subNodes.push(subNode);
+      hitTargets.push({mesh:sHit,node:subNode});
+    });
+  }
+});
+
+/* Sub-sub-nodes (third layer) */
+const SSUB_ORBIT=0.55;const SSUB_SIZE=0.06;
+subNodes.forEach(parentSub=>{
+  const key=parentSub.parent.data.id+'_'+parentSub.id;
+  const ssData=SUB_SUB_NODE_DATA[key];
+  if(!ssData)return;
+  ssData.forEach((ssd,ssi)=>{
+    const ssAngle=(ssi/ssData.length)*Math.PI*2-Math.PI/2;
+    const ssCol=new THREE.Color(ssd.color);
+    const ssMesh=new THREE.Mesh(new THREE.IcosahedronGeometry(SSUB_SIZE,1),new THREE.MeshPhongMaterial({color:ssCol,emissive:ssCol,emissiveIntensity:0.25,transparent:true,opacity:0}));
+    scene.add(ssMesh);
+    const ssWire=new THREE.Mesh(new THREE.IcosahedronGeometry(SSUB_SIZE*1.4,0),new THREE.MeshBasicMaterial({color:ssCol,wireframe:true,transparent:true,opacity:0}));
+    scene.add(ssWire);
+    const ssHit=new THREE.Mesh(new THREE.SphereGeometry(SSUB_SIZE*4,6,6),new THREE.MeshBasicMaterial({visible:false}));
+    scene.add(ssHit);
+    const ssLbl=document.createElement('div');ssLbl.className='node-label';ssLbl.style.fontSize='7px';ssLbl.style.opacity='0';
+    ssLbl.textContent=ssd.label;document.getElementById('labels').appendChild(ssLbl);
+    const ssPts=[];for(let q=0;q<=12;q++)ssPts.push(new THREE.Vector3());
+    const ssGeo=new THREE.BufferGeometry().setFromPoints(ssPts);
+    const ssMat=new THREE.LineBasicMaterial({color:ssCol,transparent:true,opacity:0});
+    const ssLine=new THREE.Line(ssGeo,ssMat);scene.add(ssLine);
+    const ssNode={id:ssd.id,label:ssd.label,data:ssd,parent:parentSub,mesh:ssMesh,wire:ssWire,hitSphere:ssHit,labelEl:ssLbl,
+      line:ssLine,lineGeo:ssGeo,lineMat:ssMat,angle:ssAngle,phase:Math.random()*Math.PI*2,expanded:0,isSubSub:true};
+    subSubNodes.push(ssNode);
+    parentSub.subSubNodes.push(ssNode);
+    hitTargets.push({mesh:ssHit,node:ssNode});
+  });
+});
+
+/* Inter-node connections */
+for(let i=0;i<nodes.length;i++){
+  for(let j=i+1;j<nodes.length;j++){
+    const pts=[];for(let k=0;k<=20;k++)pts.push(new THREE.Vector3());
+    const geo=new THREE.BufferGeometry().setFromPoints(pts);
+    const mat=new THREE.LineBasicMaterial({color:0x334455,transparent:true,opacity:0.04});
+    const line=new THREE.Line(geo,mat);scene.add(line);
+    conns.push({from:nodes[i],to:nodes[j],line,geo,mat,color:0x334455,isCenter:false});
+  }
+}
+
+/* ================================================================
+   SCENARIO + TIMELINE
+   ================================================================ */
+const yrSlider=document.getElementById('yr-slider');
+const yrVal=document.getElementById('yr-val');
+const playBtn=document.getElementById('play-btn');
+let playTimer=null;
+
+function setScenario(sc){
+  active=sc;
+  document.querySelectorAll('.sc-btn').forEach(b=>b.classList.toggle('active',b.dataset.sc===sc));
+  updateUI();
+}
+document.querySelectorAll('.sc-btn').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.sc)));
+
+yrSlider.addEventListener('input',()=>{year=+yrSlider.value;yrVal.textContent=year;updateUI()});
+playBtn.addEventListener('click',()=>{
+  playing=!playing;
+  playBtn.innerHTML=playing?'&#9646;&#9646; Pause':'&#9654; Play';
+  if(playing){
+    playTimer=setInterval(()=>{
+      year++;if(year>2050){year=2026}
+      yrSlider.value=year;yrVal.textContent=year;updateUI();
+    },400);
+  }else{clearInterval(playTimer)}
+});
+
+function currentScore(d,yr){return scAt(d.today,d.proj[active],yr||year)}
+
+document.addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='4'){setScenario(['aggressive','moderate','bau','worst'][+e.key-1]);e.preventDefault()}
+  if(e.key===' '){playBtn.click();e.preventDefault()}
+  if(e.key==='ArrowLeft'){year=Math.max(2026,year-1);yrSlider.value=year;yrVal.textContent=year;updateUI();e.preventDefault()}
+  if(e.key==='ArrowRight'){year=Math.min(2050,year+1);yrSlider.value=year;yrVal.textContent=year;updateUI();e.preventDefault()}
+  if(e.key==='Escape'){selNode=null;selSub=null;selSubSub=null;ctrl.autoRotate=true;updateUI();e.preventDefault()}
+});
+
+/* ================================================================
+   INFO PANEL
+   ================================================================ */
+const infoEl=document.getElementById('info');
+
+function updateUI(){
+  const aggSc=currentScore(AGG);
+  const g=grade(aggSc);
+  document.getElementById('agg-score').textContent=aggSc;
+  document.getElementById('agg-score').style.color=SC_META[active].css;
+  document.getElementById('agg-grade').textContent=g+' — '+SC_META[active].name;
+  document.getElementById('agg-grade').style.color=SC_META[active].css;
+
+  if(!selNode&&!selSub&&!selSubSub){infoEl.classList.add('hidden')}
+  else{
+    infoEl.classList.remove('hidden');
+    const target=selSubSub||selSub||selNode;
+    const sc=target.isCenter?currentScore(AGG):currentScore(target.data);
+    const grd=grade(sc);const col=scoreColor(sc);
+    document.getElementById('info-name').textContent=target.label;
+    document.getElementById('info-name').style.color=col;
+    document.getElementById('info-score').textContent=sc;
+    document.getElementById('info-score').style.color=col;
+    document.getElementById('info-grade').textContent=grd;
+    document.getElementById('info-grade').style.color=col;
+    document.getElementById('info-grade').style.borderColor=col;
+    document.getElementById('info-when').textContent='Year '+year+' — '+SC_META[active].name;
+    document.getElementById('info-bar').style.width=sc+'%';
+    document.getElementById('info-bar').style.background=col;
+    document.getElementById('info-desc').textContent=target.desc||target.parent?.desc||'';
+
+    const subEl=document.getElementById('info-sub');
+    subEl.innerHTML='';
+    if(selSub&&selSub.subSubNodes&&selSub.subSubNodes.length){
+      selSub.subSubNodes.forEach(ssn=>{
+        const ssc=currentScore(ssn.data);const scol=scoreColor(ssc);
+        subEl.innerHTML+='<div class="info-sub-row"><span class="info-sub-name">'+ssn.label+'</span><span class="info-sub-val" style="color:'+scol+'">'+ssc+' '+grade(ssc)+'</span></div>';
+      });
+    }else{
+      const targetNode=selSub?selSub.parent:(target.isCenter?null:target);
+      if(targetNode&&targetNode.subNodes){
+        targetNode.subNodes.forEach(sn=>{
+          const ssc=currentScore(sn.data);const scol=scoreColor(ssc);
+          subEl.innerHTML+='<div class="info-sub-row"><span class="info-sub-name">'+sn.label+'</span><span class="info-sub-val" style="color:'+scol+'">'+ssc+' '+grade(ssc)+'</span></div>';
+        });
+      }
+      if(target.isCenter){
+        nodes.forEach(n=>{
+          const nsc=currentScore(n.data);const ncol=scoreColor(nsc);
+          subEl.innerHTML+='<div class="info-sub-row"><span class="info-sub-name">'+n.label+'</span><span class="info-sub-val" style="color:'+ncol+'">'+nsc+' '+grade(nsc)+'</span></div>';
+        });
+      }
+    }
+
+    const navText=target.isSubSub?'':target.isSub?'Click to see sub-metrics':(target.data?.href?'Double-click to open dashboard':'');
+    document.getElementById('info-nav').textContent=navText;
+  }
+
+  /* World State */
+  if(worldOpen&&window.simWorldState){
+    document.getElementById('world-year').textContent=year+' — '+SC_META[active].name;
+    const ws=window.simWorldState(active,year);
+    if(ws){
+      const s=window.simScore?window.simScore(active,year):aggSc;
+      const g2=grade(s);const era=window.simEra?window.simEra(year):{label:'—',feel:''};
+      const col2=scoreColor(s);
+      let h='<div class="ws-hero"><span class="ws-score" style="color:'+col2+'">'+s+'</span>';
+      h+='<span class="ws-grade" style="color:'+col2+';border-color:'+col2+'">'+g2+'</span>';
+      h+='<span class="ws-era">'+era.label+'</span></div>';
+      if(era.feel)h+='<div class="ws-feel">'+era.feel+'</div>';
+      Object.keys(ws).forEach(k=>{
+        h+='<div class="ws-section"><div class="ws-section-label" style="color:'+SC_META[active].css+'">'+k+'</div><p>'+ws[k]+'</p></div>';
+      });
+      document.getElementById('world-body').innerHTML=h;
+    }
+  }
+}
+
+/* World toggle */
+document.getElementById('mode-world').addEventListener('click',function(){
+  worldOpen=!worldOpen;
+  this.classList.toggle('on',worldOpen);
+  document.getElementById('world-panel').classList.toggle('hidden',!worldOpen);
+  if(worldOpen)updateUI();
+});
+
+/* Compare toggle (placeholder) */
+document.getElementById('mode-compare').addEventListener('click',function(){
+  compareOpen=!compareOpen;this.classList.toggle('on',compareOpen);
+});
+
+updateUI();
+
+/* ================================================================
+   RAYCASTING
+   ================================================================ */
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+let pointerDown=new THREE.Vector2();
+let lastClickTime=0;
+
+renderer.domElement.addEventListener('pointerdown',e=>pointerDown.set(e.clientX,e.clientY));
+renderer.domElement.addEventListener('click',e=>{
+  if(Math.abs(e.clientX-pointerDown.x)+Math.abs(e.clientY-pointerDown.y)>6)return;
+  mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
+  raycaster.setFromCamera(mouse,camera);
+  const targets=hitTargets.map(h=>h.mesh);
+  const hits=raycaster.intersectObjects(targets);
+  const now=Date.now();
+  if(hits.length){
+    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+    if(ht){
+      const n=ht.node;
+      if(n.isSubSub){
+        if(n.expanded>0.3){selSubSub=selSubSub===n?null:n}
+      }else if(n.isSub){
+        if(n.expanded>0.3){
+          if(selSub===n){selSub=null;selSubSub=null}
+          else{selSub=n;selSubSub=null;selNode=n.parent}
+        }
+      }else{
+        if(now-lastClickTime<400&&selNode===n&&n.data?.href){
+          window.location.href=n.data.href;return;
+        }
+        if(selNode===n){
+          selNode=null;selSub=null;selSubSub=null;
+        }else{
+          selNode=n;selSub=null;selSubSub=null;
+        }
+      }
+      lastClickTime=now;
+      ctrl.autoRotate=!selNode;
+      updateUI();
+    }
+  }else{selNode=null;selSub=null;selSubSub=null;ctrl.autoRotate=true;updateUI()}
+});
+
+/* ================================================================
+   WEBXR
+   ================================================================ */
+const vrBtn=document.getElementById('vr-btn');
+const arBtn=document.getElementById('ar-btn');
+
+if(navigator.xr){
+  navigator.xr.isSessionSupported('immersive-vr').then(ok=>{
+    if(ok){vrBtn.disabled=false;vrBtn.addEventListener('click',()=>startXR('immersive-vr'))}
+  });
+  navigator.xr.isSessionSupported('immersive-ar').then(ok=>{
+    if(ok){arBtn.disabled=false;arBtn.addEventListener('click',()=>startXR('immersive-ar'))}
+  });
+}
+
+let xrSession=null;
+const controllerModelFactory=new XRControllerModelFactory();
+
+function startXR(mode){
+  if(xrSession)return;
+  navigator.xr.requestSession(mode,{requiredFeatures:['local-floor']}).then(session=>{
+    xrSession=session;
+    renderer.xr.setSession(session);
+    document.getElementById('ui').style.display='none';
+    session.addEventListener('end',()=>{
+      xrSession=null;
+      document.getElementById('ui').style.display='';
+      renderer.xr.setSession(null);
+    });
+    for(let i=0;i<2;i++){
+      const controller=renderer.xr.getController(i);
+      controller.addEventListener('selectstart',onXRSelect);
+      scene.add(controller);
+      const grip=renderer.xr.getControllerGrip(i);
+      grip.add(controllerModelFactory.createControllerModel(grip));
+      scene.add(grip);
+      const rayGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-3)]);
+      controller.add(new THREE.Line(rayGeo,new THREE.LineBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.4})));
+    }
+  });
+}
+function onXRSelect(e){
+  const controller=e.target;
+  const m=new THREE.Matrix4().identity().extractRotation(controller.matrixWorld);
+  raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+  raycaster.ray.direction.set(0,0,-1).applyMatrix4(m);
+  const hits=raycaster.intersectObjects(hitTargets.map(h=>h.mesh));
+  if(hits.length){
+    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+    if(ht){
+      if(ht.node.isSub){selSub=selSub===ht.node?null:ht.node;if(selSub)selNode=selSub.parent}
+      else{if(selNode===ht.node){selNode=null;selSub=null}else{selNode=ht.node;selSub=null}}
+    }
+  }
+}
+
+/* ================================================================
+   CAMERA FLY-TO
+   ================================================================ */
+let flyPos=null,flyTarget=null,flyProgress=1;
+function flyTo(pos){
+  const dir=new THREE.Vector3().subVectors(camera.position,pos).normalize();
+  flyPos=pos.clone().add(dir.multiplyScalar(3)).add(new THREE.Vector3(0,1,0));
+  flyTarget=pos.clone();
+  flyProgress=0;
+}
+function flyToOverview(){
+  flyPos=overviewPos.clone();
+  flyTarget=new THREE.Vector3(0,1.5,0);
+  flyProgress=0;
+}
+
+/* ================================================================
+   AUDIO
+   ================================================================ */
+function initAudio(){
+  if(audioInited)return;
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  masterGain=audioCtx.createGain();masterGain.gain.value=0.3;masterGain.connect(audioCtx.destination);
+
+  const bg=audioCtx.createGain();bg.gain.value=0.06;
+  const baseOsc=audioCtx.createOscillator();baseOsc.type='sine';baseOsc.frequency.value=55;
+  baseOsc.connect(bg);bg.connect(masterGain);baseOsc.start();
+
+  [440,554,660].forEach(f=>{
+    const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;
+    const g=audioCtx.createGain();g.gain.value=0.005;o.connect(g);g.connect(masterGain);o.start();
+  });
+
+  nodes.forEach((n,i)=>{
+    const primary=audioCtx.createOscillator();primary.type='sine';primary.frequency.value=VOICE_FREQ[i];
+    const shimmer=audioCtx.createOscillator();shimmer.type='sine';shimmer.frequency.value=VOICE_FREQ[i]*1.5;
+    const pGain=audioCtx.createGain();pGain.gain.value=0;
+    const sGain=audioCtx.createGain();sGain.gain.value=0;
+    const filter=audioCtx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=1200;filter.Q.value=0.7;
+    primary.connect(filter);shimmer.connect(sGain);filter.connect(pGain);pGain.connect(masterGain);sGain.connect(masterGain);
+    primary.start();shimmer.start();
+    voices.push({primary,shimmer,pGain,sGain,filter,baseFreq:VOICE_FREQ[i]});
+  });
+  audioInited=true;
+}
+function updateAudio(){
+  if(!audioInited||audioMuted)return;
+  const now=audioCtx.currentTime;const ramp=0.6;
+  nodes.forEach((n,i)=>{
+    const v=voices[i];if(!v)return;
+    const sc=currentScore(n.data)/100;
+    const vol=0.015+0.025*sc;
+    v.pGain.gain.linearRampToValueAtTime(vol,now+ramp);
+    v.sGain.gain.linearRampToValueAtTime(sc*0.008,now+ramp);
+    v.filter.frequency.linearRampToValueAtTime(400+800*sc,now+ramp);
+    const detune=sc>0.5?0:(1-sc*2)*150;
+    v.primary.frequency.linearRampToValueAtTime(v.baseFreq+detune*(Math.sin(now*2+i)*0.5),now+ramp);
+  });
+}
+document.getElementById('mode-sound').addEventListener('click',function(){
+  audioMuted=!audioMuted;
+  this.classList.toggle('on',!audioMuted);
+  if(!audioMuted){
+    initAudio();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    masterGain.gain.linearRampToValueAtTime(0.3,audioCtx.currentTime+0.5);
+  }else if(audioInited){
+    masterGain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+0.3);
+  }
+});
+
+/* ================================================================
+   ANIMATION
+   ================================================================ */
+const clock=new THREE.Clock();
+let prevSelNode=null,prevSelSub=null;
+
+renderer.setAnimationLoop(function(){
+  const dt=Math.min(clock.getDelta(),0.05);
+  const t=clock.getElapsedTime();
+  const inXR=renderer.xr.isPresenting;
+
+  if(!inXR){
+    ctrl.update();
+    if(flyProgress<1){
+      flyProgress=Math.min(flyProgress+dt*2.5,1);
+      const e=1-Math.pow(1-flyProgress,3);
+      camera.position.lerp(flyPos,e*0.12);
+      ctrl.target.lerp(flyTarget,e*0.12);
+    }
+  }
+
+  if(selNode!==prevSelNode||selSub!==prevSelSub){
+    if(!inXR){
+      if(selSub)flyTo(selSub.mesh.position);
+      else if(selNode)flyTo(selNode.isCenter?centerMesh.position:selNode.mesh.position);
+      else flyToOverview();
+    }
+    prevSelNode=selNode;prevSelSub=selSub;
+  }
+
+  const aggSc=currentScore(AGG)/100;
+
+  bloom.strength=lerp(bloom.strength,0.3+0.7*aggSc,dt*2);
+  scene.fog.density=lerp(scene.fog.density,0.015+0.03*(1-aggSc),dt*2);
+  gridMat.color.lerp(new THREE.Color(aggSc>0.5?0x1a1a2e:0x2e1a1a),dt*2);
+  ctrl.autoRotateSpeed=lerp(ctrl.autoRotateSpeed,0.1+0.5*aggSc,dt*2);
+
+  /* Center */
+  centerMesh.rotation.y+=dt*0.4;centerWire.rotation.y-=dt*0.2;
+  centerRing.material.opacity=0.06+0.04*Math.sin(t*1.5);
+  const cSel=selNode===centerNode;
+  centerMat.emissiveIntensity=cSel?0.5:0.15+0.15*aggSc;
+  const cScale=0.3+0.15*aggSc;
+  centerMesh.scale.setScalar(cScale/0.35);
+  centerWire.scale.setScalar(cScale/0.35);
+
+  /* System nodes — health-driven scale + color */
+  nodes.forEach(n=>{
+    const sc=currentScore(n.data)/100;
+    const bob=Math.sin(t*1.2+n.phase)*0.06*(0.5+0.5*sc);
+    const jitter=sc<0.35?Math.sin(t*12+n.phase)*0.02*(1-sc*2.5):0;
+    n.mesh.position.set(n.basePos.x+jitter,n.basePos.y+bob,n.basePos.z);
+    n.wire.position.copy(n.mesh.position);
+    n.ring.position.set(n.basePos.x,n.basePos.y+bob,n.basePos.z);
+
+    n.mesh.rotation.y+=dt*(0.3+sc*0.3);
+    n.wire.rotation.y-=dt*0.15;
+
+    const isSel=selNode===n;
+    const healthScale=0.7+0.6*sc;
+    const selScale=isSel?1.3:1;
+    const targetScale=healthScale*selScale;
+    const curScale=n.mesh.scale.x;
+    const newScale=lerp(curScale,targetScale,dt*4);
+    n.mesh.scale.setScalar(newScale);
+    n.wire.scale.setScalar(newScale*(0.27/0.22));
+
+    n.mesh.material.emissiveIntensity=isSel?0.5:0.1+0.2*sc;
+    n.wire.material.opacity=isSel?0.2:0.06+0.08*sc;
+    n.ring.material.opacity=isSel?0.12:0.04+0.04*sc;
+
+    const baseCol=new THREE.Color(n.data.color);
+    baseCol.lerp(new THREE.Color(0x555555),(1-sc)*0.5);
+    n.mesh.material.color.lerp(baseCol,dt*3);
+    n.mesh.material.emissive.lerp(baseCol,dt*3);
+
+    if(!inXR&&n.labelEl){
+      const v=n.mesh.position.clone().add(new THREE.Vector3(0,0.35+newScale*0.15,0));v.project(camera);
+      n.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
+      n.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';
+      n.labelEl.style.opacity=v.z<1?(isSel?'0.9':'0.5'):'0';
+    }else if(n.labelEl)n.labelEl.style.opacity='0';
+  });
+
+  /* Sub-nodes */
+  subNodes.forEach(sn=>{
+    const isExpanded=selNode===sn.parent;
+    const tgt=isExpanded?1:0;
+    sn.expanded=lerp(sn.expanded,tgt,1-Math.exp(-3.5*dt));
+    if(sn.expanded<0.005)sn.expanded=0;
+    const e=sn.expanded;
+
+    const pp=sn.parent.mesh.position;
+    const ox=Math.cos(sn.angle)*SUB_ORBIT_R;
+    const oz=Math.sin(sn.angle)*SUB_ORBIT_R;
+    sn.mesh.position.lerp(new THREE.Vector3(pp.x+ox*e,pp.y,pp.z+oz*e),dt*6);
+    sn.wire.position.copy(sn.mesh.position);
+    sn.hitSphere.position.copy(sn.mesh.position);
+
+    const sc=currentScore(sn.data)/100;
+    const bob=Math.sin(t*1.5+sn.phase)*0.04*e;
+    sn.mesh.position.y+=bob;sn.wire.position.y+=bob;
+
+    sn.mesh.material.opacity=e*0.85;
+    sn.wire.material.opacity=e*0.1;
+    sn.mesh.rotation.y+=dt*0.5;sn.wire.rotation.y-=dt*0.25;
+
+    const isSel=selSub===sn;
+    const healthScale=0.7+0.6*sc;
+    const sScale=SUB_SIZE*healthScale*(isSel?1.4:1)*e;
+    sn.mesh.scale.setScalar(Math.max(sScale/SUB_SIZE,0.001));
+    sn.wire.scale.setScalar(Math.max(sScale/(SUB_SIZE*1.35),0.001));
+    sn.mesh.material.emissiveIntensity=isSel?0.5:0.15+0.15*sc;
+
+    const sBaseCol=new THREE.Color(sn.data.color);
+    sBaseCol.lerp(new THREE.Color(0x555555),(1-sc)*0.4);
+    sn.mesh.material.color.lerp(sBaseCol,dt*3);
+    sn.mesh.material.emissive.lerp(sBaseCol,dt*3);
+
+    sn.lineMat.opacity=e*0.15;
+    const a=pp;const b=sn.mesh.position;
+    const mid=new THREE.Vector3().addVectors(a,b).multiplyScalar(0.5);mid.y+=0.3*e;
+    const crv=new THREE.QuadraticBezierCurve3(a,mid,b);
+    const pts=crv.getPoints(16);
+    const arr=sn.lineGeo.attributes.position.array;
+    for(let k=0;k<pts.length;k++){arr[k*3]=pts[k].x;arr[k*3+1]=pts[k].y;arr[k*3+2]=pts[k].z}
+    sn.lineGeo.attributes.position.needsUpdate=true;
+
+    if(!inXR&&sn.labelEl){
+      const v=sn.mesh.position.clone().add(new THREE.Vector3(0,SUB_SIZE*2,0));v.project(camera);
+      sn.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
+      sn.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';
+      sn.labelEl.style.opacity=e>0.3&&v.z<1?String(0.5*e):'0';
+    }else if(sn.labelEl)sn.labelEl.style.opacity='0';
+  });
+
+  /* Sub-sub-nodes */
+  subSubNodes.forEach(ssn=>{
+    const isExpanded=selSub===ssn.parent;
+    const tgt=isExpanded?1:0;
+    ssn.expanded=lerp(ssn.expanded,tgt,1-Math.exp(-3.5*dt));
+    if(ssn.expanded<0.005)ssn.expanded=0;
+    const e=ssn.expanded;
+
+    const pp=ssn.parent.mesh.position;
+    const ox=Math.cos(ssn.angle)*SSUB_ORBIT;
+    const oz=Math.sin(ssn.angle)*SSUB_ORBIT;
+    ssn.mesh.position.lerp(new THREE.Vector3(pp.x+ox*e,pp.y,pp.z+oz*e),dt*6);
+    ssn.wire.position.copy(ssn.mesh.position);
+    ssn.hitSphere.position.copy(ssn.mesh.position);
+
+    const sc=currentScore(ssn.data)/100;
+    const bob=Math.sin(t*2+ssn.phase)*0.03*e;
+    ssn.mesh.position.y+=bob;ssn.wire.position.y+=bob;
+
+    ssn.mesh.material.opacity=e*0.75;
+    ssn.wire.material.opacity=e*0.08;
+    ssn.mesh.rotation.y+=dt*0.6;ssn.wire.rotation.y-=dt*0.3;
+
+    const isSel=selSubSub===ssn;
+    const healthScale=0.7+0.6*sc;
+    const ssScale=SSUB_SIZE*healthScale*(isSel?1.5:1)*e;
+    ssn.mesh.scale.setScalar(Math.max(ssScale/SSUB_SIZE,0.001));
+    ssn.wire.scale.setScalar(Math.max(ssScale/(SSUB_SIZE*1.4),0.001));
+    ssn.mesh.material.emissiveIntensity=isSel?0.5:0.15+0.2*sc;
+
+    const ssBaseCol=new THREE.Color(ssn.data.color);
+    ssBaseCol.lerp(new THREE.Color(0x555555),(1-sc)*0.4);
+    ssn.mesh.material.color.lerp(ssBaseCol,dt*3);
+    ssn.mesh.material.emissive.lerp(ssBaseCol,dt*3);
+
+    ssn.lineMat.opacity=e*0.12;
+    const ssA=pp;const ssB=ssn.mesh.position;
+    const ssMid=new THREE.Vector3().addVectors(ssA,ssB).multiplyScalar(0.5);ssMid.y+=0.2*e;
+    const ssCrv=new THREE.QuadraticBezierCurve3(ssA,ssMid,ssB);
+    const ssPts=ssCrv.getPoints(12);
+    const ssArr=ssn.lineGeo.attributes.position.array;
+    for(let q=0;q<ssPts.length;q++){ssArr[q*3]=ssPts[q].x;ssArr[q*3+1]=ssPts[q].y;ssArr[q*3+2]=ssPts[q].z}
+    ssn.lineGeo.attributes.position.needsUpdate=true;
+
+    if(!inXR&&ssn.labelEl){
+      const v=ssn.mesh.position.clone().add(new THREE.Vector3(0,SSUB_SIZE*3,0));v.project(camera);
+      ssn.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
+      ssn.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';
+      ssn.labelEl.style.opacity=e>0.3&&v.z<1?String(0.4*e):'0';
+    }else if(ssn.labelEl)ssn.labelEl.style.opacity='0';
+  });
+
+  /* Connections */
+  conns.forEach(conn=>{
+    const a=conn.from.isCenter?centerMesh.position:conn.from.mesh.position;
+    const b=conn.to.mesh.position;
+    const mid=new THREE.Vector3().addVectors(a,b).multiplyScalar(0.5);mid.y+=0.35;
+    const crv=new THREE.QuadraticBezierCurve3(a,mid,b);
+    const pts=crv.getPoints(20);
+    const arr=conn.geo.attributes.position.array;
+    for(let k=0;k<pts.length;k++){arr[k*3]=pts[k].x;arr[k*3+1]=pts[k].y;arr[k*3+2]=pts[k].z}
+    conn.geo.attributes.position.needsUpdate=true;
+
+    const isSel=selNode&&(conn.from===selNode||conn.to===selNode);
+    const tgtOp=isSel?0.25:conn.isCenter?0.08:0.03;
+    conn.mat.opacity=lerp(conn.mat.opacity,tgtOp,dt*4);
+  });
+
+  updateAudio();
+
+  if(inXR)renderer.render(scene,camera);
+  else composer.render();
+});
+
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  composer.setSize(window.innerWidth,window.innerHeight);
+});
+</script>
+</body>
+</html>

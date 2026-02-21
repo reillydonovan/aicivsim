@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Civilization Simulator — Knowledge Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#080810;color:#fff;font-family:'Space Grotesk',sans-serif}
+#cv{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+canvas{display:block}
+
+#ui{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+#ui>*{pointer-events:auto}
+
+.top-bar{position:absolute;top:0;left:0;right:0;padding:20px 28px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+.top-bar>*{pointer-events:auto}
+.brand{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.brand strong{color:#e8a838;font-weight:600}
+.site-title{font-size:14px;font-weight:500;color:rgba(255,255,255,0.75);margin-top:3px}
+.back-link{font-size:11px;color:rgba(255,255,255,0.3);text-decoration:none;margin-top:6px;display:inline-block;transition:color 0.2s}
+.back-link:hover{color:#e8a838}
+
+.top-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.node-count{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;line-height:1;color:#e8a838}
+.node-count-lbl{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+
+/* Input bar */
+.input-bar{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:600px;max-width:calc(100vw - 48px);display:flex;gap:8px;align-items:flex-end;pointer-events:auto}
+.input-wrap{flex:1;position:relative}
+.input-field{width:100%;font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;color:#fff;background:rgba(6,6,14,0.85);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:12px 16px;backdrop-filter:blur(12px);outline:none;resize:none;min-height:44px;max-height:120px;transition:border-color 0.2s}
+.input-field:focus{border-color:rgba(232,168,56,0.3)}
+.input-field::placeholder{color:rgba(255,255,255,0.2)}
+.send-btn{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#e8a838;background:rgba(232,168,56,0.08);border:1px solid rgba(232,168,56,0.15);border-radius:6px;padding:12px 20px;cursor:pointer;transition:all 0.2s;white-space:nowrap;backdrop-filter:blur(12px)}
+.send-btn:hover:not(:disabled){background:rgba(232,168,56,0.15);border-color:rgba(232,168,56,0.3)}
+.send-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+/* Detail panel */
+.detail{position:absolute;top:80px;right:28px;width:320px;max-height:calc(100vh - 180px);background:rgba(6,6,14,0.88);border:1px solid rgba(255,255,255,0.08);border-radius:8px;backdrop-filter:blur(12px);overflow:hidden;display:flex;flex-direction:column;opacity:0;transform:translateX(12px);pointer-events:none;transition:all 0.3s}
+.detail.visible{opacity:1;transform:translateX(0);pointer-events:auto}
+.detail-head{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center}
+.detail-q{font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);flex:1;margin-right:8px;line-height:1.4}
+.detail-close{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);cursor:pointer;border:none;background:none;font-size:14px;border-radius:3px;transition:all 0.2s;flex-shrink:0}
+.detail-close:hover{color:#fff;background:rgba(255,255,255,0.06)}
+.detail-body{padding:14px 16px;overflow-y:auto;flex:1;font-family:'Inter',sans-serif;font-size:12px;line-height:1.7;color:rgba(255,255,255,0.55);scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent}
+.detail-body::-webkit-scrollbar{width:3px}
+.detail-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:2px}
+.detail-body p{margin:0 0 8px}.detail-body p:last-child{margin:0}
+.detail-body strong{color:rgba(255,255,255,0.85);font-weight:600}
+.detail-body em{color:rgba(255,255,255,0.4)}
+.detail-body code{font-family:'JetBrains Mono',monospace;font-size:10px;background:rgba(255,255,255,0.04);padding:1px 4px;border-radius:2px;color:#e8a838}
+.detail-body a{color:#4ecdc4;border-bottom:1px solid rgba(78,205,196,0.2);text-decoration:none}
+.detail-body a:hover{border-color:#4ecdc4}
+.detail-body ul,.detail-body ol{margin:4px 0 8px 16px}
+.detail-body li{margin:2px 0}
+.detail-body h4{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);margin:10px 0 4px}
+.detail-body h4:first-child{margin-top:0}
+.detail-body .page-ref{display:inline-flex;align-items:center;gap:3px;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;color:#4ecdc4;background:rgba(78,205,196,0.06);border:1px solid rgba(78,205,196,0.1);padding:3px 8px;border-radius:3px;margin:2px;white-space:nowrap;text-decoration:none}
+.detail-body .page-ref::before{content:'\2192';font-size:8px}
+.detail-body .page-ref:hover{background:rgba(78,205,196,0.12);border-color:rgba(78,205,196,0.2)}
+.detail-refs{padding:8px 16px 14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-wrap:wrap;gap:4px}
+
+.typing-dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:rgba(232,168,56,0.5);animation:blink 1.4s infinite;margin:0 1px}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+@keyframes blink{0%,80%,100%{opacity:0.3}40%{opacity:1}}
+
+/* Labels */
+#labels{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.node-label{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.5);white-space:nowrap;text-align:center;transform:translate(-50%,-100%);transition:opacity 0.3s;text-shadow:0 1px 4px rgba(0,0,0,0.8)}
+
+/* Settings */
+.settings-btn{position:absolute;bottom:28px;right:28px;font-family:'Space Grotesk',sans-serif;font-size:9px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.3);background:rgba(6,6,14,0.6);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px 14px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s}
+.settings-btn:hover{color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.12)}
+.settings-panel{position:absolute;bottom:70px;right:28px;background:rgba(6,6,14,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:12px;backdrop-filter:blur(12px);display:none;flex-direction:column;gap:6px;pointer-events:auto}
+.settings-panel.show{display:flex}
+.settings-panel select,.settings-panel input{font-family:'Space Grotesk',sans-serif;font-size:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:3px;padding:5px 8px;color:rgba(255,255,255,0.6);outline:none}
+.settings-panel input{min-width:200px}
+.settings-panel input:focus,.settings-panel select:focus{border-color:rgba(232,168,56,0.3)}
+.sdot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px}
+.sdot.ok{background:#4ecdc4}.sdot.none{background:rgba(255,255,255,0.15)}
+
+.hint{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.15);text-align:center;line-height:1.6;pointer-events:none}
+
+@media(max-width:768px){
+  .input-bar{width:calc(100vw - 24px);bottom:16px}
+  .detail{top:auto;bottom:80px;right:12px;left:12px;width:auto;max-height:50vh}
+  .top-bar{padding:12px 16px}
+  .hint{display:none}
+  .settings-btn{bottom:16px;right:12px}
+  .settings-panel{bottom:56px;right:12px}
+}
+</style>
+</head>
+<body>
+<div id="cv"></div>
+
+<div id="labels"></div>
+
+<div id="ui">
+  <div class="top-bar">
+    <div>
+      <div class="brand"><strong>AICIVSIM</strong> &mdash; Explorer</div>
+      <div class="site-title">Knowledge Graph</div>
+      <a href="index.html" class="back-link">&larr; Back to site</a>
+    </div>
+    <div class="top-right">
+      <div class="node-count" id="node-count">0</div>
+      <div class="node-count-lbl">Nodes</div>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-wrap">
+      <textarea class="input-field" id="input" rows="1" placeholder="Ask about civilization systems, scenarios, policy levers&hellip;"></textarea>
+    </div>
+    <button class="send-btn" id="send-btn">Explore</button>
+  </div>
+
+  <div class="detail" id="detail">
+    <div class="detail-head">
+      <div class="detail-q" id="detail-q"></div>
+      <button class="detail-close" id="detail-close">&times;</button>
+    </div>
+    <div class="detail-body" id="detail-body"></div>
+    <div class="detail-refs" id="detail-refs"></div>
+  </div>
+
+  <button class="settings-btn" id="settings-btn">&#9881; API</button>
+  <div class="settings-panel" id="settings-panel">
+    <div><span class="sdot none" id="sdot"></span><span style="font-size:10px;color:rgba(255,255,255,0.4)">API Settings</span></div>
+    <select id="api-provider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic</option></select>
+    <input type="password" id="api-key" placeholder="API key (stored locally)">
+    <select id="api-model"></select>
+  </div>
+
+  <div class="hint">Ask a question to spawn your first knowledge node<br>Click nodes to read &middot; Drag to orbit &middot; Scroll to zoom</div>
+</div>
+
+<script src="js/shared.js?v=20260221b"></script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+/* ================================================================
+   CONSTANTS
+   ================================================================ */
+const SPAWN_RADIUS=3.5;
+const NODE_SIZE=0.25;
+const CURVE_SEGS=20;
+const TOPIC_SIZE=0.08;
+const TOPIC_ORBIT=0.6;
+const COLORS={
+  question:0xe8a838,
+  answer:0x4ecdc4,
+  topic:0x5da5da,
+  system:0x9b87f5,
+  connection:0x334455,
+  centerStart:0x4ecdc4
+};
+
+const SITE_PAGES={
+  'index.html':'Home','ai.html':'AI','climate.html':'Climate','simulation.html':'Simulation',
+  'transition.html':'Transition','civilization.html':'Civilization','governance.html':'Governance',
+  'strategy.html':'Strategy','timeline.html':'Timeline','visualizer.html':'Visualizer',
+  'viz.html':'3D Network','research.html':'Research','chat.html':'Advisor','about.html':'About'
+};
+
+/* ================================================================
+   SYSTEM PROMPT
+   ================================================================ */
+const SYS_PROMPT=`You are the Knowledge Explorer AI for AICIVSIM. You answer questions about civilization systems and generate structured responses.
+
+## RESPONSE FORMAT
+Always include a JSON block at the very end of your response (after your natural language answer) in this exact format:
+\`\`\`json
+{"topics":["keyword1","keyword2","keyword3"],"pages":["page.html","page2.html"]}
+\`\`\`
+- "topics": 2-5 key concept keywords from your answer (short, 1-3 words each)
+- "pages": relevant site pages from this list: index.html, ai.html, climate.html, simulation.html, transition.html, civilization.html, governance.html, strategy.html, timeline.html, visualizer.html, research.html
+
+## KNOWLEDGE BASE
+7 Systems (scored 0-100): Climate (42), AI (48), Simulation (50), Transition (43), Governance (40), Strategy (35), Civilization (44 aggregate)
+
+4 Scenarios: Aggressive Action (10% dividends, enforced charter, 25% capex), Moderate Reform (5%, active, 15%), BAU (0%, none, 5%), Worst Case (0%, none, 2%)
+
+2050 Projections (Agg/Mod/BAU/Worst): Climate 85/58/28/12, AI 92/68/32/10, Governance 85/65/30/10, Transition 88/68/28/12, Strategy 88/62/22/8
+
+42 cross-system feedback loops. Tipping points: Arctic ice-free BAU 2035, coral collapse BAU 2034, Amazon dieback BAU 2040.
+
+Simulation eras: Dawn (0-3yr), Divergence (4-12yr), Maturity (13-30yr), Legacy (31+yr).
+
+Keep answers concise (2-4 paragraphs max). Be data-rich with specific scores and projections.`;
+
+/* ================================================================
+   THREE.JS SCENE
+   ================================================================ */
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.1;
+document.getElementById('cv').appendChild(renderer.domElement);
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x080810,0.04);
+
+const camera=new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,200);
+camera.position.set(0,4,8);
+
+const ctrl=new OrbitControls(camera,renderer.domElement);
+ctrl.enableDamping=true;ctrl.dampingFactor=0.06;
+ctrl.minDistance=2;ctrl.maxDistance=40;
+ctrl.autoRotate=true;ctrl.autoRotateSpeed=0.3;
+ctrl.target.set(0,0,0);
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight),0.8,0.6,0.3);
+composer.addPass(bloom);
+
+scene.add(new THREE.AmbientLight(0x445566,0.6));
+const dLight=new THREE.DirectionalLight(0xffffff,0.8);dLight.position.set(5,8,5);scene.add(dLight);
+const pLight=new THREE.PointLight(0xe8a838,0.4,20);pLight.position.set(0,2,0);scene.add(pLight);
+
+/* Ground grid */
+const gridGeo=new THREE.PlaneGeometry(60,60,60,60);
+gridGeo.rotateX(-Math.PI/2);
+const gridMat=new THREE.MeshBasicMaterial({color:0x1a1a2e,wireframe:true,transparent:true,opacity:0.08});
+scene.add(new THREE.Mesh(gridGeo,gridMat));
+
+/* Center seed node */
+const seedGeo=new THREE.IcosahedronGeometry(0.15,1);
+const seedMat=new THREE.MeshPhongMaterial({color:COLORS.centerStart,emissive:COLORS.centerStart,emissiveIntensity:0.3,transparent:true,opacity:0.8});
+const seedMesh=new THREE.Mesh(seedGeo,seedMat);
+seedMesh.position.set(0,0.5,0);scene.add(seedMesh);
+const seedWire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.18,1),new THREE.MeshBasicMaterial({color:COLORS.centerStart,wireframe:true,transparent:true,opacity:0.15}));
+seedWire.position.copy(seedMesh.position);scene.add(seedWire);
+
+/* Ring around seed */
+const seedRing=new THREE.Mesh(new THREE.RingGeometry(0.25,0.28,32),new THREE.MeshBasicMaterial({color:COLORS.centerStart,transparent:true,opacity:0.1,side:THREE.DoubleSide}));
+seedRing.rotation.x=-Math.PI/2;seedRing.position.set(0,0.5,0);scene.add(seedRing);
+
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  composer.setSize(window.innerWidth,window.innerHeight);
+});
+
+/* ================================================================
+   GRAPH STATE
+   ================================================================ */
+const graphNodes=[];     // {id,type,question,answer,topics,pages,mesh,wire,ring,label,pos,targetPos,scale,expanded,connections}
+const graphEdges=[];     // {from,to,line,lineGeo}
+const topicNodes=[];     // {id,parentId,label,mesh,pos,orbitAngle,orbitSpeed}
+const hitTargets=[];
+let selectedNode=null;
+let hoveredNode=null;
+let nodeIdCounter=0;
+let streaming=false;
+
+/* ================================================================
+   NODE CREATION
+   ================================================================ */
+function goldenAngle(n){return n*2.399963;}
+
+function spawnNode(question){
+  const id=nodeIdCounter++;
+  const n=graphNodes.length;
+  const angle=goldenAngle(n);
+  const r=SPAWN_RADIUS+n*0.4;
+  const x=Math.cos(angle)*r;
+  const z=Math.sin(angle)*r;
+  const y=0.5+(Math.random()-0.5)*1.5;
+
+  const color=new THREE.Color().setHSL((n*0.13)%1,0.6,0.55);
+  const hex=color.getHex();
+
+  const mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(NODE_SIZE,2),new THREE.MeshPhongMaterial({color:hex,emissive:hex,emissiveIntensity:0.15,transparent:true,opacity:0}));
+  mesh.position.set(seedMesh.position.x,seedMesh.position.y,seedMesh.position.z);
+  scene.add(mesh);
+
+  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(NODE_SIZE*1.25,1),new THREE.MeshBasicMaterial({color:hex,wireframe:true,transparent:true,opacity:0}));
+  wire.position.copy(mesh.position);scene.add(wire);
+
+  const ring=new THREE.Mesh(new THREE.RingGeometry(NODE_SIZE*1.3,NODE_SIZE*1.4,24),new THREE.MeshBasicMaterial({color:hex,transparent:true,opacity:0,side:THREE.DoubleSide}));
+  ring.rotation.x=-Math.PI/2;ring.position.copy(mesh.position);scene.add(ring);
+
+  const hitSphere=new THREE.Mesh(new THREE.SphereGeometry(NODE_SIZE*2,8,8),new THREE.MeshBasicMaterial({visible:false}));
+  hitSphere.position.copy(mesh.position);scene.add(hitSphere);
+
+  const lbl=document.createElement('div');
+  lbl.className='node-label';lbl.style.opacity='0';
+  lbl.textContent='Q'+(id+1);
+  document.getElementById('labels').appendChild(lbl);
+
+  const node={id,type:'qa',question,answer:'',rawAnswer:'',topics:[],pages:[],mesh,wire,ring,hitSphere,label:lbl,
+    pos:new THREE.Vector3(seedMesh.position.x,seedMesh.position.y,seedMesh.position.z),
+    targetPos:new THREE.Vector3(x,y,z),
+    color:hex,expanded:0,phase:Math.random()*Math.PI*2,connections:[]};
+
+  graphNodes.push(node);
+  hitTargets.push({mesh:hitSphere,node});
+
+  /* Edge from last node or seed */
+  if(graphNodes.length>1){
+    addEdge(graphNodes[graphNodes.length-2],node);
+  }
+
+  updateNodeCount();
+  return node;
+}
+
+function addEdge(fromNode,toNode){
+  const pts=[];for(let i=0;i<=CURVE_SEGS;i++)pts.push(new THREE.Vector3());
+  const geo=new THREE.BufferGeometry().setFromPoints(pts);
+  const mat=new THREE.LineBasicMaterial({color:COLORS.connection,transparent:true,opacity:0});
+  const line=new THREE.Line(geo,mat);scene.add(line);
+
+  const edge={from:fromNode,to:toNode,line,lineGeo:geo,lineMat:mat};
+  graphEdges.push(edge);
+  fromNode.connections.push(edge);
+  toNode.connections.push(edge);
+}
+
+function spawnTopics(parentNode,topics){
+  topics.forEach((t,i)=>{
+    const angle=(i/topics.length)*Math.PI*2;
+    const col=new THREE.Color(parentNode.color).lerp(new THREE.Color(COLORS.topic),0.5);
+    const mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(TOPIC_SIZE,1),new THREE.MeshPhongMaterial({color:col,emissive:col,emissiveIntensity:0.25,transparent:true,opacity:0}));
+    scene.add(mesh);
+
+    const hitSphere=new THREE.Mesh(new THREE.SphereGeometry(TOPIC_SIZE*3.5,6,6),new THREE.MeshBasicMaterial({visible:false}));
+    scene.add(hitSphere);
+
+    const lbl=document.createElement('div');
+    lbl.className='node-label';lbl.style.opacity='0';lbl.style.fontSize='8px';
+    lbl.textContent=t;
+    document.getElementById('labels').appendChild(lbl);
+
+    const tn={id:'t_'+parentNode.id+'_'+i,parentId:parentNode.id,parentNode,label:t,mesh,hitSphere,labelEl:lbl,
+      orbitAngle:angle,orbitSpeed:0.3+Math.random()*0.2,expanded:0,isTopic:true};
+    topicNodes.push(tn);
+    hitTargets.push({mesh:hitSphere,node:tn});
+
+    const pts=[];for(let j=0;j<=12;j++)pts.push(new THREE.Vector3());
+    const geo=new THREE.BufferGeometry().setFromPoints(pts);
+    const mat=new THREE.LineBasicMaterial({color:col,transparent:true,opacity:0});
+    const line=new THREE.Line(geo,mat);scene.add(line);
+    tn.line=line;tn.lineGeo=geo;tn.lineMat=mat;
+  });
+  updateNodeCount();
+}
+
+function exploreTopic(topicNode){
+  if(streaming)return;
+  const question='Tell me more about '+topicNode.label+' in the context of AICIVSIM civilization systems.';
+  inputEl.value=question;
+  const parentQA=topicNode.parentNode;
+  const newNode=spawnNode(question);
+  addEdge(parentQA,newNode);
+  showDetail(newNode);
+
+  streaming=true;sendBtn.disabled=true;
+  inputEl.value='';inputEl.style.height='auto';
+
+  const msgs=[{role:'user',content:question}];
+  callLLM(msgs,function(chunk,done){
+    if(chunk)newNode.rawAnswer+=chunk;
+    newNode.answer=renderMd(newNode.rawAnswer);
+    if(selectedNode===newNode){
+      detailBody.innerHTML=newNode.answer||'<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    }
+    if(done){
+      streaming=false;sendBtn.disabled=false;
+      const parsed=parseJsonBlock(newNode.rawAnswer);
+      newNode.topics=parsed.topics||[];
+      newNode.pages=parsed.pages||[];
+      newNode.answer=renderMd(newNode.rawAnswer);
+      if(selectedNode===newNode){
+        detailBody.innerHTML=newNode.answer;
+        detailRefs.innerHTML='';
+        newNode.pages.forEach(p=>{
+          if(SITE_PAGES[p]){const a=document.createElement('a');a.className='page-ref';a.href=p;a.textContent=SITE_PAGES[p];detailRefs.appendChild(a)}
+        });
+      }
+      spawnTopics(newNode,newNode.topics);
+      const shortQ=topicNode.label;
+      newNode.label.textContent=shortQ;
+      inputEl.focus();
+    }
+  });
+}
+
+function updateNodeCount(){
+  document.getElementById('node-count').textContent=graphNodes.length+topicNodes.length;
+}
+
+/* ================================================================
+   DETAIL PANEL
+   ================================================================ */
+const detailEl=document.getElementById('detail');
+const detailQ=document.getElementById('detail-q');
+const detailBody=document.getElementById('detail-body');
+const detailRefs=document.getElementById('detail-refs');
+
+function showDetail(node){
+  selectedNode=node;
+  detailQ.textContent=node.question;
+  detailBody.innerHTML=node.answer||'<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+  detailRefs.innerHTML='';
+  if(node.pages&&node.pages.length){
+    node.pages.forEach(p=>{
+      if(SITE_PAGES[p]){
+        const a=document.createElement('a');a.className='page-ref';a.href=p;a.textContent=SITE_PAGES[p];
+        detailRefs.appendChild(a);
+      }
+    });
+  }
+  detailEl.classList.add('visible');
+  flyTo(node);
+}
+function hideDetail(){selectedNode=null;detailEl.classList.remove('visible')}
+document.getElementById('detail-close').addEventListener('click',hideDetail);
+
+/* ================================================================
+   CAMERA
+   ================================================================ */
+let flyPos=null,flyTarget=null,flyProgress=1;
+function flyTo(node){
+  const dir=new THREE.Vector3().subVectors(camera.position,node.mesh.position).normalize();
+  flyPos=node.mesh.position.clone().add(dir.multiplyScalar(3)).add(new THREE.Vector3(0,1.5,0));
+  flyTarget=node.mesh.position.clone();
+  flyProgress=0;ctrl.autoRotate=false;
+}
+
+/* ================================================================
+   MARKDOWN
+   ================================================================ */
+function renderMd(raw){
+  if(!raw)return'';
+  let s=raw.replace(/```json[\s\S]*?```/g,'');
+  s=s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  s=s.replace(/^####?\s+(.+)$/gm,'<h4>$1</h4>');
+  s=s.replace(/^###?\s+(.+)$/gm,'<h4>$1</h4>');
+  s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+  s=s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,function(_,text,href){
+    if(SITE_PAGES[href])return '<a class="page-ref" href="'+href+'">'+text+'</a>';
+    return '<a href="'+href+'" target="_blank" rel="noopener">'+text+'</a>';
+  });
+  s=s.replace(/^[\-\*]\s+(.+)$/gm,'<li>$1</li>');
+  s=s.replace(/((?:<li>.*<\/li>\n?)+)/g,'<ul>$1</ul>');
+  s=s.replace(/\n{2,}/g,'</p><p>');
+  s=s.replace(/\n/g,'<br>');
+  if(!s.startsWith('<'))s='<p>'+s;
+  if(!s.endsWith('>'))s=s+'</p>';
+  s=s.replace(/<p><\/p>/g,'');
+  s=s.replace(/<p>(<h4>)/g,'$1').replace(/(<\/h4>)<\/p>/g,'$1');
+  s=s.replace(/<p>(<ul>)/g,'$1').replace(/(<\/ul>)<\/p>/g,'$1');
+  return s;
+}
+
+function parseJsonBlock(raw){
+  const m=raw.match(/```json\s*([\s\S]*?)\s*```/);
+  if(!m)return{topics:[],pages:[]};
+  try{return JSON.parse(m[1])}catch(e){return{topics:[],pages:[]}}
+}
+
+/* ================================================================
+   LLM
+   ================================================================ */
+const apiKeyEl=document.getElementById('api-key');
+const apiProviderEl=document.getElementById('api-provider');
+const apiModelEl=document.getElementById('api-model');
+const sdot=document.getElementById('sdot');
+let proxyAvailable=null;
+
+apiKeyEl.value=localStorage.getItem('aicivsim_api_key')||'';
+apiProviderEl.value=localStorage.getItem('aicivsim_api_provider')||'openai';
+updateModels();
+const sm=localStorage.getItem('aicivsim_api_model');if(sm)apiModelEl.value=sm;
+updateDot();
+
+apiKeyEl.addEventListener('input',()=>{localStorage.setItem('aicivsim_api_key',apiKeyEl.value);updateDot()});
+apiProviderEl.addEventListener('change',()=>{localStorage.setItem('aicivsim_api_provider',apiProviderEl.value);updateModels();updateDot()});
+apiModelEl.addEventListener('change',()=>{localStorage.setItem('aicivsim_api_model',apiModelEl.value)});
+
+function updateModels(){
+  apiModelEl.innerHTML='';
+  if(apiProviderEl.value==='openai'){addOpt('gpt-4o-mini','GPT-4o Mini');addOpt('gpt-4o','GPT-4o')}
+  else{addOpt('claude-sonnet-4-20250514','Claude Sonnet');addOpt('claude-haiku-4-20250514','Claude Haiku')}
+  function addOpt(v,t){const o=document.createElement('option');o.value=v;o.textContent=t;apiModelEl.appendChild(o)}
+  localStorage.setItem('aicivsim_api_model',apiModelEl.value);
+}
+function updateDot(){sdot.className='sdot '+(apiKeyEl.value.length>10||proxyAvailable?'ok':'none')}
+
+document.getElementById('settings-btn').addEventListener('click',()=>{
+  document.getElementById('settings-panel').classList.toggle('show');
+});
+
+(function probeProxy(){
+  fetch('api/chat.php',{method:'OPTIONS'}).then(r=>{
+    proxyAvailable=(r.ok||r.status===405);updateDot();
+  }).catch(()=>{proxyAvailable=false;updateDot()});
+})();
+
+function callLLM(messages,onChunk){
+  if(proxyAvailable&&!apiKeyEl.value)callProxy(messages,onChunk);
+  else if(apiKeyEl.value){
+    if(apiProviderEl.value==='anthropic')callAnthropic(messages,onChunk);
+    else callOpenAI(messages,onChunk);
+  }else{onChunk('*No API available. Click the gear icon to paste an API key.*',true)}
+}
+
+function callProxy(msgs,onChunk){
+  fetch('api/chat.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:SYS_PROMPT,messages:msgs})})
+  .then(r=>{if(!r.ok)return r.text().then(t=>{throw new Error(t)});return streamRead(r,onChunk)})
+  .catch(e=>onChunk('*Error: '+e.message+'*',true));
+}
+function callOpenAI(msgs,onChunk){
+  fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKeyEl.value},
+    body:JSON.stringify({model:apiModelEl.value,messages:[{role:'system',content:SYS_PROMPT}].concat(msgs),stream:true,max_tokens:1500})})
+  .then(r=>{if(!r.ok)return r.text().then(t=>{throw new Error(t)});return streamReadOpenAI(r,onChunk)})
+  .catch(e=>onChunk('*Error: '+e.message+'*',true));
+}
+function callAnthropic(msgs,onChunk){
+  fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKeyEl.value,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:apiModelEl.value,system:SYS_PROMPT,messages:msgs,stream:true,max_tokens:1500})})
+  .then(r=>{if(!r.ok)return r.text().then(t=>{throw new Error(t)});return streamRead(r,onChunk)})
+  .catch(e=>onChunk('*Error: '+e.message+'*',true));
+}
+
+function streamReadOpenAI(r,onChunk){
+  const reader=r.body.getReader(),dec=new TextDecoder();let buf='';
+  (function read(){
+    reader.read().then(res=>{
+      if(res.done){onChunk('',true);return}
+      buf+=dec.decode(res.value,{stream:true});
+      const lines=buf.split('\n');buf=lines.pop();
+      lines.forEach(l=>{
+        if(!l.startsWith('data: '))return;
+        const d=l.slice(6);if(d==='[DONE]'){onChunk('',true);return}
+        try{const j=JSON.parse(d);const c=j.choices?.[0]?.delta;if(c?.content)onChunk(c.content,false)}catch(e){}
+      });
+      read();
+    }).catch(e=>onChunk('\n*Error: '+e.message+'*',true));
+  })();
+}
+function streamRead(r,onChunk){
+  const reader=r.body.getReader(),dec=new TextDecoder();let buf='';
+  (function read(){
+    reader.read().then(res=>{
+      if(res.done){onChunk('',true);return}
+      buf+=dec.decode(res.value,{stream:true});
+      const lines=buf.split('\n');buf=lines.pop();
+      lines.forEach(l=>{
+        if(!l.startsWith('data: '))return;
+        const d=l.slice(6);if(d==='[DONE]'){onChunk('',true);return}
+        try{
+          const j=JSON.parse(d);
+          if(j.type==='content_block_delta'&&j.delta?.text)onChunk(j.delta.text,false);
+          else if(j.type==='message_stop')onChunk('',true);
+          else if(j.choices?.[0]?.delta?.content)onChunk(j.choices[0].delta.content,false);
+        }catch(e){}
+      });
+      read();
+    }).catch(e=>onChunk('\n*Error: '+e.message+'*',true));
+  })();
+}
+
+/* ================================================================
+   INPUT
+   ================================================================ */
+const inputEl=document.getElementById('input');
+const sendBtn=document.getElementById('send-btn');
+
+inputEl.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'});
+inputEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+sendBtn.addEventListener('click',send);
+
+function send(){
+  const text=inputEl.value.trim();
+  if(!text||streaming)return;
+  if(!apiKeyEl.value&&!proxyAvailable){
+    document.getElementById('settings-panel').classList.add('show');
+    apiKeyEl.focus();return;
+  }
+
+  document.querySelector('.hint')?.remove();
+  streaming=true;sendBtn.disabled=true;
+  inputEl.value='';inputEl.style.height='auto';
+
+  const node=spawnNode(text);
+  showDetail(node);
+
+  const msgs=[{role:'user',content:text}];
+  callLLM(msgs,function(chunk,done){
+    if(chunk)node.rawAnswer+=chunk;
+    node.answer=renderMd(node.rawAnswer);
+    if(selectedNode===node){
+      detailBody.innerHTML=node.answer||'<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    }
+    if(done){
+      streaming=false;sendBtn.disabled=false;
+      const parsed=parseJsonBlock(node.rawAnswer);
+      node.topics=parsed.topics||[];
+      node.pages=parsed.pages||[];
+      node.answer=renderMd(node.rawAnswer);
+      if(selectedNode===node){
+        detailBody.innerHTML=node.answer;
+        detailRefs.innerHTML='';
+        node.pages.forEach(p=>{
+          if(SITE_PAGES[p]){const a=document.createElement('a');a.className='page-ref';a.href=p;a.textContent=SITE_PAGES[p];detailRefs.appendChild(a)}
+        });
+      }
+      spawnTopics(node,node.topics);
+      const shortQ=text.length>30?text.slice(0,30)+'…':text;
+      node.label.textContent=shortQ;
+      inputEl.focus();
+    }
+  });
+}
+
+/* ================================================================
+   RAYCASTING
+   ================================================================ */
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+let pointerDown=new THREE.Vector2();
+
+renderer.domElement.addEventListener('pointerdown',e=>{pointerDown.set(e.clientX,e.clientY)});
+renderer.domElement.addEventListener('click',e=>{
+  if(Math.abs(e.clientX-pointerDown.x)+Math.abs(e.clientY-pointerDown.y)>6)return;
+  mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
+  raycaster.setFromCamera(mouse,camera);
+  const targets=hitTargets.map(h=>h.mesh);
+  const hits=raycaster.intersectObjects(targets);
+  if(hits.length){
+    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+    if(ht&&ht.node.expanded>0.3){
+      if(ht.node.isTopic){
+        exploreTopic(ht.node);
+      }else{
+        if(selectedNode===ht.node)hideDetail();
+        else showDetail(ht.node);
+      }
+    }
+  }else{hideDetail()}
+});
+
+renderer.domElement.addEventListener('mousemove',e=>{
+  mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
+  raycaster.setFromCamera(mouse,camera);
+  const targets=hitTargets.map(h=>h.mesh);
+  const hits=raycaster.intersectObjects(targets);
+  hoveredNode=null;
+  if(hits.length){
+    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+    if(ht&&ht.node.expanded>0.3){hoveredNode=ht.node;renderer.domElement.style.cursor='pointer'}
+    else renderer.domElement.style.cursor='default';
+  }else renderer.domElement.style.cursor='default';
+});
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideDetail();e.preventDefault()}});
+
+/* ================================================================
+   ANIMATION LOOP
+   ================================================================ */
+const clock=new THREE.Clock();
+
+function tick(){
+  requestAnimationFrame(tick);
+  const dt=Math.min(clock.getDelta(),0.05);
+  const t=clock.getElapsedTime();
+
+  /* Camera fly */
+  if(flyProgress<1){
+    flyProgress=Math.min(flyProgress+dt*2.5,1);
+    const e=1-Math.pow(1-flyProgress,3);
+    camera.position.lerp(flyPos,e*0.15);
+    ctrl.target.lerp(flyTarget,e*0.15);
+  }
+  ctrl.update();
+
+  /* Seed pulse */
+  seedMesh.rotation.y+=dt*0.3;seedWire.rotation.y-=dt*0.15;
+  seedRing.material.opacity=0.08+0.04*Math.sin(t*1.5);
+  seedMesh.material.emissiveIntensity=0.2+0.1*Math.sin(t*2);
+
+  /* Graph nodes */
+  graphNodes.forEach(node=>{
+    const tgt=1;
+    node.expanded+=(tgt-node.expanded)*3*dt;
+    const e=node.expanded;
+
+    node.pos.lerp(node.targetPos,dt*2);
+    node.mesh.position.copy(node.pos);
+    node.wire.position.copy(node.pos);
+    node.ring.position.set(node.pos.x,node.pos.y,node.pos.z);
+    node.hitSphere.position.copy(node.pos);
+
+    const bob=Math.sin(t*1.2+node.phase)*0.06*e;
+    node.mesh.position.y+=bob;node.wire.position.y+=bob;node.ring.position.y+=bob;
+
+    node.mesh.material.opacity=e;
+    node.wire.material.opacity=e*0.12;
+    node.ring.material.opacity=e*0.08;
+
+    node.mesh.rotation.y+=dt*0.5;
+    node.wire.rotation.y-=dt*0.25;
+
+    const isHovered=hoveredNode===node;
+    const isSelected=selectedNode===node;
+    const scale=NODE_SIZE*(isSelected?1.3:isHovered?1.15:1)*e;
+    node.mesh.scale.setScalar(scale/NODE_SIZE);
+    node.wire.scale.setScalar(scale/(NODE_SIZE*1.25));
+
+    node.mesh.material.emissiveIntensity=isSelected?0.5:isHovered?0.35:0.15;
+
+    /* Label */
+    const v=node.pos.clone().add(new THREE.Vector3(0,NODE_SIZE*2,0));
+    v.project(camera);
+    const x2=(v.x*0.5+0.5)*window.innerWidth;
+    const y2=(-v.y*0.5+0.5)*window.innerHeight;
+    node.label.style.left=x2+'px';node.label.style.top=y2+'px';
+    node.label.style.opacity=e>0.3&&v.z<1?String(0.6*e):'0';
+  });
+
+  /* Edges */
+  graphEdges.forEach(edge=>{
+    const a=edge.from.mesh.position;const b=edge.to.mesh.position;
+    const e=Math.min(edge.from.expanded,edge.to.expanded);
+    edge.lineMat.opacity=e*0.15;
+    const mid=new THREE.Vector3().addVectors(a,b).multiplyScalar(0.5);
+    mid.y+=0.4*e;
+    const crv=new THREE.QuadraticBezierCurve3(a,mid,b);
+    const pts=crv.getPoints(CURVE_SEGS);
+    const arr=edge.lineGeo.attributes.position.array;
+    for(let i=0;i<pts.length;i++){arr[i*3]=pts[i].x;arr[i*3+1]=pts[i].y;arr[i*3+2]=pts[i].z}
+    edge.lineGeo.attributes.position.needsUpdate=true;
+  });
+
+  /* Topic nodes */
+  topicNodes.forEach(tn=>{
+    const parent=tn.parentNode||graphNodes.find(n=>n.id===tn.parentId);
+    if(!parent)return;
+    const pe=parent.expanded;
+    tn.expanded+=(pe-tn.expanded)*3*dt;
+    const e=tn.expanded;
+    tn.orbitAngle+=tn.orbitSpeed*dt;
+    const ox=Math.cos(tn.orbitAngle)*TOPIC_ORBIT;
+    const oz=Math.sin(tn.orbitAngle)*TOPIC_ORBIT;
+    const tp=parent.mesh.position.clone().add(new THREE.Vector3(ox,0.1,oz));
+    tn.mesh.position.lerp(tp,dt*4);
+    tn.mesh.material.opacity=e*0.7;
+    tn.mesh.rotation.y+=dt;
+    tn.mesh.scale.setScalar(e);
+
+    const isHov=hoveredNode===tn;
+    tn.mesh.material.emissiveIntensity=isHov?0.6:0.25;
+    tn.mesh.scale.setScalar(e*(isHov?1.5:1));
+
+    if(tn.hitSphere)tn.hitSphere.position.copy(tn.mesh.position);
+
+    if(tn.labelEl){
+      const lv=tn.mesh.position.clone().add(new THREE.Vector3(0,TOPIC_SIZE*2.5,0));
+      lv.project(camera);
+      tn.labelEl.style.left=((lv.x*0.5+0.5)*window.innerWidth)+'px';
+      tn.labelEl.style.top=((-lv.y*0.5+0.5)*window.innerHeight)+'px';
+      tn.labelEl.style.opacity=e>0.3&&lv.z<1?String(0.5*e):'0';
+    }
+
+    if(tn.line){
+      tn.lineMat.opacity=e*0.1;
+      const a2=parent.mesh.position;const b2=tn.mesh.position;
+      const m2=new THREE.Vector3().addVectors(a2,b2).multiplyScalar(0.5);m2.y+=0.15*e;
+      const c2=new THREE.QuadraticBezierCurve3(a2,m2,b2);
+      const p2=c2.getPoints(12);
+      const ar2=tn.lineGeo.attributes.position.array;
+      for(let j=0;j<p2.length;j++){ar2[j*3]=p2[j].x;ar2[j*3+1]=p2[j].y;ar2[j*3+2]=p2[j].z}
+      tn.lineGeo.attributes.position.needsUpdate=true;
+    }
+  });
+
+  composer.render();
+}
+tick();
+</script>
+</body>
+</html>

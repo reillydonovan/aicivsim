@@ -23,6 +23,8 @@ var PAGE_ORDER=[
   {href:'timeline.html',label:'Timeline'},
   {href:'research.html',label:'Research'},
   {href:'chat.html',label:'Advisor'},
+  {href:'explorer.html',label:'Explorer \u03B2'},
+  {href:'xr.html',label:'WebXR \u03B2'},
   {href:'about.html',label:'About'}
 ];
 

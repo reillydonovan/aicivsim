@@ -104,33 +104,23 @@ css.textContent=`
 @keyframes cwIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes cwBlink{0%,80%,100%{opacity:0.3}40%{opacity:1}}
 
-/* Tablet portrait + large phones */
+/* Mobile — panel stacks above the toggle button */
 @media(max-width:768px){
-  .cw-panel{width:340px;max-width:calc(100vw - 32px);height:480px;bottom:76px;right:16px}
   .cw-toggle{bottom:16px;right:16px;width:44px;height:44px}
-  .cw-head-btn{width:26px;height:26px;font-size:12px}
-  .cw-head-actions{gap:2px}
-  .cw-page-tag{font-size:7px;padding:2px 4px;max-width:100px;overflow:hidden;text-overflow:ellipsis}
-}
-
-/* Phone portrait — full-screen panel */
-@media(max-width:480px){
-  .cw-panel{bottom:0;right:0;width:100vw;max-width:100vw;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;border-radius:0;border:none}
-  .cw-panel.collapsed{height:auto;bottom:0}
-  .cw-toggle.mobile-hidden{display:none}
-  .cw-toggle{bottom:16px;right:16px;width:42px;height:42px}
   .cw-toggle svg{width:18px;height:18px}
-  .cw-input-area{padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);gap:8px}
+  .cw-panel{width:calc(100vw - 24px);max-width:400px;right:12px;bottom:72px;height:calc(100dvh - 90px);max-height:calc(100dvh - 90px);border-radius:8px}
+  .cw-panel.collapsed{height:auto;max-height:none}
+  .cw-input-area{padding:10px 12px;gap:8px}
   .cw-send{padding:8px 12px;font-size:9px}
   .cw-head{padding:10px 12px}
-  .cw-head-actions{gap:1px}
+  .cw-head-actions{gap:2px}
   .cw-head-btn{width:26px;height:26px;font-size:12px}
   .cw-page-tag{font-size:7px;padding:2px 4px;max-width:80px;overflow:hidden;text-overflow:ellipsis}
 }
 
 /* Landscape phone — shorter panel */
 @media(max-height:500px){
-  .cw-panel{height:calc(100vh - 20px);height:calc(100dvh - 20px);bottom:10px;right:10px;max-height:none}
+  .cw-panel{height:calc(100dvh - 80px);bottom:70px}
   .cw-panel.collapsed{height:auto}
   .cw-toggle{bottom:10px;right:10px}
 }
@@ -152,6 +142,8 @@ var PAGES={
   'viz.html':{l:'3D Network',d:'Three.js node graph with nested sub-orbits, curved connections, scenario-aware coloring'},
   'research.html':{l:'Research',d:'19-section civic roadmap paper with policy recommendations and references'},
   'chat.html':{l:'Advisor',d:'AI advisor landing page with setup guide and example questions'},
+  'explorer.html':{l:'Explorer',d:'Three.js knowledge graph — ask questions to spawn nodes in 3D space, topics orbit answers, curved connections link the graph'},
+  'xr.html':{l:'WebXR',d:'Immersive WebXR visualization — 7-system node network in VR/AR with controller interaction, scenario switching'},
   'about.html':{l:'About',d:'Project scope, intent, methodology, technology stack, design system'}
 };
 
@@ -294,6 +286,8 @@ A (90+), A− (85+), B+ (80+), B (70+), B− (65+), C+ (60+), C (50+), C− (45+
 - [Civilization Dashboard](civilization.html) — Composite health, KPI trajectories
 - [Timeline](timeline.html) — 200K-year arc, AI inflection point
 - [Visualizer](visualizer.html) — 3D interactive system network
+- [Explorer](explorer.html) — 3D knowledge graph — ask questions to spawn interactive nodes
+- [WebXR](xr.html) — Immersive VR/AR visualization of the 7-system network
 - [Research Paper](research.html) — 19-section civic roadmap
 
 ## CONTEXT AWARENESS
