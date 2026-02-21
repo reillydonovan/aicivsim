@@ -42,6 +42,9 @@ css.textContent=`
 .cw-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;align-self:center}
 .cw-dot.ok{background:#4ecdc4}
 .cw-dot.none{background:#3a3834}
+.cw-proxy-tag{font-family:'Space Grotesk',system-ui,sans-serif;font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap}
+.cw-proxy-tag.active{color:#4ecdc4;background:rgba(78,205,196,0.08);border:1px solid rgba(78,205,196,0.12)}
+.cw-proxy-tag.off{color:#5e5b54;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)}
 
 /* Log */
 .cw-log{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.06) transparent}
@@ -220,6 +223,7 @@ var isOpen=_hasOpenPref?localStorage.getItem('cw_open')==='true':_isHomepage;
 var isCollapsed=_hasOpenPref?localStorage.getItem('cw_collapsed')==='true':_isHomepage;
 var settingsOpen=false;
 var streaming=false;
+var proxyAvailable=null; /* null=unchecked, true/false after probe */
 
 /* ── BUILD DOM ── */
 var toggle=document.createElement('button');
@@ -241,6 +245,7 @@ panel.innerHTML=`
 </div>
 <div class="cw-settings" id="cw-settings">
   <span class="cw-dot none" id="cw-api-dot"></span>
+  <span class="cw-proxy-tag" id="cw-proxy-tag" style="display:none"></span>
   <select id="cw-provider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic</option></select>
   <input type="password" id="cw-apikey" placeholder="API key (local only)">
   <select id="cw-model"></select>
@@ -426,7 +431,7 @@ sendBtn.addEventListener('click',send);
 function send(){
   var text=input.value.trim();
   if(!text||streaming)return;
-  if(!keyEl.value){
+  if(!keyEl.value&&!proxyAvailable){
     settingsOpen=true;settingsEl.className='cw-settings show';
     keyEl.focus();keyEl.style.borderColor='rgba(212,98,42,0.5)';
     setTimeout(function(){keyEl.style.borderColor=''},1500);
@@ -498,10 +503,50 @@ function prepareMessages(msgs){
 
 function callLLM(msgs,onChunk){
   var prepared=prepareMessages(msgs);
-  if(providerEl.value==='anthropic')callAnthropic(prepared,onChunk);
-  else callOpenAI(prepared,onChunk);
+  if(proxyAvailable&&!keyEl.value){
+    callProxy(prepared,onChunk);
+  }else if(keyEl.value){
+    if(providerEl.value==='anthropic')callAnthropic(prepared,onChunk);
+    else callOpenAI(prepared,onChunk);
+  }else{
+    onChunk('*No API available. Open settings (gear icon) and paste an API key, or wait for the server proxy to respond.*',true);
+  }
 }
 
+/* ── Proxy call — server holds the key ── */
+function callProxy(msgs,onChunk){
+  var body={system:SYS_PROMPT,messages:msgs};
+  fetch('api/chat.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  }).then(function(r){
+    if(!r.ok)return r.text().then(function(t){throw new Error(t)});
+    var reader=r.body.getReader(),dec=new TextDecoder(),buf='';
+    var provider=(proxyProvider||'openai');
+    (function read(){
+      reader.read().then(function(res){
+        if(res.done){onChunk('',true);return}
+        buf+=dec.decode(res.value,{stream:true});
+        var lines=buf.split('\n');buf=lines.pop();
+        lines.forEach(function(l){
+          if(!l.startsWith('data: '))return;
+          var d=l.slice(6);
+          if(d==='[DONE]'){onChunk('',true);return}
+          try{
+            var j=JSON.parse(d);
+            if(j.type==='content_block_delta'&&j.delta&&j.delta.text){onChunk(j.delta.text,false)}
+            else if(j.type==='message_stop'){onChunk('',true)}
+            else if(j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content){onChunk(j.choices[0].delta.content,false)}
+          }catch(e){}
+        });
+        read();
+      }).catch(function(e){onChunk('\n\n*Error: '+e.message+'*',true)});
+    })();
+  }).catch(function(e){onChunk('*Proxy error: '+e.message+'*',true)});
+}
+
+/* ── Direct OpenAI call ── */
 function callOpenAI(msgs,onChunk){
   var body={model:modelEl.value,messages:[{role:'system',content:SYS_PROMPT}].concat(msgs),stream:true,max_tokens:1500};
   fetch('https://api.openai.com/v1/chat/completions',{
@@ -526,6 +571,7 @@ function callOpenAI(msgs,onChunk){
   }).catch(function(e){onChunk('*Error: '+e.message+'*',true)});
 }
 
+/* ── Direct Anthropic call ── */
 function callAnthropic(msgs,onChunk){
   var body={model:modelEl.value,system:SYS_PROMPT,messages:msgs.map(function(m){return{role:m.role,content:m.content}}),stream:true,max_tokens:1500};
   fetch('https://api.anthropic.com/v1/messages',{
@@ -549,6 +595,35 @@ function callAnthropic(msgs,onChunk){
     })();
   }).catch(function(e){onChunk('*Error: '+e.message+'*',true)});
 }
+
+/* ── PROXY DETECTION ── */
+var proxyProvider='openai';
+var proxyTag=document.getElementById('cw-proxy-tag');
+
+function updateProxyUI(){
+  if(!proxyTag)return;
+  if(proxyAvailable){
+    proxyTag.textContent='Server API';
+    proxyTag.className='cw-proxy-tag active';
+    proxyTag.style.display='';
+    keyEl.placeholder='Optional — server API active';
+    dotEl.className='cw-dot ok';
+  }else if(proxyAvailable===false){
+    proxyTag.style.display='none';
+    updateDot();
+  }
+}
+
+(function probeProxy(){
+  fetch('api/chat.php',{method:'OPTIONS'}).then(function(r){
+    if(r.ok||r.status===405||r.status===200){
+      proxyAvailable=true;
+      updateProxyUI();
+    }else{
+      proxyAvailable=false;updateProxyUI();
+    }
+  }).catch(function(){proxyAvailable=false;updateProxyUI()});
+})();
 
 /* ── INIT ── */
 var pageTag=document.getElementById('cw-page-tag');

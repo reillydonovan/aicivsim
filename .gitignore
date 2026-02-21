@@ -9,6 +9,9 @@ next-env.d.ts
 .env.local
 .env*.local
 
+# API proxy config (contains API key — never commit)
+public/layoutUpdate/api/config.php
+
 .DS_Store
 Thumbs.db
 
