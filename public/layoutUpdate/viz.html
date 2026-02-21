@@ -305,7 +305,7 @@ const TIPPING=[
   {node:'governance',label:'Democratic backsliding point',  thresholds:{worst:2033}}
 ];
 
-let active='aggressive',year=2026,playing=false,selNode=null,hovNode=null,hovSub=null;
+let active='aggressive',year=2026,playing=false,selNode=null,selSub=null,hovNode=null,hovSub=null,hovSubSub=null;
 let comparing=false,compareWith='moderate';
 let globeActive=false;
 let audioMuted=false,audioCtx=null,masterGain=null,baseOsc=null,chordOscs=[],audioInited=false;
@@ -483,6 +483,151 @@ const SUB_NODE_DATA={
 };
 
 const subNodes=[];
+const subSubNodes=[];
+
+const SUB_SUB_NODE_DATA={
+  climate_temp:[
+    {id:'arctic',label:'Arctic',color:0x4ecdc4,today:45,proj:{aggressive:88,moderate:62,bau:28,worst:10}},
+    {id:'surface',label:'Surface Temp',color:0x5da5da,today:60,proj:{aggressive:90,moderate:70,bau:38,worst:18}},
+    {id:'extremes',label:'Heat Extremes',color:0xd4622a,today:52,proj:{aggressive:85,moderate:60,bau:30,worst:12}}
+  ],
+  climate_emissions:[
+    {id:'co2',label:'CO\u2082 Levels',color:0xd4622a,today:28,proj:{aggressive:92,moderate:58,bau:20,worst:6}},
+    {id:'methane',label:'Methane',color:0xe8a838,today:35,proj:{aggressive:90,moderate:55,bau:22,worst:8}},
+    {id:'industrial',label:'Industrial',color:0x5da5da,today:30,proj:{aggressive:88,moderate:52,bau:18,worst:5}}
+  ],
+  climate_energy:[
+    {id:'solar',label:'Solar',color:0xe8a838,today:55,proj:{aggressive:98,moderate:78,bau:42,worst:22}},
+    {id:'wind',label:'Wind',color:0x5da5da,today:48,proj:{aggressive:95,moderate:72,bau:38,worst:18}},
+    {id:'storage',label:'Grid Storage',color:0x4ecdc4,today:30,proj:{aggressive:92,moderate:65,bau:32,worst:12}}
+  ],
+  climate_bio:[
+    {id:'species',label:'Species Loss',color:0xd4622a,today:35,proj:{aggressive:82,moderate:52,bau:18,worst:5}},
+    {id:'habitat',label:'Habitat',color:0x95cf95,today:42,proj:{aggressive:88,moderate:60,bau:22,worst:10}},
+    {id:'pollinator',label:'Pollinators',color:0xe8a838,today:38,proj:{aggressive:85,moderate:55,bau:15,worst:6}}
+  ],
+  climate_ocean:[
+    {id:'acid',label:'Acidification',color:0x9b87f5,today:30,proj:{aggressive:75,moderate:48,bau:15,worst:4}},
+    {id:'coral',label:'Coral Reefs',color:0xd4622a,today:28,proj:{aggressive:72,moderate:45,bau:12,worst:3}},
+    {id:'sealevel',label:'Sea Level',color:0x5da5da,today:40,proj:{aggressive:82,moderate:55,bau:22,worst:8}}
+  ],
+  climate_resource:[
+    {id:'water',label:'Water',color:0x5da5da,today:40,proj:{aggressive:75,moderate:52,bau:28,worst:10}},
+    {id:'soil',label:'Soil Health',color:0x95cf95,today:45,proj:{aggressive:80,moderate:58,bau:32,worst:14}},
+    {id:'minerals',label:'Minerals',color:0xe8a838,today:38,proj:{aggressive:72,moderate:50,bau:25,worst:10}}
+  ],
+  ai_alignment:[
+    {id:'values',label:'Value Align.',color:0xe8a838,today:42,proj:{aggressive:90,moderate:65,bau:28,worst:8}},
+    {id:'goals',label:'Goal Stability',color:0x5da5da,today:50,proj:{aggressive:92,moderate:68,bau:35,worst:12}},
+    {id:'corrig',label:'Corrigibility',color:0x4ecdc4,today:45,proj:{aggressive:88,moderate:62,bau:30,worst:10}}
+  ],
+  ai_transparency:[
+    {id:'weights',label:'Open Weights',color:0x4ecdc4,today:12,proj:{aggressive:95,moderate:58,bau:10,worst:2}},
+    {id:'auditacc',label:'Audit Access',color:0x5da5da,today:18,proj:{aggressive:96,moderate:62,bau:14,worst:4}},
+    {id:'explain',label:'Explainability',color:0xe8a838,today:15,proj:{aggressive:94,moderate:55,bau:10,worst:3}}
+  ],
+  ai_safety:[
+    {id:'redteam',label:'Red Teams',color:0xd4622a,today:38,proj:{aggressive:92,moderate:65,bau:30,worst:12}},
+    {id:'killswitch',label:'Kill Switch',color:0xe8a838,today:30,proj:{aggressive:88,moderate:58,bau:25,worst:8}},
+    {id:'contain',label:'Containment',color:0x5da5da,today:32,proj:{aggressive:85,moderate:55,bau:22,worst:8}}
+  ],
+  ai_compute:[
+    {id:'chips',label:'Chip Tracking',color:0x5da5da,today:18,proj:{aggressive:82,moderate:50,bau:16,worst:4}},
+    {id:'license',label:'Licensing',color:0x4ecdc4,today:22,proj:{aggressive:88,moderate:55,bau:20,worst:6}},
+    {id:'alloc',label:'Allocation',color:0xe8a838,today:15,proj:{aggressive:80,moderate:48,bau:15,worst:4}}
+  ],
+  ai_autonomy:[
+    {id:'weapons',label:'Weapons Ban',color:0xd4622a,today:55,proj:{aggressive:85,moderate:68,bau:38,worst:12}},
+    {id:'decision',label:'Decision Auth.',color:0x9b87f5,today:65,proj:{aggressive:90,moderate:72,bau:42,worst:18}},
+    {id:'oversight',label:'Oversight',color:0x4ecdc4,today:58,proj:{aggressive:88,moderate:70,bau:40,worst:15}}
+  ],
+  ai_trust:[
+    {id:'literacy',label:'AI Literacy',color:0x95cf95,today:25,proj:{aggressive:80,moderate:52,bau:20,worst:6}},
+    {id:'sentiment',label:'Sentiment',color:0x5da5da,today:32,proj:{aggressive:82,moderate:55,bau:24,worst:10}},
+    {id:'adoption',label:'Adoption',color:0xe8a838,today:28,proj:{aggressive:78,moderate:50,bau:18,worst:5}}
+  ],
+  simulation_gini:[
+    {id:'wealth',label:'Wealth Gap',color:0x5da5da,today:55,proj:{aggressive:85,moderate:68,bau:35,worst:12}},
+    {id:'access',label:'Access',color:0x4ecdc4,today:60,proj:{aggressive:88,moderate:72,bau:40,worst:18}},
+    {id:'mobility',label:'Mobility',color:0x95cf95,today:58,proj:{aggressive:82,moderate:65,bau:32,worst:12}}
+  ],
+  simulation_trust:[
+    {id:'media',label:'Media Trust',color:0xd4622a,today:35,proj:{aggressive:72,moderate:58,bau:28,worst:10}},
+    {id:'instit',label:'Institutions',color:0x5da5da,today:45,proj:{aggressive:80,moderate:65,bau:35,worst:15}},
+    {id:'interp',label:'Interpersonal',color:0x4ecdc4,today:48,proj:{aggressive:78,moderate:62,bau:30,worst:12}}
+  ],
+  simulation_emis:[
+    {id:'transport',label:'Transport',color:0xd4622a,today:28,proj:{aggressive:80,moderate:52,bau:20,worst:6}},
+    {id:'industry',label:'Industry',color:0xe8a838,today:32,proj:{aggressive:82,moderate:55,bau:25,worst:10}},
+    {id:'agri',label:'Agriculture',color:0x95cf95,today:25,proj:{aggressive:78,moderate:50,bau:18,worst:6}}
+  ],
+  simulation_resil:[
+    {id:'infra',label:'Infrastructure',color:0x95cf95,today:38,proj:{aggressive:75,moderate:58,bau:32,worst:12}},
+    {id:'supply',label:'Supply Chain',color:0x5da5da,today:35,proj:{aggressive:72,moderate:55,bau:28,worst:10}},
+    {id:'social',label:'Social',color:0x4ecdc4,today:32,proj:{aggressive:70,moderate:52,bau:25,worst:8}}
+  ],
+  simulation_aiinf:[
+    {id:'automate',label:'Automation',color:0xe8a838,today:15,proj:{aggressive:42,moderate:32,bau:18,worst:6}},
+    {id:'decide',label:'Decision AI',color:0x5da5da,today:10,proj:{aggressive:38,moderate:28,bau:12,worst:4}},
+    {id:'creative',label:'Creative AI',color:0x9b87f5,today:8,proj:{aggressive:35,moderate:25,bau:10,worst:3}}
+  ],
+  transition_poverty:[
+    {id:'extreme',label:'Extreme',color:0xd4622a,today:30,proj:{aggressive:85,moderate:68,bau:25,worst:8}},
+    {id:'working',label:'Working Poor',color:0xe8a838,today:38,proj:{aggressive:88,moderate:72,bau:30,worst:12}},
+    {id:'aid',label:'Aid Access',color:0x5da5da,today:40,proj:{aggressive:90,moderate:75,bau:28,worst:10}}
+  ],
+  transition_reskill:[
+    {id:'digital',label:'Digital',color:0x5da5da,today:35,proj:{aggressive:88,moderate:68,bau:28,worst:10}},
+    {id:'green',label:'Green Skills',color:0x95cf95,today:28,proj:{aggressive:85,moderate:62,bau:22,worst:6}},
+    {id:'duration',label:'Duration',color:0xe8a838,today:30,proj:{aggressive:82,moderate:58,bau:20,worst:5}}
+  ],
+  transition_placement:[
+    {id:'match',label:'Match Rate',color:0x4ecdc4,today:58,proj:{aggressive:92,moderate:75,bau:32,worst:12}},
+    {id:'retention',label:'Retention',color:0x5da5da,today:62,proj:{aggressive:90,moderate:78,bau:38,worst:18}},
+    {id:'satisf',label:'Satisfaction',color:0x95cf95,today:55,proj:{aggressive:88,moderate:72,bau:30,worst:12}}
+  ],
+  transition_employment:[
+    {id:'formal',label:'Formal',color:0x95cf95,today:48,proj:{aggressive:88,moderate:72,bau:32,worst:14}},
+    {id:'gig',label:'Gig Economy',color:0xe8a838,today:40,proj:{aggressive:80,moderate:62,bau:28,worst:10}},
+    {id:'under',label:'Underemployed',color:0xd4622a,today:42,proj:{aggressive:82,moderate:65,bau:25,worst:8}}
+  ],
+  governance_civic:[
+    {id:'voting',label:'Voting',color:0xb0a0d0,today:45,proj:{aggressive:80,moderate:60,bau:38,worst:15}},
+    {id:'deliber',label:'Deliberation',color:0x4ecdc4,today:38,proj:{aggressive:75,moderate:55,bau:30,worst:10}},
+    {id:'digdem',label:'Digital Dem.',color:0x5da5da,today:35,proj:{aggressive:78,moderate:58,bau:32,worst:8}}
+  ],
+  governance_charter:[
+    {id:'ratify',label:'Ratification',color:0x4ecdc4,today:8,proj:{aggressive:90,moderate:52,bau:6,worst:0}},
+    {id:'comply',label:'Compliance',color:0x5da5da,today:12,proj:{aggressive:92,moderate:55,bau:10,worst:0}},
+    {id:'enforce',label:'Enforcement',color:0xe8a838,today:10,proj:{aggressive:88,moderate:50,bau:5,worst:0}}
+  ],
+  governance_instrust:[
+    {id:'courts',label:'Courts',color:0x5da5da,today:48,proj:{aggressive:75,moderate:58,bau:35,worst:20}},
+    {id:'parliam',label:'Parliament',color:0xb0a0d0,today:40,proj:{aggressive:70,moderate:55,bau:30,worst:16}},
+    {id:'civil',label:'Civil Service',color:0x4ecdc4,today:42,proj:{aggressive:72,moderate:56,bau:32,worst:18}}
+  ],
+  governance_audit:[
+    {id:'aiaudit',label:'AI Audits',color:0xe8a838,today:8,proj:{aggressive:95,moderate:65,bau:12,worst:2}},
+    {id:'finance',label:'Finance',color:0x5da5da,today:12,proj:{aggressive:94,moderate:68,bau:18,worst:4}},
+    {id:'environ',label:'Environmental',color:0x95cf95,today:10,proj:{aggressive:92,moderate:62,bau:14,worst:3}}
+  ],
+  strategy_personal:[
+    {id:'education',label:'Education',color:0xe8636e,today:32,proj:{aggressive:90,moderate:60,bau:20,worst:8}},
+    {id:'consump',label:'Consumption',color:0x5da5da,today:28,proj:{aggressive:85,moderate:55,bau:16,worst:5}},
+    {id:'advocacy',label:'Advocacy',color:0x4ecdc4,today:25,proj:{aggressive:82,moderate:52,bau:15,worst:4}}
+  ],
+  strategy_org:[
+    {id:'corporate',label:'Corporate',color:0x5da5da,today:38,proj:{aggressive:92,moderate:65,bau:25,worst:10}},
+    {id:'university',label:'University',color:0x4ecdc4,today:35,proj:{aggressive:88,moderate:60,bau:20,worst:6}},
+    {id:'ngo',label:'NGO',color:0x95cf95,today:30,proj:{aggressive:85,moderate:55,bau:18,worst:5}}
+  ],
+  strategy_systemic:[
+    {id:'regulation',label:'Regulation',color:0x4ecdc4,today:42,proj:{aggressive:88,moderate:68,bau:28,worst:12}},
+    {id:'infrastr',label:'Infrastructure',color:0xe8a838,today:38,proj:{aggressive:85,moderate:62,bau:22,worst:8}},
+    {id:'intl',label:'International',color:0x5da5da,today:35,proj:{aggressive:82,moderate:58,bau:20,worst:8}}
+  ]
+};
+
 /* ================================================================
    CONNECTIONS
    ================================================================ */
@@ -604,6 +749,51 @@ nodes.forEach((parentNode,pi)=>{
     subNodes.push(sub);
   });
 });
+/* ================================================================
+   SUB-SUB-NODE MESHES — leaf-level satellites that expand from sub-nodes
+   ================================================================ */
+const SUBSUB_RADIUS=1.0;
+const SUBSUB_SIZE=0.10;
+const SUBSUB_CURVE_SEGS=16;
+const ssubGeo=new THREE.IcosahedronGeometry(SUBSUB_SIZE,1);
+const ssubWireGeo=new THREE.IcosahedronGeometry(SUBSUB_SIZE*1.35,0);
+subNodes.forEach((parentSub,psi)=>{
+  const key=parentSub.parent.data.id+'_'+parentSub.data.id;
+  const subs=SUB_SUB_NODE_DATA[key];
+  if(!subs)return;
+  parentSub.subSubNodes=[];
+  subs.forEach((ssd,ssi)=>{
+    const angle=(ssi/subs.length)*Math.PI*2-Math.PI/2;
+    const offX=Math.cos(angle)*SUBSUB_RADIUS;
+    const offZ=Math.sin(angle)*SUBSUB_RADIUS;
+    const sColor=new THREE.Color(ssd.color);
+    const mat=new THREE.MeshPhongMaterial({color:sColor,emissive:sColor,emissiveIntensity:0.3,transparent:true,opacity:0});
+    const mesh=new THREE.Mesh(ssubGeo.clone(),mat);
+    const wMat=new THREE.MeshBasicMaterial({color:sColor,wireframe:true,transparent:true,opacity:0});
+    const wire=new THREE.Mesh(ssubWireGeo.clone(),wMat);
+    mesh.add(wire);
+    mesh.position.copy(parentSub.mesh.position);
+    mesh.scale.setScalar(0.001);
+    scene.add(mesh);
+    const hitS=new THREE.Mesh(new THREE.SphereGeometry(0.4,6,6),hitMat);
+    hitS.visible=false;
+    mesh.add(hitS);
+    const ssInitPts=[];for(let q=0;q<=SUBSUB_CURVE_SEGS;q++)ssInitPts.push(new THREE.Vector3());
+    const lineGeo=new THREE.BufferGeometry().setFromPoints(ssInitPts);
+    const lineMat=new THREE.LineBasicMaterial({color:sColor,transparent:true,opacity:0});
+    const line=new THREE.Line(lineGeo,lineMat);
+    scene.add(line);
+    const ssn={mesh,wire,mat,data:ssd,parent:parentSub,grandParent:parentSub.parent,
+      offset:new THREE.Vector3(offX,0,offZ),
+      baseColor:sColor.clone(),color:sColor.clone(),
+      health:ssd.today/100,bobPhase:ssi*1.5+psi*0.7,
+      expanded:0,hitMesh:hitS,line,lineMat,lineGeo};
+    hitTargets.push({mesh:hitS,node:ssn,isSubSub:true});
+    parentSub.subSubNodes.push(ssn);
+    subSubNodes.push(ssn);
+  });
+});
+
 const allHitMeshes=hitTargets.map(h=>h.mesh);
 
 /* Sub-node floating labels */
@@ -615,6 +805,17 @@ subNodes.forEach(sn=>{
   el.innerHTML='<div class="nlabel-score" style="color:'+c+';font-size:10px"></div><div class="nlabel-name" style="color:'+c+'88;font-size:8px;letter-spacing:0.04em">'+sn.data.label+'</div>';
   labelBox.appendChild(el);
   sn.labelEl=el;sn.scoreEl=el.querySelector('.nlabel-score');
+});
+
+/* Sub-sub-node floating labels */
+subSubNodes.forEach(ssn=>{
+  const el=document.createElement('div');
+  el.className='nlabel';
+  el.style.opacity='0';el.style.transition='opacity 0.3s';
+  const c='#'+ssn.baseColor.getHexString();
+  el.innerHTML='<div class="nlabel-score" style="color:'+c+';font-size:9px"></div><div class="nlabel-name" style="color:'+c+'88;font-size:7px;letter-spacing:0.03em">'+ssn.data.label+'</div>';
+  labelBox.appendChild(el);
+  ssn.labelEl=el;ssn.scoreEl=el.querySelector('.nlabel-score');
 });
 
 /* ================================================================
@@ -838,10 +1039,11 @@ function sfx(type){
 /* ================================================================
    CAMERA FLY-TO
    ================================================================ */
-function flyTo(target){
+function flyTo(target,dist){
   if(!target||target.isCenter){flyToOverview();return}
+  const d=dist||3.5;
   const dir=new THREE.Vector3().subVectors(camera.position,target.mesh.position).normalize();
-  flyPos=target.mesh.position.clone().add(dir.multiplyScalar(3.5)).add(new THREE.Vector3(0,1.5,0));
+  flyPos=target.mesh.position.clone().add(dir.multiplyScalar(d)).add(new THREE.Vector3(0,d*0.43,0));
   flyTarget=target.mesh.position.clone();
   flyProgress=0;ctrl.autoRotate=false;
 }
@@ -867,14 +1069,25 @@ let lastDeselectTime=0;
 renderer.domElement.addEventListener('click',e=>{
   const dx=e.clientX-pointerDownPos.x,dy=e.clientY-pointerDownPos.y;
   if(dx*dx+dy*dy>CLICK_THRESHOLD*CLICK_THRESHOLD)return;
-  if(hovNode){
+  if(hovSubSub){
+    sfx('select');selSub=hovSubSub.parent;updateInfo();
+  }else if(hovSub){
+    const wasSel=selSub===hovSub;
+    selSub=wasSel?null:hovSub;
+    if(selSub){sfx('select');flyTo(selSub,2.0)}
+    else{sfx('deselect');if(selNode)flyTo(selNode)}
+    updateInfo();
+  }else if(hovNode){
     const wasSelected=selNode===hovNode;
+    selSub=null;
     selNode=wasSelected?null:hovNode;
     if(selNode){sfx('select');flyTo(selNode);if(!selNode.isCenter)pingNode(selNode.idx||0)}
     else{sfx('deselect');lastDeselectTime=performance.now();flyToOverview()}
     updateInfo();renderOverrideBar();
+  }else if(selSub){
+    sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo();
   }else if(selNode){
-    sfx('deselect');selNode=null;lastDeselectTime=performance.now();updateInfo();renderOverrideBar();
+    sfx('deselect');selNode=null;lastDeselectTime=performance.now();updateInfo();renderOverrideBar();flyToOverview();
   }
 });
 renderer.domElement.addEventListener('dblclick',()=>{
@@ -895,15 +1108,28 @@ renderer.domElement.addEventListener('touchend',e=>{
     ray.setFromCamera(mouse,camera);
     const hits=ray.intersectObjects(allHitMeshes);
     if(hits.length){
-      const t=hitTargets.find(h=>h.mesh===hits[0].object);
-      if(t){
-        selNode=selNode===t.node?null:t.node;
-        if(selNode){sfx('select');flyTo(selNode)}
-        else{sfx('deselect');flyToOverview()}
-        updateInfo();renderOverrideBar();
+      const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+      if(ht){
+        if(ht.isSubSub&&ht.node.expanded>0.3){
+          sfx('select');selSub=ht.node.parent;updateInfo();
+        }else if(ht.isSub&&ht.node.expanded>0.3){
+          const wasSel=selSub===ht.node;
+          selSub=wasSel?null:ht.node;
+          if(selSub){sfx('select');flyTo(selSub,2.0)}
+          else{sfx('deselect');if(selNode)flyTo(selNode)}
+          updateInfo();
+        }else if(!ht.isSub&&!ht.isSubSub){
+          selSub=null;
+          selNode=selNode===ht.node?null:ht.node;
+          if(selNode){sfx('select');flyTo(selNode)}
+          else{sfx('deselect');flyToOverview()}
+          updateInfo();renderOverrideBar();
+        }
       }
+    }else if(selSub){
+      sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo();
     }else if(selNode){
-      sfx('deselect');selNode=null;updateInfo();renderOverrideBar();
+      sfx('deselect');selNode=null;updateInfo();renderOverrideBar();flyToOverview();
     }
   }
 },{passive:true});
@@ -918,7 +1144,11 @@ document.addEventListener('keydown',e=>{
   if(e.key===' '){togglePlay();e.preventDefault()}
   if(e.key==='ArrowLeft'){stepYear(-1);e.preventDefault()}
   if(e.key==='ArrowRight'){stepYear(1);e.preventDefault()}
-  if(e.key==='Escape'){sfx('deselect');selNode=null;flyToOverview();updateInfo();renderOverrideBar();e.preventDefault()}
+  if(e.key==='Escape'){
+    if(selSub){sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo()}
+    else if(selNode){sfx('deselect');selNode=null;flyToOverview();updateInfo();renderOverrideBar()}
+    e.preventDefault();
+  }
 });
 function stepYear(d){year=Math.max(2026,Math.min(2050,year+d));yrSlider.value=year;yrVal.textContent=year;updateVis()}
 function togglePlay(){playing=!playing;playBtn.innerHTML=playing?'&#9646;&#9646; Pause':'&#9654; Play'}
@@ -1155,10 +1385,20 @@ muteBtn.addEventListener('click',()=>{
    ================================================================ */
 function updateInfo(){
   const p=document.getElementById('info');
-  if(!selNode){p.classList.add('hidden');return}
+  if(!selNode&&!selSub){p.classList.add('hidden');return}
   p.classList.remove('hidden');
   let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt,nodeSc;
-  if(selNode.isCenter){
+  if(selSub){
+    const sd=selSub.data;
+    const sysId=selSub.parent.data.id;
+    nodeSc=eff(sysId);
+    sc=scAt(sd.today,sd.proj[nodeSc],year);g=grade(sc);
+    proj2050=sd.proj[nodeSc];projG=grade(proj2050);
+    c='#'+selSub.baseColor.getHexString();
+    name=sd.label;
+    desc=selSub.parent.data.label+' \u2192 '+sd.label+' sub-domain under '+SC_META[nodeSc].name+'.';
+    navTxt='Esc to return to '+selSub.parent.data.label;
+  }else if(selNode.isCenter){
     name='Civilization';sc=mixedAgg();g=grade(sc);
     const anyOvr=Object.values(overrides).some(v=>v!==null);
     nodeSc=anyOvr?'mixed':active;
@@ -1196,7 +1436,9 @@ function updateInfo(){
   const chartsEl=document.getElementById('info-charts');
   if(chartsEl){
     const VM=window.VIZ_METRICS;
-    if(selNode&&!selNode.isCenter&&VM&&VM[selNode.data.id]){
+    if(selSub){
+      chartsEl.innerHTML='';
+    }else if(selNode&&!selNode.isCenter&&VM&&VM[selNode.data.id]){
       const metrics=VM[selNode.data.id];
       const nSc=eff(selNode.data.id);
       const scClr=SC_META[nSc].css;
@@ -1235,7 +1477,9 @@ function updateInfo(){
   }
   /* Override scenario picker */
   const ovrEl=document.getElementById('info-override');
-  if(ovrEl&&selNode&&!selNode.isCenter){
+  if(ovrEl&&selSub){
+    ovrEl.innerHTML='';
+  }else if(ovrEl&&selNode&&!selNode.isCenter){
     const sid=selNode.data.id;
     const cur=overrides[sid];
     let oh='<div class="info-override-label">Scenario Override</div><div class="info-override-btns">';
@@ -1320,6 +1564,8 @@ nodes.forEach(n=>tgt.nodes.push({
 }));
 tgt.subs=[];
 subNodes.forEach(sn=>tgt.subs.push({health:sn.data.today/100}));
+tgt.subSubs=[];
+subSubNodes.forEach(ssn=>tgt.subSubs.push({health:ssn.data.today/100}));
 conns.forEach(()=>tgt.conns.push({opacity:0.05,color:new THREE.Color(0x444466)}));
 
 function applyScenario(sc){
@@ -1356,6 +1602,12 @@ function applyScenario(sc){
     const nSc=eff(sn.parent.data.id);
     const h=scAt(sn.data.today,sn.data.proj[nSc],year)/100;
     tgt.subs[si].health=h;
+  });
+  /* Sub-sub-node targets */
+  subSubNodes.forEach((ssn,si)=>{
+    const nSc=eff(ssn.grandParent.data.id);
+    const h=scAt(ssn.data.today,ssn.data.proj[nSc],year)/100;
+    tgt.subSubs[si].health=h;
   });
   /* Connection targets */
   conns.forEach((c,i)=>{
@@ -1412,6 +1664,8 @@ function lerpScenario(dt){
   });
   /* Sub-nodes */
   subNodes.forEach((sn,si)=>{sn.health=lerp(sn.health,tgt.subs[si].health,a)});
+  /* Sub-sub-nodes */
+  subSubNodes.forEach((ssn,si)=>{ssn.health=lerp(ssn.health,tgt.subSubs[si].health,a)});
   /* Atmosphere */
   bloom.strength=lerp(bloom.strength,tgt.bloomStr,a);
   scene.fog.density=lerp(scene.fog.density,tgt.fogDen,a);
@@ -1609,6 +1863,48 @@ function tick(){
     sn.lineGeo.attributes.position.needsUpdate=true;
   });
 
+  /* Sub-sub-node expand/collapse + health-driven animation */
+  const SUBSUB_EXPAND_SPEED=3.5;
+  subSubNodes.forEach(ssn=>{
+    const isExpanded=selSub===ssn.parent;
+    const expandTarget=isExpanded?1:0;
+    ssn.expanded=lerp(ssn.expanded,expandTarget,1-Math.exp(-SUBSUB_EXPAND_SPEED*dt));
+    if(ssn.expanded<0.005){ssn.expanded=0}
+    const e=ssn.expanded;
+    const pp=ssn.parent.mesh.position;
+    const tX=pp.x+ssn.offset.x*e;
+    const tZ=pp.z+ssn.offset.z*e;
+    ssn.mesh.position.x=lerp(ssn.mesh.position.x,tX,1-Math.exp(-6*dt));
+    ssn.mesh.position.z=lerp(ssn.mesh.position.z,tZ,1-Math.exp(-6*dt));
+    const h=ssn.health;
+    const subScale=e*(0.4+h*0.6);
+    ssn.mesh.scale.setScalar(Math.max(0.001,subScale));
+    ssn.mat.opacity=e*(0.5+h*0.5);
+    ssn.wire.material.opacity=e*(0.08+h*0.15);
+    ssn.mat.emissiveIntensity=0.05+h*0.5;
+    const desat=new THREE.Color().lerpColors(sickColor,ssn.baseColor,Math.pow(h,0.6));
+    ssn.mat.emissive.copy(desat);
+    ssn.mat.color.copy(desat);
+    const bobAmp=e*(h>0.5?0.05:0.05+((0.5-h)*0.2));
+    const bobFreq=h>0.5?1.1:1.1+((0.5-h)*2.5);
+    ssn.bobPhase+=bobFreq*dt;
+    ssn.mesh.position.y=pp.y+Math.sin(ssn.bobPhase)*bobAmp;
+    const spinSpd=0.04+h*0.12;
+    ssn.wire.rotation.y+=spinSpd*dt*5;
+    ssn.wire.rotation.x+=spinSpd*dt*3;
+    ssn.hitMesh.visible=e>0.3;
+    ssn.lineMat.opacity=e*0.12;
+    const ssA=new THREE.Vector3(pp.x,pp.y,pp.z);
+    const ssB=new THREE.Vector3(ssn.mesh.position.x,ssn.mesh.position.y,ssn.mesh.position.z);
+    const ssM=new THREE.Vector3().addVectors(ssA,ssB).multiplyScalar(0.5);
+    ssM.y+=0.35*e;
+    const ssCrv=new THREE.QuadraticBezierCurve3(ssA,ssM,ssB);
+    const ssPts=ssCrv.getPoints(SUBSUB_CURVE_SEGS);
+    const ssArr=ssn.lineGeo.attributes.position.array;
+    for(let q=0;q<ssPts.length;q++){ssArr[q*3]=ssPts[q].x;ssArr[q*3+1]=ssPts[q].y;ssArr[q*3+2]=ssPts[q].z}
+    ssn.lineGeo.attributes.position.needsUpdate=true;
+  });
+
   const cH=aggHealth;
   const cSpinSpd=0.04+cH*0.22;
   cWire.rotation.y+=cSpinSpd*dt*5;cWire.rotation.z+=cSpinSpd*dt*3;
@@ -1668,17 +1964,18 @@ function tick(){
   /* Raycaster */
   ray.setFromCamera(mouse,camera);
   const hits=ray.intersectObjects(allHitMeshes);
-  const prevHov=hovNode;const prevHovSub=hovSub;
-  hovNode=null;hovSub=null;
+  const prevHov=hovNode;const prevHovSub=hovSub;const prevHovSS=hovSubSub;
+  hovNode=null;hovSub=null;hovSubSub=null;
   if(hits.length){
     const ht=hitTargets.find(h=>h.mesh===hits[0].object);
     if(ht){
-      if(ht.isSub&&ht.node.expanded>0.3){hovSub=ht.node;renderer.domElement.style.cursor='pointer'}
-      else if(!ht.isSub){hovNode=ht.node;renderer.domElement.style.cursor='pointer'}
+      if(ht.isSubSub&&ht.node.expanded>0.3){hovSubSub=ht.node;renderer.domElement.style.cursor='pointer'}
+      else if(ht.isSub&&ht.node.expanded>0.3){hovSub=ht.node;renderer.domElement.style.cursor='pointer'}
+      else if(!ht.isSub&&!ht.isSubSub){hovNode=ht.node;renderer.domElement.style.cursor='pointer'}
       else{renderer.domElement.style.cursor='default'}
     }
   }else{renderer.domElement.style.cursor='default'}
-  if(hovNode!==prevHov||hovSub!==prevHovSub){if(hovNode||hovSub)sfx('hover');else if(prevHov||prevHovSub)sfx('unhover')}
+  if(hovNode!==prevHov||hovSub!==prevHovSub||hovSubSub!==prevHovSS){if(hovNode||hovSub||hovSubSub)sfx('hover');else if(prevHov||prevHovSub||prevHovSS)sfx('unhover')}
 
   /* Connection highlights */
   conns.forEach(c=>{
@@ -1696,13 +1993,22 @@ function tick(){
 
   /* Hover tooltip */
   const hTip=document.getElementById('hover-tip');
-  if(hovSub){
+  if(hovSubSub){
+    const sd=hovSubSub.data;
+    const nSc=eff(hovSubSub.grandParent.data.id);
+    const sc=scAt(sd.today,sd.proj[nSc],year);
+    const g=grade(sc);const c='#'+hovSubSub.baseColor.getHexString();
+    const parentLabel=hovSubSub.parent.data.label;
+    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+sd.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">'+parentLabel+' \u2192 leaf metric</div>';
+    hTip.style.left=(mouseScreen.x+16)+'px';hTip.style.top=(mouseScreen.y-10)+'px';
+    hTip.classList.remove('hidden');
+  }else if(hovSub&&hovSub!==selSub){
     const sd=hovSub.data;
     const nSc=eff(hovSub.parent.data.id);
     const sc=scAt(sd.today,sd.proj[nSc],year);
     const g=grade(sc);const c='#'+hovSub.baseColor.getHexString();
     const parentLabel=hovSub.parent.data.label;
-    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+sd.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">'+parentLabel+' sub-domain</div>';
+    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+sd.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">'+parentLabel+' sub-domain &middot; Click to expand</div>';
     hTip.style.left=(mouseScreen.x+16)+'px';hTip.style.top=(mouseScreen.y-10)+'px';
     hTip.classList.remove('hidden');
   }else if(hovNode&&hovNode!==selNode){
@@ -1749,6 +2055,20 @@ function tick(){
     const nSc=eff(sn.parent.data.id);
     const sc=scAt(sn.data.today,sn.data.proj[nSc],year);
     sn.scoreEl.textContent=sc;
+  });
+
+  /* Sub-sub-node labels */
+  subSubNodes.forEach(ssn=>{
+    if(!ssn.labelEl)return;
+    if(ssn.expanded<0.15){ssn.labelEl.style.opacity='0';ssn.labelEl.style.display='none';return}
+    ssn.labelEl.style.display='';ssn.labelEl.style.opacity=String(Math.min(1,ssn.expanded*1.5));
+    const v=new THREE.Vector3().copy(ssn.mesh.position);v.y+=0.3;v.project(camera);
+    if(v.z>1){ssn.labelEl.style.display='none';return}
+    ssn.labelEl.style.left=(v.x*hw+hw)+'px';ssn.labelEl.style.top=(-v.y*hh+hh)+'px';
+    ssn.labelEl.style.transform='translate(-50%,-100%)';
+    const nSc=eff(ssn.grandParent.data.id);
+    const sc=scAt(ssn.data.today,ssn.data.proj[nSc],year);
+    ssn.scoreEl.textContent=sc;
   });
 
   /* Update compare panel if open */
