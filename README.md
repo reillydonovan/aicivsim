@@ -38,8 +38,10 @@ public/layoutUpdate/
 ├── viz.html               # 3D network visualization — Three.js interactive systems graph
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
+├── chat.html              # AI Advisor landing page — setup guide, example questions, roadmap
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
-├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter
+├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection
+├── js/chat-widget.js      # Persistent AI Advisor chat widget — floating panel, LLM integration, page awareness, message persistence
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
@@ -95,6 +97,15 @@ public/layoutUpdate/
   - **Compact mode bar** — Compare, Charts, World, and Sound toggles styled as an inline button group matching the scenario bar pattern. Globe hidden pending redesign.
   - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects and returns to overview.
   - **Double-click navigation** — Double-clicking an unselected system node opens its dashboard page. Guarded against accidental triggers during deselect.
+- **AI Advisor (persistent chat widget)** — A floating chat panel (`js/chat-widget.js`) that persists across every page of the site. Features include:
+  - **LLM integration** — Supports OpenAI (GPT-4o, GPT-4o Mini) and Anthropic (Claude Sonnet, Claude Haiku) with streaming responses. API key stored in browser `localStorage` only — never committed to source or sent to any server besides the chosen provider.
+  - **Deep site knowledge** — System prompt encodes all 7 systems with scores and 2050 projections, 42 cross-system feedback loops, 4 scenarios with policy configurations, simulation eras, tipping points, grade scale, and policy levers.
+  - **Page awareness** — Every message includes the user's current page and its contents as context, so the advisor tailors answers to what the user can see (e.g., "The chart above shows..." on the Climate dashboard). A page tag in the header shows the current page.
+  - **Navigation tracking** — When the advisor links to a page and the user clicks it, the navigation is recorded and the advisor acknowledges the transition on the next message. Internal page links render as styled pill buttons.
+  - **Persistent conversation** — Messages, API settings, and open/collapsed state all stored in `localStorage`, surviving page navigations and browser refreshes.
+  - **Collapse/expand** — Three states: closed (bubble only), collapsed (header bar), expanded (full panel). Defaults to open+collapsed on the homepage for discoverability.
+  - **Advisor landing page** — `chat.html` provides setup instructions, example questions, and a three-phase roadmap (Chat → 3D Explorer → WebXR).
+  - **Markdown rendering** — Responses render headers, bold, italic, code, lists, and links with auto-detection of internal page references.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
 - **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`. The first four items after Home are **AI → Civilization → Simulation → Visualizer**, mirroring the site name.
@@ -181,6 +192,10 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [x] ~~Animated transitions~~ — CSS transitions + `fadeSwitch()` / `animateValue()` utilities.
 - [x] ~~Scenario persistence across pages~~ — localStorage fallback added to URL hash persistence.
 - [x] ~~Interactive policy levers on more pages~~ — Climate, Transition, and Governance each have 3 interactive sliders.
+- [x] ~~AI Advisor chat widget~~ — Persistent floating LLM chat across all pages with page awareness, navigation tracking, and internal page linking.
+- [ ] **AI Advisor — server-side API proxy** — Move API key to a server-side proxy (Cloudflare Worker, Hostinger PHP endpoint, or similar) so end users don't need their own key.
+- [ ] **AI Advisor — 3D Explorer mode** — Three.js node-based exploration interface where questions generate and navigate an interactive knowledge graph (Phase 2).
+- [ ] **WebXR visualization** — Extend the 3D system network into an immersive WebXR experience for headsets and spatial computing (Phase 3).
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
 - [ ] **Real-time cross-system feedback** — Cross-system panels now reflect the active scenario, but adjusting a policy lever on one page does not yet propagate score changes to other pages in real time.
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
@@ -203,7 +218,7 @@ Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 <script src="js/shared.js?v=20260216c"></script>
 ```
 
-Before deploying, do a **find-and-replace across all 13 HTML files** in `public/layoutUpdate/`:
+Before deploying, do a **find-and-replace across all 14 HTML files** in `public/layoutUpdate/`:
 
 - Find: `v=20260216c` (or whatever the current value is)
 - Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260217a`
@@ -214,7 +229,7 @@ This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`,
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
-3. Upload the contents of `public/layoutUpdate/` (13 HTML files + `css/` + `js/` folders) into `public_html/`
+3. Upload the contents of `public/layoutUpdate/` (14 HTML files + `css/` + `js/` folders) into `public_html/`
 
 #### Step 3 — Verify
 

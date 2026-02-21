@@ -22,6 +22,7 @@ var PAGE_ORDER=[
   {href:'strategy.html',label:'Strategy'},
   {href:'timeline.html',label:'Timeline'},
   {href:'research.html',label:'Research'},
+  {href:'chat.html',label:'Advisor'},
   {href:'about.html',label:'About'}
 ];
 
@@ -1116,4 +1117,12 @@ document.addEventListener('click',function(e){
 /* ── Auto-init: if nav already exists in DOM, highlight + mobile toggle ── */
 (function(){
   if(document.querySelector('.site-nav')) initSiteNav();
+})();
+
+/* ── Chat Widget: inject on every page ── */
+(function(){
+  var s=document.createElement('script');
+  s.src='js/chat-widget.js?v=20260221a';
+  s.defer=true;
+  document.body.appendChild(s);
 })();

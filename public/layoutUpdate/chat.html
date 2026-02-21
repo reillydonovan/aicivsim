@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Advisor — AI Civilization Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260220f">
+</head>
+<body>
+
+<header class="masthead">
+<div class="page masthead-inner">
+  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / AI Advisor</p>
+  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">AI Advisor</h1>
+  <hr class="rule">
+</div>
+</header>
+
+<div id="site-nav-mount"></div>
+
+<main>
+
+<div class="section">
+<div class="page">
+  <span class="section-num">01</span>
+  <p class="t2">About the Advisor</p>
+  <hr class="rule">
+  <div class="pullquote mt-4">
+    An AI assistant trained on the full data model behind AICIVSIM &mdash; 7 systems, 4 scenarios, 42 cross-system feedback loops, and 50 years of projections. Ask anything.
+  </div>
+
+  <div class="grid grid-2 mt-6">
+    <div class="cell">
+      <p class="t3" style="margin-bottom:8px">How It Works</p>
+      <p class="body">The advisor understands every metric, scenario, tipping point, and policy lever modeled on this site. Ask it questions in natural language and it responds with data-rich answers, linking you to the relevant dashboards and pages.</p>
+      <p class="body mt-2">The chat widget persists in the bottom-right corner of every page. Navigate the site while keeping your conversation going &mdash; click any page link in a response to jump there without losing context.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="margin-bottom:8px">Setup</p>
+      <p class="body">Click the chat bubble in the bottom-right corner, then open settings (gear icon) to paste your API key. Keys are stored in your browser's localStorage only &mdash; never sent anywhere except your chosen provider (OpenAI or Anthropic).</p>
+      <p class="body mt-2" style="color:var(--text-muted)">Supported models: GPT-4o, GPT-4o Mini, Claude Sonnet, Claude Haiku. Responses stream in real-time.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<div class="page">
+  <span class="section-num">02</span>
+  <p class="t2">Example Questions</p>
+  <hr class="rule">
+
+  <div class="grid grid-3 mt-6">
+    <div class="cell" style="padding:16px">
+      <p class="t4" style="color:var(--climate);margin-bottom:6px">SYSTEMS</p>
+      <p class="body" style="font-size:12px">"What happens to climate resilience under worst case by 2050?"</p>
+      <p class="body mt-2" style="font-size:12px">"How does AI alignment affect governance scores?"</p>
+    </div>
+    <div class="cell" style="padding:16px">
+      <p class="t4" style="color:var(--ai);margin-bottom:6px">SCENARIOS</p>
+      <p class="body" style="font-size:12px">"Compare aggressive action vs BAU across all systems"</p>
+      <p class="body mt-2" style="font-size:12px">"What are the key tipping points and when do they hit?"</p>
+    </div>
+    <div class="cell" style="padding:16px">
+      <p class="t4" style="color:var(--governance);margin-bottom:6px">POLICY</p>
+      <p class="body" style="font-size:12px">"Which policy levers have the highest impact?"</p>
+      <p class="body mt-2" style="font-size:12px">"Explain the cross-system feedback loops"</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<div class="page">
+  <span class="section-num">03</span>
+  <p class="t2">Roadmap</p>
+  <hr class="rule">
+  <div class="grid grid-3 mt-6">
+    <div class="cell" style="padding:16px">
+      <p class="t3" style="color:#4ecdc4;margin-bottom:6px">Phase 1 &mdash; Chat</p>
+      <p class="t4" style="color:var(--text-muted);margin-bottom:4px">CURRENT</p>
+      <p class="body" style="font-size:12px">Persistent floating chat widget with streaming LLM responses and contextual page linking across the entire site.</p>
+    </div>
+    <div class="cell" style="padding:16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:6px">Phase 2 &mdash; Explorer</p>
+      <p class="t4" style="color:var(--text-faint);margin-bottom:4px">NEXT</p>
+      <p class="body" style="font-size:12px">Three.js node-based exploration interface where questions generate and navigate an interactive knowledge graph.</p>
+    </div>
+    <div class="cell" style="padding:16px">
+      <p class="t3" style="color:var(--text-muted);margin-bottom:6px">Phase 3 &mdash; WebXR</p>
+      <p class="t4" style="color:var(--text-faint);margin-bottom:4px">FUTURE</p>
+      <p class="body" style="font-size:12px">Immersive visualization extending the 3D system network into a full WebXR experience for headsets and spatial computing.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="footer-mount"></div>
+</main>
+
+<script src="js/shared.js?v=20260216d"></script>
+<script>
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('footer-mount').outerHTML=renderFooter();
+localStorage.setItem('cw_open','true');
+</script>
+</body>
+</html>
