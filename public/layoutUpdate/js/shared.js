@@ -23,8 +23,6 @@ var PAGE_ORDER=[
   {href:'timeline.html',label:'Timeline'},
   {href:'research.html',label:'Research'},
   {href:'chat.html',label:'Advisor'},
-  {href:'explorer.html',label:'Explorer \u03B2'},
-  {href:'xr.html',label:'WebXR \u03B2'},
   {href:'about.html',label:'About'}
 ];
 
@@ -60,12 +58,16 @@ function renderScenarioButtons(){
   return h;
 }
 
+var NAV_PARENTS={'explorer.html':'visualizer.html','xr.html':'visualizer.html','viz.html':'visualizer.html'};
 function initSiteNav(){
   var path=window.location.pathname;
+  var parentHref=null;
+  for(var k in NAV_PARENTS){if(path.indexOf(k)!==-1){parentHref=NAV_PARENTS[k];break}}
   document.querySelectorAll('.site-nav a').forEach(function(a){
     var href=a.getAttribute('href');
     if(href && path.indexOf(href)!==-1 && href!=='index.html') a.classList.add('active');
     else if(href==='index.html' && (path.endsWith('/')||path.endsWith('/index.html'))) a.classList.add('active');
+    else if(parentHref && href===parentHref) a.classList.add('active');
   });
 
   var toggle=document.querySelector('.mobile-nav-toggle');
@@ -1076,11 +1078,15 @@ function initComparisonMode(renderCallback){
    ================================================================ */
 function renderFooter(){
   var path=window.location.pathname;
+  var parentHref=null;
+  for(var k in NAV_PARENTS){if(path.indexOf(k)!==-1&&k!=='viz.html'){parentHref=NAV_PARENTS[k];break}}
   var idx=-1;
   PAGE_ORDER.forEach(function(p,i){if(path.indexOf(p.href)!==-1) idx=i});
   if(idx===-1&&(path.endsWith('/')||path.endsWith('/index.html'))) idx=0;
   var nav='';
-  if(idx>0||idx<PAGE_ORDER.length-1){
+  if(parentHref){
+    nav='<div class="text-center" style="margin-bottom:24px"><a href="'+parentHref+'" style="color:var(--text-muted);text-decoration:none;font-family:var(--font-body);font-size:13px">&larr; Back to Visualizer</a></div>';
+  }else if(idx>0||idx<PAGE_ORDER.length-1){
     nav='<div class="flex justify-between" style="margin-bottom:24px">';
     if(idx>0){
       var prev=PAGE_ORDER[idx-1];

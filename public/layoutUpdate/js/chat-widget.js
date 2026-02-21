@@ -142,8 +142,8 @@ var PAGES={
   'viz.html':{l:'3D Network',d:'Three.js node graph with nested sub-orbits, curved connections, scenario-aware coloring'},
   'research.html':{l:'Research',d:'19-section civic roadmap paper with policy recommendations and references'},
   'chat.html':{l:'Advisor',d:'AI advisor landing page with setup guide and example questions'},
-  'explorer.html':{l:'Explorer',d:'Three.js knowledge graph — ask questions to spawn nodes in 3D space, topics orbit answers, curved connections link the graph'},
-  'xr.html':{l:'WebXR',d:'Immersive WebXR visualization — 7-system node network in VR/AR with controller interaction, scenario switching'},
+  'explorer.html':{l:'Explorer',d:'Three.js knowledge graph (beta) — ask questions to spawn nodes in 3D space, accessed via Visualizer hub'},
+  'xr.html':{l:'WebXR',d:'Immersive WebXR visualization (beta) — 7-system node network in VR/AR, accessed via Visualizer hub'},
   'about.html':{l:'About',d:'Project scope, intent, methodology, technology stack, design system'}
 };
 
@@ -285,9 +285,9 @@ A (90+), A− (85+), B+ (80+), B (70+), B− (65+), C+ (60+), C (50+), C− (45+
 - [Strategy Dashboard](strategy.html) — 20+ actions across levels
 - [Civilization Dashboard](civilization.html) — Composite health, KPI trajectories
 - [Timeline](timeline.html) — 200K-year arc, AI inflection point
-- [Visualizer](visualizer.html) — 3D interactive system network
-- [Explorer](explorer.html) — 3D knowledge graph — ask questions to spawn interactive nodes
-- [WebXR](xr.html) — Immersive VR/AR visualization of the 7-system network
+- [Visualizer](visualizer.html) — 3D experience hub: flagship visualizer, Knowledge Explorer (β), and WebXR (β)
+- [Explorer](explorer.html) — 3D knowledge graph (accessed via Visualizer hub)
+- [WebXR](xr.html) — Immersive VR/AR visualization (accessed via Visualizer hub)
 - [Research Paper](research.html) — 19-section civic roadmap
 
 ## CONTEXT AWARENESS
