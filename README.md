@@ -39,6 +39,10 @@ public/layoutUpdate/
 ├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
 ├── about.html             # About page
 ├── chat.html              # AI Advisor landing page — setup guide, example questions, roadmap
+├── api/
+│   ├── chat.php           # Streaming PHP proxy — holds API key server-side, forwards to LLM provider
+│   ├── config.example.php # Config template (committed) — copy to config.php or above web root
+│   └── .htaccess          # Blocks direct web access to config files
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
 ├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection
 ├── js/chat-widget.js      # Persistent AI Advisor chat widget — floating panel, LLM integration, page awareness, message persistence
@@ -100,12 +104,15 @@ public/layoutUpdate/
 - **AI Advisor (persistent chat widget)** — A floating chat panel (`js/chat-widget.js`) that persists across every page of the site. Features include:
   - **LLM integration** — Supports OpenAI (GPT-4o, GPT-4o Mini) and Anthropic (Claude Sonnet, Claude Haiku) with streaming responses. API key stored in browser `localStorage` only — never committed to source or sent to any server besides the chosen provider.
   - **Deep site knowledge** — System prompt encodes all 7 systems with scores and 2050 projections, 42 cross-system feedback loops, 4 scenarios with policy configurations, simulation eras, tipping points, grade scale, and policy levers.
-  - **Page awareness** — Every message includes the user's current page and its contents as context, so the advisor tailors answers to what the user can see (e.g., "The chart above shows..." on the Climate dashboard). A page tag in the header shows the current page.
+  - **Page + sub-tab awareness** — Every message includes the user's current page AND active sub-tab as context. The advisor knows you're on "Climate → Biodiversity" vs "Climate → Tipping Points" and tailors answers to the specific data visible. The header tag updates live as you switch tabs. Detailed tab descriptions for all 8 tabbed pages (Climate, AI, Simulation, Transition, Civilization, Governance, Strategy, Timeline).
   - **Navigation tracking** — When the advisor links to a page and the user clicks it, the navigation is recorded and the advisor acknowledges the transition on the next message. Internal page links render as styled pill buttons.
   - **Persistent conversation** — Messages, API settings, and open/collapsed state all stored in `localStorage`, surviving page navigations and browser refreshes.
   - **Collapse/expand** — Three states: closed (bubble only), collapsed (header bar), expanded (full panel). Defaults to open+collapsed on the homepage for discoverability.
   - **Advisor landing page** — `chat.html` provides setup instructions, example questions, and a three-phase roadmap (Chat → 3D Explorer → WebXR).
   - **Markdown rendering** — Responses render headers, bold, italic, code, lists, and links with auto-detection of internal page references.
+  - **Responsive mobile layout** — Three breakpoints: desktop (floating 380×520 panel), tablet/large phone (340×480), phone portrait (full-screen with `100dvh`). Toggle bubble hides when panel is open on mobile; dedicated close button in header. Landscape-aware height adjustment. Safe-area inset padding for notched phones.
+  - **Server-side API proxy** — PHP streaming proxy (`api/chat.php`) holds the API key server-side so visitors never need their own key. Supports both OpenAI and Anthropic. Config loads from above the web root (`/home/<user>/aicivsim_config.php`) for maximum security, with `.htaccess` fallback protection. Includes per-IP rate limiting (20 req/min) and CORS origin locking.
+  - **Dual mode** — If the server proxy is active, the widget auto-detects it and shows "Server API" — no setup needed for visitors. Users can still override with their own key if preferred.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
 - **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`. The first four items after Home are **AI → Civilization → Simulation → Visualizer**, mirroring the site name.
@@ -116,7 +123,7 @@ public/layoutUpdate/
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260216c`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260221a`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
 
 ### Scenario system
 
@@ -193,7 +200,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [x] ~~Scenario persistence across pages~~ — localStorage fallback added to URL hash persistence.
 - [x] ~~Interactive policy levers on more pages~~ — Climate, Transition, and Governance each have 3 interactive sliders.
 - [x] ~~AI Advisor chat widget~~ — Persistent floating LLM chat across all pages with page awareness, navigation tracking, and internal page linking.
-- [ ] **AI Advisor — server-side API proxy** — Move API key to a server-side proxy (Cloudflare Worker, Hostinger PHP endpoint, or similar) so end users don't need their own key.
+- [x] ~~AI Advisor — server-side API proxy~~ — PHP streaming proxy with config above web root, .htaccess protection, per-IP rate limiting, and CORS origin locking.
 - [ ] **AI Advisor — 3D Explorer mode** — Three.js node-based exploration interface where questions generate and navigate an interactive knowledge graph (Phase 2).
 - [ ] **WebXR visualization** — Extend the 3D system network into an immersive WebXR experience for headsets and spatial computing (Phase 3).
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
@@ -214,26 +221,34 @@ No install, no build. Open any HTML file directly or serve with any static file 
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 
 ```html
-<link rel="stylesheet" href="css/style.css?v=20260216c">
-<script src="js/shared.js?v=20260216c"></script>
+<link rel="stylesheet" href="css/style.css?v=20260221a">
+<script src="js/shared.js?v=20260221a"></script>
 ```
 
 Before deploying, do a **find-and-replace across all 14 HTML files** in `public/layoutUpdate/`:
 
-- Find: `v=20260216c` (or whatever the current value is)
-- Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260217a`
+- Find: `v=20260221a` (or whatever the current value is)
+- Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260222a`
 
 This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.
 
-#### Step 2 — Upload
+#### Step 2 — Upload site files
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
-3. Upload the contents of `public/layoutUpdate/` (14 HTML files + `css/` + `js/` folders) into `public_html/`
+3. Upload the contents of `public/layoutUpdate/` (14 HTML files + `css/` + `js/` + `api/` folders) into `public_html/`
 
-#### Step 3 — Verify
+#### Step 3 — Set up AI Advisor API proxy
 
-Hard-refresh the site (`Ctrl+Shift+R` / `Cmd+Shift+R`) and confirm the new version string appears in the page source.
+1. In File Manager, navigate to `/home/<username>/` (one level **above** `public_html/`)
+2. Upload `aicivsim_config.php` with your API key filled in — this file is completely unreachable from the web
+3. Verify `public_html/api/` contains `chat.php`, `config.example.php`, and `.htaccess`
+
+The proxy auto-detects the config above the web root. If not found, it falls back to `api/config.php` (protected by `.htaccess`). The widget auto-detects the proxy and shows "Server API" — no key needed from visitors.
+
+#### Step 4 — Verify
+
+Hard-refresh the site (`Ctrl+Shift+R` / `Cmd+Shift+R`) and confirm the new version string appears in the page source. Open the chat widget and verify "Server API" appears in the settings bar.
 
 ---
 

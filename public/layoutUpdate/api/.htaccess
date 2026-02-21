@@ -1,0 +1,14 @@
+# Block direct access to config files
+<FilesMatch "config\.php$">
+    Require all denied
+</FilesMatch>
+
+# Block access to example config too
+<FilesMatch "config\.example\.php$">
+    Require all denied
+</FilesMatch>
+
+# Only allow POST to chat.php
+<FilesMatch "chat\.php$">
+    Require all granted
+</FilesMatch>

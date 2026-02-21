@@ -2,10 +2,14 @@
 /*
  * AICIVSIM — AI Advisor API Configuration
  *
- * Copy this file to config.php and fill in your API key.
- * config.php is gitignored and should NEVER be committed.
+ * OPTION A (recommended): Place this file ABOVE the web root as:
+ *   /home/<username>/aicivsim_config.php
+ *   This is completely inaccessible from the web — no URL can reach it.
  *
- * Upload config.php to public_html/api/ on Hostinger.
+ * OPTION B (fallback): Copy to config.php in this same api/ directory.
+ *   Protected by .htaccess but still inside public_html/.
+ *
+ * config.php is gitignored and should NEVER be committed.
  */
 
 return [

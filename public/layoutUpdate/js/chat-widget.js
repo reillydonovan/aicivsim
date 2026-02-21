@@ -104,10 +104,35 @@ css.textContent=`
 @keyframes cwIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes cwBlink{0%,80%,100%{opacity:0.3}40%{opacity:1}}
 
-/* Mobile */
+/* Tablet portrait + large phones */
+@media(max-width:768px){
+  .cw-panel{width:340px;max-width:calc(100vw - 32px);height:480px;bottom:76px;right:16px}
+  .cw-toggle{bottom:16px;right:16px;width:44px;height:44px}
+  .cw-head-btn{width:26px;height:26px;font-size:12px}
+  .cw-head-actions{gap:2px}
+  .cw-page-tag{font-size:7px;padding:2px 4px;max-width:100px;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* Phone portrait — full-screen panel */
 @media(max-width:480px){
-  .cw-panel{bottom:0;right:0;width:100vw;max-width:100vw;height:100vh;max-height:100vh;border-radius:0;border:none}
-  .cw-toggle{bottom:16px;right:16px}
+  .cw-panel{bottom:0;right:0;width:100vw;max-width:100vw;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;border-radius:0;border:none}
+  .cw-panel.collapsed{height:auto;bottom:0}
+  .cw-toggle.mobile-hidden{display:none}
+  .cw-toggle{bottom:16px;right:16px;width:42px;height:42px}
+  .cw-toggle svg{width:18px;height:18px}
+  .cw-input-area{padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);gap:8px}
+  .cw-send{padding:8px 12px;font-size:9px}
+  .cw-head{padding:10px 12px}
+  .cw-head-actions{gap:1px}
+  .cw-head-btn{width:26px;height:26px;font-size:12px}
+  .cw-page-tag{font-size:7px;padding:2px 4px;max-width:80px;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* Landscape phone — shorter panel */
+@media(max-height:500px){
+  .cw-panel{height:calc(100vh - 20px);height:calc(100dvh - 20px);bottom:10px;right:10px;max-height:none}
+  .cw-panel.collapsed{height:auto}
+  .cw-toggle{bottom:10px;right:10px}
 }
 `;
 document.head.appendChild(css);
@@ -130,6 +155,59 @@ var PAGES={
   'about.html':{l:'About',d:'Project scope, intent, methodology, technology stack, design system'}
 };
 
+/* ── SUB-TAB DESCRIPTIONS ── */
+var TABS={
+  'climate.html':{
+    overview:'Overview — today/projected scores, policy levers, 9 metric projection charts',
+    scenarios:'Scenarios — side-by-side comparison grid of all 4 scenarios across climate metrics',
+    biodiversity:'Biodiversity — species index, habitat loss, extinction rates, ecosystem health projections',
+    energy:'Energy & Emissions — CO₂ concentration, renewable share, fossil fuel phase-out, emission trajectories',
+    resources:'Resources — crop yield, water stress, forest cover, ocean pH, resource depletion projections',
+    tipping:'Tipping Points — Arctic ice-free, coral collapse, Amazon dieback, thresholds with breach indicators'
+  },
+  'ai.html':{
+    overview:'Overview — alignment index, transparency, safety coverage, compute governance, autonomy, public trust',
+    scenarios:'Scenarios — 4-scenario comparison across all AI metrics',
+    safety:'Safety — protocol coverage, incident tracking, containment readiness',
+    governance:'Compute — compute governance, resource allocation, access equity',
+    risks:'Risks — 5 threshold cards with scenario-specific risk levels and notes',
+    milestones:'Milestones — 5-phase AI development timeline with capability markers'
+  },
+  'simulation.html':{
+    overview:'Overview — 5 policy levers, 50-year timeline, era narratives, world state report',
+    trajectories:'Trajectories — GINI, Trust, Emissions, Resilience, AI Influence projection charts',
+    scenarios:'Scenarios — scenario comparison with policy configuration details'
+  },
+  'transition.html':{
+    overview:'Overview — poverty rate, reskill time, placement rate, employment metrics',
+    bridges:'Income Bridges — income bridge calculator, civic dividend modeling',
+    projections:'Projections — workforce transition projection charts across scenarios'
+  },
+  'civilization.html':{
+    overview:'Overview — composite health index, today/projected scores',
+    trajectories:'Trajectories — KPI trajectory charts for aggregate health',
+    funding:'Funding — funding models, civic dividend allocation',
+    timeline:'Timeline — civilization milestone progression with scenario grades'
+  },
+  'governance.html':{
+    overview:'Overview — civic participation, charter adoption, institutional trust, audit coverage',
+    assemblies:'Assemblies — 5 citizen assemblies with per-scenario status and grades',
+    modules:'Modules — 5 governance modules with deployment status per scenario',
+    audit:'Audit Timeline — safety audit coverage progression and milestones'
+  },
+  'strategy.html':{
+    overview:'Overview — 20+ actions with adoption rates and impact scores',
+    personal:'Personal — individual-level actions and adoption metrics',
+    organization:'Organization — institutional-level actions and adoption metrics',
+    policy:'Policy — systemic/government-level actions and adoption metrics'
+  },
+  'timeline.html':{
+    overview:'The Arc — 200K-year visual timeline of civilization inflection points',
+    inflection:'The Inflection — why this decade is different, convergence of crises',
+    futures:'Possible Futures — scenario-aware era-by-era projections through 2050'
+  }
+};
+
 /* ── PAGE AWARENESS ── */
 function currentPageKey(){
   var path=window.location.pathname;
@@ -145,6 +223,17 @@ function currentPageLabel(){
 function currentPageDesc(){
   var k=currentPageKey();
   return k&&PAGES[k]?PAGES[k].d:'';
+}
+function currentTab(){
+  var active=document.querySelector('.nav-tab.active');
+  if(!active)return null;
+  return active.getAttribute('data-section')||null;
+}
+function currentTabDesc(){
+  var pg=currentPageKey();
+  var tab=currentTab();
+  if(!pg||!tab||!TABS[pg])return null;
+  return TABS[pg][tab]||null;
 }
 var _lastPage=localStorage.getItem('cw_last_page')||'';
 
@@ -208,10 +297,12 @@ A (90+), A− (85+), B+ (80+), B (70+), B− (65+), C+ (60+), C (50+), C− (45+
 - [Research Paper](research.html) — 19-section civic roadmap
 
 ## CONTEXT AWARENESS
-You always receive a [CONTEXT] block at the start of each user turn telling you which page the user is currently viewing and what data is on that page. Use this to:
-- Tailor answers to what the user can see right now ("On this page you can see..." or "The chart above shows...")
+You always receive a [CONTEXT] block at the start of each user turn telling you which page AND which sub-tab the user is currently viewing. Pages have multiple tabs (e.g. Climate has Overview, Scenarios, Biodiversity, Energy & Emissions, Resources, Tipping Points). Use this to:
+- Tailor answers to the specific tab the user is on ("The Biodiversity tab you're viewing shows..." or "On this Tipping Points tab you can see...")
+- Reference specific data visible on that tab — don't describe content from other tabs unless asked
+- Suggest switching to another tab on the same page when relevant ("Try the Energy & Emissions tab for CO₂ details")
 - Suggest other pages only when the question goes beyond what the current page covers
-- When the context says "Navigated via advisor link to...", acknowledge the navigation briefly (e.g. "Now that you're on the Climate dashboard, you can see...")
+- When the context says "Navigated via advisor link to...", acknowledge the navigation briefly
 
 When linking to pages, use markdown links like [Climate Dashboard](climate.html). Keep answers concise but data-rich. Use specific scores, projections, and scenario comparisons. Frame as planning tool, not predictions.`;
 
@@ -239,8 +330,8 @@ panel.innerHTML=`
   <div class="cw-head-actions">
     <button class="cw-head-btn" id="cw-collapse-btn" title="Collapse">&#9660;</button>
     <button class="cw-head-btn" id="cw-settings-btn" title="API settings">&#9881;</button>
-    <button class="cw-head-btn" id="cw-clear-btn" title="Clear chat">&#10005;</button>
-    <button class="cw-head-btn" id="cw-full-btn" title="Full page" onclick="window.location.href='chat.html'">&#8599;</button>
+    <button class="cw-head-btn" id="cw-clear-btn" title="Clear history">&#8634;</button>
+    <button class="cw-head-btn cw-close-btn" id="cw-close-btn" title="Close">&#10005;</button>
   </div>
 </div>
 <div class="cw-settings" id="cw-settings">
@@ -315,13 +406,28 @@ document.getElementById('cw-settings-btn').addEventListener('click',function(){
 document.getElementById('cw-clear-btn').addEventListener('click',function(){
   messages=[];saveMessages();renderLog();
 });
+document.getElementById('cw-close-btn').addEventListener('click',function(){
+  isOpen=false;
+  panel.classList.remove('visible');
+  toggle.classList.remove('open');
+  localStorage.setItem('cw_open','false');
+  syncMobileToggle();
+});
 
 /* ── TOGGLE ── */
+var _isMobile=window.matchMedia('(max-width:480px)');
+_isMobile.addEventListener('change',syncMobileToggle);
+function syncMobileToggle(){
+  if(_isMobile.matches&&isOpen)toggle.classList.add('mobile-hidden');
+  else toggle.classList.remove('mobile-hidden');
+}
+
 toggle.addEventListener('click',function(){
   isOpen=!isOpen;
   panel.classList.toggle('visible',isOpen);
   toggle.classList.toggle('open',isOpen);
   localStorage.setItem('cw_open',isOpen?'true':'false');
+  syncMobileToggle();
   if(isOpen){
     if(isCollapsed)setCollapsed(false);
     log.scrollTop=log.scrollHeight;
@@ -473,9 +579,12 @@ function buildContext(){
   var pg=currentPageKey();
   var label=currentPageLabel();
   var desc=currentPageDesc();
+  var tab=currentTab();
+  var tabDesc=currentTabDesc();
   var ctx='[CONTEXT] User is viewing: '+label;
   if(pg)ctx+=' ('+pg+')';
-  if(desc)ctx+=' — Page contains: '+desc;
+  if(tab&&tabDesc)ctx+=' → Active tab: '+tabDesc;
+  else if(desc)ctx+=' — Page contains: '+desc;
   var navTo=localStorage.getItem('cw_nav_to');
   if(navTo&&navTo===pg){
     var navFrom=localStorage.getItem('cw_nav_from');
@@ -627,7 +736,20 @@ function updateProxyUI(){
 
 /* ── INIT ── */
 var pageTag=document.getElementById('cw-page-tag');
-if(pageTag)pageTag.textContent=currentPageLabel();
+function updatePageTag(){
+  if(!pageTag)return;
+  var label=currentPageLabel();
+  var tab=currentTab();
+  pageTag.textContent=tab?label+' / '+tab:label;
+}
+updatePageTag();
+
+/* Listen for tab changes to update the page tag live */
+document.addEventListener('click',function(e){
+  if(e.target.closest&&e.target.closest('.nav-tab')){
+    setTimeout(updatePageTag,50);
+  }
+});
 
 /* On page load: detect if we arrived via an advisor link */
 (function(){
@@ -647,6 +769,7 @@ if(pageTag)pageTag.textContent=currentPageLabel();
 })();
 
 renderLog();
+syncMobileToggle();
 if(isOpen)setTimeout(function(){log.scrollTop=log.scrollHeight},50);
 
 })();

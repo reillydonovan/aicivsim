@@ -7,7 +7,20 @@
  * The API key never leaves the server.
  */
 
-$cfg = @include(__DIR__ . '/config.php');
+/*
+ * Config load order (first match wins):
+ * 1. Above web root — safest, completely inaccessible from the web
+ *    e.g. /home/username/aicivsim_config.php on Hostinger
+ * 2. Local config.php — protected by .htaccess, works as fallback
+ */
+$cfg = false;
+$aboveRoot = dirname($_SERVER['DOCUMENT_ROOT'] ?? '') . '/aicivsim_config.php';
+if (file_exists($aboveRoot)) {
+    $cfg = @include($aboveRoot);
+}
+if (!$cfg) {
+    $cfg = @include(__DIR__ . '/config.php');
+}
 if (!$cfg || empty($cfg['api_key'])) {
     http_response_code(500);
     header('Content-Type: application/json');
