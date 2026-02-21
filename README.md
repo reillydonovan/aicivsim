@@ -45,8 +45,8 @@ public/layoutUpdate/
 │   ├── chat.php           # Streaming PHP proxy — holds API key server-side, forwards to LLM provider
 │   ├── config.example.php # Config template (committed) — copy to config.php or above web root
 │   └── .htaccess          # Blocks direct web access to config files
-├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading
-├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection
+├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading, command palette, scroll animations, reading progress bar, back-to-top, enhanced hover states
+├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection, command palette, reading progress bar, back-to-top, scroll-reveal animations
 ├── js/chat-widget.js      # Persistent AI Advisor chat widget — floating panel, LLM integration, page awareness, message persistence
 └── styleguide.md          # Feltron design guide used to build the site
 ```
@@ -55,7 +55,7 @@ public/layoutUpdate/
 
 - **Zero dependencies** — No npm, no build step, no framework. Plain HTML/CSS/JS served as static files.
 - **AI dashboard** — Dedicated `ai.html` page tracking 6 AI-specific domains: Alignment Index, Model Transparency, Safety Protocol Coverage, Compute Governance, Autonomy Safety, and Public Trust in AI. Includes 6 tabs (Overview with policy levers and 6 projection charts, Scenarios comparison grid, Safety sub-domain, Compute sub-domain, Risks with 5 threshold cards and scenario-specific notes, Milestones with 5-phase development timeline), plus always-visible cross-system impact and a 4-scenario summary panel at the bottom. Follows the same Feltron editorial pattern as every other page.
-- **Visualizer landing page** — `visualizer.html` introduces the 3D experience with four editorial sections (What It Is, What You Can Do, How It Works, Controls Reference) before a prominent "Enter the Visualizer" CTA, plus secondary buttons linking to the Knowledge Explorer β and WebXR Experience β. The main nav links here; `viz.html` is the actual 3D app. A back-link in `viz.html` returns to the landing page. The Simulation page also includes a direct CTA linking to the Visualizer, since `viz.html` is where the simulation of all system metrics comes to life in 3D.
+- **3D Experiences hub** — `visualizer.html` serves as the hub page for all three 3D experiences: the flagship Visualizer, Knowledge Explorer β, and WebXR β. Four editorial sections (What It Is, What You Can Do, How It Works, Controls Reference) describe the core visualizer, followed by Section 05 — "Three Ways to Experience the Data" with three stacked launch cards, each with descriptions, feature stats, and styled CTAs. The main nav links to this hub under "Visualizer"; `viz.html`, `explorer.html`, and `xr.html` are the actual 3D apps. A `NAV_PARENTS` mapping in `shared.js` highlights the "Visualizer" nav link when on any child page, and the footer shows a "Back to Visualizer" link instead of generic prev/next. The Simulation page also includes a direct CTA to the Visualizer.
 - **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair. The index page shows all seven systems with today + projected scores that update with scenario selection.
 - **Standardized 4-scenario system** — All pages now use the same four scenarios (Aggressive, Moderate, BAU, Worst) with consistent colors (#4ecdc4, #5da5da, #e8a838, #d4622a). Transition was migrated from its original 3-scenario system (Baseline/Transition/Full Stack) to match.
 - **Standardized chart headers** — Every graph uses a consistent `chartHeader()` function (defined in `shared.js`) that renders a Feltron domain-card style header: uppercase `t3` metric label, large `num-lg` projected value colored to the active scenario, trend arrow (green/red based on direction preference), end-year target, and baseline reference.
@@ -68,7 +68,7 @@ public/layoutUpdate/
   - **Civilization timeline** — Each milestone has per-scenario scores, grades, goal comparison, status tags, and narrative notes.
   - **Climate tipping points** — Risk levels (low/moderate/high/critical) calculated dynamically from projected temperature vs. threshold, with BREACHED indicators, margin display, and scenario-specific notes.
   - **Strategy** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
-  - **Index page** — Seven Systems cards (including AI) show today + projected scores, hero projected score, and scenario descriptions all update dynamically. A dedicated CTA section links to the Visualizer landing page, plus a responsive two-card CTA grid for the Knowledge Explorer β and WebXR Experience β.
+  - **Index page** — Seven Systems cards (including AI) show today + projected scores, hero projected score, and scenario descriptions all update dynamically. A dedicated CTA section links to the Visualizer hub, with an additional "3 Experiences Under One Roof" callout linking to the hub page where all three 3D modes are accessible.
 - **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
 - **Scenario persistence (hash + localStorage)** — Active scenario is stored in the URL hash (e.g. `#aggressive`) AND in `localStorage`. Sharing a link preserves the selected scenario; navigating between pages automatically maintains the selected scenario via localStorage fallback.
 - **Prev/Next page navigation** — Footer includes contextual navigation links to the previous and next page in the site order.
@@ -136,9 +136,14 @@ public/layoutUpdate/
   - **Info panel** — Shows selected node name, score, grade, year, scenario, description, and sub-metric breakdown for all three nesting levels.
   - **Camera fly-to/fly-back** — Clicking a node flies the camera to focus on it; clicking again or pressing Escape flies back to the overview position.
   - **Desktop fallback** — Full OrbitControls with auto-rotate, bloom, labels, and raycasting when no headset is connected. The page functions as a standalone 3D viewer on any WebGL device.
+- **Command palette (Ctrl+K / Cmd+K)** — A Spotlight/VS Code-style search overlay accessible from any page. Fuzzy-searches across all pages (13), 3D experiences (3), scenarios (4), and actions (theme toggle). Full keyboard navigation with arrow keys and Enter. Grouped results with emoji icons and descriptions. Clicking a scenario item sets it globally and reloads. Styled for both dark and light mode.
+- **Reading progress bar** — A 2px accent-colored bar fixed to the top of the viewport that fills proportionally as you scroll. Fades in after the first scroll and disappears at the top. Provides a subtle reading-depth indicator on long editorial pages like Research and Timeline.
+- **Back-to-top button** — A floating circular button (bottom-right, offset to avoid the chat widget) that appears after 400px of scroll. Smooth-scrolls to top on click with an accent-colored hover state. Hidden in print stylesheets.
+- **Scroll-triggered entrance animations** — All `.cell`, `.pullquote`, `.chapter-divider`, and `.section-num` elements use IntersectionObserver to fade and slide up into view as they enter the viewport. Each element animates once and stays visible. Respects `prefers-reduced-motion` for accessibility. Renders normally in print. Does not affect 3D pages since they use canvas-based UI.
+- **Enhanced cell hover states** — Grid cells show a 3px accent-colored left border bar on hover, adding a subtle editorial highlight effect to data cards across all dashboard pages.
 - **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
 - **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
-- **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`. The first four items after Home are **AI → Civilization → Simulation → Visualizer**, mirroring the site name.
+- **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`. The first four items after Home are **AI → Civilization → Simulation → Visualizer**, mirroring the site name. A `NAV_PARENTS` map allows child pages (e.g., `explorer.html`, `xr.html`, `viz.html`) to highlight their parent nav item ("Visualizer") and render a "Back to Visualizer" footer link instead of generic prev/next.
 - **Dark / light mode** — Theme toggle in the nav bar switches between dark (default) and light mode. Preference persists in localStorage. Light mode overrides CSS custom properties for backgrounds, text, borders, and chart elements.
 - **Data export (CSV)** — Every chart includes a "CSV" download button. Click to export all scenario data for that metric as a CSV file. Powered by `registerChartExport()` + `downloadCSV()` in `shared.js`.
 - **Cross-system feedback loops (scenario-aware)** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence all other operating systems (42 total cross-system relationships across 7 systems). Weights, effect descriptions, and visual impact bars all update dynamically when the user switches scenarios — e.g., Climate's workforce displacement impact ranges from −5% under Aggressive Action to −35% under Worst Case, each with a unique narrative explanation. Every impact carries four distinct scenario texts describing how the relationship plays out under each policy configuration.
@@ -146,7 +151,7 @@ public/layoutUpdate/
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260221b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260221d`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
 
 ### Scenario system
 
@@ -226,6 +231,12 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [x] ~~AI Advisor — server-side API proxy~~ — PHP streaming proxy with config above web root, .htaccess protection, per-IP rate limiting, and CORS origin locking.
 - [x] ~~AI Advisor — 3D Explorer mode~~ — `explorer.html` — Three.js knowledge graph where questions spawn interactive nodes with topic satellites, curved connections, streaming LLM responses, and camera fly-to.
 - [x] ~~WebXR visualization~~ — `xr.html` — Immersive VR/AR experience rendering the 7-system network with dual XR modes, controller interaction, scenario switching, and desktop fallback.
+- [x] ~~3D Experiences hub~~ — `visualizer.html` consolidated into a hub for all three 3D modes (Visualizer, Explorer β, WebXR β) with `NAV_PARENTS` child-page highlighting and "Back to Visualizer" footer links. Explorer and WebXR removed from top-level nav to reduce menu clutter.
+- [x] ~~Command palette~~ — Ctrl+K / Cmd+K global search overlay with fuzzy matching across pages, scenarios, and actions.
+- [x] ~~Reading progress bar~~ — Thin accent-colored progress indicator fixed to top of viewport.
+- [x] ~~Scroll-triggered animations~~ — IntersectionObserver-based entrance animations for cells, pullquotes, chapter dividers, and section numbers.
+- [x] ~~Back-to-top button~~ — Floating scroll-to-top button with visibility threshold and accent hover state.
+- [x] ~~Enhanced cell hover states~~ — Left-border accent indicator on grid cell hover.
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
 - [ ] **Real-time cross-system feedback** — Cross-system panels now reflect the active scenario, but adjusting a policy lever on one page does not yet propagate score changes to other pages in real time.
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
@@ -244,13 +255,13 @@ No install, no build. Open any HTML file directly or serve with any static file 
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 
 ```html
-<link rel="stylesheet" href="css/style.css?v=20260221b">
-<script src="js/shared.js?v=20260221b"></script>
+<link rel="stylesheet" href="css/style.css?v=20260221d">
+<script src="js/shared.js?v=20260221d"></script>
 ```
 
 Before deploying, do a **find-and-replace across all 16 HTML files** in `public/layoutUpdate/`:
 
-- Find: `v=20260221b` (or whatever the current value is)
+- Find: `v=20260221d` (or whatever the current value is)
 - Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260222a`
 
 This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.

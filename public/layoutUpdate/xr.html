@@ -104,6 +104,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 #labels{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5}
 .node-label{position:absolute;font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.5);white-space:nowrap;text-align:center;transform:translate(-50%,-100%);transition:opacity 0.3s;text-shadow:0 1px 4px rgba(0,0,0,0.8)}
+.node-label-score{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;display:block;margin-top:1px}
+.node-label-grade{font-size:8px;opacity:0.5;display:block}
+
+/* Hover tooltip */
+.hover-tip{position:fixed;pointer-events:none;z-index:20;background:rgba(6,6,14,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:8px 12px;backdrop-filter:blur(8px);transition:opacity 0.12s;white-space:nowrap;max-width:240px}
+.hover-tip.hidden{opacity:0}
+.hover-tip-name{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;font-weight:500}
+.hover-tip-score{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-top:2px}
+.hover-tip-desc{font-size:9px;color:rgba(255,255,255,0.35);margin-top:3px;white-space:normal;line-height:1.4;max-width:220px}
+.hover-tip-hint{font-size:8px;color:rgba(255,255,255,0.2);margin-top:4px;font-style:italic}
 
 @media(max-width:768px){
   .top-bar{padding:12px 16px}
@@ -119,6 +129,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <body>
 <div id="cv"></div>
 <div id="labels"></div>
+<div id="hover-tip" class="hover-tip hidden"></div>
 
 <div id="ui">
   <div class="top-bar">
@@ -185,7 +196,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260221c"></script>
+<script src="js/shared.js?v=20260221d"></script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -308,7 +319,7 @@ let active='aggressive',year=2026,playing=false,selNode=null,selSub=null,selSubS
 let worldOpen=false,compareOpen=false;
 let audioCtx=null,masterGain=null,audioInited=false,audioMuted=true;
 const voices=[];const VOICE_FREQ=[130.81,164.81,196.00,246.94,293.66,220.00];
-const overviewPos=new THREE.Vector3(0,3,7);
+const overviewPos=new THREE.Vector3(0,4,10);
 
 function scAt(today,proj,yr){return Math.round(today+(proj-today)*((yr-2026)/24))}
 function grade(s){return s>=90?'A':s>=85?'A−':s>=80?'B+':s>=70?'B':s>=65?'B−':s>=60?'C+':s>=50?'C':s>=45?'C−':s>=40?'D+':s>=35?'D':s>=30?'D−':'F'}
@@ -332,7 +343,7 @@ scene.fog=new THREE.FogExp2(0x080810,0.025);
 scene.background=new THREE.Color(0x080810);
 
 const camera=new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,200);
-camera.position.set(0,3,7);
+camera.position.set(0,4,10);
 
 const ctrl=new OrbitControls(camera,renderer.domElement);
 ctrl.enableDamping=true;ctrl.dampingFactor=0.06;
@@ -379,8 +390,10 @@ const centerWire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.42,1),new THREE.
 centerWire.position.copy(centerMesh.position);scene.add(centerWire);
 const centerRing=new THREE.Mesh(new THREE.RingGeometry(0.5,0.53,32),new THREE.MeshBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.08,side:THREE.DoubleSide}));
 centerRing.rotation.x=-Math.PI/2;centerRing.position.copy(centerMesh.position);scene.add(centerRing);
+const centerLbl=document.createElement('div');centerLbl.className='node-label';centerLbl.style.fontSize='10px';
+centerLbl.textContent='Civilization';document.getElementById('labels').appendChild(centerLbl);
 const centerNode={id:'center',label:'Civilization',data:AGG,mesh:centerMesh,wire:centerWire,ring:centerRing,isCenter:true,
-  desc:'Composite aggregate of all 7 interconnected systems.',phase:0,subNodes:[]};
+  desc:'Composite aggregate of all 7 interconnected systems.',phase:0,subNodes:[],labelEl:centerLbl};
 const centerHit=new THREE.Mesh(new THREE.SphereGeometry(0.6,8,8),new THREE.MeshBasicMaterial({visible:false}));
 centerHit.position.copy(centerMesh.position);scene.add(centerHit);
 hitTargets.push({mesh:centerHit,node:centerNode});
@@ -661,6 +674,45 @@ renderer.domElement.addEventListener('click',e=>{
   }else{selNode=null;selSub=null;selSubSub=null;ctrl.autoRotate=true;updateUI()}
 });
 
+/* Hover tooltip */
+const hoverMouse=new THREE.Vector2();
+let hovNode=null;
+const hTip=document.getElementById('hover-tip');
+renderer.domElement.addEventListener('mousemove',e=>{
+  hoverMouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
+  raycaster.setFromCamera(hoverMouse,camera);
+  const hits=raycaster.intersectObjects(hitTargets.map(h=>h.mesh));
+  if(hits.length){
+    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+    if(ht){
+      const n=ht.node;
+      hovNode=n;
+      const sc=n.isCenter?currentScore(AGG):currentScore(n.data);
+      const g=grade(sc);const col=scoreColor(sc);
+      const name=n.label;
+      let desc=n.desc||'';
+      let hint='Click to inspect';
+      if(n.isSub){desc=n.parent?.label+' sub-domain';hint='Click to expand sub-metrics'}
+      else if(n.isSubSub){desc=n.parent?.parent?.label+' → '+n.parent?.label;hint='Click to select'}
+      else if(n.isCenter){desc='Composite of all 7 systems';hint='Click for system breakdown'}
+      else if(n.data?.href){hint='Click to inspect · Double-click for dashboard'}
+      hTip.innerHTML='<div class="hover-tip-name" style="color:'+col+'">'+name+'</div>'
+        +'<div class="hover-tip-score" style="color:'+col+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div>'
+        +'<div class="hover-tip-desc">'+desc+'</div>'
+        +'<div class="hover-tip-hint">'+hint+'</div>';
+      hTip.style.left=(e.clientX+16)+'px';
+      hTip.style.top=(e.clientY-10)+'px';
+      hTip.classList.remove('hidden');
+      renderer.domElement.style.cursor='pointer';
+    }
+  }else{
+    hovNode=null;
+    hTip.classList.add('hidden');
+    renderer.domElement.style.cursor='';
+  }
+});
+renderer.domElement.addEventListener('mouseleave',()=>{hovNode=null;hTip.classList.add('hidden')});
+
 /* ================================================================
    WEBXR
    ================================================================ */
@@ -834,6 +886,15 @@ renderer.setAnimationLoop(function(){
   centerMesh.scale.setScalar(cScale/0.35);
   centerWire.scale.setScalar(cScale/0.35);
 
+  if(!inXR&&centerNode.labelEl){
+    const cSc=currentScore(AGG);const cG=grade(cSc);const cCol=scoreColor(cSc);
+    centerNode.labelEl.innerHTML='Civilization<span class="node-label-score" style="color:'+cCol+'">'+cSc+' '+cG+'</span>';
+    const cv=centerMesh.position.clone().add(new THREE.Vector3(0,0.55,0));cv.project(camera);
+    centerNode.labelEl.style.left=((cv.x*0.5+0.5)*window.innerWidth)+'px';
+    centerNode.labelEl.style.top=((-cv.y*0.5+0.5)*window.innerHeight)+'px';
+    centerNode.labelEl.style.opacity=cv.z<1?(cSel?'0.9':'0.5'):'0';
+  }
+
   /* System nodes — health-driven scale + color */
   nodes.forEach(n=>{
     const sc=currentScore(n.data)/100;
@@ -865,6 +926,8 @@ renderer.setAnimationLoop(function(){
     n.mesh.material.emissive.lerp(baseCol,dt*3);
 
     if(!inXR&&n.labelEl){
+      const nsc=currentScore(n.data);const ng=grade(nsc);const ncol=scoreColor(nsc);
+      n.labelEl.innerHTML=n.label+'<span class="node-label-score" style="color:'+ncol+'">'+nsc+' '+ng+'</span>';
       const v=n.mesh.position.clone().add(new THREE.Vector3(0,0.35+newScale*0.15,0));v.project(camera);
       n.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
       n.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';
@@ -917,6 +980,8 @@ renderer.setAnimationLoop(function(){
     sn.lineGeo.attributes.position.needsUpdate=true;
 
     if(!inXR&&sn.labelEl){
+      const snSc=currentScore(sn.data);const snG=grade(snSc);const snCol=scoreColor(snSc);
+      sn.labelEl.innerHTML=sn.label+'<span class="node-label-score" style="color:'+snCol+';font-size:9px">'+snSc+' '+snG+'</span>';
       const v=sn.mesh.position.clone().add(new THREE.Vector3(0,SUB_SIZE*2,0));v.project(camera);
       sn.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
       sn.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';
@@ -969,6 +1034,8 @@ renderer.setAnimationLoop(function(){
     ssn.lineGeo.attributes.position.needsUpdate=true;
 
     if(!inXR&&ssn.labelEl){
+      const ssnSc=currentScore(ssn.data);const ssnG=grade(ssnSc);const ssnCol=scoreColor(ssnSc);
+      ssn.labelEl.innerHTML=ssn.label+'<span class="node-label-score" style="color:'+ssnCol+';font-size:8px">'+ssnSc+' '+ssnG+'</span>';
       const v=ssn.mesh.position.clone().add(new THREE.Vector3(0,SSUB_SIZE*3,0));v.project(camera);
       ssn.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
       ssn.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';

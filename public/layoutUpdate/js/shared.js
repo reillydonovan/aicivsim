@@ -1013,7 +1013,7 @@ function initSectionNav(navSelector,sectionPrefix,defaultSection){
   btns.forEach(function(b){
     b.setAttribute('role','tab');
     b.setAttribute('aria-controls',sectionPrefix+b.dataset.section);
-    b.addEventListener('click',function(){show(b.dataset.section)});
+    b.addEventListener('click',function(){show(b.dataset.section);window.scrollTo({top:0,behavior:'smooth'})});
   });
   show(defaultSection||btns[0].dataset.section);
   return show;
@@ -1122,6 +1122,179 @@ document.addEventListener('click',function(e){
   downloadCSV('aicivsim-'+id+'.csv',d.headers,d.rows);
 });
 
+/* ================================================================
+   COMMAND PALETTE (Ctrl+K / Cmd+K)
+   ================================================================ */
+var CMD_ITEMS=[
+  {g:'Pages',l:'Home',d:'Overview — all 7 systems with current + projected scores',h:'index.html',icon:'🏠'},
+  {g:'Pages',l:'AI',d:'AI system — alignment, safety, regulation metrics',h:'ai.html',icon:'🤖'},
+  {g:'Pages',l:'Civilization',d:'Civilization health — Gini, trust, wellbeing, resilience',h:'civilization.html',icon:'🏛'},
+  {g:'Pages',l:'Simulation',d:'Interactive engine — 5 policy levers, narrative reports',h:'simulation.html',icon:'⚙'},
+  {g:'Pages',l:'Visualizer',d:'3D experience hub — Visualizer, Explorer, WebXR',h:'visualizer.html',icon:'🌐'},
+  {g:'Pages',l:'Climate',d:'Planetary systems — temperature, emissions, biodiversity',h:'climate.html',icon:'🌍'},
+  {g:'Pages',l:'Transition',d:'Workforce — poverty, reskilling, income bridge calculator',h:'transition.html',icon:'📊'},
+  {g:'Pages',l:'Governance',d:'Institutions — participation, AI charter, citizen assemblies',h:'governance.html',icon:'⚖'},
+  {g:'Pages',l:'Strategy',d:'Action catalog — 50+ interventions across 3 levels',h:'strategy.html',icon:'🎯'},
+  {g:'Pages',l:'Timeline',d:'200,000 years of inflection points',h:'timeline.html',icon:'📅'},
+  {g:'Pages',l:'Research',d:'19-section civic roadmap',h:'research.html',icon:'📄'},
+  {g:'Pages',l:'Advisor',d:'AI chat assistant with page-aware context',h:'chat.html',icon:'💬'},
+  {g:'Pages',l:'About',d:'Project scope, methodology, technology stack',h:'about.html',icon:'ℹ'},
+  {g:'3D Experiences',l:'3D Visualizer',d:'Flagship 3D network — nodes, sound, timeline',h:'viz.html',icon:'✦'},
+  {g:'3D Experiences',l:'Knowledge Explorer β',d:'AI-powered 3D knowledge graph',h:'explorer.html',icon:'🔭'},
+  {g:'3D Experiences',l:'WebXR β',d:'Immersive VR/AR visualization',h:'xr.html',icon:'🥽'},
+  {g:'Scenarios',l:'Aggressive Action',d:'Best-case policy scenario',action:function(){setScenarioHash('aggressive');location.reload()},icon:'🟢'},
+  {g:'Scenarios',l:'Moderate Reform',d:'Middle-ground scenario',action:function(){setScenarioHash('moderate');location.reload()},icon:'🔵'},
+  {g:'Scenarios',l:'Business as Usual',d:'No major policy changes',action:function(){setScenarioHash('bau');location.reload()},icon:'🟡'},
+  {g:'Scenarios',l:'Worst Case',d:'Systemic failure scenario',action:function(){setScenarioHash('worst');location.reload()},icon:'🔴'},
+  {g:'Actions',l:'Toggle Light / Dark Mode',d:'Switch theme',action:function(){document.body.classList.toggle('light');try{localStorage.setItem('aicivsim-theme',document.body.classList.contains('light')?'light':'dark')}catch(e){}},icon:'🌓'}
+];
+
+(function(){
+  var backdrop=document.createElement('div');
+  backdrop.className='cmd-backdrop';
+  var dialog=document.createElement('div');
+  dialog.className='cmd-dialog';
+  dialog.innerHTML=
+    '<div class="cmd-input-wrap">'+
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>'+
+    '<input class="cmd-input" placeholder="Search pages, scenarios, actions\u2026" autocomplete="off" spellcheck="false">'+
+    '<kbd>esc</kbd>'+
+    '</div>'+
+    '<div class="cmd-results"></div>'+
+    '<div class="cmd-footer"><span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span><span><kbd>↵</kbd> select</span><span><kbd>esc</kbd> close</span></div>';
+  document.body.appendChild(backdrop);
+  document.body.appendChild(dialog);
+
+  var input=dialog.querySelector('.cmd-input');
+  var results=dialog.querySelector('.cmd-results');
+  var activeIdx=-1;
+  var filtered=[];
+
+  function open(){backdrop.classList.add('open');dialog.classList.add('open');input.value='';render('');input.focus();activeIdx=-1}
+  function close(){backdrop.classList.remove('open');dialog.classList.remove('open');input.blur()}
+  function isOpen(){return backdrop.classList.contains('open')}
+
+  function fuzzy(query,text){
+    var q=query.toLowerCase(),t=text.toLowerCase(),qi=0;
+    for(var ti=0;ti<t.length&&qi<q.length;ti++){if(t[ti]===q[qi])qi++}
+    return qi===q.length;
+  }
+
+  function render(q){
+    filtered=[];
+    var grouped={};
+    CMD_ITEMS.forEach(function(it){
+      if(q&&!fuzzy(q,it.l)&&!fuzzy(q,it.d||'')&&!fuzzy(q,it.g))return;
+      if(!grouped[it.g])grouped[it.g]=[];
+      grouped[it.g].push(it);
+      filtered.push(it);
+    });
+    if(!filtered.length){results.innerHTML='<div class="cmd-empty">No results for &ldquo;'+q+'&rdquo;</div>';return}
+    var h='';
+    for(var g in grouped){
+      h+='<div class="cmd-group">'+g+'</div>';
+      grouped[g].forEach(function(it){
+        var idx=filtered.indexOf(it);
+        h+='<div class="cmd-item'+(idx===activeIdx?' active':'')+'" data-idx="'+idx+'">';
+        h+='<div class="cmd-item-icon">'+it.icon+'</div>';
+        h+='<div class="cmd-item-text"><div class="cmd-item-label">'+it.l+'</div>';
+        if(it.d)h+='<div class="cmd-item-desc">'+it.d+'</div>';
+        h+='</div></div>';
+      });
+    }
+    results.innerHTML=h;
+  }
+
+  function select(it){
+    close();
+    if(it.action){it.action();return}
+    if(it.h)window.location.href=it.h;
+  }
+
+  function highlightIdx(i){
+    activeIdx=Math.max(0,Math.min(filtered.length-1,i));
+    results.querySelectorAll('.cmd-item').forEach(function(el){el.classList.remove('active')});
+    var el=results.querySelector('[data-idx="'+activeIdx+'"]');
+    if(el){el.classList.add('active');el.scrollIntoView({block:'nearest'})}
+  }
+
+  input.addEventListener('input',function(){activeIdx=-1;render(input.value)});
+  results.addEventListener('click',function(e){
+    var el=e.target.closest('.cmd-item');
+    if(el){var idx=parseInt(el.dataset.idx,10);if(filtered[idx])select(filtered[idx])}
+  });
+  backdrop.addEventListener('click',close);
+
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();isOpen()?close():open();return}
+    if(!isOpen())return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='ArrowDown'){e.preventDefault();highlightIdx(activeIdx+1);return}
+    if(e.key==='ArrowUp'){e.preventDefault();highlightIdx(activeIdx-1);return}
+    if(e.key==='Enter'){e.preventDefault();if(activeIdx>=0&&filtered[activeIdx])select(filtered[activeIdx]);else if(filtered.length===1)select(filtered[0]);return}
+  });
+})();
+
+/* ================================================================
+   READING PROGRESS BAR
+   ================================================================ */
+(function(){
+  var bar=document.createElement('div');
+  bar.className='reading-progress';
+  document.body.appendChild(bar);
+  var ticking=false;
+  function update(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    var pct=h>0?Math.min(window.scrollY/h,1):0;
+    bar.style.width=(pct*100)+'%';
+    bar.style.opacity=pct>0.01?'1':'0';
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+  update();
+})();
+
+/* ================================================================
+   BACK TO TOP BUTTON
+   ================================================================ */
+(function(){
+  var btn=document.createElement('button');
+  btn.className='back-to-top';
+  btn.setAttribute('aria-label','Back to top');
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>';
+  document.body.appendChild(btn);
+  var ticking=false;
+  function check(){btn.classList.toggle('visible',window.scrollY>400);ticking=false}
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(check)}},{passive:true});
+  btn.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+  check();
+})();
+
+/* ================================================================
+   SCROLL REVEAL — IntersectionObserver
+   ================================================================ */
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  function init(){
+    var targets=document.querySelectorAll('.cell,.pullquote,.chapter-divider,.section-num');
+    if(!targets.length)return;
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('revealed');
+          io.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+    targets.forEach(function(el){
+      el.classList.add('scroll-reveal');
+      io.observe(el);
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else setTimeout(init,50);
+})();
+
 /* ── Auto-init: if nav already exists in DOM, highlight + mobile toggle ── */
 (function(){
   if(document.querySelector('.site-nav')) initSiteNav();
@@ -1130,7 +1303,7 @@ document.addEventListener('click',function(e){
 /* ── Chat Widget: inject on every page ── */
 (function(){
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260221a';
+  s.src='js/chat-widget.js?v=20260221d';
   s.defer=true;
   document.body.appendChild(s);
 })();
