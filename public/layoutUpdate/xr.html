@@ -319,7 +319,7 @@ let active='aggressive',year=2026,playing=false,selNode=null,selSub=null,selSubS
 let worldOpen=false,compareOpen=false;
 let audioCtx=null,masterGain=null,audioInited=false,audioMuted=true;
 const voices=[];const VOICE_FREQ=[130.81,164.81,196.00,246.94,293.66,220.00];
-const overviewPos=new THREE.Vector3(0,4,10);
+const overviewPos=new THREE.Vector3(0,3,7);
 
 function scAt(today,proj,yr){return Math.round(today+(proj-today)*((yr-2026)/24))}
 function grade(s){return s>=90?'A':s>=85?'A−':s>=80?'B+':s>=70?'B':s>=65?'B−':s>=60?'C+':s>=50?'C':s>=45?'C−':s>=40?'D+':s>=35?'D':s>=30?'D−':'F'}
@@ -343,7 +343,7 @@ scene.fog=new THREE.FogExp2(0x080810,0.025);
 scene.background=new THREE.Color(0x080810);
 
 const camera=new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,200);
-camera.position.set(0,4,10);
+camera.position.set(0,3,7);
 
 const ctrl=new OrbitControls(camera,renderer.domElement);
 ctrl.enableDamping=true;ctrl.dampingFactor=0.06;
@@ -365,8 +365,8 @@ const gridMat=new THREE.MeshBasicMaterial({color:0x1a1a2e,wireframe:true,transpa
 const gridMesh=new THREE.Mesh(gridGeo,gridMat);scene.add(gridMesh);
 
 /* Orbit ring */
-const ORBIT_R=3;
-const orbitRingGeo=new THREE.RingGeometry(ORBIT_R-0.02,ORBIT_R+0.02,64);
+const ORBIT_R=2;
+const orbitRingGeo=new THREE.RingGeometry(ORBIT_R-0.015,ORBIT_R+0.015,64);
 orbitRingGeo.rotateX(-Math.PI/2);
 scene.add(new THREE.Mesh(orbitRingGeo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.03,side:THREE.DoubleSide})));
 
@@ -378,23 +378,23 @@ const subNodes=[];
 const subSubNodes=[];
 const conns=[];
 const hitTargets=[];
-const SUB_ORBIT_R=1.3;
-const SUB_SIZE=0.12;
+const SUB_ORBIT_R=0.85;
+const SUB_SIZE=0.08;
 
 /* Center */
-const centerGeo=new THREE.IcosahedronGeometry(0.35,2);
+const centerGeo=new THREE.IcosahedronGeometry(0.24,2);
 const centerMat=new THREE.MeshPhongMaterial({color:0x9b87f5,emissive:0x9b87f5,emissiveIntensity:0.25,transparent:true,opacity:0.85});
 const centerMesh=new THREE.Mesh(centerGeo,centerMat);
 centerMesh.position.set(0,1.5,0);scene.add(centerMesh);
-const centerWire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.42,1),new THREE.MeshBasicMaterial({color:0x9b87f5,wireframe:true,transparent:true,opacity:0.12}));
+const centerWire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.29,1),new THREE.MeshBasicMaterial({color:0x9b87f5,wireframe:true,transparent:true,opacity:0.12}));
 centerWire.position.copy(centerMesh.position);scene.add(centerWire);
-const centerRing=new THREE.Mesh(new THREE.RingGeometry(0.5,0.53,32),new THREE.MeshBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.08,side:THREE.DoubleSide}));
+const centerRing=new THREE.Mesh(new THREE.RingGeometry(0.34,0.36,32),new THREE.MeshBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.08,side:THREE.DoubleSide}));
 centerRing.rotation.x=-Math.PI/2;centerRing.position.copy(centerMesh.position);scene.add(centerRing);
 const centerLbl=document.createElement('div');centerLbl.className='node-label';centerLbl.style.fontSize='10px';
 centerLbl.textContent='Civilization';document.getElementById('labels').appendChild(centerLbl);
 const centerNode={id:'center',label:'Civilization',data:AGG,mesh:centerMesh,wire:centerWire,ring:centerRing,isCenter:true,
   desc:'Composite aggregate of all 7 interconnected systems.',phase:0,subNodes:[],labelEl:centerLbl};
-const centerHit=new THREE.Mesh(new THREE.SphereGeometry(0.6,8,8),new THREE.MeshBasicMaterial({visible:false}));
+const centerHit=new THREE.Mesh(new THREE.SphereGeometry(0.4,8,8),new THREE.MeshBasicMaterial({visible:false}));
 centerHit.position.copy(centerMesh.position);scene.add(centerHit);
 hitTargets.push({mesh:centerHit,node:centerNode});
 
@@ -404,14 +404,14 @@ SYS.forEach((s,i)=>{
   const x=Math.cos(angle)*ORBIT_R;
   const z=Math.sin(angle)*ORBIT_R;
 
-  const mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(0.22,2),new THREE.MeshPhongMaterial({color:s.color,emissive:s.color,emissiveIntensity:0.15,transparent:true,opacity:0.85}));
+  const mesh=new THREE.Mesh(new THREE.IcosahedronGeometry(0.15,2),new THREE.MeshPhongMaterial({color:s.color,emissive:s.color,emissiveIntensity:0.15,transparent:true,opacity:0.85}));
   mesh.position.set(x,1.5,z);scene.add(mesh);
-  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.27,1),new THREE.MeshBasicMaterial({color:s.color,wireframe:true,transparent:true,opacity:0.1}));
+  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(0.18,1),new THREE.MeshBasicMaterial({color:s.color,wireframe:true,transparent:true,opacity:0.1}));
   wire.position.copy(mesh.position);scene.add(wire);
-  const ring=new THREE.Mesh(new THREE.RingGeometry(0.3,0.33,24),new THREE.MeshBasicMaterial({color:s.color,transparent:true,opacity:0.06,side:THREE.DoubleSide}));
+  const ring=new THREE.Mesh(new THREE.RingGeometry(0.2,0.22,24),new THREE.MeshBasicMaterial({color:s.color,transparent:true,opacity:0.06,side:THREE.DoubleSide}));
   ring.rotation.x=-Math.PI/2;ring.position.copy(mesh.position);scene.add(ring);
 
-  const hit=new THREE.Mesh(new THREE.SphereGeometry(0.4,8,8),new THREE.MeshBasicMaterial({visible:false}));
+  const hit=new THREE.Mesh(new THREE.SphereGeometry(0.28,8,8),new THREE.MeshBasicMaterial({visible:false}));
   hit.position.copy(mesh.position);scene.add(hit);
 
   const lbl=document.createElement('div');lbl.className='node-label';lbl.textContent=s.label;
@@ -461,7 +461,7 @@ SYS.forEach((s,i)=>{
 });
 
 /* Sub-sub-nodes (third layer) */
-const SSUB_ORBIT=0.55;const SSUB_SIZE=0.06;
+const SSUB_ORBIT=0.36;const SSUB_SIZE=0.04;
 subNodes.forEach(parentSub=>{
   const key=parentSub.parent.data.id+'_'+parentSub.id;
   const ssData=SUB_SUB_NODE_DATA[key];
@@ -1241,7 +1241,7 @@ function startXR(mode){
     document.getElementById('ui').style.display='none';
     document.getElementById('labels').style.display='none';
 
-    world.position.set(0,-0.3,-5);
+    world.position.set(0,-0.3,-3.2);
     hudMesh.visible=true;
     hudInited=false;
     xrLabels.forEach(l=>l.mesh.visible=true);
@@ -1363,7 +1363,7 @@ function onXRSelectEnd(e){
 let flyPos=null,flyTarget=null,flyProgress=1;
 function flyTo(pos){
   const dir=new THREE.Vector3().subVectors(camera.position,pos).normalize();
-  flyPos=pos.clone().add(dir.multiplyScalar(3)).add(new THREE.Vector3(0,1,0));
+  flyPos=pos.clone().add(dir.multiplyScalar(2)).add(new THREE.Vector3(0,0.7,0));
   flyTarget=pos.clone();
   flyProgress=0;
 }
@@ -1470,14 +1470,14 @@ renderer.setAnimationLoop(function(){
   centerRing.material.opacity=0.06+0.04*Math.sin(t*1.5);
   const cSel=selNode===centerNode;const cHov=inXR&&xrHoveredNode===centerNode;
   centerMat.emissiveIntensity=cSel?0.5:cHov?0.4:0.15+0.15*aggSc;
-  const cScale=0.3+0.15*aggSc;
-  centerMesh.scale.setScalar(cScale/0.35);
-  centerWire.scale.setScalar(cScale/0.35);
+  const cScale=0.2+0.1*aggSc;
+  centerMesh.scale.setScalar(cScale/0.24);
+  centerWire.scale.setScalar(cScale/0.24);
 
   if(!inXR&&centerNode.labelEl){
     const cSc=currentScore(AGG);const cG=grade(cSc);const cCol=scoreColor(cSc);
     centerNode.labelEl.innerHTML='Civilization<span class="node-label-score" style="color:'+cCol+'">'+cSc+' '+cG+'</span>';
-    const cv=centerMesh.position.clone().add(new THREE.Vector3(0,0.55,0));cv.project(camera);
+    const cv=centerMesh.position.clone().add(new THREE.Vector3(0,0.38,0));cv.project(camera);
     centerNode.labelEl.style.left=((cv.x*0.5+0.5)*window.innerWidth)+'px';
     centerNode.labelEl.style.top=((-cv.y*0.5+0.5)*window.innerHeight)+'px';
     centerNode.labelEl.style.opacity=cv.z<1?(cSel?'0.9':'0.5'):'0';
@@ -1502,7 +1502,7 @@ renderer.setAnimationLoop(function(){
     const curScale=n.mesh.scale.x;
     const newScale=lerp(curScale,targetScale,dt*4);
     n.mesh.scale.setScalar(newScale);
-    n.wire.scale.setScalar(newScale*(0.27/0.22));
+    n.wire.scale.setScalar(newScale*(0.18/0.15));
 
     const nHov=inXR&&xrHoveredNode===n;
     n.mesh.material.emissiveIntensity=isSel?0.5:nHov?0.4:0.1+0.2*sc;
@@ -1517,7 +1517,7 @@ renderer.setAnimationLoop(function(){
     if(!inXR&&n.labelEl){
       const nsc=currentScore(n.data);const ng=grade(nsc);const ncol=scoreColor(nsc);
       n.labelEl.innerHTML=n.label+'<span class="node-label-score" style="color:'+ncol+'">'+nsc+' '+ng+'</span>';
-      const v=n.mesh.position.clone().add(new THREE.Vector3(0,0.35+newScale*0.15,0));v.project(camera);
+      const v=n.mesh.position.clone().add(new THREE.Vector3(0,0.24+newScale*0.1,0));v.project(camera);
       n.labelEl.style.left=((v.x*0.5+0.5)*window.innerWidth)+'px';
       n.labelEl.style.top=((-v.y*0.5+0.5)*window.innerHeight)+'px';
       n.labelEl.style.opacity=v.z<1?(isSel?'0.9':'0.5'):'0';
@@ -1678,7 +1678,7 @@ renderer.setAnimationLoop(function(){
     xrCam.getWorldPosition(camWorld);
 
     if(centerNode.xrLabel){
-      centerNode.xrLabel.mesh.position.copy(centerMesh.position).add(new THREE.Vector3(0,0.6,0));
+      centerNode.xrLabel.mesh.position.copy(centerMesh.position).add(new THREE.Vector3(0,0.4,0));
       billboardY(centerNode.xrLabel.mesh,camWorld);
       const cs=currentScore(AGG);const cg=grade(cs);const cc=scoreColor(cs);
       updateLabelCanvas(centerNode.xrLabel,'Civilization',String(cs),cg,cc);
@@ -1686,7 +1686,7 @@ renderer.setAnimationLoop(function(){
     nodes.forEach(n=>{
       if(n.xrLabel){
         n.xrLabel.mesh.visible=true;
-        n.xrLabel.mesh.position.copy(n.mesh.position).add(new THREE.Vector3(0,0.4,0));
+        n.xrLabel.mesh.position.copy(n.mesh.position).add(new THREE.Vector3(0,0.28,0));
         billboardY(n.xrLabel.mesh,camWorld);
         const sc=currentScore(n.data);const g=grade(sc);const c=scoreColor(sc);
         updateLabelCanvas(n.xrLabel,n.label,String(sc),g,c);
@@ -1695,7 +1695,7 @@ renderer.setAnimationLoop(function(){
     subNodes.forEach(sn=>{
       if(sn.xrLabel){
         sn.xrLabel.mesh.visible=sn.expanded>0.3;
-        sn.xrLabel.mesh.position.copy(sn.mesh.position).add(new THREE.Vector3(0,0.2,0));
+        sn.xrLabel.mesh.position.copy(sn.mesh.position).add(new THREE.Vector3(0,0.14,0));
         if(sn.expanded>0.3){
           billboardY(sn.xrLabel.mesh,camWorld);
           const sc=currentScore(sn.data);const g=grade(sc);const c=scoreColor(sc);
