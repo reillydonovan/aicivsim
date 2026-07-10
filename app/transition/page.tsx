@@ -705,7 +705,7 @@ export default function Home() {
         <p className="mt-1">
           <a href="/blog" className="underline" style={{ color: "var(--text-muted)" }}>Blog</a>
           {" \u00B7 "}
-          <a href="https://github.com/reillyclawcode/transitionOS" target="_blank" rel="noopener" className="underline" style={{ color: "var(--text-muted)" }}>GitHub</a>
+          <a href="https://github.com/reillydonovan/aicivsim" target="_blank" rel="noopener" className="underline" style={{ color: "var(--text-muted)" }}>GitHub</a>
           {" \u00B7 "}
           <a href="/simulation" className="underline" style={{ color: "var(--text-muted)" }}>Simulation</a>
           {" \u00B7 "}

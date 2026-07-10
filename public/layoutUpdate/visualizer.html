@@ -4,10 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Visualizer — AI Civilization Simulator</title>
+<meta name="description" content="The 3D Experiences hub - flagship network visualizer, AI Knowledge Explorer, and immersive WebXR.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://aicivsim.com/visualizer.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Visualizer — AI Civilization Simulator">
+<meta property="og:description" content="The 3D Experiences hub - flagship network visualizer, AI Knowledge Explorer, and immersive WebXR.">
+<meta property="og:url" content="https://aicivsim.com/visualizer.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Visualizer — AI Civilization Simulator">
+<meta name="twitter:description" content="The 3D Experiences hub - flagship network visualizer, AI Knowledge Explorer, and immersive WebXR.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260221d">
+<link rel="stylesheet" href="css/style.css?v=20260710a">
 </head>
 <body>
 
@@ -60,9 +71,9 @@
       <p class="t4 mt-2">Switch between Aggressive Action, Moderate Reform, Business as Usual, and Worst Case. Watch every node scale, pulse, and recolor in response. The ambient soundscape shifts from harmonic consonance to dissonant drift.</p>
     </div>
     <div class="cell">
-      <p class="num-lg" style="color:var(--accent)">50</p>
+      <p class="num-lg" style="color:var(--accent)">25</p>
       <p class="t3 mt-1">Year Timeline</p>
-      <p class="t4 mt-2">Scrub from 2026 to 2075. Charts split into solid past and dashed future. Scores interpolate year-by-year. A narrative panel summarizes the state of the world at any point on the timeline.</p>
+      <p class="t4 mt-2">Scrub from 2026 to 2050. Charts split into solid past and dashed future. Scores interpolate year-by-year. A narrative panel summarizes the state of the world at any point on the timeline.</p>
     </div>
     <div class="cell">
       <p class="num-lg" style="color:var(--accent)">6</p>
@@ -130,6 +141,7 @@
     <div class="cell">
       <p class="t3" style="margin-bottom:8px">Keyboard Shortcuts</p>
       <p class="t4"><strong style="color:var(--text-primary)">1 &ndash; 4</strong> &mdash; switch scenario (Aggressive, Moderate, BAU, Worst).</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Space</strong> &mdash; play / pause the timeline.</p>
       <p class="t4 mt-2"><strong style="color:var(--text-primary)">M</strong> &mdash; toggle sound on/off.</p>
       <p class="t4 mt-2"><strong style="color:var(--text-primary)">Esc</strong> &mdash; deselect node and return to overview.</p>
       <p class="t4 mt-2"><strong style="color:var(--text-primary)">Left / Right arrows</strong> &mdash; step through the timeline year by year.</p>
@@ -157,7 +169,7 @@
       <div style="flex:1;min-width:260px">
         <p class="t4" style="color:var(--accent);margin-bottom:4px">FLAGSHIP</p>
         <p class="t2" style="color:var(--accent);margin-bottom:10px">3D Network Visualizer</p>
-        <p class="t4" style="line-height:1.7;max-width:480px">The core experience. Six system nodes orbit a central Civilization Index with 3-layer nested sub-nodes, 42 weighted cross-system connections, scenario-driven timeline (2026&ndash;2050), floating chart overlays, a World State narrative panel, comparison mode, and a cosmic symphony audio layer that harmonizes when systems are healthy and fractures when they fail.</p>
+        <p class="t4" style="line-height:1.7;max-width:480px">The core experience. Six system nodes orbit a central Civilization Index with 3-layer nested sub-nodes, 21 connections carrying 42 directional cross-system influence weights, scenario-driven timeline (2026&ndash;2050), floating chart overlays, a World State narrative panel, comparison mode, and a cosmic symphony audio layer that harmonizes when systems are healthy and fractures when they fail.</p>
         <p class="t4 mt-3" style="color:var(--text-faint);line-height:1.7">Sound on recommended. Works on desktop and mobile. Requires WebGL. Best in fullscreen.</p>
         <a href="viz.html" style="display:inline-block;margin-top:16px;padding:14px 36px;background:var(--accent);color:#080810;font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border-radius:4px;transition:opacity 0.2s" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Enter the Visualizer &rarr;</a>
       </div>
@@ -204,7 +216,7 @@
       <div style="flex:1;min-width:260px">
         <p class="t4" style="color:#9b87f5;margin-bottom:4px">BETA</p>
         <p class="t2" style="color:#9b87f5;margin-bottom:10px">WebXR Experience</p>
-        <p class="t4" style="line-height:1.7;max-width:480px">Step inside the civilization network. The full 7-system visualization with 3-layer nested sub-nodes, year timeline, 4-scenario switching, health-driven visuals, and ambient cosmic symphony audio &mdash; rendered for immersive VR and AR headsets. Works as a standalone 3D viewer on desktop browsers without a headset.</p>
+        <p class="t4" style="line-height:1.7;max-width:480px">Step inside the civilization network. Six system nodes orbiting a central Civilization Index with 3-layer nested sub-nodes, year timeline, 4-scenario switching, health-driven visuals, and ambient cosmic symphony audio &mdash; rendered for immersive VR and AR headsets. Works as a standalone 3D viewer on desktop browsers without a headset.</p>
         <div class="grid grid-3 mt-4" style="gap:8px">
           <div style="text-align:center">
             <p style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:#9b87f5">VR</p>
@@ -236,7 +248,7 @@
 <!-- FOOTER -->
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260221d"></script>
+<script src="js/shared.js?v=20260710a"></script>
 <script>
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
 document.getElementById('page-footer').innerHTML=renderFooter();

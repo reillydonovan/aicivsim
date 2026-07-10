@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Civilization Simulator — WebXR</title>
+<meta name="description" content="Immersive WebXR (VR/AR) visualization of the civilization systems network.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://aicivsim.com/xr.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="AI Civilization Simulator — WebXR">
+<meta property="og:description" content="Immersive WebXR (VR/AR) visualization of the civilization systems network.">
+<meta property="og:url" content="https://aicivsim.com/xr.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI Civilization Simulator — WebXR">
+<meta name="twitter:description" content="Immersive WebXR (VR/AR) visualization of the civilization systems network.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -124,10 +135,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   .xr-btns{bottom:80px;right:12px}
   .hint{display:none}
 }
+
+/* Boot / error overlay */
+.boot{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#080810;transition:opacity 0.5s;pointer-events:none}
+.boot.gone{opacity:0}
+.boot-spinner{width:28px;height:28px;border:2px solid rgba(255,255,255,0.08);border-top-color:#9b87f5;border-radius:50%;animation:bootspin 0.9s linear infinite}
+@keyframes bootspin{to{transform:rotate(360deg)}}
+.boot-msg{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+.boot.error .boot-spinner{display:none}
+.boot.error{pointer-events:auto}
+.boot.error .boot-msg{color:#d4622a;max-width:420px;text-align:center;text-transform:none;letter-spacing:0.02em;line-height:1.7}
+.boot a{color:#9b87f5}
 </style>
 </head>
 <body>
 <div id="cv"></div>
+<div class="boot" id="boot">
+  <div class="boot-spinner"></div>
+  <div class="boot-msg" id="boot-msg">Loading 3D engine&hellip;</div>
+</div>
 <div id="labels"></div>
 <div id="hover-tip" class="hover-tip hidden"></div>
 
@@ -147,7 +173,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       </div>
       <div class="mode-bar" style="margin-top:6px">
         <button class="mode-btn" id="mode-world">World</button>
-        <button class="mode-btn" id="mode-compare">Compare</button>
         <button class="mode-btn" id="mode-sound">Sound</button>
       </div>
       <div class="agg" style="margin-top:8px">
@@ -196,7 +221,24 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260221d"></script>
+<script src="js/shared.js?v=20260710a"></script>
+<script>
+/* Boot watchdog — surface CDN/module failures instead of a black screen */
+(function(){
+  var boot=document.getElementById('boot');
+  function fail(msg){
+    if(!boot||boot.classList.contains('gone'))return;
+    boot.classList.add('error');
+    document.getElementById('boot-msg').innerHTML=msg;
+  }
+  window.addEventListener('error',function(e){
+    if(e.target&&(e.target.tagName==='SCRIPT'))fail('Could not load the 3D engine (network/CDN error).<br>Check your connection and refresh, or <a href="visualizer.html">go back to the Visualizer hub</a>.');
+  },true);
+  setTimeout(function(){
+    if(!window.__xrBooted)fail('The 3D engine did not start.<br>Your browser may not support WebGL2 / ES modules.<br><a href="visualizer.html">Back to the Visualizer hub</a>');
+  },10000);
+})();
+</script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -307,21 +349,14 @@ const SUB_SUB_NODE_DATA={
   strategy_systemic:[{id:'regulation',label:'Regulation',color:0x4ecdc4,today:42,proj:{aggressive:88,moderate:68,bau:28,worst:12}},{id:'infrastr',label:'Infrastructure',color:0xe8a838,today:38,proj:{aggressive:85,moderate:62,bau:22,worst:8}},{id:'intl',label:'International',color:0x5da5da,today:35,proj:{aggressive:82,moderate:58,bau:20,worst:8}}]
 };
 
-const TIPPING=[
-  {node:'climate',label:'Arctic ice-free summer',thresholds:{bau:2035,worst:2031}},
-  {node:'climate',label:'Coral reef functional collapse',thresholds:{bau:2034,worst:2030}},
-  {node:'climate',label:'Amazon dieback threshold',thresholds:{bau:2040,worst:2035}},
-  {node:'governance',label:'Governance capacity exceeded',thresholds:{worst:2038}},
-  {node:'transition',label:'Mass displacement threshold',thresholds:{bau:2042,worst:2036}}
-];
-
-let active='aggressive',year=2026,playing=false,selNode=null,selSub=null,selSubSub=null;
-let worldOpen=false,compareOpen=false;
+let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'aggressive';
+let year=2026,playing=false,selNode=null,selSub=null,selSubSub=null;
+let worldOpen=false;
 let audioCtx=null,masterGain=null,audioInited=false,audioMuted=true;
 const voices=[];const VOICE_FREQ=[130.81,164.81,196.00,246.94,293.66,220.00];
 const overviewPos=new THREE.Vector3(0,3,7);
 
-function scAt(today,proj,yr){return Math.round(today+(proj-today)*((yr-2026)/24))}
+function scAt(today,proj,yr){const t=Math.max(0,Math.min(1,(yr-2026)/24));return Math.round(today+(proj-today)*t)}
 function grade(s){return s>=90?'A':s>=85?'A−':s>=80?'B+':s>=70?'B':s>=65?'B−':s>=60?'C+':s>=50?'C':s>=45?'C−':s>=40?'D+':s>=35?'D':s>=30?'D−':'F'}
 function scoreColor(s){return s>=70?'#4ecdc4':s>=50?'#5da5da':s>=35?'#e8a838':'#d4622a'}
 function scoreHex(s){return s>=70?0x4ecdc4:s>=50?0x5da5da:s>=35?0xe8a838:0xd4622a}
@@ -393,7 +428,7 @@ centerRing.rotation.x=-Math.PI/2;centerRing.position.copy(centerMesh.position);s
 const centerLbl=document.createElement('div');centerLbl.className='node-label';centerLbl.style.fontSize='10px';
 centerLbl.textContent='Civilization';document.getElementById('labels').appendChild(centerLbl);
 const centerNode={id:'center',label:'Civilization',data:AGG,mesh:centerMesh,wire:centerWire,ring:centerRing,isCenter:true,
-  desc:'Composite aggregate of all 7 interconnected systems.',phase:0,subNodes:[],labelEl:centerLbl};
+  desc:'Composite aggregate of the six interconnected systems.',phase:0,subNodes:[],labelEl:centerLbl};
 const centerHit=new THREE.Mesh(new THREE.SphereGeometry(0.4,8,8),new THREE.MeshBasicMaterial({visible:false}));
 centerHit.position.copy(centerMesh.position);scene.add(centerHit);
 hitTargets.push({mesh:centerHit,node:centerNode});
@@ -541,6 +576,11 @@ function makeBillboard(canvas,scaleH){
 }
 
 function updateLabelCanvas(lbl,name,score,grd,color){
+  /* Skip the redraw + GPU texture upload when nothing changed —
+     this runs per label per frame in XR otherwise. */
+  const sig=name+'|'+score+'|'+grd+'|'+color;
+  if(lbl._sig===sig)return;
+  lbl._sig=sig;
   const c=lbl.canvas;const x=c.getContext('2d');
   x.clearRect(0,0,c.width,c.height);
   x.fillStyle='rgba(6,6,14,0.8)';
@@ -655,6 +695,11 @@ const wsPanel=makeSidePanel();
 const nodePanel=makeSidePanel();
 
 function renderWorldPanel(){
+  /* Redraw only when visible content or the cursor actually changed —
+     this is called every XR frame and each redraw uploads a 512px texture. */
+  const sig=active+'|'+year+'|'+Math.round(wsPanel.cursorU*200)+'|'+Math.round(wsPanel.cursorV*200);
+  if(wsPanel._sig===sig)return;
+  wsPanel._sig=sig;
   const c=wsPanel.canvas;const x=c.getContext('2d');
   x.clearRect(0,0,sidePW,sidePH);
   x.fillStyle='rgba(6,6,14,0.94)';x.beginPath();x.roundRect(4,4,sidePW-8,sidePH-8,12);x.fill();
@@ -709,6 +754,10 @@ function renderWorldPanel(){
 }
 
 function renderNodePanel(){
+  const selKey=(selSubSub?selSubSub.label:'')+'/'+(selSub?selSub.label:'')+'/'+(selNode?(selNode.isCenter?'center':selNode.label):'');
+  const sig=active+'|'+year+'|'+selKey+'|'+Math.round(nodePanel.cursorU*200)+'|'+Math.round(nodePanel.cursorV*200);
+  if(nodePanel._sig===sig)return;
+  nodePanel._sig=sig;
   const c=nodePanel.canvas;const x=c.getContext('2d');
   x.clearRect(0,0,sidePW,sidePH);
   x.fillStyle='rgba(6,6,14,0.94)';x.beginPath();x.roundRect(4,4,sidePW-8,sidePH-8,12);x.fill();
@@ -807,7 +856,12 @@ HUD_BUTTONS.push({id:'collapse',x:hudW-P-COLLAPSE_BTN_W,y:COLLAPSE_BTN_Y,w:COLLA
 const GRAB_Y=hudH-32,GRAB_H=28;
 HUD_BUTTONS.push({id:'grab',x:P,y:GRAB_Y,w:hudW-P*2,h:GRAB_H,expandedOnly:true});
 
+let _hudSig='';
 function renderHUD(){
+  const sig=[active,year,playing,hudExpanded,hudGrabbing,audioMuted,xrWorldPanelOpen,xrNodePanelOpen,
+    Math.round(hudCursorU*200),Math.round(hudCursorV*200)].join('|');
+  if(_hudSig===sig)return;
+  _hudSig=sig;
   const x=hudCanvas.getContext('2d');
   x.clearRect(0,0,hudW,hudH);
 
@@ -990,11 +1044,14 @@ let playTimer=null;
 
 function setScenario(sc){
   active=sc;
+  if(window.setScenarioHash)window.setScenarioHash(sc);
   document.querySelectorAll('.sc-btn').forEach(b=>b.classList.toggle('active',b.dataset.sc===sc));
   updateUI();
   if(hudMesh.visible)renderHUD();
 }
 document.querySelectorAll('.sc-btn').forEach(b=>b.addEventListener('click',()=>setScenario(b.dataset.sc)));
+/* Reflect the persisted scenario on load */
+document.querySelectorAll('.sc-btn').forEach(b=>b.classList.toggle('active',b.dataset.sc===active));
 
 yrSlider.addEventListener('input',()=>{year=+yrSlider.value;yrVal.textContent=year;updateUI();if(hudMesh.visible)renderHUD()});
 playBtn.addEventListener('click',()=>{
@@ -1076,20 +1133,27 @@ function updateUI(){
     document.getElementById('info-nav').textContent=navText;
   }
 
-  /* World State */
+  /* World State — simWorldState returns {score,grade,era,eraFeel,
+     livelihoods,climate,governance,aiText,outlook,...}; render the
+     narrative fields explicitly (matches viz.html's world panel). */
   if(worldOpen&&window.simWorldState){
     document.getElementById('world-year').textContent=year+' — '+SC_META[active].name;
-    const ws=window.simWorldState(active,year);
-    if(ws){
-      const s=window.simScore?window.simScore(active,year):aggSc;
-      const g2=grade(s);const era=window.simEra?window.simEra(year):{label:'—',feel:''};
-      const col2=scoreColor(s);
-      let h='<div class="ws-hero"><span class="ws-score" style="color:'+col2+'">'+s+'</span>';
-      h+='<span class="ws-grade" style="color:'+col2+';border-color:'+col2+'">'+g2+'</span>';
-      h+='<span class="ws-era">'+era.label+'</span></div>';
-      if(era.feel)h+='<div class="ws-feel">'+era.feel+'</div>';
-      Object.keys(ws).forEach(k=>{
-        h+='<div class="ws-section"><div class="ws-section-label" style="color:'+SC_META[active].css+'">'+k+'</div><p>'+ws[k]+'</p></div>';
+    const w=window.simWorldState(active,Math.max(2027,year));
+    if(w&&w.score!=null){
+      const col2=scoreColor(w.score);
+      let h='<div class="ws-hero"><span class="ws-score" style="color:'+col2+'">'+w.score+'</span>';
+      h+='<span class="ws-grade" style="color:'+col2+';border-color:'+col2+'">'+w.grade+'</span>';
+      h+='<span class="ws-era">'+w.era+' Era</span></div>';
+      if(w.eraFeel)h+='<div class="ws-feel">'+w.eraFeel+'</div>';
+      const wsSections=[
+        {label:'People & Livelihoods',text:w.livelihoods},
+        {label:'Climate & Energy',text:w.climate},
+        {label:'Trust & Governance',text:w.governance},
+        {label:'AI & the Future',text:w.aiText},
+        {label:'The Road Ahead',text:w.outlook}
+      ];
+      wsSections.forEach(s=>{
+        if(s.text)h+='<div class="ws-section"><div class="ws-section-label" style="color:'+SC_META[active].css+'">'+s.label+'</div><p>'+s.text+'</p></div>';
       });
       document.getElementById('world-body').innerHTML=h;
     }
@@ -1102,11 +1166,6 @@ document.getElementById('mode-world').addEventListener('click',function(){
   this.classList.toggle('on',worldOpen);
   document.getElementById('world-panel').classList.toggle('hidden',!worldOpen);
   if(worldOpen)updateUI();
-});
-
-/* Compare toggle (placeholder) */
-document.getElementById('mode-compare').addEventListener('click',function(){
-  compareOpen=!compareOpen;this.classList.toggle('on',compareOpen);
 });
 
 updateUI();
@@ -1175,7 +1234,7 @@ renderer.domElement.addEventListener('mousemove',e=>{
       let hint='Click to inspect';
       if(n.isSub){desc=n.parent?.label+' sub-domain';hint='Click to expand sub-metrics'}
       else if(n.isSubSub){desc=n.parent?.parent?.label+' → '+n.parent?.label;hint='Click to select'}
-      else if(n.isCenter){desc='Composite of all 7 systems';hint='Click for system breakdown'}
+      else if(n.isCenter){desc='Composite of all 6 systems';hint='Click for system breakdown'}
       else if(n.data?.href){hint='Click to inspect · Double-click for dashboard'}
       hTip.innerHTML='<div class="hover-tip-name" style="color:'+col+'">'+name+'</div>'
         +'<div class="hover-tip-score" style="color:'+col+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div>'
@@ -1233,13 +1292,48 @@ if(navigator.xr){
 let xrSession=null;
 const controllerModelFactory=new XRControllerModelFactory();
 
+/* Controllers are set up ONCE — renderer.xr.getController returns a
+   cached object, so per-session setup would stack duplicate listeners
+   and ray lines on every re-entry. */
+let controllersInited=false;
+function initControllers(){
+  if(controllersInited)return;
+  controllersInited=true;
+  for(let i=0;i<2;i++){
+    const controller=renderer.xr.getController(i);
+    controller.addEventListener('selectstart',onXRSelectStart);
+    controller.addEventListener('selectend',onXRSelectEnd);
+    controller.addEventListener('squeezestart',onXRSqueeze);
+    scene.add(controller);
+    const grip=renderer.xr.getControllerGrip(i);
+    grip.add(controllerModelFactory.createControllerModel(grip));
+    scene.add(grip);
+    const rayGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-3)]);
+    controller.add(new THREE.Line(rayGeo,new THREE.LineBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.4})));
+  }
+}
+
+const savedBackground=scene.background;
+const savedFog=scene.fog;
+
 function startXR(mode){
   if(xrSession)return;
-  navigator.xr.requestSession(mode,{requiredFeatures:['local-floor']}).then(session=>{
+  const sessionInit={requiredFeatures:['local-floor']};
+  navigator.xr.requestSession(mode,sessionInit).catch(()=>{
+    /* Some devices reject local-floor — retry with it optional */
+    return navigator.xr.requestSession(mode,{optionalFeatures:['local-floor']});
+  }).then(session=>{
     xrSession=session;
     renderer.xr.setSession(session);
     document.getElementById('ui').style.display='none';
     document.getElementById('labels').style.display='none';
+
+    /* AR: clear the opaque background + fog so passthrough shows */
+    if(mode==='immersive-ar'){
+      scene.background=null;
+      scene.fog=null;
+      gridMesh.visible=false;
+    }
 
     world.position.set(0,-0.3,-3.2);
     hudMesh.visible=true;
@@ -1252,6 +1346,9 @@ function startXR(mode){
       document.getElementById('ui').style.display='';
       document.getElementById('labels').style.display='';
       renderer.xr.setSession(null);
+      scene.background=savedBackground;
+      scene.fog=savedFog;
+      gridMesh.visible=true;
       world.position.set(0,0,0);
       world.rotation.set(0,0,0);
       hudMesh.visible=false;hudExpanded=true;hudGrabbing=false;
@@ -1260,18 +1357,11 @@ function startXR(mode){
       hudUserOffset.set(0,0,0);hudInited=false;
       xrLabels.forEach(l=>l.mesh.visible=false);
     });
-    for(let i=0;i<2;i++){
-      const controller=renderer.xr.getController(i);
-      controller.addEventListener('selectstart',onXRSelectStart);
-      controller.addEventListener('selectend',onXRSelectEnd);
-      controller.addEventListener('squeezestart',onXRSqueeze);
-      scene.add(controller);
-      const grip=renderer.xr.getControllerGrip(i);
-      grip.add(controllerModelFactory.createControllerModel(grip));
-      scene.add(grip);
-      const rayGeo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,-3)]);
-      controller.add(new THREE.Line(rayGeo,new THREE.LineBasicMaterial({color:0x9b87f5,transparent:true,opacity:0.4})));
-    }
+    initControllers();
+  }).catch(err=>{
+    const btn=mode==='immersive-ar'?arBtn:vrBtn;
+    btn.textContent=mode==='immersive-ar'?'AR Failed — retry':'VR Failed — retry';
+    console.error('WebXR session failed:',err);
   });
 }
 function onXRSqueeze(){
@@ -1348,8 +1438,16 @@ function onXRSelectEnd(e){
     if(hits.length){
       const ht=hitTargets.find(h=>h.mesh===hits[0].object);
       if(ht){
-        if(ht.node.isSub){selSub=selSub===ht.node?null:ht.node;if(selSub)selNode=selSub.parent}
-        else{if(selNode===ht.node){selNode=null;selSub=null}else{selNode=ht.node;selSub=null}}
+        if(ht.node.isSubSub){
+          selSubSub=selSubSub===ht.node?null:ht.node;
+          if(selSubSub){selSub=selSubSub.parent;selNode=selSub.parent}
+        }else if(ht.node.isSub){
+          selSubSub=null;
+          selSub=selSub===ht.node?null:ht.node;if(selSub)selNode=selSub.parent;
+        }else{
+          selSubSub=null;
+          if(selNode===ht.node){selNode=null;selSub=null}else{selNode=ht.node;selSub=null}
+        }
         if(xrNodePanelOpen)renderNodePanel();
       }
     }
@@ -1460,10 +1558,13 @@ renderer.setAnimationLoop(function(){
 
   const aggSc=currentScore(AGG)/100;
 
-  bloom.strength=lerp(bloom.strength,0.3+0.7*aggSc,dt*2);
-  scene.fog.density=lerp(scene.fog.density,0.015+0.03*(1-aggSc),dt*2);
+  if(!inXR){
+    /* Composer/bloom only render outside XR; fog may be null in AR */
+    bloom.strength=lerp(bloom.strength,0.3+0.7*aggSc,dt*2);
+    ctrl.autoRotateSpeed=lerp(ctrl.autoRotateSpeed,0.1+0.5*aggSc,dt*2);
+  }
+  if(scene.fog)scene.fog.density=lerp(scene.fog.density,0.015+0.03*(1-aggSc),dt*2);
   gridMat.color.lerp(new THREE.Color(aggSc>0.5?0x1a1a2e:0x2e1a1a),dt*2);
-  ctrl.autoRotateSpeed=lerp(ctrl.autoRotateSpeed,0.1+0.5*aggSc,dt*2);
 
   /* Center */
   centerMesh.rotation.y+=dt*0.4;centerWire.rotation.y-=dt*0.2;
@@ -1809,6 +1910,11 @@ window.addEventListener('resize',()=>{
   renderer.setSize(window.innerWidth,window.innerHeight);
   composer.setSize(window.innerWidth,window.innerHeight);
 });
+
+/* Boot complete — clear the watchdog overlay */
+window.__xrBooted=true;
+const bootEl=document.getElementById('boot');
+if(bootEl){bootEl.classList.add('gone');setTimeout(()=>bootEl.remove(),600)}
 </script>
 </body>
 </html>

@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Civilization Simulator — 3D Network</title>
+<meta name="description" content="Interactive 3D network of the civilization systems - scenarios, timeline, audio, and nested sub-systems.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://aicivsim.com/viz.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="AI Civilization Simulator — 3D Network">
+<meta property="og:description" content="Interactive 3D network of the civilization systems - scenarios, timeline, audio, and nested sub-systems.">
+<meta property="og:url" content="https://aicivsim.com/viz.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI Civilization Simulator — 3D Network">
+<meta name="twitter:description" content="Interactive 3D network of the civilization systems - scenarios, timeline, audio, and nested sub-systems.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -151,6 +162,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 .hint{position:absolute;bottom:90px;left:28px;font-size:10px;color:rgba(255,255,255,0.15);line-height:1.9;letter-spacing:0.02em;pointer-events:none}
 
+/* Boot / error overlay */
+.boot{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#080810;transition:opacity 0.5s;pointer-events:none}
+.boot.gone{opacity:0}
+.boot-spinner{width:28px;height:28px;border:2px solid rgba(255,255,255,0.08);border-top-color:#4ecdc4;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.boot-msg{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+.boot.error .boot-spinner{display:none}
+.boot.error{pointer-events:auto}
+.boot.error .boot-msg{color:#d4622a;max-width:420px;text-align:center;text-transform:none;letter-spacing:0.02em;line-height:1.7}
+.boot a{color:#4ecdc4}
+
 @media(max-width:768px){
   .top-bar{padding:12px 14px;flex-direction:column;gap:10px}
   .top-right{align-items:flex-start;gap:8px}
@@ -171,6 +193,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <body>
 
 <div id="cv"></div>
+<div class="boot" id="boot">
+  <div class="boot-spinner"></div>
+  <div class="boot-msg" id="boot-msg">Loading 3D engine&hellip;</div>
+</div>
 <div id="labels"></div>
 <div id="conn-tip" class="conn-tip hidden"></div>
 <div id="tip-event" class="tip-event hidden"></div>
@@ -243,10 +269,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
 
   <div class="hint">Drag to orbit &middot; Scroll to zoom &middot; Click a node<br>
-  1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
+  1-4 scenarios &middot; Space play &middot; M sound &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260221d"></script>
+<script src="js/shared.js?v=20260710a"></script>
+<script>
+/* Boot watchdog — surface CDN/module failures instead of a black screen */
+(function(){
+  var boot=document.getElementById('boot');
+  function fail(msg){
+    if(!boot||boot.classList.contains('gone'))return;
+    boot.classList.add('error');
+    document.getElementById('boot-msg').innerHTML=msg;
+  }
+  window.addEventListener('error',function(e){
+    if(e.target&&(e.target.tagName==='SCRIPT'))fail('Could not load the 3D engine (network/CDN error).<br>Check your connection and refresh, or <a href="visualizer.html">go back to the Visualizer hub</a>.');
+  },true);
+  setTimeout(function(){
+    if(!window.__vizBooted)fail('The 3D engine did not start.<br>Your browser may not support WebGL2 / ES modules.<br><a href="visualizer.html">Back to the Visualizer hub</a>');
+  },10000);
+})();
+</script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -258,8 +301,6 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 /* shared.js globals accessible from ES module */
-const sparkSVG=window.sparkSVG;
-const comparisonSVG=window.comparisonSVG;
 const timelineSVG=window.timelineSVG;
 
 /* ================================================================
@@ -305,7 +346,9 @@ const TIPPING=[
   {node:'governance',label:'Democratic backsliding point',  thresholds:{worst:2033}}
 ];
 
-let active='aggressive',year=2026,playing=false,selNode=null,selSub=null,hovNode=null,hovSub=null,hovSubSub=null;
+/* Honor the site-wide scenario (URL hash / localStorage via shared.js) */
+let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'aggressive';
+let year=2026,playing=false,selNode=null,selSub=null,hovNode=null,hovSub=null,hovSubSub=null;
 let comparing=false,compareWith='moderate';
 let globeActive=false;
 let audioMuted=false,audioCtx=null,masterGain=null,baseOsc=null,chordOscs=[],audioInited=false;
@@ -838,7 +881,7 @@ function spawnShock(pos){
    ================================================================ */
 const trailMat=new THREE.MeshBasicMaterial({transparent:true,depthWrite:false});
 const trailGeo=new THREE.SphereGeometry(0.08,6,6);
-function clearTrail(){trailSpheres.forEach(s=>{scene.remove(s.mesh);s.mesh.geometry.dispose()});trailSpheres=[]}
+function clearTrail(){trailSpheres.forEach(s=>{scene.remove(s.mesh);s.mesh.geometry.dispose();s.mesh.material.dispose()});trailSpheres=[]}
 
 /* ================================================================
    SOUND — Cosmic symphony: consonant when aligned, dissonant when fractured
@@ -1065,7 +1108,6 @@ function setMouse(e){mouse.x=(e.clientX/W())*2-1;mouse.y=-(e.clientY/H())*2+1;mo
 document.addEventListener('mousemove',setMouse);
 
 renderer.domElement.addEventListener('pointerdown',e=>{pointerDownPos={x:e.clientX,y:e.clientY}});
-let lastDeselectTime=0;
 renderer.domElement.addEventListener('click',e=>{
   const dx=e.clientX-pointerDownPos.x,dy=e.clientY-pointerDownPos.y;
   if(dx*dx+dy*dy>CLICK_THRESHOLD*CLICK_THRESHOLD)return;
@@ -1082,16 +1124,18 @@ renderer.domElement.addEventListener('click',e=>{
     selSub=null;
     selNode=wasSelected?null:hovNode;
     if(selNode){sfx('select');flyTo(selNode);if(!selNode.isCenter)pingNode(selNode.idx||0)}
-    else{sfx('deselect');lastDeselectTime=performance.now();flyToOverview()}
+    else{sfx('deselect');flyToOverview()}
     updateInfo();renderOverrideBar();
   }else if(selSub){
     sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo();
   }else if(selNode){
-    sfx('deselect');selNode=null;lastDeselectTime=performance.now();updateInfo();renderOverrideBar();flyToOverview();
+    sfx('deselect');selNode=null;updateInfo();renderOverrideBar();flyToOverview();
   }
 });
+/* Double-click a system node → open its dashboard. The single-click
+   handler above will have toggled selection on the way through; that's
+   fine — navigation is the terminal action. */
 renderer.domElement.addEventListener('dblclick',()=>{
-  if(performance.now()-lastDeselectTime<400)return;
   if(hovNode&&!hovNode.isCenter&&hovNode.data.href) window.location.href=hovNode.data.href;
 });
 
@@ -1142,6 +1186,7 @@ document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
   if(e.key>='1'&&e.key<='4'){switchScenario(scKeys[+e.key-1]);e.preventDefault()}
   if(e.key===' '){togglePlay();e.preventDefault()}
+  if(e.key==='m'||e.key==='M'){muteBtn.click();e.preventDefault()}
   if(e.key==='ArrowLeft'){stepYear(-1);e.preventDefault()}
   if(e.key==='ArrowRight'){stepYear(1);e.preventDefault()}
   if(e.key==='Escape'){
@@ -1150,7 +1195,7 @@ document.addEventListener('keydown',e=>{
     e.preventDefault();
   }
 });
-function stepYear(d){year=Math.max(2026,Math.min(2050,year+d));yrSlider.value=year;yrVal.textContent=year;updateVis()}
+function stepYear(d){year=Math.max(2026,Math.min(2050,year+d));yrSlider.value=year;yrVal.textContent=year;updateVis();checkTipping()}
 function togglePlay(){playing=!playing;playBtn.innerHTML=playing?'&#9646;&#9646; Pause':'&#9654; Play'}
 
 /* ================================================================
@@ -1169,14 +1214,17 @@ function rebuildCompareSel(){
 }
 function switchScenario(id){
   active=id;
+  if(window.setScenarioHash)window.setScenarioHash(id);
   document.querySelectorAll('.sc-btn').forEach(x=>x.classList.remove('active'));
   const btn=document.querySelector('.sc-btn[data-id="'+id+'"]');if(btn)btn.classList.add('active');
   rebuildCompareSel();
   sfx('scenario');clearTrail();tipFired={};updateVis();renderOverrideBar();
 }
 document.querySelectorAll('.sc-btn').forEach(b=>b.addEventListener('click',()=>switchScenario(b.dataset.id)));
+/* Reflect the persisted scenario in the button bar on load */
+document.querySelectorAll('.sc-btn').forEach(x=>x.classList.toggle('active',x.dataset.id===active));
 const yrSlider=document.getElementById('yr-slider'),yrVal=document.getElementById('yr-val');
-yrSlider.addEventListener('input',()=>{year=+yrSlider.value;yrVal.textContent=year;updateVis()});
+yrSlider.addEventListener('input',()=>{year=+yrSlider.value;yrVal.textContent=year;updateVis();checkTipping()});
 const playBtn=document.getElementById('play-btn');
 playBtn.addEventListener('click',togglePlay);
 
@@ -1339,7 +1387,6 @@ function updateWorldPanel(){
   });
 
   h+='<div class="ws-nums">';
-  const simE=window.SIM_ENGINE;
   const nums=[
     {lbl:'GINI',val:w.gini.toFixed(3),base:'0.385',clr:w.gini<=.385?'#4ecdc4':'#d4622a'},
     {lbl:'Trust',val:w.trust.toFixed(3),base:'0.432',clr:w.trust>=.432?'#4ecdc4':'#d4622a'},
@@ -1507,7 +1554,8 @@ function updateInfo(){
 }
 function updateAgg(){
   const anyOvr=Object.values(overrides).some(v=>v!==null);
-  const sc=anyOvr?mixedAgg():scAt(AGG.today,AGG.proj[active],year);
+  /* Single source of truth: same mean-of-systems the center node shows */
+  const sc=mixedAgg();
   const c=anyOvr?'#fff':SC_META[active].css;
   document.getElementById('agg-score').textContent=sc;
   document.getElementById('agg-score').style.color=c;
@@ -1571,7 +1619,7 @@ conns.forEach(()=>tgt.conns.push({opacity:0.05,color:new THREE.Color(0x444466)})
 function applyScenario(sc){
   const scC=new THREE.Color(SC_META[sc].color);
   const anyOvr=Object.values(overrides).some(v=>v!==null);
-  const aggSc=anyOvr?mixedAgg():scAt(AGG.today,AGG.proj[sc],year);
+  const aggSc=mixedAgg();
   tgt.aggHealth=aggSc/100;
   /* Center node targets */
   const centerC=anyOvr?new THREE.Color(0xaaaacc):scC;
@@ -1652,9 +1700,10 @@ function lerpScenario(dt){
     n.mesh.material.emissive.lerp(nt.emissive,a);
     n.spriteMat.color.lerp(nt.spriteColor,a);
     n.spriteMat.opacity=lerp(n.spriteMat.opacity,nt.spriteOp,a);
-    const gCur=n.mesh.children[0]&&n.mesh.children[0].isSprite?n.mesh.children[0].scale.x:nt.glowScale;
+    const sprite=n.mesh.children.find(ch=>ch.isSprite);
+    const gCur=sprite?sprite.scale.x:nt.glowScale;
     const g=lerp(gCur,nt.glowScale,a);
-    n.mesh.children.forEach(ch=>{if(ch.isSprite)ch.scale.set(g,g,1)});
+    if(sprite)sprite.scale.set(g,g,1);
   });
   /* Connections */
   conns.forEach((c,i)=>{
@@ -1677,6 +1726,7 @@ function updateVis(){
   applyScenario(active);
   updateAgg();updateInfo();updateAudio();
   if(chartsActive)renderNodeCharts();
+  if(comparing)updateComparePanel();
   updateWorldPanel();
 }
 updateVis();
@@ -1776,14 +1826,14 @@ function tick(){
       yrSlider.value=year;yrVal.textContent=year;
       updateVis();checkTipping();
       /* Timeline trail */
-      const aggSc=scAt(AGG.today,AGG.proj[active],year);
+      const aggSc=mixedAgg();
       const m=new THREE.Mesh(trailGeo.clone(),trailMat.clone());
       m.material.color=new THREE.Color(SC_META[active].color);
       m.material.opacity=0.6;
       m.position.copy(cMesh.position);
       const s=0.3+aggSc/100*0.7;m.scale.setScalar(s);
       scene.add(m);trailSpheres.push({mesh:m,birth:t});
-      if(trailSpheres.length>25){const old=trailSpheres.shift();scene.remove(old.mesh);old.mesh.geometry.dispose()}
+      if(trailSpheres.length>25){const old=trailSpheres.shift();scene.remove(old.mesh);old.mesh.geometry.dispose();old.mesh.material.dispose()}
     }
   }
 
@@ -1828,6 +1878,10 @@ function tick(){
     const expandTarget=isExpanded?1:0;
     sn.expanded=lerp(sn.expanded,expandTarget,1-Math.exp(-SUB_EXPAND_SPEED*dt));
     if(sn.expanded<0.005){sn.expanded=0}
+    /* Fully collapsed and staying collapsed → invisible; skip all
+       per-frame color/bezier work (30 sub + 90 leaf nodes otherwise
+       churn allocations while hidden). */
+    if(sn.expanded===0&&expandTarget===0)return;
     const e=sn.expanded;
     const pp=sn.parent.mesh.position;
     const tX=pp.x+sn.offset.x*e;
@@ -1870,6 +1924,7 @@ function tick(){
     const expandTarget=isExpanded?1:0;
     ssn.expanded=lerp(ssn.expanded,expandTarget,1-Math.exp(-SUBSUB_EXPAND_SPEED*dt));
     if(ssn.expanded<0.005){ssn.expanded=0}
+    if(ssn.expanded===0&&expandTarget===0)return;
     const e=ssn.expanded;
     const pp=ssn.parent.mesh.position;
     const tX=pp.x+ssn.offset.x*e;
@@ -1937,10 +1992,9 @@ function tick(){
   /* Tipping point text fade */
   if(tipTimer>0){tipTimer-=dt;if(tipTimer<=0)tipEl.classList.add('hidden')}
 
-  /* Particles */
-  const aggSc=scAt(AGG.today,AGG.proj[active],year);
-  const spdMul=0.25+aggSc/100*1.6;
-  const health=aggSc/100;
+  /* Particles — driven by the smoothed aggregate health */
+  const spdMul=0.25+aggHealth*1.6;
+  const health=aggHealth;
   for(let i=0;i<pData.length;i++){
     const d=pData[i];
     const conn=conns[d.ci];
@@ -2071,9 +2125,6 @@ function tick(){
     ssn.scoreEl.textContent=sc;
   });
 
-  /* Update compare panel if open */
-  if(comparing) updateComparePanel();
-
   /* Keep audio in sync with lerping health values */
   updateAudio();
 
@@ -2085,8 +2136,14 @@ function tick(){
 }
 tick();
 
+/* Boot complete — clear the watchdog overlay */
+window.__vizBooted=true;
+const bootEl=document.getElementById('boot');
+if(bootEl){bootEl.classList.add('gone');setTimeout(()=>bootEl.remove(),600)}
+
 window.addEventListener('resize',()=>{
   camera.aspect=W()/H();camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(W(),H());composer.setSize(W(),H());
 });
 </script>

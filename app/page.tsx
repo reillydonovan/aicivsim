@@ -539,7 +539,7 @@ export default function HomePage() {
               </div>
             </Link>
             <a
-              href="https://github.com/reillyclawcode/aicivsim"
+              href="https://github.com/reillydonovan/aicivsim"
               target="_blank"
               rel="noopener noreferrer"
               className="glass-card glass-card-interactive rounded-xl overflow-hidden text-center"
@@ -585,7 +585,7 @@ export default function HomePage() {
           <span style={{ color: "var(--text-faint)" }}>&middot;</span>
           <Link href="/research" className="hover:underline" style={{ color: "var(--text-muted)" }}>Research</Link>
           <span style={{ color: "var(--text-faint)" }}>&middot;</span>
-          <a href="https://github.com/reillyclawcode/aicivsim" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--text-muted)" }}>GitHub</a>
+          <a href="https://github.com/reillydonovan/aicivsim" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--text-muted)" }}>GitHub</a>
         </div>
       </footer>
     </main>

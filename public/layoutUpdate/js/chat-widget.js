@@ -369,7 +369,7 @@ function updateModels(){
   if(providerEl.value==='openai'){
     addOpt('gpt-4o-mini','GPT-4o Mini');addOpt('gpt-4o','GPT-4o');
   }else{
-    addOpt('claude-sonnet-4-20250514','Claude Sonnet');addOpt('claude-haiku-4-20250514','Claude Haiku');
+    addOpt('claude-sonnet-4-5','Claude Sonnet 4.5');addOpt('claude-haiku-4-5','Claude Haiku 4.5');
   }
   function addOpt(v,t){var o=document.createElement('option');o.value=v;o.textContent=t;modelEl.appendChild(o)}
   localStorage.setItem('aicivsim_api_model',modelEl.value);

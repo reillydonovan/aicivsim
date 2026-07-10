@@ -2,9 +2,25 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://aicivsim.com"),
   title: "AI Civilization Simulator — Strategy for a Sustainable Future",
   description:
     "Use AI to simulate, measure, and navigate civilization-scale challenges. Six interconnected dashboards model climate, governance, workforce, strategy, and 50-year branching futures.",
+  openGraph: {
+    type: "website",
+    siteName: "AI Civilization Simulator",
+    title: "AI Civilization Simulator — Strategy for a Sustainable Future",
+    description:
+      "Use AI to simulate, measure, and navigate civilization-scale challenges across climate, governance, workforce, and 50-year branching futures.",
+    images: ["/images/blog/hero.webp"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Civilization Simulator",
+    description:
+      "Simulate, measure, and navigate civilization-scale challenges across 50 years of branching futures.",
+    images: ["/images/blog/hero.webp"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

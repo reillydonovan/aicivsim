@@ -1438,7 +1438,7 @@ export default function Home() {
         <p>ClimateOS &middot; Clawcode Research &middot; 2026</p>
         <p className="mt-1">
           <a href="/blog" className="underline" style={{ color: "var(--text-muted)" }}>Blog</a>{" \u00B7 "}
-          <a href="https://github.com/reillyclawcode/ClimateOS" target="_blank" rel="noopener" className="underline" style={{ color: "var(--text-muted)" }}>GitHub</a>{" \u00B7 "}
+          <a href="https://github.com/reillydonovan/aicivsim" target="_blank" rel="noopener" className="underline" style={{ color: "var(--text-muted)" }}>GitHub</a>{" \u00B7 "}
           <a href="/simulation" className="underline" style={{ color: "var(--text-muted)" }}>Simulation</a>{" \u00B7 "}
           <a href="/transition" className="underline" style={{ color: "var(--text-muted)" }}>TransitionOS</a>{" \u00B7 "}
           <a href="/civilization" className="underline" style={{ color: "var(--text-muted)" }}>CivilizationOS</a>{" \u00B7 "}

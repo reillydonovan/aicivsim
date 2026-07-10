@@ -1300,10 +1300,16 @@ var CMD_ITEMS=[
   if(document.querySelector('.site-nav')) initSiteNav();
 })();
 
-/* ── Chat Widget: inject on every page ── */
+/* ── Chat Widget: inject on every page except fullscreen 3D apps ──
+   viz/explorer/xr render their own canvas UI in the bottom corners;
+   the floating chat bubble overlaps their panels and (on explorer)
+   duplicates its built-in LLM input. ── */
 (function(){
+  var path=window.location.pathname;
+  var NO_WIDGET=['viz.html','explorer.html','xr.html'];
+  for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260221d';
+  s.src='js/chat-widget.js?v=20260710a';
   s.defer=true;
   document.body.appendChild(s);
 })();

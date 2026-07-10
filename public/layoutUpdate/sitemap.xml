@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://aicivsim.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://aicivsim.com/ai.html</loc><priority>0.9</priority></url>
+  <url><loc>https://aicivsim.com/civilization.html</loc><priority>0.9</priority></url>
+  <url><loc>https://aicivsim.com/simulation.html</loc><priority>0.9</priority></url>
+  <url><loc>https://aicivsim.com/visualizer.html</loc><priority>0.9</priority></url>
+  <url><loc>https://aicivsim.com/climate.html</loc><priority>0.9</priority></url>
+  <url><loc>https://aicivsim.com/transition.html</loc><priority>0.8</priority></url>
+  <url><loc>https://aicivsim.com/governance.html</loc><priority>0.8</priority></url>
+  <url><loc>https://aicivsim.com/strategy.html</loc><priority>0.8</priority></url>
+  <url><loc>https://aicivsim.com/timeline.html</loc><priority>0.8</priority></url>
+  <url><loc>https://aicivsim.com/research.html</loc><priority>0.8</priority></url>
+  <url><loc>https://aicivsim.com/chat.html</loc><priority>0.6</priority></url>
+  <url><loc>https://aicivsim.com/about.html</loc><priority>0.6</priority></url>
+  <url><loc>https://aicivsim.com/viz.html</loc><priority>0.7</priority></url>
+  <url><loc>https://aicivsim.com/explorer.html</loc><priority>0.6</priority></url>
+  <url><loc>https://aicivsim.com/xr.html</loc><priority>0.6</priority></url>
+</urlset>
