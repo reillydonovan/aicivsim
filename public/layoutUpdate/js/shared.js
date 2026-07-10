@@ -58,7 +58,7 @@ function renderScenarioButtons(){
   return h;
 }
 
-var NAV_PARENTS={'explorer.html':'visualizer.html','xr.html':'visualizer.html','viz.html':'visualizer.html'};
+var NAV_PARENTS={'explorer.html':'visualizer.html','xr.html':'visualizer.html','viz.html':'visualizer.html','globe.html':'visualizer.html'};
 function initSiteNav(){
   var path=window.location.pathname;
   var parentHref=null;
@@ -1140,6 +1140,7 @@ var CMD_ITEMS=[
   {g:'Pages',l:'Advisor',d:'AI chat assistant with page-aware context',h:'chat.html',icon:'💬'},
   {g:'Pages',l:'About',d:'Project scope, methodology, technology stack',h:'about.html',icon:'ℹ'},
   {g:'3D Experiences',l:'3D Visualizer',d:'Flagship 3D network — nodes, sound, timeline',h:'viz.html',icon:'✦'},
+  {g:'3D Experiences',l:'Globe',d:'Global data — resources, cables, sea level, emissions',h:'globe.html',icon:'🌍'},
   {g:'3D Experiences',l:'Knowledge Explorer β',d:'AI-powered 3D knowledge graph',h:'explorer.html',icon:'🔭'},
   {g:'3D Experiences',l:'WebXR β',d:'Immersive VR/AR visualization',h:'xr.html',icon:'🥽'},
   {g:'Scenarios',l:'Aggressive Action',d:'Best-case policy scenario',action:function(){setScenarioHash('aggressive');location.reload()},icon:'🟢'},

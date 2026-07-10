@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AICivSim Globe — Real-Time Data</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0e14; color: #e6edf3; overflow: hidden; }
+    #canvas-container { position: fixed; inset: 0; }
+    #ui {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(10,14,20,0.95));
+      padding: 24px 32px 32px;
+      z-index: 10;
+    }
+    #layers {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+    }
+    .layer-btn {
+      padding: 8px 14px; border-radius: 8px; border: 1px solid #30363d;
+      background: #161b22; color: #8b949e; cursor: pointer; font-size: 13px;
+      transition: all 0.2s;
+    }
+    .layer-btn:hover { border-color: #58a6ff; color: #58a6ff; }
+    .layer-btn.active { background: #238636; border-color: #238636; color: #fff; }
+    .layer-btn.live { border-color: #f59e0b; }
+    #timeline {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 12px;
+    }
+    #timeline input[type="range"] {
+      flex: 1; height: 8px; -webkit-appearance: none; background: #21262d; border-radius: 4px;
+    }
+    #timeline input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px; background: #58a6ff;
+      border-radius: 50%; cursor: pointer; box-shadow: 0 0 8px rgba(88,166,255,0.5);
+    }
+    #year-display { font-size: 18px; font-weight: 600; color: #58a6ff; min-width: 60px; }
+    #scenario-select {
+      padding: 8px 12px; border-radius: 8px; border: 1px solid #30363d;
+      background: #161b22; color: #e6edf3; font-size: 14px; cursor: pointer;
+    }
+    #legend {
+      position: fixed; top: 20px; right: 20px; background: rgba(22,27,34,0.9);
+      border: 1px solid #30363d; border-radius: 12px; padding: 16px; max-width: 280px;
+      font-size: 12px; line-height: 1.6; z-index: 10;
+    }
+    #legend h3 { margin-bottom: 8px; font-size: 14px; color: #58a6ff; }
+    #legend .live-badge { display: inline-block; background: #f59e0b; color: #0a0e14; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 6px; }
+    #title {
+      position: fixed; top: 20px; left: 20px; font-size: 24px; font-weight: 700;
+      color: #e6edf3; z-index: 10; text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    #title span { color: #8b949e; font-weight: 400; font-size: 14px; }
+    #data-status {
+      position: fixed; top: 60px; left: 20px; font-size: 11px; color: #8b949e; z-index: 10;
+    }
+    #data-status .ok { color: #10b981; }
+    #data-status .err { color: #f43f5e; }
+    #data-status .pending { color: #f59e0b; }
+  </style>
+</head>
+<body>
+  <div id="title">AICivSim Globe <span>— Real-Time Data</span></div>
+  <div id="data-status"></div>
+  <div id="legend">
+    <h3 id="legend-title">Layers <span class="live-badge" id="live-badge" style="display:none">LIVE</span></h3>
+    <p id="legend-desc">Real-time layers fetch from external APIs. Static layers use site data.</p>
+  </div>
+  <div id="canvas-container"></div>
+  <div id="ui">
+    <div id="layers">
+      <button class="layer-btn" data-layer="resources">Critical Minerals</button>
+      <button class="layer-btn" data-layer="datacenters">Data Centers</button>
+      <button class="layer-btn" data-layer="energy">Energy Sources</button>
+      <button class="layer-btn" data-layer="cables">Internet Cables</button>
+      <button class="layer-btn live" data-layer="satellites">Satellites (ISS Live)</button>
+      <button class="layer-btn active" data-layer="sealevel">Sea Level Rise</button>
+      <button class="layer-btn" data-layer="emissions">Emissions</button>
+      <button class="layer-btn" data-layer="biodiversity">Biodiversity</button>
+    </div>
+    <div id="timeline">
+      <span id="year-display">2026</span>
+      <input type="range" id="year-slider" min="2026" max="2050" value="2026">
+      <select id="scenario-select">
+        <option value="aggressive">Aggressive Action</option>
+        <option value="moderate">Moderate Transition</option>
+        <option value="bau">Business as Usual</option>
+        <option value="worst">Worst Case</option>
+      </select>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+
+    // ─── Data sources (real-time + static fallback) ─────────────────────────
+    const DATA_SOURCES = {
+      climate: null,
+      issPosition: null,
+      lastFetch: {},
+    };
+
+    async function fetchClimate() {
+      try {
+        const base = window.location.origin || '';
+        const res = await fetch(base + '/data/climate.json');
+        if (res.ok) {
+          DATA_SOURCES.climate = await res.json();
+          updateStatus('climate', 'ok', 'Climate data loaded from site');
+          return DATA_SOURCES.climate;
+        }
+      } catch (e) {
+        updateStatus('climate', 'err', 'Climate: ' + (e.message || 'fetch failed'));
+      }
+      return null;
+    }
+
+    async function fetchISS() {
+      const urls = [
+        'https://api.wheretheiss.at/v1/satellites/25544',
+        'https://api.open-notify.org/iss-now.json',
+      ];
+      for (const url of urls) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.latitude != null) {
+              DATA_SOURCES.issPosition = { lat: data.latitude, lon: data.longitude, alt: 400 };
+            } else if (data.iss_position) {
+              DATA_SOURCES.issPosition = {
+                lat: parseFloat(data.iss_position.latitude),
+                lon: parseFloat(data.iss_position.longitude),
+                alt: 400,
+              };
+            }
+            if (DATA_SOURCES.issPosition) {
+              updateStatus('iss', 'ok', 'ISS position live');
+              return DATA_SOURCES.issPosition;
+            }
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+      updateStatus('iss', 'err', 'ISS: fetch failed (CORS or network)');
+      return null;
+    }
+
+    function updateStatus(source, status, msg) {
+      const el = document.getElementById('data-status');
+      if (!el) return;
+      let span = el.querySelector(`[data-source="${source}"]`);
+      if (!span) {
+        span = document.createElement('div');
+        span.dataset.source = source;
+        el.appendChild(span);
+      }
+      span.className = status;
+      span.textContent = msg;
+    }
+
+    // Fallback static data (same as globe-static.html)
+    const GEO_DATA = {
+      minerals: [
+        { name: 'Lithium', lat: -23.6, lon: -68.9, country: 'Chile', demand2024: 130, demand2040: 800, reserves: 98, color: 0x14b8a6 },
+        { name: 'Cobalt', lat: -11.6, lon: 27.5, country: 'DRC', demand2024: 190, demand2040: 450, reserves: 8.3, color: 0x8b5cf6 },
+        { name: 'Copper', lat: -33.4, lon: -70.7, country: 'Chile', demand2024: 25000, demand2040: 40000, reserves: 890, color: 0xf59e0b },
+        { name: 'Rare Earths', lat: 30.5, lon: 105.5, country: 'China', demand2024: 300, demand2040: 600, reserves: 130, color: 0x0ea5e9 },
+        { name: 'Nickel', lat: -5.2, lon: 119.5, country: 'Indonesia', demand2024: 3300, demand2040: 6000, reserves: 300, color: 0x10b981 },
+      ],
+      datacenters: [
+        { name: 'Virginia', lat: 38.9, lon: -77.0, capacity: 1.2 },
+        { name: 'Dublin', lat: 53.3, lon: -6.3, capacity: 0.9 },
+        { name: 'Frankfurt', lat: 50.1, lon: 8.7, capacity: 0.8 },
+        { name: 'Tokyo', lat: 35.7, lon: 139.7, capacity: 0.7 },
+        { name: 'Singapore', lat: 1.3, lon: 103.8, capacity: 0.6 },
+        { name: 'Sydney', lat: -33.9, lon: 151.2, capacity: 0.4 },
+        { name: 'São Paulo', lat: -23.5, lon: -46.6, capacity: 0.3 },
+        { name: 'Mumbai', lat: 19.1, lon: 72.9, capacity: 0.5 },
+      ],
+      energy: [
+        { name: 'Solar', lat: 35.0, lon: 115.0, pct: 5.5, color: 0xf59e0b },
+        { name: 'Wind', lat: 52.5, lon: 5.0, pct: 7.8, color: 0x06b6d4 },
+        { name: 'Hydro', lat: 30.0, lon: 105.0, pct: 14.8, color: 0x0ea5e9 },
+        { name: 'Nuclear', lat: 48.9, lon: 2.4, pct: 9.5, color: 0x8b5cf6 },
+        { name: 'Coal', lat: 39.9, lon: 116.4, pct: 35.2, color: 0x64748b },
+        { name: 'Gas', lat: 25.3, lon: 51.5, pct: 22.5, color: 0x94a3b8 },
+      ],
+      cables: [
+        { from: [51.5, -0.1], to: [40.7, -74.0], name: 'Transatlantic' },
+        { from: [35.7, 139.7], to: [37.8, -122.4], name: 'Pacific' },
+        { from: [1.3, 103.8], to: [22.3, 114.2], name: 'Asia' },
+        { from: [48.9, 2.4], to: [40.4, -3.7], name: 'Europe' },
+        { from: [-33.9, 151.2], to: [-37.8, 145.0], name: 'Australia' },
+        { from: [-23.5, -46.6], to: [38.9, -77.0], name: 'Americas' },
+      ],
+      satellites: [
+        { name: 'Starlink', lat: 45, lon: -120, alt: 550 },
+        { name: 'OneWeb', lat: 50, lon: 10, alt: 1200 },
+        { name: 'ISS', lat: 30, lon: 60, alt: 400 },
+        { name: 'GPS', lat: 0, lon: 0, alt: 20200 },
+      ],
+    };
+
+    let SCENARIOS = {
+      aggressive: { seaLevel: [0,3,6,9,12,15,18,21,24,27,30,33,35,37,39,41,43,44,45,46,47,48,48,49,49], biodiversity: [100,99,98,97,97,97,97,98,98,99,100,101,102,103,105,107,109,111,113,115,117,119,121,123,125] },
+      moderate: { seaLevel: [0,4,8,13,18,23,28,34,40,46,52,58,64,70,76,82,88,94,100,106,112,118,124,130,136], biodiversity: [100,98,96,94,92,90,88,87,86,85,84,84,84,84,85,85,86,87,88,89,90,91,92,93,94] },
+      bau: { seaLevel: [0,5,11,18,26,35,44,54,65,77,89,102,116,130,145,161,177,194,212,230,249,269,289,310,332], biodiversity: [100,97,94,91,88,85,82,79,76,73,71,69,67,65,63,61,60,59,58,57,56,55,54,53,52] },
+      worst: { seaLevel: [0,7,16,27,40,56,74,95,119,146,176,210,248,290,336,387,442,502,567,637,712,793,880,973,1072], biodiversity: [100,96,91,86,81,76,71,66,61,56,51,47,43,39,36,33,30,28,26,24,23,22,21,20,19] },
+    };
+
+    const EMISSIONS_HISTORY = [35.2,35.5,36.0,36.6,36.7,34.8,36.3,36.8,36.8,36.8,36.6];
+
+    // Merge fetched climate into SCENARIOS
+    function mergeClimateData(climate) {
+      if (!climate || !climate.scenarios) return;
+      climate.scenarios.forEach(s => {
+        if (SCENARIOS[s.id]) {
+          SCENARIOS[s.id].seaLevel = s.seaLevel || SCENARIOS[s.id].seaLevel;
+          SCENARIOS[s.id].biodiversity = s.biodiversity || SCENARIOS[s.id].biodiversity;
+        }
+      });
+      if (climate.resources?.criticalMinerals) {
+        const fallback = { Lithium: [-23.6,-68.9], Cobalt: [-11.6,27.5], Copper: [-33.4,-70.7], 'Rare Earths': [30.5,105.5], Nickel: [-5.2,119.5] };
+        GEO_DATA.minerals = climate.resources.criticalMinerals.map(m => {
+          const fb = fallback[m.mineral] || [0,0];
+          return {
+            name: m.mineral, lat: fb[0], lon: fb[1], country: '',
+            demand2024: m.demand2024_kt, demand2040: m.demand2040_kt, reserves: m.reserves_mt,
+            color: parseInt((m.color || '#14b8a6').replace('#',''), 16),
+          };
+        });
+      }
+      if (climate.energy?.gridMix2024) {
+        const lats = [35, 52.5, 30, 48.9, 39.9, 25.3], lons = [115, 5, 105, 2.4, 116.4, 51.5];
+        GEO_DATA.energy = climate.energy.gridMix2024.map((e, i) => ({
+          name: e.source, lat: lats[i] ?? 0, lon: lons[i] ?? 0, pct: e.pct,
+          color: parseInt((e.color || '#64748b').slice(1), 16),
+        }));
+      }
+    }
+
+    // ─── Globe setup ────────────────────────────────────────────────────────
+    const R = 5;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 15;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 8;
+    controls.maxDistance = 30;
+
+    function latLonToVec3(lat, lon, r = R) {
+      const phi = (90 - lat) * Math.PI / 180;
+      const theta = (lon + 180) * Math.PI / 180;
+      return new THREE.Vector3(-r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+    }
+
+    const globeGeo = new THREE.SphereGeometry(R, 64, 64);
+    const globeMat = new THREE.MeshPhongMaterial({
+      color: 0x0d1117,
+      emissive: 0x010409,
+      specular: 0x333333,
+      shininess: 5,
+      transparent: true,
+      opacity: 0.95,
+    });
+    const globe = new THREE.Mesh(globeGeo, globeMat);
+    scene.add(globe);
+
+    const atmoGeo = new THREE.SphereGeometry(R * 1.02, 64, 64);
+    const atmoMat = new THREE.MeshBasicMaterial({
+      color: 0x58a6ff,
+      transparent: true,
+      opacity: 0.08,
+      side: THREE.BackSide,
+    });
+    const atmo = new THREE.Mesh(atmoGeo, atmoMat);
+    scene.add(atmo);
+
+    scene.add(new THREE.AmbientLight(0x404060, 0.6));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(10, 10, 10);
+    scene.add(dirLight);
+
+    const layers = {};
+    ['resources','datacenters','energy','cables','satellites','sealevel','emissions','biodiversity'].forEach(k => {
+      layers[k] = new THREE.Group();
+      scene.add(layers[k]);
+    });
+
+    function addMarker(lat, lon, color, size = 0.08, group) {
+      const geo = new THREE.SphereGeometry(size, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color });
+      const m = new THREE.Mesh(geo, mat);
+      m.position.copy(latLonToVec3(lat, lon, R + size));
+      group.add(m);
+      return m;
+    }
+
+    function addCable(from, to, color = 0x58a6ff, group) {
+      const start = latLonToVec3(from[0], from[1], R + 0.01);
+      const end = latLonToVec3(to[0], to[1], R + 0.01);
+      const curve = new THREE.QuadraticBezierCurve3(
+        start,
+        new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5).add(new THREE.Vector3(0, 2, 0)),
+        end
+      );
+      const pts = curve.getPoints(32);
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineBasicMaterial({ color, linewidth: 2 });
+      const line = new THREE.Line(geo, mat);
+      group.add(line);
+      return line;
+    }
+
+    let year = 2026;
+    let scenario = 'aggressive';
+
+    function renderLayers() {
+      Object.values(layers).forEach(g => { while (g.children.length) g.remove(g.children[0]); });
+
+      if (layers.resources.visible) {
+        GEO_DATA.minerals.forEach(m => addMarker(m.lat, m.lon, m.color, 0.12, layers.resources));
+      }
+      if (layers.datacenters.visible) {
+        GEO_DATA.datacenters.forEach(d => addMarker(d.lat, d.lon, 0x58a6ff, 0.06 + d.capacity * 0.03, layers.datacenters));
+      }
+      if (layers.energy.visible) {
+        GEO_DATA.energy.forEach(e => addMarker(e.lat, e.lon, e.color, 0.05 + (e.pct || 0) / 100, layers.energy));
+      }
+      if (layers.cables.visible) {
+        GEO_DATA.cables.forEach(c => addCable(c.from, c.to, 0x58a6ff, layers.cables));
+      }
+      if (layers.satellites.visible) {
+        const sats = [...GEO_DATA.satellites];
+        if (DATA_SOURCES.issPosition) {
+          sats[2] = { name: 'ISS', lat: DATA_SOURCES.issPosition.lat, lon: DATA_SOURCES.issPosition.lon, alt: 400 };
+          document.getElementById('live-badge').style.display = 'inline-block';
+        }
+        sats.forEach(s => {
+          const alt = (s.alt / 42000) * 0.5;
+          addMarker(s.lat, s.lon, 0xf59e0b, 0.04 + alt, layers.satellites);
+        });
+      }
+      if (layers.sealevel.visible) {
+        const idx = Math.min(year - 2026, 24);
+        const val = SCENARIOS[scenario].seaLevel[Math.max(0, idx)] || 0;
+        const intensity = Math.min(val / 400, 1);
+        const color = new THREE.Color().setHSL(0.6 - intensity * 0.6, 1, 0.5);
+        for (let i = 0; i < 8; i++) {
+          const phi = (i / 8) * Math.PI * 2;
+          const geo = new THREE.RingGeometry(R + 0.002, R + 0.02, 32);
+          const mat = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+          const ring = new THREE.Mesh(geo, mat);
+          ring.rotation.x = -Math.PI / 2;
+          ring.rotation.z = phi;
+          ring.position.copy(latLonToVec3(0, (phi * 180 / Math.PI), 0).multiplyScalar(0.3));
+          layers.sealevel.add(ring);
+        }
+      }
+      if (layers.emissions.visible) {
+        const idx = Math.min(year - 2015, 10);
+        const gt = EMISSIONS_HISTORY[Math.max(0, idx)] || 36.8;
+        const scale = gt / 40;
+        [30, 60, 90, 120, 150].forEach((lat, i) => {
+          addMarker(lat - 60, i * 72, 0xf43f5e, 0.03 + scale * 0.08, layers.emissions);
+          addMarker(-lat + 60, i * 72 + 36, 0xf43f5e, 0.03 + scale * 0.08, layers.emissions);
+        });
+      }
+      if (layers.biodiversity.visible) {
+        const idx = Math.min(Math.max(0, year - 2026), 24);
+        const bio = SCENARIOS[scenario].biodiversity ? SCENARIOS[scenario].biodiversity[idx] : 100;
+        const color = new THREE.Color().setHSL((bio / 125) * 0.35, 1, 0.5);
+        [[-3,-60,'Amazon'],[22,114,'Coral'],[70,30,'Arctic'],[55,105,'Boreal'],[-25,115,'Australia']].forEach(([lat,lon,name],i) => {
+          addMarker(lat, lon, color.getHex(), 0.06 + (bio/100)*0.04, layers.biodiversity);
+        });
+      }
+    }
+
+    layers.resources.visible = false;
+    layers.datacenters.visible = false;
+    layers.energy.visible = false;
+    layers.cables.visible = false;
+    layers.satellites.visible = false;
+    layers.sealevel.visible = true;
+    layers.emissions.visible = false;
+    layers.biodiversity.visible = false;
+
+    document.querySelectorAll('.layer-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const layer = btn.dataset.layer;
+        Object.keys(layers).forEach(k => { layers[k].visible = k === layer; });
+        renderLayers();
+      });
+    });
+
+    const yearSlider = document.getElementById('year-slider');
+    const yearDisplay = document.getElementById('year-display');
+    yearSlider.addEventListener('input', (e) => {
+      year = parseInt(e.target.value);
+      yearDisplay.textContent = year;
+      renderLayers();
+    });
+
+    document.getElementById('scenario-select').addEventListener('change', (e) => {
+      scenario = e.target.value;
+      renderLayers();
+    });
+
+    // Load data and init
+    (async () => {
+      updateStatus('climate', 'pending', 'Loading climate data...');
+      updateStatus('iss', 'pending', 'Loading ISS position...');
+      const [climate] = await Promise.all([fetchClimate(), fetchISS()]);
+      mergeClimateData(climate);
+      renderLayers();
+      if (layers.satellites.visible) document.getElementById('live-badge').style.display = DATA_SOURCES.issPosition ? 'inline-block' : 'none';
+    })();
+
+    setInterval(async () => {
+      if (layers.satellites.visible) {
+        await fetchISS();
+        renderLayers();
+      }
+    }, 5000);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
