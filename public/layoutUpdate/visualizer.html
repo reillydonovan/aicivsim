@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260710b">
+<link rel="stylesheet" href="css/style.css?v=20260710c">
 </head>
 <body>
 
@@ -134,7 +134,8 @@
       <p class="t3" style="margin-bottom:8px">Mouse / Touch</p>
       <p class="t4"><strong style="color:var(--text-primary)">Click a node</strong> &mdash; fly the camera in and open the system detail panel with charts, scores, and override controls.</p>
       <p class="t4 mt-2"><strong style="color:var(--text-primary)">Click again</strong> &mdash; deselect and fly back to overview.</p>
-      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Double-click a node</strong> &mdash; navigate to its full dashboard page.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Double-click a node</strong> &mdash; zoom straight into it. The detail panel&rsquo;s &ldquo;Open dashboard&rdquo; link jumps to that system&rsquo;s full page.</p>
+      <p class="t4 mt-2"><strong style="color:var(--text-primary)">Click a sub-node, then a leaf</strong> &mdash; drill through all three layers; each level shows its own detail panel.</p>
       <p class="t4 mt-2"><strong style="color:var(--text-primary)">Drag</strong> &mdash; orbit the camera freely around the scene.</p>
       <p class="t4 mt-2"><strong style="color:var(--text-primary)">Scroll</strong> &mdash; zoom in and out.</p>
     </div>
@@ -248,7 +249,7 @@
 <!-- FOOTER -->
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260710b"></script>
+<script src="js/shared.js?v=20260710c"></script>
 <script>
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
 document.getElementById('page-footer').innerHTML=renderFooter();

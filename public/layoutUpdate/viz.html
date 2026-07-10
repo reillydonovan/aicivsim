@@ -272,7 +272,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; M sound &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260710b"></script>
+<script src="js/shared.js?v=20260710c"></script>
 <script>
 /* Boot watchdog — surface CDN/module failures instead of a black screen */
 (function(){
@@ -1108,35 +1108,67 @@ function setMouse(e){mouse.x=(e.clientX/W())*2-1;mouse.y=-(e.clientY/H())*2+1;mo
 document.addEventListener('mousemove',setMouse);
 
 renderer.domElement.addEventListener('pointerdown',e=>{pointerDownPos={x:e.clientX,y:e.clientY}});
+
+/* Deselects are DEFERRED briefly so the second click of a double-click
+   never zooms out — double-click always means "zoom in". */
+let pendingDeselect=null;
+function cancelPendingDeselect(){if(pendingDeselect){clearTimeout(pendingDeselect);pendingDeselect=null}}
+function deferDeselect(fn){cancelPendingDeselect();pendingDeselect=setTimeout(()=>{pendingDeselect=null;fn()},280)}
+
+function selectLeaf(leaf){
+  selSubSub=leaf;selSub=leaf.parent;
+  sfx('select');flyTo(leaf,1.8);
+  updateInfo();
+}
+function selectSub(sub){
+  selSubSub=null;selSub=sub;
+  sfx('select');flyTo(sub,3.0);
+  updateInfo();
+}
+function selectNode(node,dist){
+  selSub=null;selSubSub=null;selNode=node;
+  sfx('select');flyTo(node,dist);
+  if(!node.isCenter)pingNode(node.idx||0);
+  updateInfo();renderOverrideBar();
+}
+
 renderer.domElement.addEventListener('click',e=>{
   const dx=e.clientX-pointerDownPos.x,dy=e.clientY-pointerDownPos.y;
   if(dx*dx+dy*dy>CLICK_THRESHOLD*CLICK_THRESHOLD)return;
+  cancelPendingDeselect();
   if(hovSubSub){
-    sfx('select');selSub=hovSubSub.parent;updateInfo();
+    if(selSubSub===hovSubSub){
+      deferDeselect(()=>{selSubSub=null;sfx('deselect');if(selSub)flyTo(selSub,3.0);updateInfo()});
+    }else selectLeaf(hovSubSub);
   }else if(hovSub){
-    const wasSel=selSub===hovSub;
-    selSub=wasSel?null:hovSub;
-    if(selSub){sfx('select');flyTo(selSub,2.0)}
-    else{sfx('deselect');if(selNode)flyTo(selNode)}
-    updateInfo();
+    if(selSub===hovSub&&!selSubSub){
+      deferDeselect(()=>{selSub=null;sfx('deselect');if(selNode)flyTo(selNode);updateInfo()});
+    }else selectSub(hovSub);
   }else if(hovNode){
-    const wasSelected=selNode===hovNode;
-    selSub=null;
-    selNode=wasSelected?null:hovNode;
-    if(selNode){sfx('select');flyTo(selNode);if(!selNode.isCenter)pingNode(selNode.idx||0)}
-    else{sfx('deselect');flyToOverview()}
-    updateInfo();renderOverrideBar();
+    if(selNode===hovNode&&!selSub&&!selSubSub){
+      deferDeselect(()=>{selNode=null;sfx('deselect');flyToOverview();updateInfo();renderOverrideBar()});
+    }else if(selNode===hovNode){
+      /* Clicking the parent while drilled in collapses back to it */
+      selSub=null;selSubSub=null;sfx('deselect');flyTo(selNode);updateInfo();
+    }else selectNode(hovNode);
+  }else if(selSubSub){
+    sfx('deselect');selSubSub=null;if(selSub)flyTo(selSub,3.0);updateInfo();
   }else if(selSub){
     sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo();
   }else if(selNode){
     sfx('deselect');selNode=null;updateInfo();renderOverrideBar();flyToOverview();
   }
 });
-/* Double-click a system node → open its dashboard. The single-click
-   handler above will have toggled selection on the way through; that's
-   fine — navigation is the terminal action. */
+
+/* Double-click = zoom straight into whatever is under the cursor.
+   Never deselects, never navigates away — the "Open dashboard" link
+   lives in the detail panel instead. */
 renderer.domElement.addEventListener('dblclick',()=>{
-  if(hovNode&&!hovNode.isCenter&&hovNode.data.href) window.location.href=hovNode.data.href;
+  cancelPendingDeselect();
+  if(hovSubSub)selectLeaf(hovSubSub);
+  else if(hovSub)selectSub(hovSub);
+  else if(hovNode&&!hovNode.isCenter)selectNode(hovNode,2.4);
+  else if(hovNode&&hovNode.isCenter)selectNode(hovNode);
 });
 
 let touchStartPos={x:0,y:0};
@@ -1155,21 +1187,21 @@ renderer.domElement.addEventListener('touchend',e=>{
       const ht=hitTargets.find(h=>h.mesh===hits[0].object);
       if(ht){
         if(ht.isSubSub&&ht.node.expanded>0.3){
-          sfx('select');selSub=ht.node.parent;updateInfo();
+          if(selSubSub===ht.node){selSubSub=null;sfx('deselect');if(selSub)flyTo(selSub,3.0);updateInfo()}
+          else selectLeaf(ht.node);
         }else if(ht.isSub&&ht.node.expanded>0.3){
-          const wasSel=selSub===ht.node;
-          selSub=wasSel?null:ht.node;
-          if(selSub){sfx('select');flyTo(selSub,2.0)}
-          else{sfx('deselect');if(selNode)flyTo(selNode)}
-          updateInfo();
+          if(selSub===ht.node&&!selSubSub){selSub=null;sfx('deselect');if(selNode)flyTo(selNode);updateInfo()}
+          else selectSub(ht.node);
         }else if(!ht.isSub&&!ht.isSubSub){
-          selSub=null;
-          selNode=selNode===ht.node?null:ht.node;
-          if(selNode){sfx('select');flyTo(selNode)}
-          else{sfx('deselect');flyToOverview()}
-          updateInfo();renderOverrideBar();
+          if(selNode===ht.node&&!selSub&&!selSubSub){
+            selNode=null;sfx('deselect');flyToOverview();updateInfo();renderOverrideBar();
+          }else if(selNode===ht.node){
+            selSub=null;selSubSub=null;sfx('deselect');flyTo(selNode);updateInfo();
+          }else selectNode(ht.node);
         }
       }
+    }else if(selSubSub){
+      sfx('deselect');selSubSub=null;if(selSub)flyTo(selSub,3.0);updateInfo();
     }else if(selSub){
       sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo();
     }else if(selNode){
@@ -1190,7 +1222,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'){stepYear(-1);e.preventDefault()}
   if(e.key==='ArrowRight'){stepYear(1);e.preventDefault()}
   if(e.key==='Escape'){
-    if(selSub){sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo()}
+    if(selSubSub){sfx('deselect');selSubSub=null;if(selSub)flyTo(selSub,3.0);updateInfo()}
+    else if(selSub){sfx('deselect');selSub=null;if(selNode)flyTo(selNode);updateInfo()}
     else if(selNode){sfx('deselect');selNode=null;flyToOverview();updateInfo();renderOverrideBar()}
     e.preventDefault();
   }
@@ -1432,10 +1465,20 @@ muteBtn.addEventListener('click',()=>{
    ================================================================ */
 function updateInfo(){
   const p=document.getElementById('info');
-  if(!selNode&&!selSub){p.classList.add('hidden');return}
+  if(!selNode&&!selSub&&!selSubSub){p.classList.add('hidden');return}
   p.classList.remove('hidden');
   let name,sc,g,c,proj2050,projG,whenTxt,desc,navTxt,nodeSc;
-  if(selSub){
+  if(selSubSub){
+    const sd=selSubSub.data;
+    const sysId=selSubSub.grandParent.data.id;
+    nodeSc=eff(sysId);
+    sc=scAt(sd.today,sd.proj[nodeSc],year);g=grade(sc);
+    proj2050=sd.proj[nodeSc];projG=grade(proj2050);
+    c='#'+selSubSub.baseColor.getHexString();
+    name=sd.label;
+    desc=selSubSub.grandParent.data.label+' \u2192 '+selSubSub.parent.data.label+' \u2192 '+sd.label+' \u2014 leaf metric under '+SC_META[nodeSc].name+'. Today '+sd.today+'/100, heading to '+proj2050+'/100 by 2050 on this scenario.';
+    navTxt='Esc to return to '+selSubSub.parent.data.label;
+  }else if(selSub){
     const sd=selSub.data;
     const sysId=selSub.parent.data.id;
     nodeSc=eff(sysId);
@@ -1443,7 +1486,7 @@ function updateInfo(){
     proj2050=sd.proj[nodeSc];projG=grade(proj2050);
     c='#'+selSub.baseColor.getHexString();
     name=sd.label;
-    desc=selSub.parent.data.label+' \u2192 '+sd.label+' sub-domain under '+SC_META[nodeSc].name+'.';
+    desc=selSub.parent.data.label+' \u2192 '+sd.label+' sub-domain under '+SC_META[nodeSc].name+'. Click an orbiting node for its leaf metrics.';
     navTxt='Esc to return to '+selSub.parent.data.label;
   }else if(selNode.isCenter){
     name='Civilization';sc=mixedAgg();g=grade(sc);
@@ -1459,7 +1502,8 @@ function updateInfo(){
     const scMeta=SC_META[nodeSc];
     sc=scAt(d.today,d.proj[nodeSc],year);g=grade(sc);
     proj2050=d.proj[nodeSc];projG=grade(proj2050);
-    c='#'+selNode.color.getHexString();desc=d.desc;navTxt='Double-click to open '+d.label;
+    c='#'+selNode.color.getHexString();desc=d.desc;
+    navTxt='<a href="'+d.href+'" style="color:'+c+';text-decoration:none;border-bottom:1px solid '+c+'55;font-style:normal">Open '+d.label+' dashboard &rarr;</a>';
   }
   const effMeta=SC_META[typeof nodeSc==='string'&&SC_META[nodeSc]?nodeSc:active];
   whenTxt=year===2026?"Today\u2019s baseline":'Projected '+year+' ('+effMeta.name+')';
@@ -1474,7 +1518,7 @@ function updateInfo(){
   document.getElementById('info-fill').style.width=sc+'%';
   document.getElementById('info-fill').style.background=c;
   document.getElementById('info-desc').textContent=desc;
-  document.getElementById('info-nav').textContent=navTxt;
+  document.getElementById('info-nav').innerHTML=navTxt;
   const projEl=document.getElementById('info-proj');
   if(projEl){
     projEl.innerHTML='<span style="color:rgba(255,255,255,0.35)">2050 ('+effMeta.name+'):</span> <span style="color:'+effMeta.css+';font-weight:600">'+proj2050+'</span> <span style="color:rgba(255,255,255,0.25)">/100</span> <span style="border:1px solid '+effMeta.css+';color:'+effMeta.css+';padding:1px 5px;border-radius:2px;font-size:10px">'+projG+'</span>';
@@ -1483,7 +1527,7 @@ function updateInfo(){
   const chartsEl=document.getElementById('info-charts');
   if(chartsEl){
     const VM=window.VIZ_METRICS;
-    if(selSub){
+    if(selSub||selSubSub){
       chartsEl.innerHTML='';
     }else if(selNode&&!selNode.isCenter&&VM&&VM[selNode.data.id]){
       const metrics=VM[selNode.data.id];
@@ -1524,7 +1568,7 @@ function updateInfo(){
   }
   /* Override scenario picker */
   const ovrEl=document.getElementById('info-override');
-  if(ovrEl&&selSub){
+  if(ovrEl&&(selSub||selSubSub)){
     ovrEl.innerHTML='';
   }else if(ovrEl&&selNode&&!selNode.isCenter){
     const sid=selNode.data.id;
@@ -1905,7 +1949,9 @@ function tick(){
     sn.wire.rotation.y+=spinSpd*dt*5;
     sn.wire.rotation.x+=spinSpd*dt*3;
     sn.hitMesh.visible=e>0.3;
-    sn.lineMat.opacity=e*0.15;
+    /* Keep the branch connectors clearly visible while drilled in —
+       at 0.15 they washed out once the camera flew in close. */
+    sn.lineMat.opacity=e*((selSub||selSubSub)?0.5:0.22);
     const subA=new THREE.Vector3(pp.x,pp.y,pp.z);
     const subB=new THREE.Vector3(sn.mesh.position.x,sn.mesh.position.y,sn.mesh.position.z);
     const subM=new THREE.Vector3().addVectors(subA,subB).multiplyScalar(0.5);
@@ -1948,7 +1994,7 @@ function tick(){
     ssn.wire.rotation.y+=spinSpd*dt*5;
     ssn.wire.rotation.x+=spinSpd*dt*3;
     ssn.hitMesh.visible=e>0.3;
-    ssn.lineMat.opacity=e*0.12;
+    ssn.lineMat.opacity=e*0.42;
     const ssA=new THREE.Vector3(pp.x,pp.y,pp.z);
     const ssB=new THREE.Vector3(ssn.mesh.position.x,ssn.mesh.position.y,ssn.mesh.position.z);
     const ssM=new THREE.Vector3().addVectors(ssA,ssB).multiplyScalar(0.5);
@@ -2053,7 +2099,7 @@ function tick(){
     const sc=scAt(sd.today,sd.proj[nSc],year);
     const g=grade(sc);const c='#'+hovSubSub.baseColor.getHexString();
     const parentLabel=hovSubSub.parent.data.label;
-    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+sd.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">'+parentLabel+' \u2192 leaf metric</div>';
+    hTip.innerHTML='<div class="hover-tip-name" style="color:'+c+'">'+sd.label+'</div><div class="hover-tip-score" style="color:'+c+'">'+sc+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+g+'</div><div class="hover-tip-sub">'+parentLabel+' \u2192 leaf metric &middot; Click for details</div>';
     hTip.style.left=(mouseScreen.x+16)+'px';hTip.style.top=(mouseScreen.y-10)+'px';
     hTip.classList.remove('hidden');
   }else if(hovSub&&hovSub!==selSub){
@@ -2075,7 +2121,7 @@ function tick(){
       const d=hovNode.data;const nSc=eff(d.id);
       tipScore=scAt(d.today,d.proj[nSc],year);tipGrade=grade(tipScore);
       tipColor='#'+hovNode.color.getHexString();tipName=d.label;
-      tipSub='Click to inspect &middot; Double-click to open';
+      tipSub='Click to inspect &middot; Double-click to zoom';
       if(overrides[d.id])ovrTag=' <span style="font-size:8px;color:'+SC_META[nSc].css+';border:1px solid '+SC_META[nSc].css+';padding:1px 4px;border-radius:2px">'+SC_META[nSc].name.split(' ')[0]+'</span>';
     }
     hTip.innerHTML='<div class="hover-tip-name" style="color:'+tipColor+'">'+tipName+ovrTag+'</div><div class="hover-tip-score" style="color:'+tipColor+'">'+tipScore+' <span style="font-size:10px;color:rgba(255,255,255,0.3)">/100</span> '+tipGrade+'</div><div class="hover-tip-sub">'+tipSub+'</div>';

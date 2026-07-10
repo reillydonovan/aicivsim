@@ -1306,6 +1306,33 @@ var CMD_ITEMS=[
   if(document.querySelector('.site-nav')) initSiteNav();
 })();
 
+/* ── "As of today" stamp — every page carrying graph data shows the
+      current date so it reads as a report on TODAY, not a fixed 2026
+      artifact. Content pages get it in the masthead breadcrumb; the
+      fullscreen 3D apps get it next to their title. ── */
+(function(){
+  function init(){
+    var bc=document.querySelector('.masthead-breadcrumb');
+    if(bc){
+      var s=document.createElement('span');
+      s.style.color='var(--text-muted)';
+      s.textContent=' · As of '+fmtToday();
+      bc.appendChild(s);
+      return;
+    }
+    var title=document.querySelector('.site-title');
+    if(title){
+      var short=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      var s2=document.createElement('span');
+      s2.style.cssText='color:rgba(255,255,255,0.3);font-size:11px;font-weight:400';
+      s2.textContent=' · '+short;
+      title.appendChild(s2);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+
 /* ── Chat Widget: inject on every page except fullscreen 3D apps ──
    viz/explorer/xr render their own canvas UI in the bottom corners;
    the floating chat bubble overlaps their panels and (on explorer)
@@ -1315,7 +1342,7 @@ var CMD_ITEMS=[
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260710b';
+  s.src='js/chat-widget.js?v=20260710c';
   s.defer=true;
   document.body.appendChild(s);
 })();
