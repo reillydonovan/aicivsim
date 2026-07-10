@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260710d">
+<link rel="stylesheet" href="css/style.css?v=20260710e">
 </head>
 <body>
 
@@ -160,7 +160,7 @@
     <span class="section-num">06</span>
     <p class="t2">Audit Coverage</p>
     <hr class="rule">
-    <p class="body mb-6">Percentage of high-risk AI systems audited through participatory safety review. Target: 100% by 2035. Incidents track bias, safety, and governance failures detected.</p>
+    <p class="body mb-6">Percentage of high-risk AI systems audited through participatory safety review. Target: 100% coverage — achieved by 2034 under Aggressive Action, never under BAU. Incidents track bias, safety, and governance failures detected.</p>
     <div id="audit-sparks"></div>
     <div id="audit-table" class="mt-8"></div>
   </div></div>
@@ -179,7 +179,7 @@
 
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260710d"></script>
+<script src="js/shared.js?v=20260710e"></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -399,6 +399,28 @@ var AUDIT={
     {yr:2035,audited:3,total:185,pct:2,incidents:58,resolved:1}]
 };
 
+/* AUDIT is authored 2026–2035; extend each scenario to the site-wide
+   2050 horizon. The deployed-system count keeps growing (~6/yr);
+   coverage and incidents ease toward scenario endpoints. */
+(function(){
+  var END={
+    aggressive:{pct:100,inc:0,  res:1},
+    moderate:  {pct:86, inc:2,  res:0.9},
+    bau:       {pct:26, inc:44, res:0.4},
+    worst:     {pct:1,  inc:70, res:0.1}
+  };
+  Object.keys(AUDIT).forEach(function(k){
+    var arr=AUDIT[k],lastRow=arr[arr.length-1],e0=END[k];
+    for(var y=2036;y<=2050;y++){
+      var t=(y-2035)/15,e=1-Math.pow(1-t,2);
+      var total=lastRow.total+(y-2035)*6;
+      var pct=Math.round(lastRow.pct+(e0.pct-lastRow.pct)*e);
+      var inc=Math.round(lastRow.incidents+(e0.inc-lastRow.incidents)*e);
+      arr.push({yr:y,audited:Math.round(total*pct/100),total:total,pct:pct,incidents:inc,resolved:Math.round(inc*e0.res)});
+    }
+  });
+})();
+
 /* ── RENDER ── */
 
 function renderParticipation(){
@@ -570,18 +592,18 @@ function renderAudit(){
   var incBase=incDs[active][0];
   var s='<div class="grid grid-2">';
   s+='<div class="cell">';
-  s+=chartHeader({label:'Audit Coverage',value:covEnd,unit:'%',dec:0,dir:'higher',baseline:covBase,color:SC_COLORS[active],endYear:2035});
-  s+=scenarioChart({datasets:covDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'%',dec:0,dir:'higher',note:'Percentage of high-risk AI systems audited. Under aggressive governance, full coverage is achieved by 2034. Without intervention, audit capacity stagnates below 30%.',height:160,exportId:'gov-audit-coverage'});
+  s+=chartHeader({label:'Audit Coverage',value:covEnd,unit:'%',dec:0,dir:'higher',baseline:covBase,color:SC_COLORS[active],endYear:2050});
+  s+=scenarioChart({datasets:covDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2050,unit:'%',dec:0,dir:'higher',note:'Percentage of high-risk AI systems audited. Under aggressive governance, full coverage is achieved by 2034 and held through 2050. Without intervention, audit capacity stagnates below 30% while the deployed fleet keeps growing.',height:160,exportId:'gov-audit-coverage'});
   s+='</div>';
 
   s+='<div class="cell">';
-  s+=chartHeader({label:'Incidents Resolved',value:incEnd,unit:'',dec:0,dir:'lower',baseline:incBase,color:SC_COLORS[active],endYear:2035});
-  s+=scenarioChart({datasets:incDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'',dec:0,dir:'lower',note:'Safety incidents detected per year. Strong governance catches more early then drives incidents down. Weak governance sees compounding undetected failures.',height:160,exportId:'gov-incidents'});
+  s+=chartHeader({label:'Incidents Resolved',value:incEnd,unit:'',dec:0,dir:'lower',baseline:incBase,color:SC_COLORS[active],endYear:2050});
+  s+=scenarioChart({datasets:incDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2050,unit:'',dec:0,dir:'lower',note:'Safety incidents detected per year. Strong governance catches more early then drives incidents down. Weak governance sees compounding undetected failures.',height:160,exportId:'gov-incidents'});
   s+='</div>';
   s+='</div>';
   document.getElementById('audit-sparks').innerHTML=s;
-  registerChartExport('gov-audit-coverage',covDs,2026,2035,'%','');
-  registerChartExport('gov-incidents',incDs,2026,2035,'','');
+  registerChartExport('gov-audit-coverage',covDs,2026,2050,'%','');
+  registerChartExport('gov-incidents',incDs,2026,2050,'','');
 
   var t='<div style="display:inline-grid;grid-template-columns:60px 80px 80px 80px 80px 80px;gap:1px;background:var(--border)">';
   var cols=['Year','Audited','Total','Coverage','Incidents','Resolved'];
@@ -658,7 +680,7 @@ function render(){
   document.getElementById('ov-scenario-label').textContent=scLabel;
   document.getElementById('ov-scenario-label').style.color=clr;
   document.getElementById('gov-projected').innerHTML=
-    '<span class="t3">Projected 2035 ('+scLabel+'):</span> '
+    '<span class="t3">Projected 2050 ('+scLabel+'):</span> '
     +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
     +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
     +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';

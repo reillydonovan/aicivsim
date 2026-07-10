@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260710d">
+<link rel="stylesheet" href="css/style.css?v=20260710e">
 </head>
 <body>
 
@@ -28,7 +28,7 @@
   <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Civilization</p>
   <p class="t3" style="color:#e8a838;letter-spacing:0.3em;margin-bottom:8px">CIVILIZATION &mdash; 2026</p>
   <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">Civilization Health Index</h1>
-  <p class="body mt-3" style="max-width:480px">Aggregate civilizational score across six interconnected domains. Scenario-aware projections from 2026 through 2035 with civic dividend modeling.</p>
+  <p class="body mt-3" style="max-width:480px">Aggregate civilizational score across six interconnected domains. Scenario-aware projections from 2026 through 2050 with civic dividend modeling.</p>
   <hr class="rule">
 </div>
 </header>
@@ -76,7 +76,7 @@
     <span class="section-num">03</span>
     <p class="t2">KPI Sparklines &mdash; Active Scenario</p>
     <hr class="rule">
-    <p class="body mb-6">Each sparkline tracks a single KPI from 2026 to 2035 under the selected scenario. Upward slopes indicate improvement for higher-is-better metrics, and worsening for lower-is-better metrics.</p>
+    <p class="body mb-6">Each sparkline tracks a single KPI from 2026 to 2050 under the selected scenario. Upward slopes indicate improvement for higher-is-better metrics, and worsening for lower-is-better metrics.</p>
     <div id="spark-grid"></div>
   </div></div>
   <div class="chapter-divider"><div class="page">
@@ -112,7 +112,7 @@
     <p class="t2">Poverty Trajectory</p>
   </div></div>
   <div class="section" style="padding-top:24px"><div class="page">
-    <p class="body mb-4">Poverty rate (2026&ndash;2035) under all four scenarios. Civic dividend scale directly maps to poverty reduction velocity. The gap between aggressive and worst case widens from zero to 27 percentage points over nine years.</p>
+    <p class="body mb-4">Poverty rate (2026&ndash;2050) under all four scenarios. Civic dividend scale directly maps to poverty reduction velocity. The gap between aggressive and worst case widens from zero to roughly 40 percentage points by 2050.</p>
     <div id="funding-chart"></div>
     <div id="funding-legend" class="mt-4"></div>
   </div></div>
@@ -142,7 +142,7 @@
 
 <div id="page-footer"></div>
 
-<script src="js/shared.js?v=20260710d"></script>
+<script src="js/shared.js?v=20260710e"></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -197,6 +197,24 @@ var KPI={
     bau:[10,11,11.5,12,12.5,13,13.5,14,15,16],
     worst:[10,9,8,7,6,5,4,3.5,3,2]}
 };
+
+/* KPI series are authored 2026–2035; extend to the site-wide 2050
+   horizon, easing toward endpoints consistent with the projections. */
+(function(){
+  var KPI2050={
+    poverty:      {aggressive:2.5, moderate:6.5,bau:24,  worst:42,  dec:1},
+    reskill:      {aggressive:3,   moderate:7,  bau:27,  worst:48,  dec:1},
+    emissions:    {aggressive:0.12,moderate:0.30,bau:0.78,worst:1.15,dec:2},
+    biodiversity: {aggressive:90,  moderate:60, bau:8,   worst:1,   dec:0},
+    charter:      {aggressive:100, moderate:78, bau:18,  worst:0,   dec:0}
+  };
+  Object.keys(KPI).forEach(function(k){
+    var t=KPI2050[k];if(!t)return;
+    ['aggressive','moderate','bau','worst'].forEach(function(s){
+      KPI[k][s]=extendSeries(KPI[k][s],t[s],15,t.dec);
+    });
+  });
+})();
 
 var FUNDING={
   aggressive:{pool:'$2.5B',bw:'$192',yr:'$4,992',pop:'10M',esc:'24 mo'},
@@ -268,14 +286,26 @@ var MILESTONES=[
     aggressive:{score:92,status:'Complete',note:'2035 targets exceeded. Course corrections minor and forward-looking. 2045 targets set with high confidence.'},
     moderate:{score:58,status:'Partial',note:'Approximately 65% of 2035 targets met. Significant course correction needed. 2045 targets set conservatively.'},
     bau:{score:22,status:'Not started',note:'Targets largely unmet. No institutional mechanism for course correction. Future planning is speculative.'},
-    worst:{score:5,status:'Not started',note:'No targets met. No planning infrastructure exists. The decade is a lost opportunity.'}}
+    worst:{score:5,status:'Not started',note:'No targets met. No planning infrastructure exists. The decade is a lost opportunity.'}},
+  {year:'2036-42',title:'Generational',goalScore:93,
+    items:['First generation raised under new institutions','Charter enforcement matures','Civic dividend becomes structural'],
+    aggressive:{score:94,status:'Complete',note:'A generation comes of age inside functioning civic infrastructure. Dividends, reskilling, and participatory governance are simply how things work.'},
+    moderate:{score:60,status:'Partial',note:'New institutions hold in leading regions but coverage is uneven. A two-track civilization emerges between participating and lagging jurisdictions.'},
+    bau:{score:20,status:'Not started',note:'Institutional drift compounds. The generation entering the workforce inherits weaker safety nets than their parents had.'},
+    worst:{score:4,status:'Not started',note:'Generational trust in institutions is broken. Recovery now requires rebuilding legitimacy from scratch, not just capacity.'}},
+  {year:'2043-50',title:'Legacy',goalScore:95,
+    items:['Long-run verdicts on the 2026-2035 window','Systems self-sustaining or self-reinforcingly failing','2050 assessment against founding goals'],
+    aggressive:{score:95,status:'Complete',note:'The 2050 assessment finds compounding returns from the early window. The systems built in the late 2020s are self-sustaining and exporting their model.'},
+    moderate:{score:61,status:'Partial',note:'Partial success locked in: the worst avoided, but the gap between what was achieved and what was possible is now permanent.'},
+    bau:{score:18,status:'Not started',note:'Historians debate exactly when the window closed. Structural decline is self-reinforcing; interventions now cost an order of magnitude more.'},
+    worst:{score:3,status:'Not started',note:'A world that failed gradually, through inaction. The 2050 assessment is an autopsy of the decisions not taken in the 2020s.'}}
 ];
 
 var KPI_ANNOTATIONS={
   poverty:'Poverty rate measures the share of the population below the adjusted threshold. Under aggressive intervention, civic dividends cut poverty in half by 2031. Without action, compounding inequality pushes rates past 30%.',
   reskill:'Average months required for a displaced worker to complete reskilling and re-enter employment. Aggressive investment in Transition infrastructure cuts reskill time by two-thirds.',
   emissions:'Per-capita carbon emissions in kilograms. Aggressive decarbonization creates a steep downward curve. Business as usual maintains a slow upward drift.',
-  biodiversity:'Percentage of land area covered by connected biodiversity corridors. The gap between aggressive (75%) and worst case (4%) represents a near-total divergence in ecological outcomes.',
+  biodiversity:'Percentage of land area covered by connected biodiversity corridors. The gap between aggressive (90%) and worst case (1%) represents a near-total divergence in ecological outcomes.',
   charter:'Percentage of AI systems operating under ratified governance charters. Full adoption under aggressive scenario versus near-abandonment under worst case.'
 };
 
@@ -316,7 +346,7 @@ function renderHero(){
   h+='</div>';
 
   h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
-  h+='<span class="t3">Projected 2035 ('+SC.find(function(s){return s.id===activeSc}).name+'):</span> ';
+  h+='<span class="t3">Projected 2050 ('+SC.find(function(s){return s.id===activeSc}).name+'):</span> ';
   h+='<span class="score-projected" style="color:'+clr+'">'+sc+'</span>';
   h+='<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
   h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(sc)+'</span>';
@@ -342,7 +372,7 @@ function renderDomains(){
     h+='<span class="delta '+(delta>=0?'delta-up':'delta-down')+'">'+(delta>=0?'+':'')+delta+'</span>';
     h+='</div>';
     h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:'+p+'%;background:'+d.color+'"></div></div>';
-    h+='<p class="t4 mt-2">Today: '+d.today+' &rarr; 2035: '+p+'</p>';
+    h+='<p class="t4 mt-2">Today: '+d.today+' &rarr; 2050: '+p+'</p>';
     h+='</div>';
   });
   h+='</div>';
@@ -362,9 +392,9 @@ function renderSparks(){
     var endVal=ds[activeSc][ds[activeSc].length-1];
     var baseVal=ds[activeSc][0];
     h+='<div class="cell"'+span+'>';
-    h+=chartHeader({label:kpi.label,value:endVal,unit:kpi.unit,dec:1,dir:kpi.dir,baseline:baseVal,color:SC_COLORS[activeSc],endYear:2035});
-    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:kpi.unit,dec:1,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160,exportId:'civ-'+k});
-    registerChartExport('civ-'+k,ds,2026,2035,kpi.unit,'');
+    h+=chartHeader({label:kpi.label,value:endVal,unit:kpi.unit,dec:1,dir:kpi.dir,baseline:baseVal,color:SC_COLORS[activeSc],endYear:2050});
+    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2050,unit:kpi.unit,dec:1,prefix:'',dir:kpi.dir,note:KPI_ANNOTATIONS[k],height:160,exportId:'civ-'+k});
+    registerChartExport('civ-'+k,ds,2026,2050,kpi.unit,'');
     h+='</div>';
   });
   h+='</div>';
@@ -416,9 +446,9 @@ function renderFunding(){
   var povEnd=datasets[activeSc][datasets[activeSc].length-1];
   var povBase=datasets[activeSc][0];
   document.getElementById('funding-chart').innerHTML=
-    chartHeader({label:'Poverty Rate',value:povEnd,unit:'%',dec:1,dir:'lower',baseline:povBase,color:SC_COLORS[activeSc],endYear:2035})
-    +scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2035,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160,exportId:'civ-poverty'});
-  registerChartExport('civ-poverty',datasets,2026,2035,'%','');
+    chartHeader({label:'Poverty Rate',value:povEnd,unit:'%',dec:1,dir:'lower',baseline:povBase,color:SC_COLORS[activeSc],endYear:2050})
+    +scenarioChart({datasets:datasets,colors:SC_COLORS,scenarios:SC,activeKey:activeSc,startYear:2026,endYear:2050,unit:'%',dec:1,dir:'lower',note:'Poverty rate trajectory under each scenario. Civic dividends and workforce programs drive the aggressive curve down; without intervention, compounding inequality pushes rates upward.',height:160,exportId:'civ-poverty'});
+  registerChartExport('civ-poverty',datasets,2026,2050,'%','');
   document.getElementById('funding-legend').innerHTML='';
 }
 

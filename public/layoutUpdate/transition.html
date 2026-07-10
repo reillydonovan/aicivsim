@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260710d">
+<link rel="stylesheet" href="css/style.css?v=20260710e">
 </head>
 <body>
 
@@ -29,7 +29,7 @@
   <div class="page masthead-inner">
     <span class="masthead-breadcrumb"><a href="index.html">AI Civ Sim</a> / Transition &mdash; 2026</span>
     <h1 class="t2-xl mt-3">Workforce Transition Dashboard</h1>
-    <p class="body mt-2">Reskilling pathways, income bridges, and employment projections for the automation wave. Four policy scenarios modeled from 2025 to 2035.</p>
+    <p class="body mt-2">Reskilling pathways, income bridges, and employment projections for the automation wave. Four policy scenarios modeled from 2025 to 2050.</p>
     <hr class="rule">
   </div>
 </div>
@@ -173,8 +173,8 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260710d"></script>
-<script src="js/live-data.js?v=20260710d" defer></script>
+<script src="js/shared.js?v=20260710e"></script>
+<script src="js/live-data.js?v=20260710e" defer></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -189,7 +189,7 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
   var scColors={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
   var active='bau';
 
-  var years=[2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
+  var years=[];for(var _y=2025;_y<=2050;_y++)years.push(_y);
 
   var D={
     poverty:{
@@ -218,6 +218,19 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
     }
   };
 
+  /* The hand-authored series above end in 2035; extend each to 2050,
+     easing toward endpoints consistent with the site-wide projections
+     (Transition 2050: 88/68/28/12). */
+  var D2050={
+    poverty:   {aggressive:2.2, moderate:6,  bau:20.5,worst:35},
+    reskill:   {aggressive:3,   moderate:6,  bau:26,  worst:44},
+    placement: {aggressive:96,  moderate:88, bau:42,  worst:18},
+    employment:{aggressive:98.2,moderate:97, bau:83,  worst:60}
+  };
+  Object.keys(D).forEach(function(k){
+    Object.keys(D[k]).forEach(function(s){D[k][s]=extendSeries(D[k][s],D2050[k][s],15,1)});
+  });
+
   var indicators=[
     {id:'poverty',    label:'Poverty Rate',       unit:'%', baseline:13,  dec:1, dir:'lower',
      note:'Regional poverty rate. Lower is better. Baseline 13% (2025).'},
@@ -232,10 +245,10 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
   var TRANS_SCORES={aggressive:88, moderate:68, bau:28, worst:12};
 
   var narratives={
-    aggressive:'Full-stack integration layers universal basic services, cooperative employment networks, and civic dividend income bridges. Poverty falls to 3.5%, reskill time compresses to 4.5 months, and placement reaches 93%. Employment rises to 97.6% as gig, cooperative, and traditional pathways converge into a unified labor market.',
-    moderate:'Targeted reskilling pipelines and civic dividend income bridges cushion the automation wave. Poverty drops to 7%, median reskill time compresses to 7.5 months, and placement rates climb to 84%. The dividend mechanism covers gap income during transitions, reducing dropout rates by more than half.',
-    bau:'Under business-as-usual conditions, automation displacement accelerates without compensating policy. Poverty rises from 13% to 18.5% by 2035, median reskilling time drifts upward to 22 months, and placement rates decline steadily. The workforce bears the full cost of structural transformation.',
-    worst:'Active deregulation and austerity compound automation displacement. Poverty surges to 30%, reskilling time doubles to 36 months as public programs collapse, and placement rates crater to 28%. Employment drops to 72% as gig protections erode and cooperative networks are defunded. A lost generation of workers is stranded without viable transition pathways.'
+    aggressive:'Full-stack integration layers universal basic services, cooperative employment networks, and civic dividend income bridges. By 2050 poverty falls to 2.2%, reskill time compresses to 3 months, and placement reaches 96%. Employment rises past 98% as gig, cooperative, and traditional pathways converge into a unified labor market.',
+    moderate:'Targeted reskilling pipelines and civic dividend income bridges cushion the automation wave. By 2050 poverty drops to 6%, median reskill time compresses to 6 months, and placement rates climb to 88%. The dividend mechanism covers gap income during transitions, reducing dropout rates by more than half.',
+    bau:'Under business-as-usual conditions, automation displacement accelerates without compensating policy. Poverty rises from 13% past 20% by 2050, median reskilling time drifts upward to 26 months, and placement rates decline steadily toward 42%. The workforce bears the full cost of structural transformation.',
+    worst:'Active deregulation and austerity compound automation displacement. By 2050 poverty surges to 35%, reskilling time reaches 44 months as public programs collapse, and placement rates crater to 18%. Employment drops to 60% as gig protections erode and cooperative networks are defunded. A lost generation of workers is stranded without viable transition pathways.'
   };
 
   var DIV_RATE={aggressive:192, moderate:115, bau:0, worst:0};
@@ -304,13 +317,13 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
       scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
       var endVal=ds[active][ds[active].length-1];
       html+='<div class="cell">'
-        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2035})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,exportId:'transition-ov-'+m.id})
+        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2050,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,exportId:'transition-ov-'+m.id})
         +'</div>';
     });
     el.innerHTML=html;
     indicators.forEach(function(m){
-      registerChartExport('transition-ov-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2035,m.unit,'');
+      registerChartExport('transition-ov-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2050,m.unit,'');
     });
   }
 
@@ -392,13 +405,13 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
       scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
       var endVal=ds[active][ds[active].length-1];
       html+='<div class="cell">'
-        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2035})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:180,exportId:'transition-proj-'+m.id})
+        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2050})
+        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2050,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:180,exportId:'transition-proj-'+m.id})
         +'</div>';
     });
     el.innerHTML=html;
     indicators.forEach(function(m){
-      registerChartExport('transition-proj-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2035,m.unit,'');
+      registerChartExport('transition-proj-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2050,m.unit,'');
     });
   }
 
@@ -442,7 +455,7 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
       :'Under <strong style="color:'+scColors[active]+'">'+scName(active)+'</strong>, there are no civic dividends. Workers bear full transition costs without income bridge support.';
     var ps=TRANS_SCORES[active]; var pc=scColors[active];
     document.getElementById('trans-projected').innerHTML=
-      '<span class="t3">Projected 2035 ('+scName(active)+'):</span> '
+      '<span class="t3">Projected 2050 ('+scName(active)+'):</span> '
       +'<span class="score-projected" style="color:'+pc+'">'+ps+'</span>'
       +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
       +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+pc+';color:'+pc+'">'+grade(ps)+'</span>'

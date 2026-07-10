@@ -5,6 +5,19 @@
 /* ── Grade helpers ── */
 function grade(s){return s>=93?'A':s>=85?'A\u2212':s>=80?'B+':s>=73?'B':s>=68?'B\u2212':s>=63?'C+':s>=58?'C':s>=53?'C\u2212':s>=48?'D+':s>=43?'D':s>=38?'D\u2212':'F'}
 function fmtToday(){return new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
+/* Extend a timeseries by `extra` points, easing from its last value
+   toward `target` (ease-out — most movement early, then plateau).
+   Used by dashboards whose hand-authored data ended at 2035 to carry
+   every chart out to the site-wide 2050 horizon. */
+function extendSeries(arr,target,extra,dec){
+  dec=dec==null?1:dec;
+  var out=arr.slice(),v=arr[arr.length-1],m=Math.pow(10,dec);
+  for(var i=1;i<=extra;i++){
+    var t=i/extra,e=1-Math.pow(1-t,2);
+    out.push(Math.round((v+(target-v)*e)*m)/m);
+  }
+  return out;
+}
 function gClr(s){return s>=73?'#4ecdc4':s>=53?'#e8a838':s>=38?'#c48a3f':'#d4622a'}
 function avg(arr){return Math.round(arr.reduce(function(a,b){return a+b},0)/arr.length)}
 function fmtK(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n)}
@@ -1342,7 +1355,7 @@ var CMD_ITEMS=[
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260710d';
+  s.src='js/chat-widget.js?v=20260710e';
   s.defer=true;
   document.body.appendChild(s);
 })();
