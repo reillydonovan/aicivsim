@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live Data — AI Civilization Simulator</title>
+<meta name="description" content="Real-time planetary and socioeconomic indicators - CO2, warming, renewables, emissions, poverty - fetched live and compared against the model's baselines.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://aicivsim.com/data.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Live Data — AI Civilization Simulator">
+<meta property="og:description" content="Real-time planetary and socioeconomic indicators - fetched live and compared against the model's baselines.">
+<meta property="og:url" content="https://aicivsim.com/data.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Live Data — AI Civilization Simulator">
+<meta name="twitter:description" content="Real-time planetary and socioeconomic indicators - fetched live and compared against the model's baselines.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260710a">
+</head>
+<body>
+
+<!-- ── MASTHEAD ── -->
+<header class="masthead">
+<div class="page masthead-inner">
+  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Live Data</p>
+  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">The World, Right Now</h1>
+  <p class="body mt-3" style="max-width:520px">Every other page on this site models <em>possible</em> futures from a fixed 2026 baseline. This page fetches the <em>actual</em> state of the world from public scientific APIs — live, in your browser — and puts it next to the model&rsquo;s assumptions.</p>
+  <hr class="rule">
+</div>
+</header>
+
+<div id="site-nav-mount"></div>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     01 — LIVE INDICATORS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="section">
+<div class="page">
+  <span class="section-num">01</span>
+  <h2 class="t2">Live Indicators <span id="live-status" class="t4" style="text-transform:none;letter-spacing:0;margin-left:8px;color:var(--text-faint)">fetching&hellip;</span></h2>
+  <hr class="rule">
+  <div class="grid grid-2" id="live-grid">
+    <!-- cards injected by JS; skeletons shown while loading -->
+  </div>
+  <p class="t4 mt-4" style="color:var(--text-faint);max-width:640px" id="live-fetched-at"></p>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     02 — HOW THIS WORKS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="chapter-divider">
+<div class="page">
+  <span class="section-num">02</span>
+  <p class="t2">How This Works</p>
+</div>
+</div>
+
+<div class="section" style="padding-top:24px">
+<div class="page">
+  <div class="grid grid-3">
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">Zero Backend</p>
+      <p class="t4 mt-2">Your browser calls the sources directly &mdash; NOAA&rsquo;s Global Monitoring Laboratory (via global-warming.org), Our World in Data&rsquo;s grapher API, and the World Bank API. All are free, key-less, and CORS-open. Nothing passes through this site&rsquo;s server.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">Graceful Fallback</p>
+      <p class="t4 mt-2">If a source is unreachable, its card shows the model&rsquo;s static baseline instead and says so. The simulation never depends on the network &mdash; live values are an overlay, not a requirement. Results are cached in your browser for six hours.</p>
+    </div>
+    <div class="cell">
+      <p class="t3" style="color:var(--accent)">Apples &amp; Oranges</p>
+      <p class="t4 mt-2">The model&rsquo;s scores are composite 0&ndash;100 indices; live values are raw physical measurements. Where a direct comparison exists (CO&#8322; ppm, warming, renewable share, emissions, poverty) the card shows the drift between the model&rsquo;s 2026 assumption and reality.</p>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <p class="t3 mb-3">Sources</p>
+    <div class="grid grid-2">
+      <div class="cell">
+        <p class="t4"><strong style="color:var(--text-primary)">global-warming.org</strong> &mdash; community mirror of NOAA GML (CO&#8322;, methane) and NSIDC (Arctic sea ice). Daily to monthly cadence.</p>
+      </div>
+      <div class="cell">
+        <p class="t4"><strong style="color:var(--text-primary)">Our World in Data</strong> &mdash; grapher CSV API. Temperature anomaly (vs 1861&ndash;1880), renewable electricity share (Ember), CO&#8322; emissions (Global Carbon Project). Annual.</p>
+      </div>
+      <div class="cell">
+        <p class="t4"><strong style="color:var(--text-primary)">World Bank Open Data</strong> &mdash; extreme poverty ($3.00/day, 2021 PPP) and ILO-modeled unemployment. Annual.</p>
+      </div>
+      <div class="cell">
+        <p class="t4"><strong style="color:var(--text-primary)">What&rsquo;s not live</strong> &mdash; trust in institutions, AI alignment, governance capacity. No public real-time series exists; those remain modeled values.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</main>
+
+<div id="page-footer"></div>
+
+<script src="js/shared.js?v=20260710a"></script>
+<script src="js/live-data.js?v=20260710a"></script>
+<script>
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('page-footer').innerHTML=renderFooter();
+
+(function(){
+  var grid=document.getElementById('live-grid');
+  var status=document.getElementById('live-status');
+  var fetchedAt=document.getElementById('live-fetched-at');
+
+  /* Skeletons while loading */
+  var skel='';
+  for(var i=0;i<8;i++){
+    skel+='<div class="cell"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-score mt-2"></div><div class="skeleton skeleton-text" style="width:80%"></div></div>';
+  }
+  grid.innerHTML=skel;
+
+  function deltaHTML(ind){
+    if(ind.baseline==null||ind.value==null)return '';
+    var d=ind.value-ind.baseline;
+    var pct=ind.baseline!==0?(d/ind.baseline*100):0;
+    var sign=d>0?'+':'';
+    var clr=Math.abs(pct)<3?'var(--text-muted)':'var(--yellow)';
+    return '<p class="t4 mt-2" style="color:'+clr+'">'+sign+d.toFixed(2).replace(/\.00$/,'')+ind.unit+' vs '+ind.baselineLabel+' ('+ind.baselineDisplay+')</p>';
+  }
+
+  function card(ind){
+    var h='<div class="cell">';
+    h+='<p class="t3">'+ind.label+'</p>';
+    h+='<p class="num num-xl mt-2" style="color:var(--climate)">'+ind.display+'</p>';
+    h+='<p class="t4 mt-1" style="color:var(--text-muted)">as of '+ind.asOf+'</p>';
+    h+=deltaHTML(ind);
+    h+='<p class="t4 mt-2" style="color:var(--text-faint)"><a href="'+ind.url+'" target="_blank" rel="noopener" style="color:var(--text-muted)">'+ind.source+'</a></p>';
+    h+='</div>';
+    return h;
+  }
+
+  function fallbackCard(def){
+    var h='<div class="cell" style="opacity:0.6">';
+    h+='<p class="t3">'+def.label+'</p>';
+    if(def.baseline!=null){
+      h+='<p class="num num-xl mt-2" style="color:var(--text-muted)">'+(def.prefix||'')+def.baseline.toFixed(def.dec)+def.unit+'</p>';
+      h+='<p class="t4 mt-1" style="color:var(--text-faint)">static model baseline &mdash; live feed unavailable</p>';
+    }else{
+      h+='<p class="num num-xl mt-2" style="color:var(--text-faint)">&mdash;</p>';
+      h+='<p class="t4 mt-1" style="color:var(--text-faint)">live feed unavailable</p>';
+    }
+    h+='<p class="t4 mt-2" style="color:var(--text-faint)">'+def.source+'</p>';
+    h+='</div>';
+    return h;
+  }
+
+  LIVE_DATA.fetchAll().then(function(res){
+    var h='';
+    LIVE_DATA.INDICATORS.forEach(function(def){
+      var ind=res.indicators[def.id];
+      h+=ind?card(ind):fallbackCard(def);
+    });
+    grid.innerHTML=h;
+    var n=res.ok||0;
+    status.textContent=n?('● '+n+'/'+LIVE_DATA.INDICATORS.length+' feeds live'):'all feeds unavailable — showing static baselines';
+    status.style.color=n?'var(--green)':'var(--red)';
+    if(res.fetchedAt&&n){
+      fetchedAt.textContent='Fetched '+new Date(res.fetchedAt).toLocaleString()+' in your browser. Cached for 6 hours. Live measurements and modeled indices differ in definition — treat deltas as directional signals, not errors.';
+    }
+  });
+})();
+</script>
+</body>
+</html>

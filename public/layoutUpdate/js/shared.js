@@ -21,6 +21,7 @@ var PAGE_ORDER=[
   {href:'governance.html',label:'Governance'},
   {href:'strategy.html',label:'Strategy'},
   {href:'timeline.html',label:'Timeline'},
+  {href:'data.html',label:'Live Data'},
   {href:'research.html',label:'Research'},
   {href:'chat.html',label:'Advisor'},
   {href:'about.html',label:'About'}
@@ -1136,6 +1137,7 @@ var CMD_ITEMS=[
   {g:'Pages',l:'Governance',d:'Institutions — participation, AI charter, citizen assemblies',h:'governance.html',icon:'⚖'},
   {g:'Pages',l:'Strategy',d:'Action catalog — 50+ interventions across 3 levels',h:'strategy.html',icon:'🎯'},
   {g:'Pages',l:'Timeline',d:'200,000 years of inflection points',h:'timeline.html',icon:'📅'},
+  {g:'Pages',l:'Live Data',d:'Real-world indicators fetched live — CO₂, warming, poverty',h:'data.html',icon:'📡'},
   {g:'Pages',l:'Research',d:'19-section civic roadmap',h:'research.html',icon:'📄'},
   {g:'Pages',l:'Advisor',d:'AI chat assistant with page-aware context',h:'chat.html',icon:'💬'},
   {g:'Pages',l:'About',d:'Project scope, methodology, technology stack',h:'about.html',icon:'ℹ'},

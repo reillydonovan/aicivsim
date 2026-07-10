@@ -40,7 +40,12 @@ public/layoutUpdate/
 ├── about.html             # About page
 ├── chat.html              # AI Advisor landing page — setup guide, example questions, roadmap
 ├── explorer.html          # Knowledge Explorer — Three.js knowledge graph, LLM-powered node spawning
-├── xr.html                # WebXR — immersive VR/AR visualization of the 7-system network
+├── xr.html                # WebXR — immersive VR/AR visualization of the systems network
+├── data.html              # Live Data — real-world indicators fetched client-side vs model baselines
+├── 404.html               # Branded 404 (wired via .htaccess ErrorDocument)
+├── favicon.svg            # Network-mark favicon (also linked from every page)
+├── robots.txt / sitemap.xml
+├── .htaccess              # ErrorDocument 404 + asset cache headers
 ├── api/
 │   ├── chat.php           # Streaming PHP proxy — holds API key server-side, forwards to LLM provider
 │   ├── config.example.php # Config template (committed) — copy to config.php or above web root
@@ -48,6 +53,7 @@ public/layoutUpdate/
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading, command palette, scroll animations, reading progress bar, back-to-top, enhanced hover states
 ├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection, command palette, reading progress bar, back-to-top, scroll-reveal animations
 ├── js/chat-widget.js      # Persistent AI Advisor chat widget — floating panel, LLM integration, page awareness, message persistence
+├── js/live-data.js        # Live data layer — key-free CORS APIs (NOAA/OWID/World Bank), sessionStorage cache, graceful fallback
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
@@ -240,7 +246,7 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
 - [ ] **Real-time cross-system feedback** — Cross-system panels now reflect the active scenario, but adjusting a policy lever on one page does not yet propagate score changes to other pages in real time.
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
-- [ ] **Data source integration** — Connect to real-world data APIs (World Bank, NOAA, ILO) to ground baseline values in actual measurements.
+- [x] ~~Data source integration~~ — `js/live-data.js` + `data.html` fetch current real-world values client-side (CO₂/methane/Arctic ice from NOAA via global-warming.org, temperature anomaly/renewable share/CO₂ emissions from Our World in Data, poverty/unemployment from the World Bank). Key-free, CORS-open, cached in sessionStorage for 6h, with graceful fallback to the static baselines when offline. The homepage shows a compact live-signal strip; `data.html` compares every live value against the model's 2026 baseline.
 - [ ] **Scenario builder** — Allow users to create custom scenarios beyond the four presets by defining their own policy lever configurations.
 - [ ] **Globe view (viz.html)** — Revisit the globe mode that remaps the network onto a wireframe icosphere. Currently hidden; JS infrastructure remains in place for re-enabling.
 - [ ] **Accessibility audit** — Full WCAG 2.1 AA compliance review, focus management, screen reader testing.
