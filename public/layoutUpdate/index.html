@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260710a">
+<link rel="stylesheet" href="css/style.css?v=20260710b">
 </head>
 <body>
 
@@ -65,7 +65,7 @@
 <div class="chapter-divider">
 <div class="page">
   <span class="section-num">02</span>
-  <p class="t2">Systems Index &mdash; <span id="idx-scenario-label" style="color:#4ecdc4">Aggressive</span></p>
+  <p class="t2">Systems Index &mdash; <span id="idx-scenario-label" style="color:#e8a838">Business as Usual</span></p>
 </div>
 </div>
 
@@ -93,7 +93,7 @@
   <p class="body mt-4" style="max-width:640px">The world&rsquo;s most critical systems &mdash; climate, economy, governance, technology &mdash; don&rsquo;t operate in isolation. A policy decision about AI regulation ripples through labor markets. A failure in climate adaptation compounds inequality. A collapse in institutional trust undermines every other reform.</p>
   <p class="body mt-3" style="max-width:640px">This simulator maps those interdependencies. It takes seven civilizational systems &mdash; including AI itself &mdash; connects them through feedback loops, and projects how different levels of policy intervention produce radically different outcomes over 50 years.</p>
   <p class="body mt-3" style="max-width:640px"><strong style="color:var(--text-primary)">This is not a prediction engine.</strong> It is a planning tool &mdash; a structured way to reason about systemic tradeoffs, compounding effects, and the consequences of acting (or failing to act) at civilizational scale.</p>
-  <p class="body mt-3" style="max-width:640px">All data is modeled from scenario projections, calibrated against IPCC pathways, labor economics research, and institutional governance literature. Nothing here is real-time sensor data.</p>
+  <p class="body mt-3" style="max-width:640px">Projections are modeled from scenario analysis, calibrated against IPCC pathways, labor economics research, and institutional governance literature. Baselines are grounded in <a href="data.html" style="color:var(--climate)">live real-world measurements</a> &mdash; CO&#8322;, warming, renewables, emissions, and poverty are fetched directly from NOAA, Our World in Data, and the World Bank each time you visit. The composite 0&ndash;100 scores remain modeled indices; the measurements underneath them are today&rsquo;s.</p>
 
   <div class="grid grid-3 mt-8">
     <div class="cell">
@@ -322,8 +322,8 @@
 
 </main>
 
-<script src="js/shared.js?v=20260710a"></script>
-<script src="js/live-data.js?v=20260710a" defer></script>
+<script src="js/shared.js?v=20260710b"></script>
+<script src="js/live-data.js?v=20260710b" defer></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -336,7 +336,7 @@ var SC=[
   {id:'worst',name:'Worst Case',color:'#d4622a'}
 ];
 var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
-var active='aggressive';
+var active='bau';
 
 var SYSTEMS=[
   {id:'ai',        label:'AI',             href:'ai.html',           color:'#e8a838',           today:48,
@@ -446,8 +446,9 @@ function renderHeroScore(){
   h+='</div>';
   h+='</div>';
   h+='</div>';
+  h+='<p class="t3 mt-3" style="color:var(--text-muted)">As of '+fmtToday()+'</p>';
 
-  h+='<p class="body mt-3">Aggregate score across AI alignment, climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today \u2014 before any of the four scenarios are applied.</p>';
+  h+='<p class="body mt-3">Aggregate score across AI alignment, climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today \u2014 before any of the four scenarios are applied. Underlying measurements refresh from live sources each visit.</p>';
   h+='<p class="t4 mt-2" style="color:var(--text-muted)">If trends continue: <span style="color:#d4622a">'+grade(bauScore)+' ('+bauScore+'/100)</span> by 2050</p>';
 
   h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';

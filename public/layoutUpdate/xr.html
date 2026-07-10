@@ -166,9 +166,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
     <div class="top-right">
       <div class="sc-bar" id="sc-bar">
-        <button class="sc-btn active" data-sc="aggressive">Aggressive</button>
+        <button class="sc-btn" data-sc="aggressive">Aggressive</button>
         <button class="sc-btn" data-sc="moderate">Moderate</button>
-        <button class="sc-btn" data-sc="bau">BAU</button>
+        <button class="sc-btn active" data-sc="bau">BAU</button>
         <button class="sc-btn" data-sc="worst">Worst</button>
       </div>
       <div class="mode-bar" style="margin-top:6px">
@@ -221,7 +221,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260710a"></script>
+<script src="js/shared.js?v=20260710b"></script>
 <script>
 /* Boot watchdog — surface CDN/module failures instead of a black screen */
 (function(){
@@ -349,7 +349,7 @@ const SUB_SUB_NODE_DATA={
   strategy_systemic:[{id:'regulation',label:'Regulation',color:0x4ecdc4,today:42,proj:{aggressive:88,moderate:68,bau:28,worst:12}},{id:'infrastr',label:'Infrastructure',color:0xe8a838,today:38,proj:{aggressive:85,moderate:62,bau:22,worst:8}},{id:'intl',label:'International',color:0x5da5da,today:35,proj:{aggressive:82,moderate:58,bau:20,worst:8}}]
 };
 
-let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'aggressive';
+let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'bau';
 let year=2026,playing=false,selNode=null,selSub=null,selSubSub=null;
 let worldOpen=false;
 let audioCtx=null,masterGain=null,audioInited=false,audioMuted=true;

@@ -213,9 +213,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
     <div class="top-right">
       <div class="sc-bar" id="sc-bar">
-        <button class="sc-btn active" data-id="aggressive">Aggressive</button>
+        <button class="sc-btn" data-id="aggressive">Aggressive</button>
         <button class="sc-btn" data-id="moderate">Moderate</button>
-        <button class="sc-btn" data-id="bau">BAU</button>
+        <button class="sc-btn active" data-id="bau">BAU</button>
         <button class="sc-btn" data-id="worst">Worst Case</button>
       </div>
       <div class="mode-bar">
@@ -272,7 +272,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; M sound &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260710a"></script>
+<script src="js/shared.js?v=20260710b"></script>
 <script>
 /* Boot watchdog — surface CDN/module failures instead of a black screen */
 (function(){
@@ -347,7 +347,7 @@ const TIPPING=[
 ];
 
 /* Honor the site-wide scenario (URL hash / localStorage via shared.js) */
-let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'aggressive';
+let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'bau';
 let year=2026,playing=false,selNode=null,selSub=null,hovNode=null,hovSub=null,hovSubSub=null;
 let comparing=false,compareWith='moderate';
 let globeActive=false;

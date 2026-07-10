@@ -4,6 +4,7 @@
 
 /* ── Grade helpers ── */
 function grade(s){return s>=93?'A':s>=85?'A\u2212':s>=80?'B+':s>=73?'B':s>=68?'B\u2212':s>=63?'C+':s>=58?'C':s>=53?'C\u2212':s>=48?'D+':s>=43?'D':s>=38?'D\u2212':'F'}
+function fmtToday(){return new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
 function gClr(s){return s>=73?'#4ecdc4':s>=53?'#e8a838':s>=38?'#c48a3f':'#d4622a'}
 function avg(arr){return Math.round(arr.reduce(function(a,b){return a+b},0)/arr.length)}
 function fmtK(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n)}
@@ -108,11 +109,14 @@ function initThemeToggle(){
 /* ================================================================
    SCENARIO PERSISTENCE — hash + localStorage
    ================================================================ */
+/* Site-wide default scenario. BAU — the world's current trajectory —
+   is the honest starting point; users opt into the other futures. */
+var DEFAULT_SCENARIO='bau';
 function getScenarioFromHash(){
   var h=window.location.hash.replace('#','');
   if(h&&/^(aggressive|moderate|bau|worst)$/.test(h)) return h;
   try{var ls=localStorage.getItem('aicivsim-scenario');if(ls&&/^(aggressive|moderate|bau|worst)$/.test(ls))return ls}catch(e){}
-  return null;
+  return DEFAULT_SCENARIO;
 }
 function setScenarioHash(id){
   if(window.history&&window.history.replaceState) window.history.replaceState(null,'','#'+id);
@@ -1103,7 +1107,7 @@ function renderFooter(){
     nav+
     '<div class="text-center">'+
     '<p class="t4">AI Civilization Simulator &middot; Clawcode Research &middot; 2026</p>'+
-    '<p class="t4 mt-2" style="color:var(--text-faint)">Data: simulated projections. Methodology: scenario modeling with policy lever inputs.<br>Typography: Space Grotesk, Inter, JetBrains Mono. Layout: 12-column editorial grid.</p>'+
+    '<p class="t4 mt-2" style="color:var(--text-faint)">Data: scenario projections grounded in <a href="data.html" style="color:var(--text-muted)">live real-world baselines</a> (NOAA &middot; Our World in Data &middot; World Bank).<br>Typography: Space Grotesk, Inter, JetBrains Mono. Layout: 12-column editorial grid.</p>'+
     '</div>'+
   '</div></footer>';
 }
@@ -1311,7 +1315,7 @@ var CMD_ITEMS=[
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260710a';
+  s.src='js/chat-widget.js?v=20260710b';
   s.defer=true;
   document.body.appendChild(s);
 })();

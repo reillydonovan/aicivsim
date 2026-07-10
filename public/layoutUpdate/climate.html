@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260710a">
+<link rel="stylesheet" href="css/style.css?v=20260710b">
 </head>
 <body>
 
@@ -194,6 +194,7 @@
     <p class="t2">Cross-System Impact</p>
     <hr class="rule">
     <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
+    <div id="live-reality" data-indicators="co2ppm,tempAnomaly,renewShare,co2emis,methane,seaice"></div>
     <div id="cross-system-mount" class="mt-4"></div>
   </div>
 
@@ -207,7 +208,8 @@
 <!-- ============================================================
      SCRIPTS
      ============================================================ -->
-<script src="js/shared.js?v=20260710a"></script>
+<script src="js/shared.js?v=20260710b"></script>
+<script src="js/live-data.js?v=20260710b" defer></script>
 <script>
 (function(){
 document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
@@ -229,7 +231,7 @@ document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
     {id:'worst',     name:'Worst Case',color:'#d4622a'}
   ];
   var scColors={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
-  var active='aggressive';
+  var active='bau';
 
   /* ── Climate Data (25 pts, 2026-2050) ── */
   var D={

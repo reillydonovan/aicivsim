@@ -219,6 +219,61 @@ function fetchAll(){
 
 window.LIVE_DATA={fetchAll:fetchAll,INDICATORS:INDICATORS};
 
+/* ================================================================
+   GLOBAL GUI BINDINGS — declarative live-value injection
+   ----------------------------------------------------------------
+   1. Any element with  data-live="co2ppm"           -> live display value
+      optional          data-live-asof="co2ppm"      -> "as of" stamp
+      Elements keep their static (baked-in) content until data arrives.
+   2. Any element with  id="live-reality" and
+      data-indicators="co2ppm,tempAnomaly,..."       -> compact
+      live-vs-model-baseline comparison panel (dashboard pages).
+   3. document fires  "aicivsim:live"  with {detail:result} so page
+      scripts can react to fresh data themselves.
+   ================================================================ */
+function applyBindings(res){
+  document.querySelectorAll('[data-live]').forEach(function(el){
+    var ind=res.indicators[el.getAttribute('data-live')];
+    if(!ind)return;
+    el.textContent=ind.display;
+    el.title=ind.source+' — as of '+ind.asOf;
+    el.classList.add('live-value');
+  });
+  document.querySelectorAll('[data-live-asof]').forEach(function(el){
+    var ind=res.indicators[el.getAttribute('data-live-asof')];
+    if(!ind)return;
+    el.textContent='live · '+ind.asOf;
+  });
+  try{document.dispatchEvent(new CustomEvent('aicivsim:live',{detail:res}))}catch(e){}
+}
+
+function mountRealityPanel(res){
+  var el=document.getElementById('live-reality');
+  if(!el)return;
+  var ids=(el.getAttribute('data-indicators')||'').split(',');
+  var rows=ids.map(function(id){return res.indicators[id.trim()]}).filter(Boolean);
+  if(!rows.length){el.style.display='none';return}
+  var h='<div class="cross-system-panel" style="margin-top:24px">';
+  h+='<p class="t3" style="margin-bottom:4px"><span style="color:var(--green)">●</span> Reality Check — Live</p>';
+  h+='<p class="t4" style="margin-bottom:12px;color:var(--text-muted)">Current measurements vs the model’s 2026 baseline assumptions. Fetched in your browser.</p>';
+  rows.forEach(function(ind){
+    h+='<div class="cross-impact-row"><div class="flex items-baseline gap-8 flex-wrap">';
+    h+='<span class="t3" style="color:var(--text-secondary);min-width:180px">'+ind.label+'</span>';
+    h+='<span class="num num-md" style="color:var(--climate)">'+ind.display+'</span>';
+    h+='<span class="t4" style="color:var(--text-faint)">as of '+ind.asOf+'</span>';
+    if(ind.baseline!=null){
+      var d=ind.value-ind.baseline;
+      var sign=d>0?'+':'';
+      h+='<span class="t4" style="color:'+(Math.abs(d)<0.01?'var(--text-muted)':'var(--yellow)')+'">'
+        +sign+(Math.round(d*100)/100)+ind.unit+' vs baseline '+ind.baselineDisplay+'</span>';
+    }
+    h+='</div></div>';
+  });
+  h+='<p class="t4" style="margin-top:10px;color:var(--text-faint)">Sources: NOAA · Our World in Data · World Bank — <a href="data.html" style="color:var(--text-muted)">all live data &rarr;</a></p>';
+  h+='</div>';
+  el.innerHTML=h;
+}
+
 /* ── Optional auto-mount: any page with #live-strip gets a compact
       live-signal row (used on the homepage). ── */
 function mountStrip(){
@@ -240,7 +295,14 @@ function mountStrip(){
     el.innerHTML=h;
   });
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountStrip);
-else mountStrip();
+function boot(){
+  mountStrip();
+  fetchAll().then(function(res){
+    applyBindings(res);
+    mountRealityPanel(res);
+  });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);
+else boot();
 
 })();
