@@ -272,7 +272,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; M sound &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260710c"></script>
+<script src="js/shared.js?v=20260710d"></script>
 <script>
 /* Boot watchdog — surface CDN/module failures instead of a black screen */
 (function(){
@@ -348,7 +348,7 @@ const TIPPING=[
 
 /* Honor the site-wide scenario (URL hash / localStorage via shared.js) */
 let active=(window.getScenarioFromHash&&window.getScenarioFromHash())||'bau';
-let year=2026,playing=false,selNode=null,selSub=null,hovNode=null,hovSub=null,hovSubSub=null;
+let year=2026,playing=false,selNode=null,selSub=null,selSubSub=null,hovNode=null,hovSub=null,hovSubSub=null;
 let comparing=false,compareWith='moderate';
 let globeActive=false;
 let audioMuted=false,audioCtx=null,masterGain=null,baseOsc=null,chordOscs=[],audioInited=false;
