@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pathways — Moving Between Futures</title>
+<meta name="description" content="What it would actually take to move from one scenario to another - policy lever deltas, the action ledger, and trajectory divergence from any starting year.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://aicivsim.com/pathways.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Pathways — Moving Between Futures">
+<meta property="og:description" content="What it would actually take to move from one scenario to another - policy lever deltas, the action ledger, and trajectory divergence from any starting year.">
+<meta property="og:url" content="https://aicivsim.com/pathways.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pathways — Moving Between Futures">
+<meta name="twitter:description" content="What it would actually take to move from one scenario to another - policy lever deltas, the action ledger, and trajectory divergence from any starting year.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=20260711b">
+</head>
+<body>
+
+<!-- ============================================================
+     MASTHEAD
+     ============================================================ -->
+<div class="masthead">
+  <div class="page masthead-inner">
+    <span class="masthead-breadcrumb"><a href="index.html">AI Civ Sim</a> / Pathways &mdash; 2026</span>
+    <h1 class="t2-xl mt-3">Pathways</h1>
+    <p class="body mt-2">Every scenario is a destination. This page maps the route between them &mdash; what would have to change to climb from one future to a better one, and what would have to break to fall to a worse one.</p>
+    <hr class="rule">
+  </div>
+</div>
+
+<!-- ============================================================
+     SITE NAV
+     ============================================================ -->
+<div id="site-nav-mount"></div>
+
+<!-- ============================================================
+     CONTROL BAR — scenario bar doubles as the FROM picker
+     ============================================================ -->
+<div class="control-bar" id="control-bar">
+  <div class="page">
+    <div class="control-bar-inner">
+      <div class="nav-tabs" id="nav-tabs">
+        <button class="nav-tab active" data-section="overview">Overview</button>
+        <button class="nav-tab" data-section="levers">Levers</button>
+        <button class="nav-tab" data-section="actions">Actions</button>
+        <button class="nav-tab" data-section="trajectory">Trajectory</button>
+      </div>
+      <div class="scenario-bar" id="scenario-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<main class="page">
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION 01: THE ROUTE (always visible)
+       ────────────────────────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-num">01</span>
+    <h2 class="t2">The Route</h2>
+    <hr class="rule">
+    <p class="body mt-3" style="max-width:640px">The scenario buttons above set your <strong>starting path</strong> (shared with every page on this site). Pick a starting year and a destination below. The destination is always evaluated at 2050.</p>
+    <div id="route-controls" class="mt-4"></div>
+    <div class="grid grid-3 mt-6" id="route-headline"></div>
+    <div class="mt-6" id="route-quote"></div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION 02: OVERVIEW (tab)
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-overview">
+    <div class="section">
+      <span class="section-num">02</span>
+      <h2 class="t2">Two Worlds</h2>
+      <hr class="rule">
+      <div class="grid grid-2 mt-4" id="worlds-grid"></div>
+      <div class="mt-6" id="worlds-narrative"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION 03: LEVERS (tab)
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-levers" style="display:none">
+    <div class="section">
+      <span class="section-num">03</span>
+      <h2 class="t2" id="levers-heading">The Policy Delta</h2>
+      <hr class="rule">
+      <p class="body mt-3" style="max-width:640px" id="levers-intro"></p>
+      <div class="mt-4" id="levers-grid"></div>
+      <p class="t4 mt-3" style="color:var(--text-faint)">Lever settings are structural features of each scenario, not year-by-year dials. Explore them interactively on the <a href="simulation.html">Simulation</a> page.</p>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION 04: ACTIONS (tab)
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-actions" style="display:none">
+    <div class="section">
+      <span class="section-num">04</span>
+      <h2 class="t2" id="actions-heading">The Action Ledger</h2>
+      <hr class="rule">
+      <p class="body mt-3" style="max-width:640px" id="actions-intro"></p>
+      <div class="mt-4" id="actions-changed"></div>
+      <div class="mt-6" id="actions-aligned"></div>
+      <p class="t4 mt-3" style="color:var(--text-faint)">Statuses are scenario-level conditions, not year-level events. Full action cards with cost, difficulty, and timelines live in the <a href="strategy.html">Strategy catalog</a>.</p>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION 05: TRAJECTORY (tab)
+       ────────────────────────────────────────────────────────── -->
+  <div id="sec-trajectory" style="display:none">
+    <div class="section">
+      <span class="section-num">05</span>
+      <h2 class="t2">Where the Curves Fork</h2>
+      <hr class="rule">
+      <p class="body mt-3" style="max-width:640px" id="trajectory-intro"></p>
+      <div class="grid grid-2 mt-4" id="trajectory-grid"></div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       SECTION 06: REALITY CHECK (always visible)
+       ────────────────────────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-num">06</span>
+    <h2 class="t2">Reality Check</h2>
+    <hr class="rule">
+    <p class="body mt-3" style="max-width:640px">Live real-world indicators, fetched as you read this. They don&rsquo;t map onto the model&rsquo;s 0&ndash;100 scores &mdash; but they are evidence of which trajectory the world is actually on. Pathways compares whole scenarios, so unlike the per-system dashboards it carries no cross-system panel.</p>
+    <div id="live-reality" data-indicators="co2ppm,tempAnomaly,renewShare,co2emis,poverty" class="mt-4"></div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<div id="page-footer"></div>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script src="js/shared.js?v=20260711b"></script>
+<script src="js/live-data.js?v=20260711b" defer></script>
+<script>
+(function(){
+document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
+
+var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
+var SC_RANK={worst:0,bau:1,moderate:2,aggressive:3};
+var YEARS=[2026,2030,2035,2040,2050];
+var LEVERS=[
+  {id:'div',label:'Civic Dividend',unit:'%',max:15,desc:'Universal dividend funded by AI compute rents.'},
+  {id:'capex',label:'Climate Capex',unit:'%',max:30,desc:'Share of GDP directed to the energy transition.'},
+  {id:'reskill',label:'Reskilling Investment',unit:'%',max:25,desc:'Publicly funded retraining for displaced workers.'},
+  {id:'transparency',label:'Algorithmic Transparency',unit:'%',max:100,desc:'Share of high-impact systems publicly auditable.'},
+  {id:'charter',label:'AI Governance Charter',bool:true,desc:'Binding oversight framework for AI deployment.'}
+];
+
+var active='bau';        /* FROM scenario — synced with the sitewide selector */
+var fromYear=2026;       /* FROM year checkpoint */
+var toSc='aggressive';   /* TO scenario — page-local */
+
+function scMeta(id){return SCENARIOS.find(function(s){return s.id===id})}
+function esc(n){return n>0?'+'+n:String(n)}
+
+/* 2026 baseline: simWorldState floors at 2027 and simScore adds the
+   scenario's +10 charter bonus, so "today" is computed by hand from
+   SIM_ENGINE.metrics baselines — scenario-independent, no charter. */
+function baselineState(){
+  var score=Math.round((1-.385)*20+.432*25+0+.355*20);
+  return {score:score,grade:grade(score),era:'Dawn',
+    eraFeel:'The world feels much as it does now. The paths have not yet split.',
+    gini:.385,trust:.432,emis:36.3,resil:.355,ai:.121,
+    outlook:'All four futures are still open. 2026 is the last point every scenario shares.',
+    scenarioName:'2026 Baseline',charter:false};
+}
+function stateAt(sc,year){return year<=2026?baselineState():simWorldState(sc,year)}
+
+function computeGap(){
+  var from=stateAt(active,fromYear), to=simWorldState(toSc,2050);
+  var delta=to.score-from.score;
+  var dir=SC_RANK[toSc]>SC_RANK[active]?'up':SC_RANK[toSc]<SC_RANK[active]?'down':'same';
+  var band=dir==='same'?'hold the course':Math.abs(delta)<10?'course correction':Math.abs(delta)<30?'major reform':'civilizational turnaround';
+  return {from:from,to:to,delta:delta,dir:dir,band:band,runway:2050-Math.max(fromYear,2026)};
+}
+
+/* ── Route controls (year + TO pickers, page-local) ── */
+function renderControls(){
+  var h='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px">';
+  h+='<span class="t3">Starting year</span><span style="display:inline-flex">';
+  YEARS.forEach(function(y){
+    var isA=y===fromYear;
+    h+='<button class="scenario-btn pw-year" data-year="'+y+'" aria-pressed="'+isA+'" style="color:'+(isA?'var(--text-primary)':'var(--text-faint)')+'">'+y+'</button>';
+  });
+  h+='</span>';
+  h+='<span class="t3">Destination (2050)</span><span style="display:inline-flex">';
+  SCENARIOS.forEach(function(s){
+    var isA=s.id===toSc;
+    h+='<button class="scenario-btn pw-to" data-to="'+s.id+'" aria-pressed="'+isA+'" style="color:'+(isA?s.color:'var(--text-faint)')+'"><span class="dot" style="background:'+(isA?s.color:'rgba(255,255,255,0.1)')+'"></span>'+s.name+'</button>';
+  });
+  h+='</span></div>';
+  var mount=document.getElementById('route-controls');
+  mount.innerHTML=h;
+  mount.querySelectorAll('.pw-year').forEach(function(b){
+    b.addEventListener('click',function(){fromYear=+b.dataset.year;render();});
+  });
+  mount.querySelectorAll('.pw-to').forEach(function(b){
+    b.addEventListener('click',function(){toSc=b.dataset.to;render();});
+  });
+}
+
+/* ── Headline gap strip ── */
+function renderHeadline(g){
+  var fm=scMeta(active),tm=scMeta(toSc);
+  var h='';
+  h+='<div class="cell"><span class="t3" style="color:'+fm.color+'">Starting point</span>';
+  h+='<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><span class="num-lg" style="color:'+fm.color+'">'+g.from.score+'</span><span class="score-sub">/100</span><span class="tag" style="border-color:'+fm.color+';color:'+fm.color+'">'+g.from.grade+'</span></div>';
+  h+='<p class="t4 mt-2">'+(fromYear<=2026?'2026 baseline (shared by every scenario)':fm.name+' &middot; '+fromYear+' &middot; '+g.from.era+' era')+'</p></div>';
+
+  h+='<div class="cell"><span class="t3">The gap</span>';
+  if(g.dir==='same'){
+    h+='<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><span class="num-lg" style="color:var(--text-primary)">'+esc(g.delta)+'</span><span class="score-sub">drift</span></div>';
+    h+='<p class="t4 mt-2">You&rsquo;re on this path. This is where staying the course leads by 2050.</p>';
+  }else{
+    h+='<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><span class="num-lg" style="color:'+(g.dir==='up'?'var(--green)':'var(--red)')+'">'+esc(g.delta)+'</span><span class="score-sub">points</span></div>';
+    h+='<p class="t4 mt-2">'+(g.dir==='up'?'A climb':'A fall')+' worth of <strong>'+g.band+'</strong> &middot; '+(g.runway>0?g.runway+' years of runway':'no runway left — endpoint vs endpoint')+'</p>';
+  }
+  h+='</div>';
+
+  h+='<div class="cell"><span class="t3" style="color:'+tm.color+'">Destination</span>';
+  h+='<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><span class="num-lg" style="color:'+tm.color+'">'+g.to.score+'</span><span class="score-sub">/100</span><span class="tag" style="border-color:'+tm.color+';color:'+tm.color+'">'+g.to.grade+'</span></div>';
+  var tl=SIM_ENGINE.scenarios[toSc];
+  h+='<p class="t4 mt-2">'+tm.name+' &middot; 2050 &middot; '+tl.div+'% dividend &middot; '+tl.capex+'% capex &middot; charter '+(tl.charter?'ON':'OFF')+'</p></div>';
+  document.getElementById('route-headline').innerHTML=h;
+
+  var q;
+  if(g.dir==='same')q='Staying on the '+fm.name+' path is itself a choice. Here is what that choice compounds into by 2050.';
+  else if(g.dir==='up')q='Moving from '+fm.name+' to '+tm.name+' is a '+g.band+': every lever below has to move, and most of the action ledger has to flip from aspiration to enforcement.';
+  else q='Falling from '+fm.name+' to '+tm.name+' doesn&rsquo;t require a decision. It requires only that the things below be allowed to break.';
+  if(g.dir==='up'&&g.delta<0)q+=' Note the score still ends lower than your starting point &mdash; the better path doesn&rsquo;t recover lost ground, it loses less of it.';
+  document.getElementById('route-quote').innerHTML='<blockquote class="pullquote">'+q+'</blockquote>';
+}
+
+/* ── Two worlds (overview tab) ── */
+function renderWorlds(g){
+  var fm=scMeta(active),tm=scMeta(toSc);
+  function worldCell(label,st,clr,yr){
+    var h='<div class="cell"><span class="t3" style="color:'+clr+'">'+label+'</span>';
+    h+='<div style="display:flex;align-items:baseline;gap:10px;margin-top:8px"><span class="num-lg" style="color:'+clr+'">'+st.score+'</span><span class="score-sub">/100 &middot; '+yr+'</span></div>';
+    h+='<p class="body mt-3">'+st.outlook+'</p>';
+    h+='<p class="t4 mt-2" style="font-style:italic">'+st.eraFeel+'</p>';
+    h+='<div class="grid grid-3 mt-3" style="gap:1px">';
+    h+='<div style="padding:8px 0"><span class="t3">GINI</span><p class="num-sm mt-1">'+st.gini.toFixed(3)+'</p></div>';
+    h+='<div style="padding:8px 0"><span class="t3">Trust</span><p class="num-sm mt-1">'+st.trust.toFixed(3)+'</p></div>';
+    h+='<div style="padding:8px 0"><span class="t3">Emissions</span><p class="num-sm mt-1">'+st.emis.toFixed(1)+' Gt</p></div>';
+    h+='</div></div>';
+    return h;
+  }
+  document.getElementById('worlds-grid').innerHTML=
+    worldCell('Where you start &mdash; '+(fromYear<=2026?'2026 Baseline':fm.name),g.from,fm.color,Math.max(fromYear,2026))
+    +worldCell('Where you&rsquo;d arrive &mdash; '+tm.name,g.to,tm.color,2050);
+  document.getElementById('worlds-narrative').innerHTML='<blockquote class="pullquote">'+SIM_ENGINE.narratives[toSc]+'</blockquote>';
+}
+
+/* ── Policy delta (levers tab) ── */
+function renderLevers(g){
+  var fl=SIM_ENGINE.scenarios[active],tl=SIM_ENGINE.scenarios[toSc];
+  var fm=scMeta(active),tm=scMeta(toSc);
+  document.getElementById('levers-heading').textContent=
+    g.dir==='down'?'What Gets Dismantled':g.dir==='same'?'The Standing Settings':'What We’d Have to Change';
+  document.getElementById('levers-intro').innerHTML=
+    g.dir==='same'
+      ?'These are the policy settings the '+fm.name+' path already assumes. Holding the course means holding every one of them.'
+      :'Five structural levers separate '+fm.name+' from '+tm.name+'. '+(g.dir==='up'?'Each has to move this far:':'Each of these gets rolled back:');
+  var h='<div class="grid" style="grid-template-columns:1fr">';
+  LEVERS.forEach(function(l){
+    var fv=fl[l.id],tv=tl[l.id];
+    h+='<div class="cell"><div class="flex items-baseline gap-8" style="flex-wrap:wrap">';
+    h+='<span style="font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-primary);min-width:220px">'+l.label+'</span>';
+    if(l.bool){
+      var chg=fv!==tv;
+      h+='<span class="num-sm" style="color:'+(chg?'var(--text-muted)':fm.color)+'">'+(fv?'Binding':'None')+'</span>';
+      h+='<span style="color:var(--text-faint)">→</span>';
+      h+='<span class="num-sm" style="color:'+tm.color+'">'+(tv?'Binding':'None')+'</span>';
+      if(chg)h+='<span class="tag" style="border-color:'+(tv?'var(--green)':'var(--red)')+';color:'+(tv?'var(--green)':'var(--red)')+'">'+(tv?'must be enacted':'gets repealed')+'</span>';
+      else h+='<span class="tag">no change</span>';
+    }else{
+      var d=tv-fv;
+      h+='<span class="num-sm" style="color:'+(d===0?fm.color:'var(--text-muted)')+'">'+fv+l.unit+'</span>';
+      h+='<span style="color:var(--text-faint)">→</span>';
+      h+='<span class="num-sm" style="color:'+tm.color+'">'+tv+l.unit+'</span>';
+      if(d!==0)h+='<span class="tag" style="border-color:'+(d>0?'var(--green)':'var(--red)')+';color:'+(d>0?'var(--green)':'var(--red)')+'">'+esc(d)+' pts</span>';
+      else h+='<span class="tag">no change</span>';
+    }
+    h+='</div>';
+    h+='<p class="t4 mt-2">'+l.desc+'</p>';
+    /* All 4 scenarios for context; FROM and TO carry full color + label,
+       the other two sit dimmed in the background — same tiering as the
+       trajectory charts below. */
+    h+='<div class="mt-3" style="display:flex;flex-direction:column;gap:6px">';
+    SCENARIOS.forEach(function(s){
+      var isFrom=s.id===active,isTo=s.id===toSc,hi=isFrom||isTo;
+      var v=l.bool?(SIM_ENGINE.scenarios[s.id][l.id]?100:0):SIM_ENGINE.scenarios[s.id][l.id];
+      var pct=l.bool?v:Math.min(100,(v/l.max)*100);
+      h+='<div style="display:flex;align-items:center;gap:10px">';
+      h+='<span class="t4" style="width:110px;flex-shrink:0;white-space:nowrap;color:'+(hi?s.color:'var(--text-faint)')+';font-weight:'+(hi?'600':'400')+'">'+s.name+(isFrom&&isTo?' (both)':isFrom?' (from)':isTo?' (to)':'')+'</span>';
+      h+='<div class="bar-track" style="flex:1;height:'+(hi?'6px':'3px')+'"><div class="bar-fill" style="width:'+pct+'%;background:'+s.color+';opacity:'+(hi?1:0.3)+'"></div></div>';
+      h+='<span class="num-sm" style="width:52px;text-align:right;color:'+(hi?s.color:'var(--text-faint)')+'">'+(l.bool?(v?'ON':'OFF'):v+l.unit)+'</span>';
+      h+='</div>';
+    });
+    h+='</div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  document.getElementById('levers-grid').innerHTML=h;
+}
+
+/* ── Action ledger (actions tab) ── */
+function toneClr(rank,scClr){return rank===3?'var(--green)':rank===2?scClr:rank===1?'#e8a838':'var(--red)'}
+function renderActions(g){
+  var fm=scMeta(active),tm=scMeta(toSc);
+  var diffs=[],total=0;
+  STRATEGY_CATALOG.categories.forEach(function(c){
+    STRATEGY_CATALOG.actions[c.key].forEach(function(a){
+      total++;
+      var f=a.scenario[active],t=a.scenario[toSc];
+      diffs.push({cat:c,a:a,f:f,t:t,fr:stratStatusRank(f.status),tr:stratStatusRank(t.status),changed:f.status!==t.status});
+    });
+  });
+  var changed=diffs.filter(function(d){return d.changed}).sort(function(x,y){return Math.abs(y.tr-y.fr)-Math.abs(x.tr-x.fr)});
+  var aligned=diffs.filter(function(d){return !d.changed});
+  var down=g.dir==='down';
+
+  document.getElementById('actions-heading').textContent=
+    g.dir==='same'?'The Action Ledger':down?'What Would Have to Break':'What Has to Change';
+  document.getElementById('actions-intro').innerHTML=
+    g.dir==='same'
+      ?'All '+total+' catalog actions shown at their standing status under the '+fm.name+' path.'
+      :'Of the '+total+' actions in the catalog, <strong>'+changed.length+'</strong> sit at a different status under '+tm.name+' than under '+fm.name+'. Sorted by how far each one moves.';
+
+  var h='';
+  if(changed.length){
+    h+='<p class="t2 mb-3">'+(down?'What would have to break':'Must change')+' <span class="num-sm" style="color:var(--text-muted)">'+changed.length+' of '+total+'</span></p>';
+    h+='<div class="grid grid-2" style="gap:1px">';
+    changed.forEach(function(d){
+      h+='<div class="cell">';
+      h+='<div class="flex items-baseline gap-8 mb-1" style="flex-wrap:wrap">';
+      h+='<span class="t3" style="color:'+d.cat.color+'">'+d.cat.label+'</span>';
+      h+='<span style="font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-primary)">'+d.a.name+'</span>';
+      h+='</div>';
+      h+='<div class="flex items-baseline gap-8 mt-2" style="flex-wrap:wrap">';
+      h+='<span class="tag" style="border-color:'+toneClr(d.fr,fm.color)+';color:'+toneClr(d.fr,fm.color)+'">'+d.f.status+'</span>';
+      h+='<span style="color:var(--text-faint)">→</span>';
+      h+='<span class="tag" style="border-color:'+toneClr(d.tr,tm.color)+';color:'+toneClr(d.tr,tm.color)+'">'+d.t.status+'</span>';
+      h+='</div>';
+      h+='<p class="t4 mt-2">'+(down?'How it breaks: ':'When done: ')+d.t.note+'</p>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }
+  document.getElementById('actions-changed').innerHTML=h;
+
+  var ah='';
+  if(aligned.length){
+    ah+='<p class="t2 mb-3">Already aligned <span class="num-sm" style="color:var(--text-muted)">'+aligned.length+' of '+total+'</span></p>';
+    ah+='<div style="display:flex;flex-wrap:wrap;gap:8px">';
+    aligned.forEach(function(d){
+      ah+='<span class="tag" style="border-color:'+toneClr(d.tr,tm.color)+';color:'+toneClr(d.tr,tm.color)+'">'+d.a.name+' &middot; '+d.t.status+'</span>';
+    });
+    ah+='</div>';
+  }
+  document.getElementById('actions-aligned').innerHTML=ah;
+}
+
+/* ── Trajectory charts ── */
+function renderTrajectory(g){
+  var fm=scMeta(active),tm=scMeta(toSc);
+  var sameSc=active===toSc;
+  document.getElementById('trajectory-intro').innerHTML=
+    'The five structural metrics behind the composite score, 2026–2050. <span style="color:'+tm.color+';font-weight:600">— '+tm.name+'</span> (solid) is your destination'
+    +(!sameSc?'; <span style="color:'+fm.color+';font-weight:600">┅ '+fm.name+'</span> (dashed) is your current path':' — you&rsquo;re already on it, so only one line stands out')
+    +(fromYear>2026?'; the faint vertical line marks '+fromYear:'')+'.';
+  var h='';
+  SIM_ENGINE.metrics.forEach(function(m){
+    var ds={};
+    SCENARIOS.forEach(function(s){
+      ds[s.id]=[m.baseline].concat(SIM_ENGINE.scenarios[s.id][m.id].slice(0,24));
+    });
+    h+='<div class="cell">';
+    h+='<p class="t2 mb-3">'+m.label+'</p>';
+    h+='<div class="grid grid-2" style="gap:16px">';
+    h+=chartHeader({label:'Current path ('+fm.name+')',value:ds[active][24],unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:fm.color,endYear:2050});
+    h+=chartHeader({label:'Destination ('+tm.name+')',value:ds[toSc][24],unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:tm.color,endYear:2050});
+    h+='</div>';
+    h+=scenarioChart({datasets:ds,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:toSc,secondaryKey:!sameSc?active:undefined,startYear:2026,endYear:2050,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,markerYear:fromYear>2026?fromYear:null,height:160,exportId:'pathways-'+m.id});
+    h+='</div>';
+    registerChartExport('pathways-'+m.id,ds,2026,2050,m.unit,'');
+  });
+  document.getElementById('trajectory-grid').innerHTML=h;
+}
+
+function render(){
+  updateScenarioBar('#scenario-bar',active,SCENARIOS);
+  renderControls();
+  var g=computeGap();
+  renderHeadline(g);
+  renderWorlds(g);
+  renderLevers(g);
+  renderActions(g);
+  renderTrajectory(g);
+}
+
+initSectionNav('#nav-tabs','sec-','overview');
+initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
+render();
+document.getElementById('page-footer').innerHTML=renderFooter();
+
+})();
+</script>
+</body>
+</html>

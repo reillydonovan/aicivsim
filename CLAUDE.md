@@ -27,7 +27,9 @@ Branches: `main` = Next.js original · `layoutUpdate-v2` = current live site ·
 - **`js/shared.js` is the single source of truth** for nav (`PAGE_ORDER`,
   `NAV_PARENTS`), scenarios (`SCENARIOS`, colors), cross-system weights
   (`CROSS_SYSTEM`), per-system timeseries (`VIZ_METRICS`), the simulation engine
-  (`SIM_ENGINE`, `simWorldState`), chart renderers (`scenarioChart`,
+  (`SIM_ENGINE`, `simWorldState`), the action catalog (`STRATEGY_CATALOG` —
+  20 actions across personal/organization/policy, `stratStatusRank()`; shared
+  by `strategy.html` and `pathways.html`), chart renderers (`scenarioChart`,
   `timelineSVG`), footer, command palette, and theme. Add data/pages there, not
   in per-page copies.
 - **Known duplication:** `viz.html` and `xr.html` each carry a copy of
@@ -77,6 +79,16 @@ Layout: `.page` (1080px), `.grid grid-N`, `.cell`, `.section`,
 `.chapter-divider`. Dark is default; light mode = `body.light` overrides.
 New pages must support both themes and the print stylesheet.
 
+## Claude Code skills
+
+`.claude/skills/` — see [SKILLS.md](SKILLS.md) for the index. `bump-cache-version`
+handles the sitewide `?v=` token bump; `verify` documents how to serve and
+drive `layoutUpdate` in a real browser (no build step, no test suite — a
+static HTML/JS site is verified by opening it), including two things that
+look like bugs but aren't: the chat widget's OPTIONS probe 501s under
+`python -m http.server` (PHP-only, works on Hostinger), and the sitewide
+scroll-reveal keeps newly-shown tab content at `opacity:0` for ~1s.
+
 ## Local development
 
 ```bash
@@ -110,3 +122,14 @@ fetch fails — never block rendering on the network.
 - Raycaster hit-spheres are invisible meshes; selection guards check
   `node.expanded > 0.3` — keep that when adding interactions.
 - Footer text and hero say "2026"; blog posts are dated Feb 2026.
+- `scenarioChart(opts)`'s `activeKey` renders solid/filled/boldest — the
+  "main" line. `opts.secondaryKey` (added for `pathways.html`) renders at
+  near-full strength too, but **dashed**, so a second highlighted scenario
+  reads as clearly emphasized rather than merely "slightly less faint."
+  Every other consumer of `scenarioChart` binds `activeKey` to the
+  **sitewide** active scenario (the top scenario bar); `pathways.html`
+  deliberately binds `activeKey` to its page-local TO scenario and
+  `secondaryKey` to the sitewide FROM scenario — the inverse of every other
+  page's convention. If you add another multi-scenario comparison page,
+  decide explicitly which scenario owns the bold line; don't assume the
+  scenario bar always gets it.
