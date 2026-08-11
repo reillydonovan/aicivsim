@@ -253,7 +253,7 @@ import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 /* ================================================================
    DATA — mirrors viz.html
    ================================================================ */
-const SYS=[
+const SYS = window.VIZ_SYS || [
   {id:'climate',label:'Climate',color:0x4ecdc4,today:42,proj:{aggressive:85,moderate:58,bau:28,worst:12},href:'climate.html',
    desc:'Planetary systems — temperature, emissions, biodiversity, ocean health, renewable energy, crop yields, water stress, and tipping point risk.'},
   {id:'simulation',label:'Simulation',color:0x5da5da,today:50,proj:{aggressive:90,moderate:70,bau:35,worst:15},href:'simulation.html',
@@ -268,14 +268,14 @@ const SYS=[
    desc:'The action catalog — 20+ strategies across individual, institutional, and systemic implementation levels.'}
 ];
 const AGG={today:44,proj:{aggressive:85,moderate:63,bau:28,worst:11}};
-const SC_META={
+const SC_META = window.VIZ_SC_META || {
   aggressive:{name:'Aggressive Action',color:0x4ecdc4,css:'#4ecdc4',outcome:'Systemic recovery underway. Compounding gains across every domain.'},
   moderate:{name:'Moderate Reform',color:0x5da5da,css:'#5da5da',outcome:'Moderate improvement. Meaningful but uneven progress.'},
   bau:{name:'Business as Usual',color:0xe8a838,css:'#e8a838',outcome:'Systemic decline. The system drifts through inaction.'},
   worst:{name:'Worst Case',color:0xd4622a,css:'#d4622a',outcome:'Civilizational failure. Feedback loops accelerate collapse.'}
 };
 
-const SUB_NODE_DATA={
+const SUB_NODE_DATA = window.VIZ_SUB_NODE_DATA || {
   climate:[
     {id:'temp',label:'Temperature',color:0x4ecdc4,today:58,proj:{aggressive:92,moderate:68,bau:35,worst:15}},
     {id:'emissions',label:'Emissions',color:0xd4622a,today:32,proj:{aggressive:95,moderate:60,bau:22,worst:8}},
@@ -318,7 +318,7 @@ const SUB_NODE_DATA={
   ]
 };
 
-const SUB_SUB_NODE_DATA={
+const SUB_SUB_NODE_DATA = window.VIZ_SUB_SUB_NODE_DATA || {
   climate_temp:[{id:'arctic',label:'Arctic',color:0x4ecdc4,today:45,proj:{aggressive:88,moderate:62,bau:28,worst:10}},{id:'surface',label:'Surface Temp',color:0x5da5da,today:60,proj:{aggressive:90,moderate:70,bau:38,worst:18}},{id:'extremes',label:'Heat Extremes',color:0xd4622a,today:52,proj:{aggressive:85,moderate:60,bau:30,worst:12}}],
   climate_emissions:[{id:'co2',label:'CO\u2082 Levels',color:0xd4622a,today:28,proj:{aggressive:92,moderate:58,bau:20,worst:6}},{id:'methane',label:'Methane',color:0xe8a838,today:35,proj:{aggressive:90,moderate:55,bau:22,worst:8}},{id:'industrial',label:'Industrial',color:0x5da5da,today:30,proj:{aggressive:88,moderate:52,bau:18,worst:5}}],
   climate_energy:[{id:'solar',label:'Solar',color:0xe8a838,today:55,proj:{aggressive:98,moderate:78,bau:42,worst:22}},{id:'wind',label:'Wind',color:0x5da5da,today:48,proj:{aggressive:95,moderate:72,bau:38,worst:18}},{id:'storage',label:'Grid Storage',color:0x4ecdc4,today:30,proj:{aggressive:92,moderate:65,bau:32,worst:12}}],
