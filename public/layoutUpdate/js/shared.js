@@ -1556,7 +1556,7 @@ var CMD_ITEMS=[
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260711b';
+  s.src='js/chat-widget.js?v=20260810a';
   s.defer=true;
   document.body.appendChild(s);
 })();
