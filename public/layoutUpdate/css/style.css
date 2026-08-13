@@ -150,10 +150,15 @@ img{display:block;max-width:100%}
    SITE NAV (global) + mobile collapse
    ================================================================ */
 .site-nav{background:var(--bg);border-bottom:1px solid var(--border);position:relative;z-index:200}
-/* flex-wrap (not hidden-scrollbar overflow) so trailing links like
-   Advisor/About are never silently cut off at narrow desktop widths */
-.site-nav-inner{display:flex;align-items:center;gap:0;flex-wrap:wrap}
-.site-nav a{display:block;padding:10px 13px;font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:0.08em;color:var(--text-faint);transition:color 0.15s;white-space:nowrap}
+/* Single row: all 15 links + the theme toggle must fit the 1000px content
+   width, so item padding is tight (6px) and wrapping is off. Measured:
+   885px of links + 46px toggle = 931px, ~69px of slack. Below 1081px the
+   .page container is narrower than 1000px, so the hamburger takes over
+   there — that's why the mobile-nav breakpoint is 1080 and not 768, and
+   why the desktop row always has the same cushion. If you add a nav link,
+   re-measure: links + toggle must stay under 1000px. */
+.site-nav-inner{display:flex;align-items:center;gap:0;flex-wrap:nowrap}
+.site-nav a{display:block;padding:10px 6px;font-family:var(--font-body);font-size:10px;font-weight:500;letter-spacing:0.08em;color:var(--text-faint);transition:color 0.15s;white-space:nowrap}
 .site-nav a:hover{color:var(--text-secondary)}
 .site-nav a.active{color:var(--text-primary)}
 
@@ -211,19 +216,9 @@ img{display:block;max-width:100%}
   .scenario-bar::-webkit-scrollbar{display:none}
   .scenario-btn{padding:10px 14px;font-size:10px;flex-shrink:0}
 }
-@media(max-width:900px){
-  .grid-6{grid-template-columns:repeat(3,1fr)}
-  .grid-5{grid-template-columns:repeat(2,1fr)}
-  .grid-4{grid-template-columns:repeat(2,1fr)}
-  .t1{font-size:48px}
-  .t1-sm{font-size:36px}
-  .t1-xs{font-size:28px}
-  .page{padding:0 20px}
-  .hero-split{grid-template-columns:1fr!important}
-  .hero-split .hero-divider{display:none!important}
-  .hero-split>div:last-child{padding-left:0!important;padding-top:32px}
-}
-@media(max-width:768px){
+/* Site nav collapses to the hamburger as soon as the .page container drops
+   below its 1000px content width — see the .site-nav-inner one-row note. */
+@media(max-width:1080px){
   .mobile-nav-toggle{display:block}
   .site-nav .page{position:relative}
   .site-nav-inner{
@@ -239,6 +234,18 @@ img{display:block;max-width:100%}
   .site-nav-inner .theme-toggle{padding:14px 20px;margin-left:0;justify-content:flex-start;gap:8px;border-bottom:1px solid var(--border)}
   .site-nav-inner .theme-toggle::after{content:'Toggle Theme';font-family:var(--font-body);font-size:11px;font-weight:500;letter-spacing:0.08em}
   .mobile-nav-backdrop.open{display:block}
+}
+@media(max-width:900px){
+  .grid-6{grid-template-columns:repeat(3,1fr)}
+  .grid-5{grid-template-columns:repeat(2,1fr)}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .t1{font-size:48px}
+  .t1-sm{font-size:36px}
+  .t1-xs{font-size:28px}
+  .page{padding:0 20px}
+  .hero-split{grid-template-columns:1fr!important}
+  .hero-split .hero-divider{display:none!important}
+  .hero-split>div:last-child{padding-left:0!important;padding-top:32px}
 }
 @media(max-width:600px){
   .grid-6{grid-template-columns:repeat(2,1fr)}

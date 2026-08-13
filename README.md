@@ -159,7 +159,8 @@ public/layoutUpdate/
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260711b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger), or use the `bump-cache-version` skill (`.claude/skills/bump-cache-version/`, see [SKILLS.md](SKILLS.md)).
+- **Single-row site nav** — All 15 nav links plus the theme toggle fit one row inside the 1000px content width (tight 6px link padding, no wrapping). Below 1080px the container is narrower than that, so the nav collapses to the hamburger menu there. Adding a nav link means re-checking that budget.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260813b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger), or use the `bump-cache-version` skill (`.claude/skills/bump-cache-version/`, see [SKILLS.md](SKILLS.md)).
 
 ### Scenario system
 
