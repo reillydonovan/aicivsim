@@ -129,19 +129,15 @@ function paint(){
   document.getElementById('route-who').textContent=t.name+' · 2050';
   document.getElementById('route-narrative').textContent=SIM_ENGINE.narratives[to];
 
-  /* slopes at 2050 */
+  /* slopes: the same metric in 2050, origin vs destination */
   var wrap=document.getElementById('slopes');wrap.innerHTML='';
   SIM_ENGINE.metrics.forEach(function(mt){
-    if(mt.id==='ai')return; /* context metric; direction ambiguous — keep the trio focused */
+    if(mt.id==='ai')return; /* context metric; direction ambiguous — keep the set focused */
     var card=document.createElement('div');card.className='slope-card';wrap.appendChild(card);
-    V3.slope(card,{label:mt.label,unit:mt.unit,dec:mt.dec,
+    V3.slope(card,{label:mt.label,unit:mt.unit,dec:mt.dec,dir:mt.dir,
       from:{name:f.short.toLowerCase(),color:f.color,v:simInterp(SIM_ENGINE.scenarios[f.id][mt.id],2050)},
       to:{name:t.short.toLowerCase(),color:t.color,v:simInterp(SIM_ENGINE.scenarios[t.id][mt.id],2050)}});
   });
-  var res=document.createElement('div');res.className='slope-card';wrap.appendChild(res);
-  V3.slope(res,{label:'Resilience',unit:'index',dec:3,
-    from:{name:f.short.toLowerCase(),color:f.color,v:simInterp(SIM_ENGINE.scenarios[f.id].resil,2050)},
-    to:{name:t.short.toLowerCase(),color:t.color,v:simInterp(SIM_ENGINE.scenarios[t.id].resil,2050)}});
 
   /* lever deltas */
   var LE=[['div','Civic dividend','%'],['capex','Climate capex','% GDP'],['reskill','Reskilling','%'],['transparency','Transparency','%'],['charter','AI charter','']];

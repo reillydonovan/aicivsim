@@ -164,21 +164,35 @@ svg{display:block}
 .v3-tip .row b{margin-left:auto;font-family:var(--font-mono);font-weight:600;color:var(--ink)}
 .v3-tip .row.on{color:var(--ink)}
 
-/* ── Dumbbell rows ── */
+/* container shared by pathways' delta/diff lists */
 .db-rows{border:1px solid var(--hairline);border-radius:var(--r);overflow:hidden}
-.db-row{display:grid;grid-template-columns:180px 1fr 96px;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--hairline)}
-.db-row:last-child{border-bottom:none}
-.db-row .lbl{font-size:13px;font-weight:500;color:var(--ink-2)}
-.db-row .lbl small{display:block;font-size:10.5px;color:var(--ink-4);font-family:var(--font-mono)}
-.db-track{position:relative;height:26px}
-.db-track .rail{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--hairline)}
-.db-track .link{position:absolute;top:50%;height:2px;transform:translateY(-50%);border-radius:1px;transition:left .4s,width .4s,background .3s}
-.db-track .pt{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);transition:left .4s,background .3s}
-.db-track .pt.today{background:var(--ink-4)}
-.db-track .pt.proj{box-shadow:0 0 0 2px var(--bg)}
-.db-track .pt-lbl{position:absolute;top:-4px;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--ink-4);transition:left .4s}
-.db-row .delta{font-family:var(--font-mono);font-size:12px;font-weight:600;text-align:right;white-space:nowrap}
-.db-row .delta.good{color:var(--good)} .db-row .delta.bad{color:var(--bad)} .db-row .delta.flat{color:var(--ink-3)}
+
+/* ── Landing tracks — today tick + all four futures on one rail ── */
+.land-rows{border:1px solid var(--hairline);border-radius:var(--r);overflow:hidden}
+.land-row{display:grid;grid-template-columns:180px 1fr 96px;align-items:center;gap:20px;padding:20px 24px 16px;border-bottom:1px solid var(--hairline)}
+.land-row:last-child{border-bottom:none}
+.land-row .lbl{font-size:13px;font-weight:500;color:var(--ink-2)}
+.land-row .lbl small{display:block;font-size:10.5px;color:var(--ink-4);font-family:var(--font-mono)}
+.land-track{position:relative;height:44px}
+.land-track .rail{position:absolute;left:0;right:0;top:60%;height:1px;background:var(--hairline-strong)}
+.land-today{position:absolute;top:60%;transform:translateX(-50%)}
+.land-today i{position:absolute;top:-7px;left:-.5px;width:1.5px;height:14px;background:var(--ink-3)}
+.land-today em{position:absolute;top:9px;transform:translateX(-50%);font-style:normal;font-family:var(--font-mono);font-size:9.5px;color:var(--ink-4);white-space:nowrap}
+.land-dot{position:absolute;top:60%;width:9px;height:9px;border-radius:50%;transform:translate(-50%,-50%);background:var(--sc);opacity:.55;cursor:pointer;transition:opacity .25s,transform .35s var(--spring),box-shadow .25s}
+.land-dot:hover{opacity:1;transform:translate(-50%,-50%) scale(1.3)}
+.land-dot[data-active="true"]{opacity:1;transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 30%,transparent)}
+.land-bubble{position:absolute;top:0;transform:translateX(-50%);font-size:11.5px;font-weight:700;white-space:nowrap;transition:left var(--spring-dur) var(--spring),color .3s}
+.land-row .delta{font-family:var(--font-mono);font-size:12px;font-weight:600;text-align:right;white-space:nowrap}
+.land-row .delta.good{color:var(--good)} .land-row .delta.bad{color:var(--bad)} .land-row .delta.flat{color:var(--ink-3)}
+
+/* ── Entrance reveal — fast, early, one-shot; JS-gated so no-JS never hides ── */
+.pre{opacity:0;transform:translateY(16px);transition:opacity .45s ease var(--rv-delay,0ms),transform .7s var(--spring) var(--rv-delay,0ms)}
+.pre.in{opacity:1;transform:none}
+
+/* chart internals */
+.v3-plot .tj-ghost{stroke-opacity:var(--ghost);transition:opacity .3s}
+.v3-plot .slope-line{stroke-dasharray:300;stroke-dashoffset:300;animation:slope-draw .7s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes slope-draw{to{stroke-dashoffset:0}}
 
 /* ── Meter ── */
 .meter{display:grid;grid-template-columns:1fr 64px;align-items:center;gap:12px}
@@ -252,7 +266,7 @@ svg{display:block}
 .action-card .a-meta b{color:var(--ink-3);font-weight:600}
 
 /* ── Slope chart (pathways) ── */
-.slopes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.slopes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .slope-card{border:1px solid var(--hairline);border-radius:var(--r);padding:18px 20px 12px;min-width:0}
 .slope-card .c-title{font-family:var(--font-display);font-size:14px;font-weight:600;margin-bottom:2px}
 .slope-card .c-unit{font-size:10.5px;color:var(--ink-4);font-family:var(--font-mono);margin-bottom:8px}
@@ -296,6 +310,25 @@ svg{display:block}
 .foot-note{margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;font-size:12px;color:var(--ink-4);flex-wrap:wrap}
 .foot-note a{color:var(--accent)}
 
+/* ── Score band (index) — 0–100 rail, fixed today tick, gliding future dot ── */
+.score-band{position:relative;height:52px;max-width:420px;margin-top:var(--s4)}
+.score-band .sb-rail{position:absolute;left:0;right:0;top:32px;height:2px;border-radius:1px;background:var(--hairline)}
+.score-band .sb-range{position:absolute;top:32px;height:2px;border-radius:1px;transition:left var(--spring-dur) var(--spring),width var(--spring-dur) var(--spring),background .3s}
+.score-band .sb-today{position:absolute;top:32px;transform:translateX(-50%)}
+.score-band .sb-today i{position:absolute;top:-6px;left:-.75px;width:1.5px;height:13px;background:var(--ink-2)}
+.score-band .sb-today em{position:absolute;top:10px;transform:translateX(-50%);font-style:normal;font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+.score-band .sb-today em b{font-family:var(--font-mono);color:var(--ink-2)}
+.score-band .sb-dot{position:absolute;top:33px;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 3px color-mix(in srgb,var(--bg) 100%,transparent);transition:left var(--spring-dur) var(--spring),background .3s}
+.score-band .sb-proj{position:absolute;top:0;transform:translateX(-50%);font-size:10.5px;color:var(--ink-3);white-space:nowrap;transition:left var(--spring-dur) var(--spring)}
+.score-band .sb-proj b{font-family:var(--font-mono);font-size:13px;font-weight:700}
+.score-band .sb-ends{position:absolute;top:40px;left:0;right:0;display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:9.5px;color:var(--ink-4)}
+
+/* ── Play button (simulation) ── */
+.play-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:10px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;transition:filter .15s,transform .15s}
+.play-btn:hover{filter:brightness(1.08)}
+.play-btn:active{transform:scale(.97)}
+.play-btn.playing{background:var(--bg-press);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hairline-strong)}
+
 /* ── Index hero (homepage only) ── */
 .hero{padding:calc(var(--s6) + 8px) 0 var(--s6);border-bottom:1px solid var(--hairline)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5);align-items:center}
@@ -327,7 +360,8 @@ svg{display:block}
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:var(--s4)}
   .quartet{grid-template-columns:repeat(2,1fr)}
-  .trio,.chart-grid,.actions-grid,.slopes{grid-template-columns:1fr}
+  .trio,.chart-grid,.actions-grid{grid-template-columns:1fr}
+  .slopes{grid-template-columns:repeat(2,1fr)}
   .levers{grid-template-columns:repeat(2,1fr)}
   .kpis{grid-template-columns:repeat(2,1fr)}
   .ledger-row{grid-template-columns:1fr 84px 24px 84px;grid-template-rows:auto auto}

@@ -35,7 +35,10 @@
     <p class="lead">Scrub from 2027 to 2070. Every chart below tracks your cursor; the report rewrites itself.</p>
   </div></div>
   <div class="year-block" style="max-width:640px">
-    <div class="yr-big"><span id="yr-now">2035</span><small>of 2027–2070</small><span class="era-chip" id="yr-era">Divergence</span></div>
+    <div style="display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div class="yr-big"><span id="yr-now">2035</span><small>of 2027–2070</small><span class="era-chip" id="yr-era">Divergence</span></div>
+      <button class="play-btn" id="play-btn" style="margin-bottom:6px">▶&#xFE0E; Play the run</button>
+    </div>
     <input type="range" id="yr-slider" min="2027" max="2070" step="1" value="2035">
     <div class="yr-ends"><span>2027</span><span>2070</span></div>
   </div>
@@ -87,7 +90,7 @@ function renderLevers(){
 }
 
 /* report */
-function renderReport(){
+function renderReport(quiet){
   var act=V3.scenario.get(),m=V3.SC[act];
   var w=simWorldState(act,year);
   document.getElementById('rep-year').textContent=year;
@@ -103,7 +106,7 @@ function renderReport(){
       +'<div class="c-title" style="margin-bottom:8px">'+c.t+'</div>'
       +'<p class="body-2" style="font-size:13.5px;color:var(--ink-2)">'+(c.b||'')+'</p></div>';
   }).join('');
-  V3.stagger(document.querySelectorAll('#report .chart-card'),26);
+  if(!quiet)V3.stagger(document.querySelectorAll('#report .chart-card'),26);
   /* KPI readouts at cursor year */
   var k=document.getElementById('sim-kpis');
   k.innerHTML=SIM_ENGINE.metrics.map(function(mt){
@@ -130,13 +133,38 @@ SIM_ENGINE.metrics.forEach(function(mt){
   }));
 });
 
-document.getElementById('yr-slider').addEventListener('input',function(){
-  year=+this.value;
+function setYear(y,quiet){
+  year=y;
   document.getElementById('yr-now').textContent=year;
-  renderReport();
-  charts.forEach(function(c){c.render()});
+  document.getElementById('yr-slider').value=year;
+  renderReport(quiet);
+  charts.forEach(function(c){c.setCursor(year)});    /* cursor-only — no chart rebuild */
+}
+document.getElementById('yr-slider').addEventListener('input',function(){
+  stopPlay();setYear(+this.value,true);
 });
-renderLevers();renderReport();
+
+/* ── Play the run: sweep 2027→2070 while the report rewrites itself ── */
+var playTimer=null;
+var playBtn=document.getElementById('play-btn');
+function stopPlay(){
+  if(playTimer){clearInterval(playTimer);playTimer=null}
+  playBtn.classList.remove('playing');
+  playBtn.innerHTML='▶&#xFE0E; Play the run';
+}
+playBtn.addEventListener('click',function(){
+  if(playTimer){stopPlay();return}
+  if(year>=2070)setYear(2027,true);
+  playBtn.classList.add('playing');
+  playBtn.innerHTML='❚❚ Pause · <span class="num">'+year+'</span>';
+  playTimer=setInterval(function(){
+    if(year>=2070){stopPlay();renderReport();return}
+    setYear(year+1,true);
+    playBtn.innerHTML='❚❚ Pause · <span class="num">'+year+'</span>';
+  },V3.REDUCED?400:170);
+});
+
+setYear(year,true);renderLevers();
 V3.scenario.onChange(function(){renderLevers();renderReport()});
 </script>
 </body>

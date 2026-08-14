@@ -23,10 +23,13 @@
         <span class="body-2">out of 100 · every tracked system declining</span>
       </div>
       <p class="lead hero-sentence">One composite number across AI alignment, climate, governance, work, and trust — refreshed from live sources each visit. What happens to it next is a choice.</p>
-      <div class="delta-bar"><i id="delta-fill" style="width:44%;background:var(--accent)"></i></div>
-      <div class="delta-labels">
-        <span><b class="num" id="delta-now">44</b> today</span>
-        <span><b class="num" id="delta-proj">28</b> in 2050 · <span id="delta-name">business as usual</span></span>
+      <div class="score-band" aria-label="Score today and in 2050">
+        <div class="sb-rail"></div>
+        <div class="sb-range" id="sb-range"></div>
+        <span class="sb-today" style="left:44%"><i></i><em><b>44</b> today</em></span>
+        <span class="sb-dot" id="sb-dot"></span>
+        <span class="sb-proj" id="sb-proj-lbl"><b class="num" id="sb-proj">28</b> in 2050 · <span id="sb-name">business as usual</span></span>
+        <div class="sb-ends"><span>0</span><span>100</span></div>
       </div>
     </div>
     <div class="sc-block">
@@ -154,23 +157,38 @@ V3.traj('#composite-chart',{
   read:function(v){var m=V3.scenario.meta();return '<b style="color:'+m.color+'">'+Math.round(v)+'/100 · '+V3.grade(v)+'</b> by 2050 · '+m.name.toLowerCase()+' — '+m.verdict}
 });
 
-function renderLedger(){
+/* ledger builds once; scenario switches tween each 2050 number in place */
+var ledgerBuilt=false,ledgerLast={};
+function renderLedger(animate){
   var act=V3.scenario.get(),m=V3.SC[act];
-  document.getElementById('ledger').innerHTML=SYSTEMS.map(function(s){
-    var sys=V3.SYS[s.key];
-    if(s.tool)return '<a class="ledger-row tool" href="'+sys.href+'">'
-      +'<span class="name"><i style="background:var(--ink-4)"></i>'+sys.label+'</span>'
-      +'<span class="desc">'+s.desc+'</span><span class="go">Open →</span></a>';
+  var wrap=document.getElementById('ledger');
+  if(!ledgerBuilt){
+    wrap.innerHTML=SYSTEMS.map(function(s){
+      var sys=V3.SYS[s.key];
+      if(s.tool)return '<a class="ledger-row tool" href="'+sys.href+'">'
+        +'<span class="name"><i style="background:var(--ink-4)"></i>'+sys.label+'</span>'
+        +'<span class="desc">'+s.desc+'</span><span class="go">Open →</span></a>';
+      return '<a class="ledger-row" href="'+sys.href+'" data-key="'+s.key+'">'
+        +'<span class="name"><i style="background:'+sys.color+'"></i>'+sys.label+'</span>'
+        +'<span class="desc">'+s.desc+'</span>'
+        +'<span class="today"><b>'+s.today+'</b><span>today</span></span>'
+        +'<span class="arrow">→</span>'
+        +'<span class="proj"><b class="p-num"></b><span>2050</span></span>'
+        +'<span class="chip"><span class="grade-chip sm p-grade"></span></span></a>';
+    }).join('');
+    ledgerBuilt=true;
+  }
+  SYSTEMS.forEach(function(s,i){
+    if(s.tool)return;
+    var row=wrap.querySelector('.ledger-row[data-key="'+s.key+'"]');
     var p=s.proj[act];
-    return '<a class="ledger-row" href="'+sys.href+'">'
-      +'<span class="name"><i style="background:'+sys.color+'"></i>'+sys.label+'</span>'
-      +'<span class="desc">'+s.desc+'</span>'
-      +'<span class="today"><b>'+s.today+'</b><span>today</span></span>'
-      +'<span class="arrow">→</span>'
-      +'<span class="proj"><b style="color:'+m.color+'">'+p+'</b><span>2050</span></span>'
-      +'<span class="chip"><span class="grade-chip sm" style="color:'+m.color+'">'+V3.grade(p)+'</span></span></a>';
-  }).join('');
-  V3.stagger(document.querySelectorAll('.ledger-row .proj b'),24);
+    var num=row.querySelector('.p-num'),gr=row.querySelector('.p-grade');
+    num.style.color=m.color;gr.style.color=m.color;
+    gr.textContent=V3.grade(p);
+    if(animate&&ledgerLast[s.key]!=null)setTimeout(function(){V3.tween(num,p,{from:ledgerLast[s.key]})},i*40);
+    else num.textContent=p;
+    ledgerLast[s.key]=p;
+  });
 }
 function renderQuartet(){
   var act=V3.scenario.get();
@@ -188,17 +206,26 @@ function renderHero(prevProj){
   V3.tween(out,m.proj,{from:prevProj});
   document.getElementById('out-verdict').textContent=m.verdict;
   document.getElementById('out-desc').textContent=SC_DESCS[m.id];
-  var fill=document.getElementById('delta-fill');
-  fill.style.width=m.proj+'%';fill.style.background=m.color;
-  fill.style.transitionTimingFunction='var(--spring)';
-  V3.tween(document.getElementById('delta-proj'),m.proj,{from:prevProj});
-  document.getElementById('delta-name').textContent=m.name.toLowerCase();
+  /* score band: dot glides to the 2050 landing; the range strip
+     spans today→2050 so direction reads at a glance */
+  var dot=document.getElementById('sb-dot');
+  dot.style.left=m.proj+'%';dot.style.background=m.color;
+  var range=document.getElementById('sb-range');
+  var lo=Math.min(TODAY,m.proj),wpc=Math.abs(m.proj-TODAY);
+  range.style.left=lo+'%';range.style.width=wpc+'%';
+  range.style.background='color-mix(in srgb,'+m.color+' 55%,transparent)';
+  var lbl=document.getElementById('sb-proj-lbl');
+  lbl.style.left=Math.max(12,Math.min(88,m.proj))+'%';
+  V3.tween(document.getElementById('sb-proj'),m.proj,{from:prevProj});
+  document.getElementById('sb-name').textContent=m.name.toLowerCase();
 }
 var lastProj=V3.scenario.meta().proj;
-renderHero(lastProj);renderLedger();renderQuartet();
+renderHero(lastProj);renderLedger(false);renderQuartet();
+/* the score arrives on load */
+V3.tween(document.getElementById('score-now'),TODAY,{from:0,stiffness:120,damping:22});
 V3.scenario.onChange(function(){
   renderHero(lastProj);lastProj=V3.scenario.meta().proj;
-  renderLedger();
+  renderLedger(true);
   document.querySelectorAll('.q-card').forEach(function(c){
     c.setAttribute('data-active',String(c.getAttribute('data-sc')===V3.scenario.get()));
   });
