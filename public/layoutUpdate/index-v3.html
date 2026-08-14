@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Civilization Simulator — Design v3 Prototype</title>
+<meta name="description" content="Design v3 prototype homepage — one story per screen.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════
+   DESIGN V3 TOKENS — see design-v3.html for the rationale.
+   Self-contained on purpose: this prototype must not disturb
+   the live design system while the direction is being evaluated.
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#111112; --bg-elev:#19191b; --bg-press:#1f1f22;
+  --hairline:rgba(255,255,255,.08); --hairline-strong:rgba(255,255,255,.16);
+  --ink:#f2f1ed; --ink-2:#b9b7af; --ink-3:#83817a; --ink-4:#575550;
+  --accent:#d4622a;
+  --sc-aggressive:#4ecdc4; --sc-moderate:#5da5da; --sc-bau:#e8a838; --sc-worst:#d4622a;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --col:1080px;
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:64px; --s6:96px;
+  --r:10px;
+}
+body.light{
+  --bg:#f5f4f0; --bg-elev:#fdfcf9; --bg-press:#efede8;
+  --hairline:rgba(0,0,0,.09); --hairline-strong:rgba(0,0,0,.18);
+  --ink:#1b1a18; --ink-2:#4c4a43; --ink-3:#7c7a72; --ink-4:#aaa89f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.col{max-width:var(--col);margin:0 auto;padding:0 32px}
+
+/* ── Type scale — real jumps, sentence case; caps live in .eyebrow only ── */
+.eyebrow{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+.title-1{font-family:var(--font-display);font-size:clamp(30px,4.5vw,44px);font-weight:600;letter-spacing:-.02em;line-height:1.12}
+.title-2{font-family:var(--font-display);font-size:28px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.title-3{font-family:var(--font-display);font-size:19px;font-weight:600;line-height:1.3}
+.lead{font-size:17px;line-height:1.65;color:var(--ink-2)}
+.body-2{font-size:13.5px;line-height:1.6;color:var(--ink-3)}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+/* ── Nav — one bar, five destinations, nothing fights ── */
+.nav{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--hairline)}
+.nav-inner{max-width:var(--col);margin:0 auto;padding:0 32px;height:52px;display:flex;align-items:center;gap:6px}
+.wordmark{font-family:var(--font-display);font-weight:700;font-size:14px;letter-spacing:.06em;margin-right:auto}
+.wordmark em{font-style:normal;color:var(--accent)}
+.nav-item{position:relative}
+.nav-link{display:flex;align-items:center;gap:5px;padding:8px 13px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink-2);transition:color .15s,background .15s}
+.nav-link:hover{color:var(--ink);background:var(--bg-press)}
+.nav-link[aria-current]{color:var(--ink)}
+.nav-link .chev{width:8px;height:8px;border-right:1.4px solid currentColor;border-bottom:1.4px solid currentColor;transform:rotate(45deg) translate(-1px,-1px);opacity:.5}
+.menu{position:absolute;top:calc(100% + 6px);left:0;min-width:250px;background:var(--bg-elev);border:1px solid var(--hairline);border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.35);padding:6px;opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .16s,transform .16s}
+.nav-item:hover .menu,.nav-item:focus-within .menu{opacity:1;transform:none;pointer-events:auto}
+.menu a{display:flex;align-items:baseline;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500}
+.menu a:hover{background:var(--bg-press)}
+.menu .tick{width:8px;height:8px;border-radius:2px;flex-shrink:0;align-self:center}
+.menu .hint{margin-left:auto;font-size:11px;color:var(--ink-4);font-weight:400}
+.theme-btn{padding:8px;border-radius:8px;color:var(--ink-3);display:flex}
+.theme-btn:hover{color:var(--ink);background:var(--bg-press)}
+
+/* ── Hero — one story: the score, and the choice that moves it ── */
+.hero{padding:calc(var(--s6) + 8px) 0 var(--s6);border-bottom:1px solid var(--hairline)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5);align-items:center}
+.score-display{font-family:var(--font-mono);font-weight:700;font-size:clamp(96px,14vw,168px);line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.score-sub{display:flex;align-items:center;gap:12px;margin-top:14px}
+.grade-chip{font-family:var(--font-mono);font-size:15px;font-weight:700;padding:3px 10px;border:1.5px solid currentColor;border-radius:7px}
+.hero-sentence{margin-top:var(--s3);max-width:400px}
+.delta-bar{margin-top:var(--s4);height:3px;background:var(--hairline);border-radius:2px;position:relative;max-width:400px}
+.delta-bar i{position:absolute;inset:0 auto 0 0;border-radius:2px;transition:width .6s cubic-bezier(.2,.7,.2,1),background .3s}
+.delta-labels{display:flex;justify-content:space-between;max-width:400px;margin-top:10px;font-size:12px;color:var(--ink-3)}
+.delta-labels .num{color:var(--ink-2)}
+
+/* Scenario control — the product's primary verb, styled like it matters */
+.sc-block .eyebrow{display:block;margin-bottom:12px}
+.sc-seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--bg-elev);border:1px solid var(--hairline);border-radius:12px;padding:4px}
+.sc-seg button{position:relative;padding:12px 6px 10px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--ink-3);transition:color .15s,background .2s;text-align:center}
+.sc-seg button .dot{display:block;width:6px;height:6px;border-radius:50%;margin:0 auto 7px;background:var(--sc);opacity:.45;transition:opacity .2s,transform .2s}
+.sc-seg button:hover{color:var(--ink-2)}
+.sc-seg button[aria-pressed="true"]{background:var(--bg-press);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hairline-strong)}
+.sc-seg button[aria-pressed="true"] .dot{opacity:1;transform:scale(1.25)}
+.sc-outcome{margin-top:var(--s3);padding:var(--s3);background:var(--bg-elev);border:1px solid var(--hairline);border-radius:var(--r);min-height:118px}
+.sc-outcome .headline{font-size:15px;font-weight:600;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sc-outcome .headline .num{font-size:22px;font-weight:700}
+.sc-outcome p{margin-top:8px;font-size:13px;line-height:1.6;color:var(--ink-3)}
+.live-strip{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:var(--s4);align-items:baseline}
+.live-strip .pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--sc-aggressive)}
+.live-strip .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.live-strip .item{font-size:12.5px;color:var(--ink-3)}
+.live-strip .item b{font-family:var(--font-mono);font-weight:600;color:var(--ink-2)}
+.live-strip a{color:var(--accent);font-size:12.5px;font-weight:500}
+
+/* ── Sections — fixed rhythm ── */
+.section{padding:var(--s6) 0;border-bottom:1px solid var(--hairline)}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:var(--s4)}
+.section-head .lead{margin-top:10px;max-width:560px}
+.section-link{font-size:13px;font-weight:500;color:var(--accent);white-space:nowrap}
+
+/* Systems ledger — a list resolves at any count; grids orphan */
+.ledger{border:1px solid var(--hairline);border-radius:var(--r);overflow:hidden}
+.ledger-row{display:grid;grid-template-columns:170px 1fr 84px 24px 84px 64px;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--hairline);transition:background .15s}
+.ledger-row:last-child{border-bottom:none}
+.ledger-row:hover{background:var(--bg-elev)}
+.ledger-row .name{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:600;font-size:15px}
+.ledger-row .name i{width:8px;height:8px;border-radius:2.5px;flex-shrink:0}
+.ledger-row .desc{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.ledger-row .today{text-align:right}
+.ledger-row .today b{font-family:var(--font-mono);font-size:17px;font-weight:600}
+.ledger-row .today span,.ledger-row .proj span{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-top:1px}
+.ledger-row .arrow{color:var(--ink-4);text-align:center}
+.ledger-row .proj{text-align:right}
+.ledger-row .proj b{font-family:var(--font-mono);font-size:17px;font-weight:600;transition:color .3s}
+.ledger-row .chip{justify-self:end}
+.ledger-row .chip .grade-chip{font-size:11px;padding:2px 7px;border-width:1px}
+.ledger-row.tool .desc{color:var(--ink-3)}
+.ledger-row.tool .go{grid-column:3/7;justify-self:end;font-size:13px;font-weight:500;color:var(--accent)}
+
+/* Scenario cards — equal quartet, color as identity only */
+.quartet{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.q-card{border:1px solid var(--hairline);border-radius:var(--r);padding:var(--s3);position:relative;overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;background:none;text-align:left;font:inherit;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--sc)}
+.q-card:hover{transform:translateY(-2px);border-color:var(--hairline-strong)}
+.q-card[data-active="true"]{border-color:var(--sc);background:var(--bg-elev)}
+.q-card h3{font-family:var(--font-display);font-size:15.5px;font-weight:600;margin-bottom:6px}
+.q-card .proj-line{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-2);margin-bottom:10px}
+.q-card p{font-size:12.5px;line-height:1.55;color:var(--ink-3)}
+
+/* Tools trio */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.t-card{border:1px solid var(--hairline);border-radius:var(--r);padding:var(--s3);transition:border-color .2s,transform .2s;display:block}
+.t-card:hover{transform:translateY(-2px);border-color:var(--hairline-strong);background:var(--bg-elev)}
+.t-card .kicker{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.t-card h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:6px}
+.t-card p{font-size:13px;color:var(--ink-3);line-height:1.55}
+.t-card .go{display:inline-block;margin-top:14px;font-size:13px;font-weight:500;color:var(--accent)}
+
+/* Footer — a real ending, not an afterthought */
+footer{padding:var(--s5) 0 var(--s4)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s4)}
+.foot-grid h4{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px}
+.foot-grid a{display:block;font-size:13px;color:var(--ink-3);padding:4px 0;transition:color .15s}
+.foot-grid a:hover{color:var(--ink)}
+.foot-note{margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--hairline);display:flex;justify-content:space-between;gap:16px;font-size:12px;color:var(--ink-4);flex-wrap:wrap}
+
+/* Prototype banner */
+.proto-note{background:var(--accent);color:#fff;font-size:12.5px;font-weight:500;text-align:center;padding:7px 16px}
+.proto-note a{text-decoration:underline;font-weight:600;color:#fff}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:var(--s4)}
+  .quartet{grid-template-columns:repeat(2,1fr)}
+  .trio{grid-template-columns:1fr}
+  .ledger-row{grid-template-columns:1fr 84px 24px 84px;grid-template-rows:auto auto}
+  .ledger-row .name{grid-column:1/5}
+  .ledger-row .desc{display:none}
+  .ledger-row .chip{display:none}
+  .foot-grid{grid-template-columns:1fr}
+  .nav-inner{overflow-x:auto;scrollbar-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="proto-note">Design v3 prototype — an experiment on the <b>design-v3</b> branch. Read the <a href="design-v3.html">audit &amp; proposal</a> · <a href="index.html" style="opacity:.85">current live design</a></div>
+
+<nav class="nav" aria-label="Site">
+  <div class="nav-inner">
+    <a class="wordmark" href="index-v3.html">AICIVSIM<em>.</em></a>
+    <div class="nav-item"><a class="nav-link" href="index-v3.html" aria-current="page">Overview</a></div>
+    <div class="nav-item">
+      <button class="nav-link" aria-haspopup="true">Systems <span class="chev"></span></button>
+      <div class="menu">
+        <a href="ai.html"><i class="tick" style="background:#e8a838"></i>AI <span class="hint">48 today</span></a>
+        <a href="climate.html"><i class="tick" style="background:#4ecdc4"></i>Climate <span class="hint">42 today</span></a>
+        <a href="governance.html"><i class="tick" style="background:#9b87f5"></i>Governance <span class="hint">40 today</span></a>
+        <a href="transition.html"><i class="tick" style="background:#5da5da"></i>Transition <span class="hint">43 today</span></a>
+        <a href="civilization.html"><i class="tick" style="background:#e05c7e"></i>Civilization <span class="hint">44 today</span></a>
+        <a href="strategy.html"><i class="tick" style="background:#d4622a"></i>Strategy <span class="hint">35 today</span></a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <button class="nav-link" aria-haspopup="true">Tools <span class="chev"></span></button>
+      <div class="menu">
+        <a href="simulation.html">Simulation <span class="hint">5 levers · 50 yr</span></a>
+        <a href="pathways.html">Pathways <span class="hint">between futures</span></a>
+        <a href="visualizer.html">Visualizer <span class="hint">3D · XR</span></a>
+      </div>
+    </div>
+    <div class="nav-item">
+      <button class="nav-link" aria-haspopup="true">Evidence <span class="chev"></span></button>
+      <div class="menu">
+        <a href="data.html">Live data <span class="hint">8 feeds</span></a>
+        <a href="timeline.html">Timeline <span class="hint">200K years</span></a>
+        <a href="research.html">Research <span class="hint">the paper</span></a>
+      </div>
+    </div>
+    <div class="nav-item"><a class="nav-link" href="chat.html">Advisor</a></div>
+    <div class="nav-item"><a class="nav-link" href="about.html">About</a></div>
+    <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="col hero-grid">
+    <div>
+      <span class="eyebrow">Civilization score · measured August 14, 2026</span>
+      <div class="score-display" id="score-now" style="margin-top:18px">44</div>
+      <div class="score-sub">
+        <span class="grade-chip" id="grade-now" style="color:var(--accent)">D</span>
+        <span class="body-2">out of 100 · every tracked system declining</span>
+      </div>
+      <p class="lead hero-sentence">One composite number across AI alignment, climate, governance, work, and trust — refreshed from live sources each visit. What happens to it next is a choice.</p>
+      <div class="delta-bar"><i id="delta-fill" style="width:44%;background:var(--accent)"></i></div>
+      <div class="delta-labels">
+        <span><b class="num" id="delta-now">44</b> today</span>
+        <span><b class="num" id="delta-proj">28</b> in 2050 · <span id="delta-name">business as usual</span></span>
+      </div>
+    </div>
+    <div class="sc-block">
+      <span class="eyebrow">Choose a future</span>
+      <div class="sc-seg" role="group" aria-label="Scenario">
+        <button data-sc="aggressive" style="--sc:var(--sc-aggressive)" aria-pressed="false"><span class="dot"></span>Aggressive</button>
+        <button data-sc="moderate" style="--sc:var(--sc-moderate)" aria-pressed="false"><span class="dot"></span>Moderate</button>
+        <button data-sc="bau" style="--sc:var(--sc-bau)" aria-pressed="true"><span class="dot"></span>As usual</button>
+        <button data-sc="worst" style="--sc:var(--sc-worst)" aria-pressed="false"><span class="dot"></span>Worst</button>
+      </div>
+      <div class="sc-outcome">
+        <div class="headline"><span>2050 outcome:</span> <b class="num" id="out-score" style="color:var(--sc-bau)">28</b> <span id="out-verdict" class="body-2">systemic decline</span></div>
+        <p id="out-desc">Current trajectory continues. No civic dividends, minimal AI governance, piecemeal climate response, insufficient reskilling. The system drifts toward structural decline through inaction.</p>
+      </div>
+      <div class="live-strip">
+        <span class="pill">Live</span>
+        <span class="item">CO₂ <b>427.9 ppm</b></span>
+        <span class="item">Warming <b>+1.39 °C</b></span>
+        <span class="item">Extreme poverty <b>10.4%</b></span>
+        <a href="data.html">All live data →</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">Six systems, one score</h2>
+        <p class="lead">Each system models a dimension of civilizational health. They feed back into each other — and into the composite above. Switch the scenario to watch every 2050 number move.</p>
+      </div>
+    </div>
+    <div class="ledger" id="ledger"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">Four futures, fully specified</h2>
+        <p class="lead">Not moods — policy configurations. Each scenario fixes the same five levers at different settings and lets fifty years of feedback loops run.</p>
+      </div>
+      <a class="section-link" href="pathways.html">How to move between them →</a>
+    </div>
+    <div class="quartet" id="quartet"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">Don't read it. Drive it.</h2>
+        <p class="lead">The scores above are outputs of a live model you can operate yourself.</p>
+      </div>
+    </div>
+    <div class="trio">
+      <a class="t-card" href="simulation.html">
+        <div class="kicker num">5</div>
+        <h3>Simulation</h3>
+        <p>Five policy levers, fifty years. Set dividends, capex, reskilling, and transparency — then scrub the timeline and read the narrative your settings produce.</p>
+        <span class="go">Open the engine →</span>
+      </a>
+      <a class="t-card" href="pathways.html">
+        <div class="kicker num">+43</div>
+        <h3>Pathways</h3>
+        <p>The gap between any two futures, itemized: which levers move, which actions flip from aspiration to enforcement, where the curves fork.</p>
+        <span class="go">Map a route →</span>
+      </a>
+      <a class="t-card" href="visualizer.html">
+        <div class="kicker num">3D</div>
+        <h3>Visualizer</h3>
+        <p>The whole system as an interactive network — a flagship 3D graph, an AI knowledge explorer, and an immersive WebXR mode.</p>
+        <span class="go">Enter the network →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="col">
+    <div class="foot-grid">
+      <div>
+        <a class="wordmark" href="index-v3.html">AICIVSIM<em>.</em></a>
+        <p class="body-2" style="margin-top:14px;max-width:300px">A data-driven simulation framework for reasoning about the systems that decide civilizational outcomes. Open source; not a prediction engine.</p>
+      </div>
+      <div>
+        <h4>Systems</h4>
+        <a href="ai.html">AI</a><a href="climate.html">Climate</a><a href="governance.html">Governance</a><a href="transition.html">Transition</a><a href="civilization.html">Civilization</a><a href="strategy.html">Strategy</a>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="simulation.html">Simulation</a><a href="pathways.html">Pathways</a><a href="visualizer.html">Visualizer</a><a href="data.html">Live data</a><a href="research.html">Research</a><a href="about.html">About</a>
+      </div>
+    </div>
+    <div class="foot-note">
+      <span>AI Civilization Simulator · 2026 · grounded in live data from NOAA, Our World in Data, and the World Bank</span>
+      <span>Design v3 prototype — <a href="design-v3.html" style="color:var(--accent)">read the proposal</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Data (mirrors index.html's SYSTEMS/COMPOSITE_PROJECTED) ── */
+var SC_META={
+  aggressive:{name:'Aggressive action',color:'#4ecdc4',proj:85,verdict:'systemic recovery underway',
+    desc:'10% civic dividends, enforced AI charter with citizen oversight, 25% GDP climate capex, 20% reskilling, 80% transparency.'},
+  moderate:{name:'Moderate reform',color:'#5da5da',proj:63,verdict:'moderate improvement',
+    desc:'Pilot-region dividends, selective governance reform, 15% climate capex, gradual reskilling. Meaningful but uneven progress.'},
+  bau:{name:'Business as usual',color:'#e8a838',proj:28,verdict:'systemic decline',
+    desc:'Current trajectory continues. No civic dividends, minimal AI governance, piecemeal climate response, insufficient reskilling. The system drifts toward structural decline through inaction.'},
+  worst:{name:'Worst case',color:'#d4622a',proj:11,verdict:'civilizational failure',
+    desc:'Institutional failure, democratic backsliding, unchecked AI deployment, and compounding climate crises accelerate decline across every domain.'}
+};
+var SYSTEMS=[
+  {label:'AI',href:'ai.html',color:'#e8a838',today:48,desc:'Alignment progress, autonomy risk, compute governance, deployment safety',proj:{aggressive:92,moderate:68,bau:32,worst:10}},
+  {label:'Climate',href:'climate.html',color:'#4ecdc4',today:42,desc:'Climate resilience, emissions trajectories, biodiversity corridors',proj:{aggressive:85,moderate:58,bau:28,worst:12}},
+  {label:'Governance',href:'governance.html',color:'#9b87f5',today:40,desc:'Institutional trust, AI governance charters, civic participation',proj:{aggressive:85,moderate:65,bau:30,worst:10}},
+  {label:'Transition',href:'transition.html',color:'#5da5da',today:43,desc:'Workforce readiness, reskilling rates, the income bridge',proj:{aggressive:88,moderate:68,bau:28,worst:12}},
+  {label:'Civilization',href:'civilization.html',color:'#e05c7e',today:44,desc:'Aggregate civilizational health across all domains',proj:{aggressive:81,moderate:61,bau:30,worst:13}},
+  {label:'Strategy',href:'strategy.html',color:'#d4622a',today:35,desc:'20 intervention strategies across 3 implementation levels',proj:{aggressive:88,moderate:62,bau:22,worst:8}},
+  {label:'Simulation',href:'simulation.html',tool:true,desc:'Interactive engine — 5 policy levers, 50-year narrative projections'}
+];
+var TODAY=44;
+function grade(s){return s>=93?'A':s>=85?'A−':s>=80?'B+':s>=73?'B':s>=68?'B−':s>=63?'C+':s>=58?'C':s>=53?'C−':s>=48?'D+':s>=43?'D':s>=38?'D−':'F'}
+
+var active=(function(){
+  var h=location.hash.replace('#','');
+  if(SC_META[h])return h;
+  try{var s=localStorage.getItem('aicivsim-scenario');if(SC_META[s])return s}catch(e){}
+  return 'bau';
+})();
+
+/* ── Renderers ── */
+function renderLedger(){
+  var m=SC_META[active],h='';
+  SYSTEMS.forEach(function(s){
+    if(s.tool){
+      h+='<a class="ledger-row tool" href="'+s.href+'">'
+        +'<span class="name"><i style="background:var(--ink-4)"></i>'+s.label+'</span>'
+        +'<span class="desc">'+s.desc+'</span>'
+        +'<span class="go">Open →</span></a>';
+      return;
+    }
+    var p=s.proj[active];
+    h+='<a class="ledger-row" href="'+s.href+'">'
+      +'<span class="name"><i style="background:'+s.color+'"></i>'+s.label+'</span>'
+      +'<span class="desc">'+s.desc+'</span>'
+      +'<span class="today"><b>'+s.today+'</b><span>today</span></span>'
+      +'<span class="arrow">→</span>'
+      +'<span class="proj"><b style="color:'+m.color+'">'+p+'</b><span>2050</span></span>'
+      +'<span class="chip"><span class="grade-chip" style="color:'+m.color+'">'+grade(p)+'</span></span>'
+      +'</a>';
+  });
+  document.getElementById('ledger').innerHTML=h;
+}
+function renderQuartet(){
+  var h='';
+  Object.keys(SC_META).forEach(function(id){
+    var m=SC_META[id];
+    h+='<button class="q-card" data-sc="'+id+'" data-active="'+(id===active)+'" style="--sc:'+m.color+'">'
+      +'<h3>'+m.name+'</h3>'
+      +'<div class="proj-line">2050: '+m.proj+'/100 · '+grade(m.proj)+'</div>'
+      +'<p>'+m.desc+'</p></button>';
+  });
+  document.getElementById('quartet').innerHTML=h;
+  document.querySelectorAll('.q-card').forEach(function(c){
+    c.addEventListener('click',function(){setScenario(c.getAttribute('data-sc'))});
+  });
+}
+
+/* ── Score tween: motion confirms the choice, never gates content ── */
+function tween(el,from,to,ms){
+  var t0=performance.now();
+  function step(t){
+    var k=Math.min(1,(t-t0)/ms);k=1-Math.pow(1-k,3);
+    el.textContent=Math.round(from+(to-from)*k);
+    if(k<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function setScenario(id){
+  if(!SC_META[id])return;
+  var prev=SC_META[active].proj;
+  active=id;
+  var m=SC_META[id];
+  try{localStorage.setItem('aicivsim-scenario',id)}catch(e){}
+  if(history.replaceState)history.replaceState(null,'','#'+id);
+  document.querySelectorAll('.sc-seg button').forEach(function(b){
+    b.setAttribute('aria-pressed',String(b.getAttribute('data-sc')===id));
+  });
+  var out=document.getElementById('out-score');
+  out.style.color=m.color;
+  tween(out,prev,m.proj,350);
+  document.getElementById('out-verdict').textContent=m.verdict;
+  document.getElementById('out-desc').textContent=m.desc;
+  var fill=document.getElementById('delta-fill');
+  fill.style.width=m.proj+'%';fill.style.background=m.color;
+  tween(document.getElementById('delta-proj'),prev,m.proj,350);
+  document.getElementById('delta-name').textContent=m.name.toLowerCase();
+  renderLedger();
+  document.querySelectorAll('.q-card').forEach(function(c){
+    c.setAttribute('data-active',String(c.getAttribute('data-sc')===id));
+  });
+}
+document.querySelectorAll('.sc-seg button').forEach(function(b){
+  b.addEventListener('click',function(){setScenario(b.getAttribute('data-sc'))});
+});
+
+/* ── Theme (same key as the live site) ── */
+(function(){
+  var saved=null;try{saved=localStorage.getItem('aicivsim-theme')}catch(e){}
+  if(saved==='light')document.body.classList.add('light');
+  document.getElementById('theme-toggle').addEventListener('click',function(){
+    var light=document.body.classList.toggle('light');
+    try{localStorage.setItem('aicivsim-theme',light?'light':'dark')}catch(e){}
+  });
+})();
+
+/* boot */
+renderQuartet();
+setScenario(active);
+</script>
+</body>
+</html>
