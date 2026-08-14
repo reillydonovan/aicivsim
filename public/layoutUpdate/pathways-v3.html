@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pathways — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+<style>
+/* page-local: the TO picker rides the section head; FROM is the sitewide control */
+.to-seg{display:inline-flex;gap:4px;background:var(--bg-elev);border:1px solid var(--hairline);border-radius:10px;padding:4px}
+.to-seg button{padding:6px 12px 5px;border-radius:7px;font-size:11.5px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.to-seg button .dot{width:6px;height:6px;border-radius:50%;background:var(--sc);opacity:.45}
+.to-seg button[aria-pressed="true"]{background:var(--bg-press);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hairline-strong)}
+.to-seg button[aria-pressed="true"] .dot{opacity:1}
+.route-line{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:28px}
+.route-line .big{font-family:var(--font-mono);font-weight:700;font-size:56px;letter-spacing:-.03em;line-height:1}
+.route-line .arrow{color:var(--ink-4);font-size:26px}
+.route-line .climb{font-family:var(--font-mono);font-weight:700;font-size:20px}
+.lever-delta{display:grid;grid-template-columns:150px 1fr 1fr;gap:12px;align-items:center;padding:13px 20px;border-bottom:1px solid var(--hairline)}
+.lever-delta:last-child{border-bottom:none}
+.lever-delta .lbl{font-size:13px;font-weight:500;color:var(--ink-2)}
+.lever-delta .fromv,.lever-delta .tov{font-family:var(--font-mono);font-size:14px;font-weight:600}
+.diff-row{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--hairline)}
+.diff-row:last-child{border-bottom:none}
+.diff-row .n{font-size:13px;font-weight:500;color:var(--ink-2)}
+.diff-row .cat{font-size:10px;color:var(--ink-4);text-transform:uppercase;letter-spacing:.08em}
+.diff-row .st{font-family:var(--font-mono);font-size:11px;font-weight:600;white-space:nowrap}
+.diff-row .ar{color:var(--ink-4)}
+</style>
+</head>
+<body>
+
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">Tool · Pathways</span>
+  <h1 class="title-1">Every future is a destination.<br>This maps the route.</h1>
+  <p class="lead">Your <b style="color:var(--ink)">starting path</b> is the scenario chosen above — the same one every page shares. Pick a <b style="color:var(--ink)">destination</b> below and the page itemizes the climb: score, levers, actions, and where the curves fork.</p>
+  <div class="route-line">
+    <span><span class="big num" id="from-score">28</span><span class="body-2"> 2050 · <span id="from-name">business as usual</span></span></span>
+    <span class="arrow">→</span>
+    <span><span class="big num" id="to-score">85</span><span class="body-2"> 2050 · <span id="to-name">aggressive action</span></span></span>
+    <span class="climb" id="climb">+57</span>
+  </div>
+</div></header>
+
+<main>
+
+<section class="section"><div class="col">
+  <div class="section-head">
+    <div><h2 class="title-2">Choose the destination</h2>
+    <p class="lead" id="route-verdict"></p></div>
+    <div class="to-seg" id="to-seg" role="group" aria-label="Destination scenario"></div>
+  </div>
+  <div class="narrative"><div class="who" id="route-who"></div><p id="route-narrative"></p></div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">Where the same metrics land</h2>
+    <p class="lead">Each structural metric in 2050 — origin on the left, destination on the right.</p>
+  </div></div>
+  <div class="slopes" id="slopes"></div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">The policy delta</h2>
+    <p class="lead">What the five levers are set to in each world. The gap between columns is the legislation.</p>
+  </div></div>
+  <div class="db-rows" id="lever-deltas"></div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">The action ledger</h2>
+    <p class="lead" id="ledger-lead">Catalog actions whose status changes between the two futures.</p>
+  </div></div>
+  <div class="db-rows" id="action-diff"></div>
+  <p class="body-2" style="margin-top:16px">Full action cards with cost, difficulty, and timelines live in the <a class="a" href="strategy-v3.html">Strategy catalog</a>.</p>
+</div></section>
+
+</main>
+</div>
+
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'simulation',context:'Pathways — moving between futures'}});
+document.querySelector('.deck-title b').textContent='Pathways';
+document.querySelector('.deck-title i').style.background='var(--accent)';
+document.querySelector('.deck-title span').textContent='Starting path — shared with every page';
+
+var to='aggressive';
+function ensureDistinct(){
+  if(to===V3.scenario.get()){
+    to=V3.SC_ORDER.filter(function(s){return s!==V3.scenario.get()})[0];
+  }
+}
+var VERDICTS={up:'A climb — every lever below has to move, and most of the action ledger flips from aspiration to enforcement.',
+  down:'A fall — this is what breaking looks like: levers zeroed, statuses decaying, curves bending down.',
+  same:'Same destination as origin.'};
+
+function renderToSeg(){
+  document.getElementById('to-seg').innerHTML=V3.SC_ORDER.map(function(id){
+    var m=V3.SC[id];
+    return '<button data-to="'+id+'" style="--sc:'+m.color+'" aria-pressed="'+(id===to)+'"'
+      +(id===V3.scenario.get()?' disabled style="opacity:.35;--sc:'+m.color+'"':'')
+      +'><span class="dot"></span>'+m.short+'</button>';
+  }).join('');
+}
+function paint(){
+  ensureDistinct();renderToSeg();
+  var f=V3.SC[V3.scenario.get()],t=V3.SC[to];
+  var d=t.proj-f.proj;
+  document.getElementById('from-score').textContent=f.proj;
+  document.getElementById('from-score').style.color=f.color;
+  document.getElementById('from-name').textContent=f.name.toLowerCase();
+  var ts=document.getElementById('to-score');
+  ts.style.color=t.color;V3.tween(ts,t.proj);
+  document.getElementById('to-name').textContent=t.name.toLowerCase();
+  var c=document.getElementById('climb');
+  c.textContent=(d>0?'+':'')+d+' points';
+  c.style.color=d>0?'var(--good)':d<0?'var(--bad)':'var(--ink-3)';
+  document.getElementById('route-verdict').textContent=VERDICTS[d>0?'up':d<0?'down':'same'];
+  document.getElementById('route-who').textContent=t.name+' · 2050';
+  document.getElementById('route-narrative').textContent=SIM_ENGINE.narratives[to];
+
+  /* slopes at 2050 */
+  var wrap=document.getElementById('slopes');wrap.innerHTML='';
+  SIM_ENGINE.metrics.forEach(function(mt){
+    if(mt.id==='ai')return; /* context metric; direction ambiguous — keep the trio focused */
+    var card=document.createElement('div');card.className='slope-card';wrap.appendChild(card);
+    V3.slope(card,{label:mt.label,unit:mt.unit,dec:mt.dec,
+      from:{name:f.short.toLowerCase(),color:f.color,v:simInterp(SIM_ENGINE.scenarios[f.id][mt.id],2050)},
+      to:{name:t.short.toLowerCase(),color:t.color,v:simInterp(SIM_ENGINE.scenarios[t.id][mt.id],2050)}});
+  });
+  var res=document.createElement('div');res.className='slope-card';wrap.appendChild(res);
+  V3.slope(res,{label:'Resilience',unit:'index',dec:3,
+    from:{name:f.short.toLowerCase(),color:f.color,v:simInterp(SIM_ENGINE.scenarios[f.id].resil,2050)},
+    to:{name:t.short.toLowerCase(),color:t.color,v:simInterp(SIM_ENGINE.scenarios[t.id].resil,2050)}});
+
+  /* lever deltas */
+  var LE=[['div','Civic dividend','%'],['capex','Climate capex','% GDP'],['reskill','Reskilling','%'],['transparency','Transparency','%'],['charter','AI charter','']];
+  document.getElementById('lever-deltas').innerHTML=LE.map(function(l){
+    var fv=SIM_ENGINE.scenarios[f.id][l[0]],tv=SIM_ENGINE.scenarios[t.id][l[0]];
+    var fs=l[0]==='charter'?(fv?'Enforced':'None'):fv+l[2];
+    var tsv=l[0]==='charter'?(tv?'Enforced':'None'):tv+l[2];
+    return '<div class="lever-delta"><span class="lbl">'+l[1]+'</span>'
+      +'<span class="fromv" style="color:'+f.color+'">'+fs+'</span>'
+      +'<span class="tov" style="color:'+t.color+'">'+tsv+' <span style="color:var(--ink-4)">←needs</span></span></div>';
+  }).join('');
+
+  /* action diff */
+  var changed=[],aligned=0;
+  STRATEGY_CATALOG.categories.forEach(function(c){
+    STRATEGY_CATALOG.actions[c.key].forEach(function(a){
+      var fs=a.scenario[f.id].status,tsx=a.scenario[t.id].status;
+      if(fs!==tsx)changed.push({cat:c.label,name:a.name,from:fs,to:tsx,up:stratStatusRank(tsx)>stratStatusRank(fs)});
+      else aligned++;
+    });
+  });
+  document.getElementById('ledger-lead').textContent=changed.length+' of '+(changed.length+aligned)+' actions change status on this route; '+aligned+' already align.';
+  document.getElementById('action-diff').innerHTML=changed.map(function(x){
+    return '<div class="diff-row"><span class="n">'+x.name+' <span class="cat">'+x.cat+'</span></span>'
+      +'<span class="st" style="color:'+f.color+'">'+x.from+'</span>'
+      +'<span class="ar">→</span>'
+      +'<span class="st" style="color:'+t.color+'">'+x.to+'</span></div>';
+  }).join('');
+  V3.stagger(document.querySelectorAll('.diff-row'),10);
+}
+document.getElementById('to-seg').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-to]');
+  if(!b||b.disabled)return;
+  to=b.getAttribute('data-to');paint();
+});
+paint();
+V3.scenario.onChange(paint);
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Civilization — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'civilization',context:'The composite — everything, together'}});
+V3.systemPage({
+  sys:'civilization',
+  tagline:'The number the other five add up to.',
+  lead:'Composite health and equity from 2026 to 2050. This is the site’s headline score in depth — the weighted aggregate of climate resilience, AI alignment, governance capacity, workforce readiness, and the feedback loops that bind them.',
+  today:44,
+  proj:{aggressive:81,moderate:61,bau:30,worst:13},
+  metrics:VIZ_METRICS.civilization,
+  narratives:{
+    aggressive:'Health 81, equity 81 — the curves converge upward as the feedback loops turn virtuous: trust funds reform, reform funds resilience, resilience earns trust. A generation grows up assuming systems mostly work.',
+    moderate:'Health 61, equity 58. Real improvement, unevenly distributed — the composite hides a gap between regions that modernized and regions that were promised modernization. Progress you can see and inequities you can map.',
+    bau:'Health 30, equity 24. No single catastrophe — just compounding erosion, each system passing its weakness to the next. The composite falls below 35 around 2040 and the decline becomes self-reinforcing.',
+    worst:'Health 13, equity 9. The loops run in reverse: climate failure breaks work, broken work breaks trust, broken trust breaks every response. The composite stops being a dashboard and becomes an obituary.'
+  },
+  crossKey:'civilization'
+});
+</script>
+</body>
+</html>

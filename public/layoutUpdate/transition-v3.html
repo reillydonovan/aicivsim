@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transition — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'transition',context:'Work, reskilling, and the income bridge'}});
+V3.systemPage({
+  sys:'transition',
+  tagline:'What happens to work decides what happens to everything.',
+  lead:'Reskilling completion and poverty rates from 2026 to 2050, as automation rewrites the labor market. The scenarios differ on one question: when a job disappears, is there a funded bridge to the next one — or a gap people fall through?',
+  today:43,
+  proj:{aggressive:88,moderate:68,bau:28,worst:12},
+  metrics:VIZ_METRICS.transition,
+  narratives:{
+    aggressive:'Civic dividends fund the bridge: 90% reskilling completion, poverty at 2.2% and still falling. Changing careers three times becomes ordinary. Automation reads as a raise for the species, not a threat to your family.',
+    moderate:'The bridge exists where budgets allow. Reskilling reaches 68%; poverty declines to 6.1% but pockets of permanent displacement persist. For most people the transition works; for the rest, it never arrives.',
+    bau:'Displacement outruns reskilling five to one. Poverty nearly doubles to 20% by 2050 as middle-skill work hollows out. The economy grows while its participants shrink — the numbers diverge from the lives behind them.',
+    worst:'A permanent underclass forms. Poverty passes 35%, reskilling is a rounding error, and an entire generation learns that the economy has no seat for them. Every other system inherits the anger.'
+  },
+  crossKey:'transition'
+});
+</script>
+</body>
+</html>

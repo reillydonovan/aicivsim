@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Climate — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'climate',context:'Planetary systems under four futures'}});
+V3.systemPage({
+  sys:'climate',
+  tagline:'Planetary systems don’t negotiate.',
+  lead:'Temperature, energy, and atmospheric carbon from 2026 to 2050. Every number here is a consequence of the policy levers — carbon pricing, renewable investment, conservation — set by the scenario you choose.',
+  today:42,
+  proj:{aggressive:85,moderate:58,bau:28,worst:12},
+  metrics:VIZ_METRICS.climate.map(function(m){
+    return Object.assign({},m,{prefix:m.prefix||(m.id==='temp'?'+':'')});
+  }),
+  narratives:{
+    aggressive:'Warming peaks at +1.2°C and begins easing by the 2040s. The grid runs 99% renewable, CO₂ is falling for the first time in industrial history, and the tipping points stay unbreached. The planet is not restored — but it is stabilizing.',
+    moderate:'Warming reaches +1.8°C and keeps climbing slowly. Renewables carry most of the grid, but the transition’s last mile stalls. Coral systems are functionally lost; other thresholds hold. A managed, wounded stability.',
+    bau:'Warming passes +2.9°C by 2050. Multiple tipping points come into range — Arctic summers ice-free in the 2030s, coral collapse, Amazon dieback risk. Coastal infrastructure spends the 2040s in managed retreat.',
+    worst:'+4.6°C by 2050. Cascading breaches — ice sheets, permafrost carbon, monsoon disruption. Habitable zones contract and climate-driven migration reshapes every border on Earth. This is the scenario the model exists to argue against.'
+  },
+  crossKey:'climate'
+});
+</script>
+</body>
+</html>

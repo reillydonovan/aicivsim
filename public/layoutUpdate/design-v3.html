@@ -104,7 +104,7 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
       <span>Reviewed <b>August 14, 2026</b></span>
       <span>Scope <b>15 pages, both themes, desktop + mobile</b></span>
     </div>
-    <a class="cta" href="index-v3.html">Open the prototype</a>
+    <a class="cta" href="index-v3.html">Tour the full demo</a>
     <a class="cta ghost" href="index.html">Current design</a>
   </div>
 </header>
@@ -208,14 +208,14 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
 <tr><th>Color</th><th>Value</th><th>Means exactly</th></tr>
 <tr><td><span class="swatch" style="background:#d4622a"></span>Accent</td><td class="mono">#d4622a</td><td>Interaction: links, CTAs, active states</td></tr>
 <tr><td><span class="swatch" style="background:#4ecdc4"></span>Aggressive</td><td class="mono">#4ecdc4</td><td rowspan="4">Scenario identity only — segments, chart series, projected values. Never decoration.</td></tr>
-<tr><td><span class="swatch" style="background:#5da5da"></span>Moderate</td><td class="mono">#5da5da</td></tr>
+<tr><td><span class="swatch" style="background:#4a7fd4"></span>Moderate</td><td class="mono">#4a7fd4 <span style="color:var(--ink-4)">(charts · brand keeps #5da5da)</span></td></tr>
 <tr><td><span class="swatch" style="background:#e8a838"></span>Business as usual</td><td class="mono">#e8a838</td></tr>
 <tr><td><span class="swatch" style="background:#d4622a;outline:1px solid rgba(255,255,255,.3)"></span>Worst case</td><td class="mono">#d4622a</td></tr>
 <tr><td>Ink tiers</td><td class="mono">ink · ink-2 · ink-3 · ink-4</td><td>Four steps of text emphasis, both themes</td></tr>
 </table>
 
-<h2>The prototype</h2>
-<p><a href="index-v3.html"><b>index-v3.html</b></a> is the proposal, working. What to test:</p>
+<h2>The prototype — where it started</h2>
+<p><a href="index-v3.html"><b>index-v3.html</b></a> was the first proof. What to test on it:</p>
 <ul>
 <li><b>Switch scenarios</b> in the hero segmented control — score, delta bar, outcome sentence, all six ledger rows, and the quartet cards update together, with motion only on the numbers you changed.</li>
 <li><b>Hover the nav groups</b> — Systems/Tools/Evidence menus with per-item hints replace thirteen naked links.</li>
@@ -224,6 +224,41 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
 <li><b>Resize below 900px</b> — the ledger reflows to a two-line row; the quartet goes 2-up; nothing wraps into a second nav row.</li>
 </ul>
 <p>It reads the live site's <span class="mono">aicivsim-scenario</span> and <span class="mono">aicivsim-theme</span> localStorage keys and hash (<span class="mono">#aggressive…</span>), so it drops into the existing persistence model unchanged.</p>
+
+<h2>The dataviz system — one geometry, six forms</h2>
+<p>The current site has charts of many species: four-line trajectory charts with a four-item legend repeated under every single plot, slider clusters, adoption bars in a third accent color, tipping-point cards, dot ledgers. Each is individually reasonable; together they read as accumulation, not intent. The v3 rule: <b>diversity of form, unity of anatomy.</b> Every chart shares one skeleton — hairline grid, mono axis labels in the faintest ink, no borders, no per-chart legends — and the <i>form</i> is chosen by the data's job, never by novelty:</p>
+<table>
+<tr><th>Form</th><th>The data's job</th><th>Where</th></tr>
+<tr><td>Stat tile</td><td>One value + where it's heading (delta + sparkline)</td><td>KPI rows on every system page</td></tr>
+<tr><td>Trajectory</td><td>Change over time, <b>one future is the point</b> — active scenario bold with a direct end-label, the other three ghosted context</td><td>All projections, 2026–2050 and 2027–2070</td></tr>
+<tr><td>Dumbbell</td><td>Before → after, per metric</td><td>"Where it stands, where it goes"</td></tr>
+<tr><td>Meter</td><td>A ratio against a cap, one hue</td><td>Strategy adoption</td></tr>
+<tr><td>Slope</td><td>Two states compared</td><td>Pathways origin → destination</td></tr>
+<tr><td>Narrative panel</td><td>Sometimes the answer is a sentence, not a chart</td><td>Simulation world reports, "what that world feels like"</td></tr>
+</table>
+<p>Three rules do most of the work. <b>The scenario control is the legend</b> — it sits in the same place on every page, so charts never repeat one. <b>Scenario hues appear only on scenario identity</b> — segments, series, projected values; single-measure charts use one neutral hue; semantic green/red appears only on deltas and always with a ▲▼ glyph, never color alone. <b>Every chart answers hover the same way</b> — a crosshair and one tooltip listing all four futures, sorted, active row emphasized.</p>
+
+<h3>A palette that survives — validated, not eyeballed</h3>
+<p>Running the four brand scenario hues through a colorblind-safety validator confirmed what squinting at the current charts suggests: <b>aggressive teal (<span class="mono">#4ecdc4</span>) and moderate blue (<span class="mono">#5da5da</span>) are near-twins</b> — ΔE 12.7 for normal vision (the legibility floor is 15), 11.4 under deuteranopia. On a four-line chart they are the two hopeful futures — and the two you can't tell apart. The v3 charts shift moderate to <span class="mono" style="color:#4a7fd4;font-weight:700">#4a7fd4</span> — same blue family, deeper — lifting the worst adjacent pair to a passing ΔE 17.1 (now amber/orange, which the emphasis form and direct labels already disambiguate). Brand surfaces keep <span class="mono">#5da5da</span>; only data ink changes.</p>
+
+<h2>Motion — springs that confirm, never gate</h2>
+<p>The current site's one big motion idea — scroll-triggered opacity reveals — is finding 05: it gates reading. v3 replaces it with the approach popularized by <a href="https://motion.dev" rel="noopener">motion.dev</a>: <b>physical springs instead of duration curves, attached to user actions instead of scroll position.</b> Switch a scenario and the score doesn't fade — it <i>arrives</i>, with the slight overshoot of a real object settling; the delta bar re-fills on the same spring; ledger rows ripple through a 26ms stagger that never drops below readable opacity. The prototype implements this dependency-free — a 40-line spring integrator that also compiles its curve to a CSS <span class="mono">linear()</span> easing — and honors <span class="mono">prefers-reduced-motion</span> throughout. For production, the recommendation is motion.dev's vanilla build (~5KB): springs, layout animation, and stagger as a maintained primitive instead of bespoke code.</p>
+
+<h2>The full demo — every page, rebuilt</h2>
+<p>The proposal is no longer a homepage — it is the entire site, working, on shared assets (<span class="mono">css/v3.css</span> + <span class="mono">js/v3.js</span>) and driven by the same data as the live pages (<span class="mono">shared.js</span>: VIZ_METRICS, SIM_ENGINE, STRATEGY_CATALOG, CROSS_SYSTEM; <span class="mono">live-data.js</span> for real-world feeds).</p>
+<table>
+<tr><th>Page</th><th>What to look at</th></tr>
+<tr><td><a href="index-v3.html">Overview</a></td><td>Hero scenario control; composite trajectory chart; systems ledger; live strip</td></tr>
+<tr><td><a href="ai-v3.html">AI</a> · <a href="climate-v3.html">Climate</a> · <a href="governance-v3.html">Governance</a> · <a href="transition-v3.html">Transition</a> · <a href="civilization-v3.html">Civilization</a></td><td>One dashboard template: score → KPI tiles → dumbbells → trajectories → narrative → cross-system feedback weights</td></tr>
+<tr><td><a href="strategy-v3.html">Strategy</a></td><td>The template + the 20-action catalog: adoption meters, per-scenario status chips, category filter</td></tr>
+<tr><td><a href="simulation-v3.html">Simulation</a></td><td>Lever readouts, the year scrubber, the generated world report, five trajectories with a year cursor</td></tr>
+<tr><td><a href="pathways-v3.html">Pathways</a></td><td>Origin = the sitewide scenario; pick a destination — slopes, lever deltas, and the 20-action status diff recompute</td></tr>
+<tr><td><a href="visualizer-v3.html">Visualizer</a></td><td>Hub for the three 3D instruments (which keep their own chrome by design)</td></tr>
+<tr><td><a href="data-v3.html">Live data</a></td><td>Eight live tiles with drift vs the 2026 baseline — real fetches, graceful fallback</td></tr>
+<tr><td><a href="timeline-v3.html">Timeline</a></td><td>The 200K-year spine without the voids; four scenario-reactive future chapters</td></tr>
+<tr><td><a href="research-v3.html">Research</a> · <a href="about-v3.html">About</a></td><td>Landing for the paper; scope, method, colophon</td></tr>
+</table>
+<p><b>The scenario contract, everywhere:</b> every page defaults to <b>business as usual</b>. The moment you choose differently, the choice persists across every page — and back to the live site, via the same <span class="mono">aicivsim-scenario</span> key and <span class="mono">#hash</span> convention — until you change it again. The theme behaves identically via <span class="mono">aicivsim-theme</span>.</p>
 
 <h2>Rollout plan</h2>
 <div class="phase"><span class="ph-n">P1</span><div><b>Tokens + navigation, sitewide</b><span>Ship the type scale, ink tiers, and the five-group nav to every page. Pure CSS + shared.js nav renderer change; zero content edits.</span></div><span class="effort">~1 day · low risk</span></div>

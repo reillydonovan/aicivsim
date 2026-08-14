@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulation — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">Tool · Simulation</span>
+  <h1 class="title-1">Pick a year. Read the world.</h1>
+  <p class="lead">The engine behind every projection on this site: five policy levers, four decades, five structural metrics. Choose a future above, scrub the timeline below, and the model writes you a report on the world your settings produce.</p>
+</div></header>
+
+<main>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">The levers</h2>
+    <p class="lead">Each future is a fixed setting of the same five levers. This is the entire difference between the four worlds.</p>
+  </div></div>
+  <div class="levers" id="levers"></div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">The year</h2>
+    <p class="lead">Scrub from 2027 to 2070. Every chart below tracks your cursor; the report rewrites itself.</p>
+  </div></div>
+  <div class="year-block" style="max-width:640px">
+    <div class="yr-big"><span id="yr-now">2035</span><small>of 2027–2070</small><span class="era-chip" id="yr-era">Divergence</span></div>
+    <input type="range" id="yr-slider" min="2027" max="2070" step="1" value="2035">
+    <div class="yr-ends"><span>2027</span><span>2070</span></div>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">State of the world — <span id="rep-year">2035</span></h2>
+    <p class="lead" id="rep-headline"></p>
+  </div></div>
+  <div class="kpis" id="sim-kpis" style="margin-bottom:40px"></div>
+  <div id="report" style="display:grid;grid-template-columns:1fr 1fr;gap:12px"></div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">The structural metrics</h2>
+    <p class="lead">2027–2070 under all four futures; the dashed cursor is your year. The bold line is your chosen scenario.</p>
+  </div></div>
+  <div class="chart-grid" id="sim-charts"></div>
+</div></section>
+
+</main>
+</div>
+
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'simulation',context:'Five levers · 2027–2070'}});
+
+var year=2035;
+var YEARS=[];for(var y=2027;y<=2070;y++)YEARS.push(y);
+
+/* levers */
+var LEVERS=[
+  {key:'div',label:'Civic dividend',fmt:function(v){return v+'%'}},
+  {key:'capex',label:'Climate capex',fmt:function(v){return v+'% GDP'}},
+  {key:'reskill',label:'Reskilling',fmt:function(v){return v+'%'}},
+  {key:'transparency',label:'Transparency',fmt:function(v){return v+'%'}},
+  {key:'charter',label:'AI charter',fmt:function(v){return v?'Enforced':'None'}}
+];
+function renderLevers(){
+  var act=V3.scenario.get(),s=SIM_ENGINE.scenarios[act],m=V3.SC[act];
+  document.getElementById('levers').innerHTML=LEVERS.map(function(l){
+    return '<div class="lever"><div class="lbl">'+l.label+'</div>'
+      +'<div class="val" style="color:'+m.color+'">'+l.fmt(s[l.key])+'</div></div>';
+  }).join('');
+  V3.stagger(document.querySelectorAll('.lever'),30);
+}
+
+/* report */
+function renderReport(){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  var w=simWorldState(act,year);
+  document.getElementById('rep-year').textContent=year;
+  document.getElementById('yr-era').textContent=simEra(year-2026);
+  document.getElementById('rep-headline').innerHTML='Score <b class="num" style="color:'+m.color+'">'+w.score+'/100 · '+V3.grade(w.score)+'</b> — '+m.name.toLowerCase()+', year '+(year-2026)+' of the run.';
+  var cards=[
+    {t:'Livelihoods',b:w.livelihoods},{t:'Climate',b:w.climate},
+    {t:'Governance',b:w.governance},{t:'AI',b:w.aiText||w.ai},
+    {t:'Outlook',b:w.outlook,wide:true}
+  ];
+  document.getElementById('report').innerHTML=cards.map(function(c){
+    return '<div class="chart-card"'+(c.wide?' style="grid-column:1/-1"':'')+'>'
+      +'<div class="c-title" style="margin-bottom:8px">'+c.t+'</div>'
+      +'<p class="body-2" style="font-size:13.5px;color:var(--ink-2)">'+(c.b||'')+'</p></div>';
+  }).join('');
+  V3.stagger(document.querySelectorAll('#report .chart-card'),26);
+  /* KPI readouts at cursor year */
+  var k=document.getElementById('sim-kpis');
+  k.innerHTML=SIM_ENGINE.metrics.map(function(mt){
+    var v=simInterp(SIM_ENGINE.scenarios[act][mt.id],year);
+    var d=v-mt.baseline;
+    var better=mt.dir==='lower'?d<0:mt.dir==='higher'?d>0:null;
+    var cls=better==null?'flat':better?'good':'bad';
+    var arrow=d>0?'▲':d<0?'▼':'—';
+    return '<div class="stat"><div class="lbl">'+mt.label+'</div>'
+      +'<div class="val">'+v.toFixed(mt.dec)+'<small>'+(mt.unit||'')+'</small></div>'
+      +'<div class="delta '+cls+'">'+arrow+' '+(d>0?'+':'')+d.toFixed(mt.dec)+(mt.unit||'')+' <span class="ctx">vs 2026</span></div></div>';
+  }).join('');
+}
+
+/* charts with cursor */
+var charts=[];
+SIM_ENGINE.metrics.forEach(function(mt){
+  var data={};V3.SC_ORDER.forEach(function(sc){data[sc]=SIM_ENGINE.scenarios[sc][mt.id]});
+  var card=document.createElement('div');card.className='chart-card';
+  document.getElementById('sim-charts').appendChild(card);
+  charts.push(V3.traj(card,{
+    label:mt.label,unit:mt.unit,dec:mt.dec,dir:mt.dir,years:YEARS,data:data,
+    cursorYear:function(){return year}
+  }));
+});
+
+document.getElementById('yr-slider').addEventListener('input',function(){
+  year=+this.value;
+  document.getElementById('yr-now').textContent=year;
+  renderReport();
+  charts.forEach(function(c){c.render()});
+});
+renderLevers();renderReport();
+V3.scenario.onChange(function(){renderLevers();renderReport()});
+</script>
+</body>
+</html>

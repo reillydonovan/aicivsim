@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Governance — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'governance',context:'Trust, participation, and institutional capacity'}});
+V3.systemPage({
+  sys:'governance',
+  tagline:'Trust is infrastructure.',
+  lead:'Civic participation and institutional trust from 2026 to 2050. Every other system in the model depends on this one: climate policy, AI charters, and workforce programs are only as strong as the institutions asked to run them — and the public’s willingness to let them.',
+  today:40,
+  proj:{aggressive:85,moderate:65,bau:30,worst:10},
+  metrics:VIZ_METRICS.governance,
+  narratives:{
+    aggressive:'Participatory budgeting, open audits, and citizen assemblies rebuild the machinery in public view. Participation reaches 82%, trust 80% — not because institutions are loved, but because they are legible and answerable.',
+    moderate:'Reform where the pressure is highest, inertia elsewhere. Trust climbs to 55% — institutions are no longer actively distrusted, which turns out to be enough for most policy to function. Fragile, but functioning.',
+    bau:'Participation flatlines at 15%. Trust decays to 26% as institutions announce reforms, partially fund them, and quietly abandon them. Every crisis is managed; none is prevented. The vacuum fills with something.',
+    worst:'Trust collapses below 20% and stays there. Emergency powers become permanent, elections become rituals, and governance capacity is consumed entirely by crisis response. Institutional failure is the upstream cause of every other collapse in this scenario.'
+  },
+  crossKey:'governance'
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI — Design v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css">
+</head>
+<body>
+<div id="app"></div>
+<script src="js/shared.js"></script>
+<script src="js/v3.js"></script>
+<script>
+V3.boot({deck:{sys:'ai',context:'Alignment, transparency, and who holds the leash'}});
+V3.systemPage({
+  sys:'ai',
+  tagline:'The technology that audits itself — or doesn’t.',
+  lead:'Alignment progress and model transparency from 2026 to 2050. The divergence between futures is starker here than in any other system: the same technology becomes civilization’s best tool or its least accountable force, depending entirely on governance choices made this decade.',
+  today:48,
+  proj:{aggressive:92,moderate:68,bau:32,worst:10},
+  metrics:VIZ_METRICS.ai,
+  narratives:{
+    aggressive:'The charter held. Frontier systems ship with enforced audit trails, capability growth converges with alignment progress, and public trust follows transparency to 97%. AI is powerful and boring — the way infrastructure should be.',
+    moderate:'Alignment improves where regulation reaches and lags where it doesn’t. Transparency plateaus near 61% — enough for oversight of the biggest actors, not the long tail. Workable, with permanent vigilance as the price.',
+    bau:'Capability compounds; alignment doesn’t. Transparency decays to 12% as competitive pressure closes every lab. By the 2040s AI shapes markets, media, and policy through systems nobody can inspect — influence without accountability.',
+    worst:'Alignment work effectively stops after 2030. Opaque autonomous systems run critical infrastructure under no charter at all. The question is no longer whether AI is aligned with human values, but which humans — if any — still steer it.'
+  },
+  crossKey:'ai'
+});
+</script>
+</body>
+</html>
