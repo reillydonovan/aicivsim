@@ -273,8 +273,8 @@ svg{display:block}
 .spine-item.ms .ms-status{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:6px;border:1px solid currentColor;margin-left:8px;vertical-align:middle}
 .spine-item.ms .ms-status.good{color:var(--good)} .spine-item.ms .ms-status.warn{color:var(--sc-bau)} .spine-item.ms .ms-status.bad{color:var(--bad)}
 .spine-item.ms .ms-score{margin-left:6px}
-.spine-item.ms .ms-items{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.spine-item.ms .ms-items span{font-size:11px;color:var(--ink-3);border:1px solid var(--hairline);border-radius:6px;padding:3px 9px}
+.ms-items{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ms-items span{font-size:11px;color:var(--ink-3);border:1px solid var(--hairline);border-radius:6px;padding:3px 9px}
 .spine-item.ms .ms-note{min-height:42px}
 
 /* ── Composition stack ── */
