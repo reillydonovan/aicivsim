@@ -208,6 +208,33 @@ V3.boot=function(opts){
     var b=e.target.closest?e.target.closest('.sc-seg button'):null;
     if(b)V3.scenario.set(b.getAttribute('data-sc'));
   });
+  /* menu intent: open instantly, switch between menus instantly,
+     close only after a short grace so stray pointer exits don't kill
+     the menu — but sweeping the bar never leaves a trail */
+  var openItem=null,closeTimer=null;
+  document.querySelectorAll('.nav-item').forEach(function(item){
+    if(!item.querySelector('.menu'))return;
+    item.addEventListener('mouseenter',function(){
+      clearTimeout(closeTimer);
+      if(openItem&&openItem!==item)openItem.classList.remove('open');
+      item.classList.add('open');openItem=item;
+    });
+    item.addEventListener('mouseleave',function(){
+      clearTimeout(closeTimer);
+      closeTimer=setTimeout(function(){
+        item.classList.remove('open');
+        if(openItem===item)openItem=null;
+      },160);
+    });
+  });
+  /* sweeping onto a plain link (no menu) closes any open menu at once */
+  document.querySelectorAll('.nav-item').forEach(function(item){
+    if(item.querySelector('.menu'))return;
+    item.addEventListener('mouseenter',function(){
+      clearTimeout(closeTimer);
+      if(openItem){openItem.classList.remove('open');openItem=null}
+    });
+  });
   /* keep the ⌘K palette inside the demo: remap its page links to the
      v3 equivalents (CMD_ITEMS is shared by reference with shared.js) */
   if(window.CMD_ITEMS){
