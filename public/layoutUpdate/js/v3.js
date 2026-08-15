@@ -208,6 +208,14 @@ V3.boot=function(opts){
     var b=e.target.closest?e.target.closest('.sc-seg button'):null;
     if(b)V3.scenario.set(b.getAttribute('data-sc'));
   });
+  /* keep the ⌘K palette inside the demo: remap its page links to the
+     v3 equivalents (CMD_ITEMS is shared by reference with shared.js) */
+  if(window.CMD_ITEMS){
+    var remap={'index.html':1,'ai.html':1,'civilization.html':1,'simulation.html':1,'visualizer.html':1,'climate.html':1,'transition.html':1,'governance.html':1,'strategy.html':1,'pathways.html':1,'timeline.html':1,'data.html':1,'research.html':1,'about.html':1};
+    CMD_ITEMS.forEach(function(it){
+      if(it.h&&remap[it.h])it.h=it.h.replace('.html','-v3.html');
+    });
+  }
   /* reveal after the page's synchronous scripts have rendered content */
   requestAnimationFrame(function(){requestAnimationFrame(V3.reveal)});
 };
