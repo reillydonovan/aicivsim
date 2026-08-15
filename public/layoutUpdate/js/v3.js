@@ -191,7 +191,9 @@ var NAV=[
     {href:'data.html',label:'Live data',hint:'8 feeds'},
     {href:'timeline.html',label:'Timeline',hint:'200K years'},
     {href:'research.html',label:'Research',hint:'the paper'}]},
-  {label:'Advisor',href:'chat.html'},
+  /* Advisor is disabled for now — the page and the floating widget are
+     both off until it gets a v3 pass. Restore by re-adding this item
+     and clearing the widget guard at the bottom of shared.js. */
   {label:'About',href:'about.html'}
 ];
 V3.nav=function(currentHref){
@@ -239,6 +241,7 @@ V3.footer=function(){
     +'<p class="body-2" style="margin-top:14px;max-width:300px">A data-driven simulation framework for reasoning about the systems that decide civilizational outcomes. Open source; not a prediction engine.</p></div>'
     +'<div><h4>Systems</h4><a href="ai.html">AI</a><a href="climate.html">Climate</a><a href="governance.html">Governance</a><a href="transition.html">Transition</a><a href="civilization.html">Civilization</a><a href="strategy.html">Strategy</a></div>'
     +'<div><h4>Explore</h4><a href="simulation.html">Simulation</a><a href="pathways.html">Pathways</a><a href="visualizer.html">Visualizer</a><a href="data.html">Live data</a><a href="research.html">Research</a><a href="about.html">About</a><a href="design-system.html">Design system</a></div></div>'
+
     +'<div class="foot-note"><span>AI Civilization Simulator · 2026 · grounded in live data from NOAA, Our World in Data, and the World Bank</span>'
     +'<span><a href="design-system.html">Built on the AICIVSIM design system</a></span></div>'
     +'</div></footer>';

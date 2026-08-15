@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260816a">
+<link rel="stylesheet" href="css/v3.css?v=20260816b">
 <style>
 /* page-local specimen chrome */
 .spec{border:1px solid var(--hairline);border-radius:var(--r);padding:24px;margin-top:16px}
@@ -200,18 +200,18 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260816a"></script>
+<script src="js/shared.js?v=20260816b"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260816a"></script>
+<script src="js/v3.js?v=20260816b"></script>
 <script>
-V3.boot({deck:{sys:'civilization',context:'Tokens · type · motion · dataviz · voice'}});
+V3.boot({deck:{sys:'civilization',context:'Tokens · type · motion · dataviz · voice',noSeg:true}});
 document.querySelector('.deck-title b').textContent='Design system';
 document.querySelector('.deck-title i').style.background='var(--accent)';
 
 /* live dataviz specimens — real site data, real kit calls */
 var years=[];for(var y=2026;y<=2050;y++)years.push(y);
 </script>
-<script src="js/v3-data.js?v=20260816a"></script>
+<script src="js/v3-data.js?v=20260816b"></script>
 <script>
 var meta=V3DATA.climate.metrics.filter(function(m){return m.id==='temp'})[0];
 var spec={label:'Trajectory — temperature rise',unit:'°C',prefix:'+',dec:2,dir:'lower',

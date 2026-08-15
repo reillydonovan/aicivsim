@@ -18,23 +18,25 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260816a">
+<link rel="stylesheet" href="css/v3.css?v=20260816b">
 <style>
-/* page-local: the DESTINATION picker — deliberately styled unlike the
-   sitewide scenario control so the two can't be confused. Outlined
-   pills with an arrow and the 2050 score; the current origin is shown
-   struck-through and unclickable. */
-.route-controls{display:flex;align-items:flex-end;gap:20px;margin-top:32px;flex-wrap:wrap}
-.rc-col .eyebrow{display:block;margin-bottom:10px;font-size:10px}
-.rc-arrow{color:var(--ink-4);font-size:20px;padding-bottom:10px}
-.route-controls .sc-seg{display:inline-grid}
-.to-seg{display:inline-flex;gap:8px;flex-wrap:wrap}
-.to-seg button{padding:9px 16px;border-radius:999px;border:1.5px dashed var(--hairline-strong);font-size:12.5px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:8px;transition:all .18s}
-.to-seg button .go-arrow{color:var(--ink-4);font-size:12px}
-.to-seg button b{font-family:var(--font-mono);font-weight:700;color:var(--sc)}
-.to-seg button:hover:not([disabled]){color:var(--ink);border-color:var(--sc)}
-.to-seg button[aria-pressed="true"]{border-style:solid;border-color:var(--sc);color:var(--ink);background:color-mix(in srgb,var(--sc) 8%,transparent)}
-.to-seg button[disabled]{opacity:.3;text-decoration:line-through;cursor:not-allowed}
+/* the route picker: one instrument, two fields — no repeated toggle rows */
+.route-picker{display:flex;align-items:flex-end;gap:10px;margin-top:30px;flex-wrap:wrap}
+.rp-field{display:block}
+.rp-field .eyebrow{display:block;margin-bottom:8px}
+.rp-field select{appearance:none;-webkit-appearance:none;background:var(--bg-elev) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2383817a' stroke-width='1.6'><path d='M1 1l4 4 4-4'/></svg>") no-repeat right 14px center;
+  border:1px solid var(--hairline-strong);border-radius:11px;color:var(--ink);
+  font-family:var(--font-display);font-size:15px;font-weight:600;padding:12px 38px 12px 15px;cursor:pointer;min-width:220px;transition:border-color .18s}
+.rp-field select:hover{border-color:var(--ink-4)}
+.rp-field select:focus{outline:none;border-color:var(--accent)}
+.rp-swap{width:38px;height:44px;border-radius:11px;border:1px solid var(--hairline);color:var(--ink-3);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.rp-swap:hover{color:var(--ink);border-color:var(--hairline-strong);background:var(--bg-elev)}
+@media(max-width:640px){
+  .route-picker{gap:8px}
+  .rp-field{flex:1 1 100%}
+  .rp-field select{width:100%;min-width:0}
+  .rp-swap{order:3;width:100%;height:36px}
+}
 .route-line{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:28px}
 .route-line .big{font-family:var(--font-mono);font-weight:700;font-size:56px;letter-spacing:-.03em;line-height:1}
 .route-line .arrow{color:var(--ink-4);font-size:26px}
@@ -57,26 +59,27 @@
 <header class="page-hero"><div class="col">
   <span class="eyebrow">Tool · Pathways</span>
   <h1 class="title-1">Every future is a destination.<br>This maps the route.</h1>
-  <p class="lead">Choose an <b style="color:var(--ink)">origin</b> and a <b style="color:var(--ink)">destination</b> below — the page itemizes the climb between them: score, levers, actions, and where the curves fork. The origin is the same scenario every other page shares; changing it here changes it everywhere.</p>
+  <p class="lead">Pick where you're starting and where you want to arrive — the page itemizes the climb between them: score, levers, actions, and where the curves fork. <b style="color:var(--ink)">From</b> is the scenario every other page shares, so changing it here changes it everywhere.</p>
   <div class="route-line">
     <span><span class="big num" id="from-score">28</span><span class="body-2"> 2050 · <span id="from-name">business as usual</span></span></span>
     <span class="arrow">→</span>
     <span><span class="big num" id="to-score">85</span><span class="body-2"> 2050 · <span id="to-name">aggressive action</span></span></span>
     <span class="climb" id="climb">+57</span>
   </div>
-  <!-- THE route instrument — the only place on this page where the four
-       futures are clickable. Origin drives the sitewide scenario (the
-       deck's own control is suppressed here to prevent a duplicate);
-       destination is page-local, styled as dashed travel pills. -->
-  <div class="route-controls">
-    <div class="rc-col">
-      <span class="eyebrow">Origin — shared with every page</span>
-      <div id="from-seg"></div>
-    </div>
-    <div class="rc-col">
-      <span class="eyebrow">Destination — this page only</span>
-      <div class="to-seg" id="to-seg" role="group" aria-label="Destination scenario"></div>
-    </div>
+  <!-- ONE route instrument. Two labeled fields, not two toggle rows —
+       the four scenario names appear once per field, the way a flight
+       search names airports. Origin drives the sitewide scenario; the
+       deck's own segment is suppressed on this page. -->
+  <div class="route-picker">
+    <label class="rp-field">
+      <span class="eyebrow">From</span>
+      <select id="from-sel" aria-label="Origin scenario"></select>
+    </label>
+    <button class="rp-swap" id="rp-swap" aria-label="Swap origin and destination" title="Swap">⇄</button>
+    <label class="rp-field">
+      <span class="eyebrow">To</span>
+      <select id="to-sel" aria-label="Destination scenario"></select>
+    </label>
   </div>
   <p class="body-2" id="route-verdict" style="margin-top:16px;max-width:560px"></p>
 </div></header>
@@ -116,18 +119,15 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260816a"></script>
+<script src="js/shared.js?v=20260816b"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260816a"></script>
+<script src="js/v3.js?v=20260816b"></script>
 <script>
 /* noSeg: this page hosts its own route instrument — the deck must not
    repeat the four scenario options (that duplication was confusing). */
 V3.boot({deck:{sys:'simulation',context:'Origin & destination — choose below',noSeg:true}});
 document.querySelector('.deck-title b').textContent='Pathways';
 document.querySelector('.deck-title i').style.background='var(--accent)';
-
-/* origin control = the sitewide scenario, seated in the route instrument */
-document.getElementById('from-seg').outerHTML=V3.seg(true);
 
 var to='aggressive';
 function ensureDistinct(){
@@ -139,17 +139,21 @@ var VERDICTS={up:'A climb — every lever below has to move, and most of the act
   down:'A fall — this is what breaking looks like: levers zeroed, statuses decaying, curves bending down.',
   same:'Same destination as origin.'};
 
-function renderToSeg(){
-  document.getElementById('to-seg').innerHTML=V3.SC_ORDER.map(function(id){
-    var m=V3.SC[id];
-    var isOrigin=id===V3.scenario.get();
-    return '<button data-to="'+id+'" style="--sc:'+m.color+'" aria-pressed="'+(id===to)+'"'
-      +(isOrigin?' disabled title="This is the origin — pick a different destination"':'')
-      +'><span class="go-arrow">→</span>'+m.short+' <b>'+m.proj+'</b></button>';
-  }).join('');
+/* both fields list every future once; the picker enforces distinctness */
+function renderPicker(){
+  var from=V3.scenario.get();
+  function opts(sel,other){
+    return V3.SC_ORDER.map(function(id){
+      var m=V3.SC[id];
+      return '<option value="'+id+'"'+(id===sel?' selected':'')+(id===other?' disabled':'')+'>'
+        +m.name+' · '+m.proj+'/100</option>';
+    }).join('');
+  }
+  document.getElementById('from-sel').innerHTML=opts(from,to);
+  document.getElementById('to-sel').innerHTML=opts(to,from);
 }
 function paint(){
-  ensureDistinct();renderToSeg();
+  ensureDistinct();renderPicker();
   var f=V3.SC[V3.scenario.get()],t=V3.SC[to];
   var d=t.proj-f.proj;
   document.getElementById('from-score').textContent=f.proj;
@@ -204,10 +208,21 @@ function paint(){
   }).join('');
   V3.stagger(document.querySelectorAll('.diff-row'),10);
 }
-document.getElementById('to-seg').addEventListener('click',function(e){
-  var b=e.target.closest('button[data-to]');
-  if(!b||b.disabled)return;
-  to=b.getAttribute('data-to');paint();
+/* From drives the sitewide scenario; To is page-local. Swap trades them. */
+document.getElementById('from-sel').addEventListener('change',function(){
+  var v=this.value;
+  if(v===to)to=V3.scenario.get();          /* swap rather than collide */
+  V3.scenario.set(v);
+  paint();                                  /* covers same-value re-render */
+});
+document.getElementById('to-sel').addEventListener('change',function(){
+  to=this.value;paint();
+});
+document.getElementById('rp-swap').addEventListener('click',function(){
+  var from=V3.scenario.get(),oldTo=to;
+  to=from;                       /* old origin becomes destination */
+  V3.scenario.set(oldTo);        /* old destination becomes origin (repaints) */
+  paint();
 });
 paint();
 V3.scenario.onChange(paint);

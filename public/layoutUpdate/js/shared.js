@@ -38,7 +38,7 @@ var PAGE_ORDER=[
   {href:'timeline.html',label:'Timeline'},
   {href:'data.html',label:'Live Data'},
   {href:'research.html',label:'Research'},
-  {href:'chat.html',label:'Advisor'},
+  /* {href:'chat.html',label:'Advisor'},  — disabled pending v3 pass */
   {href:'about.html',label:'About'}
 ];
 
@@ -1295,7 +1295,7 @@ var CMD_ITEMS=[
   {g:'Pages',l:'Timeline',d:'200,000 years of inflection points',h:'timeline.html',icon:'📅'},
   {g:'Pages',l:'Live Data',d:'Real-world indicators fetched live — CO₂, warming, poverty',h:'data.html',icon:'📡'},
   {g:'Pages',l:'Research',d:'19-section civic roadmap',h:'research.html',icon:'📄'},
-  {g:'Pages',l:'Advisor',d:'AI chat assistant with page-aware context',h:'chat.html',icon:'💬'},
+  /* Advisor omitted from the palette while disabled */
   {g:'Pages',l:'About',d:'Project scope, methodology, technology stack',h:'about.html',icon:'ℹ'},
   {g:'3D Experiences',l:'3D Visualizer',d:'Flagship 3D network — nodes, sound, timeline',h:'viz.html',icon:'✦'},
   {g:'3D Experiences',l:'Globe',d:'Global data — resources, cables, sea level, emissions',h:'globe.html',icon:'🌍'},
@@ -1491,11 +1491,16 @@ var CMD_ITEMS=[
    the floating chat bubble overlaps their panels and (on explorer)
    duplicates its built-in LLM input. ── */
 (function(){
+  /* ADVISOR DISABLED — the chat page and this floating widget are off
+     until the Advisor gets a v3 pass. To restore: set ADVISOR_ENABLED
+     to true and re-add the Advisor item to NAV in js/v3.js. */
+  var ADVISOR_ENABLED=false;
+  if(!ADVISOR_ENABLED)return;
   var path=window.location.pathname;
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260816a';
+  s.src='js/chat-widget.js?v=20260816b';
   s.defer=true;
   document.body.appendChild(s);
 })();
