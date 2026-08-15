@@ -8,14 +8,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260815c">
+<link rel="stylesheet" href="css/v3.css?v=20260815d">
 <style>
-/* page-local: the TO picker rides the section head; FROM is the sitewide control */
-.to-seg{display:inline-flex;gap:4px;background:var(--bg-elev);border:1px solid var(--hairline);border-radius:10px;padding:4px}
-.to-seg button{padding:6px 12px 5px;border-radius:7px;font-size:11.5px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:6px}
-.to-seg button .dot{width:6px;height:6px;border-radius:50%;background:var(--sc);opacity:.45}
-.to-seg button[aria-pressed="true"]{background:var(--bg-press);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hairline-strong)}
-.to-seg button[aria-pressed="true"] .dot{opacity:1}
+/* page-local: the DESTINATION picker — deliberately styled unlike the
+   sitewide scenario control so the two can't be confused. Outlined
+   pills with an arrow and the 2050 score; the current origin is shown
+   struck-through and unclickable. */
+.to-picker-row{display:flex;align-items:center;gap:16px;margin-top:28px;flex-wrap:wrap}
+.to-seg{display:inline-flex;gap:8px;flex-wrap:wrap}
+.to-seg button{padding:9px 16px;border-radius:999px;border:1.5px dashed var(--hairline-strong);font-size:12.5px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:8px;transition:all .18s}
+.to-seg button .go-arrow{color:var(--ink-4);font-size:12px}
+.to-seg button b{font-family:var(--font-mono);font-weight:700;color:var(--sc)}
+.to-seg button:hover:not([disabled]){color:var(--ink);border-color:var(--sc)}
+.to-seg button[aria-pressed="true"]{border-style:solid;border-color:var(--sc);color:var(--ink);background:color-mix(in srgb,var(--sc) 8%,transparent)}
+.to-seg button[disabled]{opacity:.3;text-decoration:line-through;cursor:not-allowed}
 .route-line{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:28px}
 .route-line .big{font-family:var(--font-mono);font-weight:700;font-size:56px;letter-spacing:-.03em;line-height:1}
 .route-line .arrow{color:var(--ink-4);font-size:26px}
@@ -45,16 +51,20 @@
     <span><span class="big num" id="to-score">85</span><span class="body-2"> 2050 · <span id="to-name">aggressive action</span></span></span>
     <span class="climb" id="climb">+57</span>
   </div>
+  <!-- The destination picker lives HERE, in the hero, styled unlike the
+       sitewide control in the deck — one is "where the world is heading"
+       (top bar, shared with every page), this is "where you want to go". -->
+  <div class="to-picker-row">
+    <span class="eyebrow">Destination</span>
+    <div class="to-seg" id="to-seg" role="group" aria-label="Destination scenario"></div>
+  </div>
+  <p class="body-2" id="route-verdict" style="margin-top:14px;max-width:560px"></p>
 </div></header>
 
 <main>
 
 <section class="section"><div class="col">
-  <div class="section-head">
-    <div><h2 class="title-2">Choose the destination</h2>
-    <p class="lead" id="route-verdict"></p></div>
-    <div class="to-seg" id="to-seg" role="group" aria-label="Destination scenario"></div>
-  </div>
+  <div class="section-head"><div><h2 class="title-2">What arriving there looks like</h2></div></div>
   <div class="narrative"><div class="who" id="route-who"></div><p id="route-narrative"></p></div>
 </div></section>
 
@@ -86,8 +96,8 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260815c"></script>
-<script src="js/v3.js?v=20260815c"></script>
+<script src="js/shared.js?v=20260815d"></script>
+<script src="js/v3.js?v=20260815d"></script>
 <script>
 V3.boot({deck:{sys:'simulation',context:'Pathways — moving between futures'}});
 document.querySelector('.deck-title b').textContent='Pathways';
@@ -107,9 +117,10 @@ var VERDICTS={up:'A climb — every lever below has to move, and most of the act
 function renderToSeg(){
   document.getElementById('to-seg').innerHTML=V3.SC_ORDER.map(function(id){
     var m=V3.SC[id];
+    var isOrigin=id===V3.scenario.get();
     return '<button data-to="'+id+'" style="--sc:'+m.color+'" aria-pressed="'+(id===to)+'"'
-      +(id===V3.scenario.get()?' disabled style="opacity:.35;--sc:'+m.color+'"':'')
-      +'><span class="dot"></span>'+m.short+'</button>';
+      +(isOrigin?' disabled title="This is the origin — set in the top bar"':'')
+      +'><span class="go-arrow">→</span>'+m.short+' <b>'+m.proj+'</b></button>';
   }).join('');
 }
 function paint(){

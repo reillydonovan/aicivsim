@@ -8,29 +8,56 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260815c">
+<link rel="stylesheet" href="css/v3.css?v=20260815d">
 </head>
 <body>
 <div id="app"></div>
-<script src="js/shared.js?v=20260815c"></script>
-<script src="js/v3.js?v=20260815c"></script>
+<script src="js/shared.js?v=20260815d"></script>
+<script src="js/v3-data.js?v=20260815d"></script>
+<script src="js/v3.js?v=20260815d"></script>
 <script>
-V3.boot({deck:{sys:'ai',context:'Alignment, transparency, and who holds the leash'}});
+V3.boot({deck:{sys:'ai',context:'Six metrics · five risk thresholds · five milestones'}});
+var A=V3DATA.ai;
+
+var KPI_ORDER=['alignment','transparency','safety','compute','autonomy','trust'];
 V3.systemPage({
   sys:'ai',
   tagline:'The technology that audits itself — or doesn’t.',
-  lead:'Alignment progress and model transparency from 2026 to 2050. The divergence between futures is starker here than in any other system: the same technology becomes civilization’s best tool or its least accountable force, depending entirely on governance choices made this decade.',
+  lead:'Six measures of whether AI stays accountable to the people it affects: alignment, transparency, safety coverage, compute governance, autonomy limits, and public trust. The divergence between futures is starker here than in any other system — and below the charts, five thresholds mark where recoverable drift becomes structural failure.',
   today:48,
   proj:{aggressive:92,moderate:68,bau:32,worst:10},
-  metrics:VIZ_METRICS.ai,
-  narratives:{
-    aggressive:'The charter held. Frontier systems ship with enforced audit trails, capability growth converges with alignment progress, and public trust follows transparency to 97%. AI is powerful and boring — the way infrastructure should be.',
-    moderate:'Alignment improves where regulation reaches and lags where it doesn’t. Transparency plateaus near 61% — enough for oversight of the biggest actors, not the long tail. Workable, with permanent vigilance as the price.',
-    bau:'Capability compounds; alignment doesn’t. Transparency decays to 12% as competitive pressure closes every lab. By the 2040s AI shapes markets, media, and policy through systems nobody can inspect — influence without accountability.',
-    worst:'Alignment work effectively stops after 2030. Opaque autonomous systems run critical infrastructure under no charter at all. The question is no longer whether AI is aligned with human values, but which humans — if any — still steer it.'
-  },
+  metrics:KPI_ORDER.map(function(k){
+    var m=A.KPI[k];
+    return {label:m.label,unit:m.unit,dir:m.dir,notes:m.notes,
+      data:{aggressive:m.aggressive,moderate:m.moderate,bau:m.bau,worst:m.worst}};
+  }),
+  narratives:A.NARRATIVES,
   crossKey:'ai'
 });
+
+/* ── risks + milestones, before the narrative ── */
+var narSection=document.querySelector('#sys-nar').closest('.section');
+narSection.insertAdjacentHTML('beforebegin',
+  '<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Five thresholds where drift becomes failure</h2>'
+  +'<p class="lead">Each risk has a hard line. Above it, problems are correctable; below it, the feedback loops flip and correction costs grow exponentially. Values are the chosen future’s 2050 outcome.</p></div></div>'
+  +'<div id="risks"></div></div></section>'
+  +'<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">The governance milestones</h2>'
+  +'<p class="lead">Five dated checkpoints from baseline assessment to mature governance — what has to be true by when, and whether the chosen future gets there.</p></div></div>'
+  +'<div id="milestones" style="max-width:680px"></div></div></section>');
+
+V3.thresholds('#risks',A.RISKS.map(function(r){
+  var series=A.KPI[r.field];
+  return {label:r.label,
+    thresholdText:'breach below '+r.threshold+(series.unit==='%'?'%':''),
+    desc:r.desc,scenarioNote:r.scenarioNote,
+    value:function(sc){var d=series[sc];return d[d.length-1]},
+    fmt:function(v){return Math.round(v)+(series.unit==='%'?'%':'')},
+    breach:function(v){return v<r.threshold},
+    near:function(v){return v<r.threshold*1.35}};
+}));
+V3.milestones('#milestones',A.MILESTONES);
 </script>
 </body>
 </html>

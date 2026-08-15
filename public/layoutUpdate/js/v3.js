@@ -297,6 +297,13 @@ V3.traj=function(container,spec){
   var read=document.createElement('div');read.className='c-read';
   var plot=document.createElement('div');plot.className='v3-plot';
   card.appendChild(head);card.appendChild(read);card.appendChild(plot);
+  /* context note — the "why this matters in this future" line. Updates
+     with a soft crossfade on scenario switch. */
+  var note=null;
+  if(spec.notes){
+    note=document.createElement('p');note.className='c-note';
+    card.appendChild(note);
+  }
   var years=spec.years,n=years.length;
   var lo=Infinity,hi=-Infinity;
   V3.SC_ORDER.forEach(function(sc){spec.data[sc].forEach(function(v){if(v<lo)lo=v;if(v>hi)hi=v})});
@@ -394,6 +401,13 @@ V3.traj=function(container,spec){
     layoutLabels(sc);
     var last=target[n-1];
     read.innerHTML=spec.read?spec.read(last,spec):('<b style="color:'+m.color+'">'+(spec.prefix||'')+fmtVal(last,spec.dec)+(spec.unit||'')+'</b> by '+years[n-1]+' · '+m.name.toLowerCase());
+    if(note){
+      var txt=spec.notes[sc]||'';
+      if(animate&&!REDUCED){
+        note.style.opacity='.35';
+        setTimeout(function(){note.textContent=txt;note.style.opacity=''},140);
+      }else note.textContent=txt;
+    }
     if(raf)cancelAnimationFrame(raf);
     if(!animate||REDUCED){disp=target.slice();paintDisp();return}
     var from=disp.slice(),t0=performance.now(),D=460;
@@ -599,6 +613,145 @@ V3.slope=function(card,spec){
     +'</svg></div>';
 };
 
+/* ── thresholds — risk / tipping-point cards with breach state ──
+   items:[{label,thresholdText,desc,scenarioNote:{sc},value:fn(sc)→n,
+   fmt:fn(n)→str, breach:fn(n)→bool, nearFrac}] */
+V3.thresholds=function(container,items){
+  var el=typeof container==='string'?document.querySelector(container):container;
+  el.classList.add('th-grid');
+  el.innerHTML=items.map(function(it,i){
+    return '<div class="th-card" data-i="'+i+'">'
+      +'<div class="th-head"><h4>'+it.label+'</h4><span class="th-state num"></span></div>'
+      +'<div class="th-line"><b class="num th-val"></b><span class="th-thr">'+it.thresholdText+'</span></div>'
+      +'<p class="th-desc">'+it.desc+'</p>'
+      +'<p class="th-note"></p></div>';
+  }).join('');
+  var lastVals=items.map(function(){return null});
+  function update(animate){
+    var act=V3.scenario.get(),m=V3.SC[act];
+    items.forEach(function(it,i){
+      var card=el.querySelector('.th-card[data-i="'+i+'"]');
+      var v=it.value(act);
+      var breached=it.breach(v);
+      var near=!breached&&it.near(v);
+      var stEl=card.querySelector('.th-state');
+      stEl.textContent=breached?'BREACHED':near?'AT RISK':'CLEAR';
+      stEl.className='th-state num '+(breached?'bad':near?'warn':'good');
+      card.setAttribute('data-state',breached?'breached':near?'near':'clear');
+      var vEl=card.querySelector('.th-val');
+      vEl.style.color=m.color;
+      if(animate&&lastVals[i]!=null)V3.tween(vEl,v,{from:lastVals[i],fmt:it.fmt});
+      else vEl.textContent=it.fmt(v);
+      lastVals[i]=v;
+      card.querySelector('.th-note').textContent=it.scenarioNote[act]||'';
+    });
+    if(animate)V3.stagger(el.querySelectorAll('.th-card .th-state'),30);
+  }
+  update(false);
+  V3.scenario.onChange(function(){update(true)});
+};
+
+/* ── milestones — a dated rail of goals with per-future status ──
+   list:[{year,title,goalScore,items:[...],<sc>:{score,status,note}}] */
+V3.milestones=function(container,list){
+  var el=typeof container==='string'?document.querySelector(container):container;
+  el.classList.add('spine');
+  el.innerHTML=list.map(function(ms,i){
+    return '<div class="spine-item ms" data-i="'+i+'">'
+      +'<div class="when">'+ms.year+' · goal '+ms.goalScore+'/100</div>'
+      +'<h3>'+ms.title+' <span class="ms-status num"></span> <span class="grade-chip sm ms-score"></span></h3>'
+      +'<p class="ms-note"></p>'
+      +'<div class="ms-items">'+ms.items.map(function(x){return '<span>'+x+'</span>'}).join('')+'</div>'
+      +'</div>';
+  }).join('');
+  var TONE={Complete:'good','On track':'good',Partial:'warn',Delayed:'warn',Stalled:'warn','At risk':'warn','Not started':'bad',Failed:'bad',Abandoned:'bad',Collapsed:'bad'};
+  function update(animate){
+    var act=V3.scenario.get(),m=V3.SC[act];
+    list.forEach(function(ms,i){
+      var it=el.querySelector('.spine-item[data-i="'+i+'"]');
+      var s=ms[act];if(!s)return;
+      var st=it.querySelector('.ms-status');
+      st.textContent=s.status;
+      st.className='ms-status num '+(TONE[s.status]||'warn');
+      var sc=it.querySelector('.ms-score');
+      sc.textContent=s.score+'/'+ms.goalScore;
+      sc.style.color=s.score>=ms.goalScore?'var(--good)':m.color;
+      it.querySelector('.ms-note').textContent=s.note;
+      it.classList.toggle('now',s.score>=ms.goalScore);
+    });
+    if(animate)V3.stagger(el.querySelectorAll('.spine-item.ms h3'),36);
+  }
+  update(false);
+  V3.scenario.onChange(function(){update(true)});
+};
+
+/* ── stack — composition bar (funding sources etc.) ──
+   getSegments:fn(sc)→[{name,pct,color,range?}] */
+V3.stack=function(container,getSegments){
+  var el=typeof container==='string'?document.querySelector(container):container;
+  el.classList.add('stack');
+  el.innerHTML='<div class="stack-bar"></div><div class="stack-legend"></div>';
+  var bar=el.querySelector('.stack-bar'),leg=el.querySelector('.stack-legend');
+  function update(){
+    var segs=getSegments(V3.scenario.get())||[];
+    bar.innerHTML=segs.map(function(s){
+      return '<i style="width:'+s.pct+'%;background:'+s.color+'" title="'+s.name+' '+s.pct+'%"></i>';
+    }).join('');
+    leg.innerHTML=segs.map(function(s){
+      return '<div class="stack-row"><i style="background:'+s.color+'"></i><span>'+s.name+'</span>'
+        +'<b class="num">'+(s.range||s.pct+'%')+'</b></div>';
+    }).join('');
+  }
+  update();
+  V3.scenario.onChange(update);
+};
+
+/* ── bridges — the income-bridge calculator (transition) ──
+   Original math preserved: dividend covers rate×months of training
+   cost; payback = out-of-pocket ÷ monthly salary gain. */
+V3.bridges=function(container,bridges,DIV_RATE){
+  var el=typeof container==='string'?document.querySelector(container):container;
+  var sel=0;
+  el.innerHTML='<div class="br-picker" role="group" aria-label="Career transition"></div>'
+    +'<div class="br-callout"></div>'
+    +'<div class="br-detail kpis" style="margin-top:12px"></div>';
+  var picker=el.querySelector('.br-picker'),callout=el.querySelector('.br-callout'),detail=el.querySelector('.br-detail');
+  function fmtD(v){return '$'+Math.round(Math.abs(v)).toLocaleString()}
+  function update(){
+    var act=V3.scenario.get(),m=V3.SC[act],rate=DIV_RATE[act];
+    picker.innerHTML=bridges.map(function(b,i){
+      return '<button data-b="'+i+'" aria-pressed="'+(i===sel)+'">'+b.from+' → '+b.to+'</button>';
+    }).join('');
+    var b=bridges[sel];
+    var divTotal=rate*b.trainMo;
+    var oop=Math.max(0,b.trainCost-divTotal);
+    var salaryGain=b.post-(b.loss*12);
+    var payback=rate>0?Math.max(1,Math.round(oop/(salaryGain/12))):Math.round(b.trainCost/(salaryGain/12));
+    var net10=salaryGain*10-oop;
+    callout.innerHTML=rate>0
+      ?'<span class="pill-dot" style="background:'+m.color+'"></span>Under '+m.name.toLowerCase()+', a civic dividend of <b class="num" style="color:'+m.color+'">$'+rate+'/mo</b> covers <b class="num">'+fmtD(Math.min(divTotal,b.trainCost))+'</b> of this retraining.'
+      :'<span class="pill-dot" style="background:'+m.color+'"></span>Under '+m.name.toLowerCase()+' there is <b style="color:var(--bad)">no civic dividend</b> — the worker carries every dollar of this transition.';
+    detail.innerHTML=[
+      {l:'Income dip during training',v:'−$'+b.loss.toLocaleString()+'/mo',c:'bad',ctx:b.trainMo+' months of retraining'},
+      {l:'Training cost',v:fmtD(b.trainCost),c:'flat',ctx:rate>0?fmtD(oop)+' out of pocket after dividend':'entirely out of pocket'},
+      {l:'New salary',v:fmtD(b.post)+'/yr',c:'good',ctx:'+'+fmtD(salaryGain)+'/yr over the displaced income'},
+      {l:'Payback time',v:payback+' mo',c:payback<=18?'good':'bad',ctx:'until the move pays for itself'},
+      {l:'10-year net',v:(net10>0?'+':'−')+fmtD(net10),c:net10>0?'good':'bad',ctx:'lifetime value of making the jump'}
+    ].map(function(x){
+      return '<div class="stat"><div class="lbl">'+x.l+'</div>'
+        +'<div class="val" style="font-size:22px">'+x.v+'</div>'
+        +'<div class="delta '+x.c+'"><span class="ctx">'+x.ctx+'</span></div></div>';
+    }).join('');
+    V3.stagger(detail.querySelectorAll('.stat'),26);
+  }
+  el.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('button[data-b]'):null;
+    if(b){sel=+b.getAttribute('data-b');update()}
+  });
+  update();
+  V3.scenario.onChange(update);
+};
+
 /* ════════ System dashboard template ════════ */
 V3.systemPage=function(cfg){
   var sys=V3.SYS[cfg.sys];
@@ -648,7 +801,10 @@ V3.systemPage=function(cfg){
   var kpiWrap=document.getElementById('sys-kpis');
   var chartWrap=document.getElementById('sys-charts');
   cfg.metrics.forEach(function(mspec){
-    var spec={label:mspec.label,unit:mspec.unit,prefix:mspec.prefix,dir:mspec.dir,years:years,data:mspec.data,dec:autoDec(mspec.data.bau[0])};
+    var len=mspec.data.bau.length;
+    var yrs=[];for(var yy=2050-(len-1);yy<=2050;yy++)yrs.push(yy);
+    var spec={label:mspec.label,unit:mspec.unit,prefix:mspec.prefix,dir:mspec.dir,years:yrs,data:mspec.data,
+      dec:mspec.dec!=null?mspec.dec:autoDec(mspec.data.bau[0]),notes:mspec.notes};
     var tile=document.createElement('div');kpiWrap.appendChild(tile);
     V3.stat(tile,spec);
     var card=document.createElement('div');card.className='chart-card';chartWrap.appendChild(card);
@@ -659,7 +815,8 @@ V3.systemPage=function(cfg){
     var all=[mspec.data.bau[0]];V3.SC_ORDER.forEach(function(sc){all.push(proj[sc])});
     var lo=Math.min.apply(null,all),hi=Math.max.apply(null,all),pad=(hi-lo)*.09||1;
     return {label:mspec.label,sub:mspec.unit||'',today:mspec.data.bau[0],proj:proj,
-      unit:mspec.unit,dir:mspec.dir,min:lo-pad,max:hi+pad,dec:autoDec(mspec.data.bau[0])};
+      unit:mspec.unit,dir:mspec.dir,min:lo-pad,max:hi+pad,
+      dec:mspec.dec!=null?mspec.dec:autoDec(mspec.data.bau[0])};
   });
   V3.landing('#sys-landing',dbRows);
 

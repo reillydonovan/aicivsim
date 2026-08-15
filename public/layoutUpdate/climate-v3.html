@@ -8,31 +8,73 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260815c">
+<link rel="stylesheet" href="css/v3.css?v=20260815d">
 </head>
 <body>
 <div id="app"></div>
-<script src="js/shared.js?v=20260815c"></script>
-<script src="js/v3.js?v=20260815c"></script>
+<script src="js/shared.js?v=20260815d"></script>
+<script src="js/v3-data.js?v=20260815d"></script>
+<script src="js/v3.js?v=20260815d"></script>
 <script>
-V3.boot({deck:{sys:'climate',context:'Planetary systems under four futures'}});
+V3.boot({deck:{sys:'climate',context:'Nine planetary metrics · six tipping points'}});
+var C=V3DATA.climate;
+
 V3.systemPage({
   sys:'climate',
   tagline:'Planetary systems don’t negotiate.',
-  lead:'Temperature, energy, and atmospheric carbon from 2026 to 2050. Every number here is a consequence of the policy levers — carbon pricing, renewable investment, conservation — set by the scenario you choose.',
+  lead:'Nine planetary metrics from 2026 to 2050 — temperature, sea level, carbon, biodiversity, energy, food, water, forests, oceans — every one a consequence of the policy levers set by the future you choose. Below them: the six thresholds the planet must not cross.',
   today:42,
-  proj:{aggressive:85,moderate:58,bau:28,worst:12},
-  metrics:VIZ_METRICS.climate.map(function(m){
-    return Object.assign({},m,{prefix:m.prefix||(m.id==='temp'?'+':'')});
+  proj:C.PROJECTED_SCORE,
+  metrics:C.metrics.map(function(meta){
+    return {label:meta.label,unit:meta.unit,prefix:meta.prefix,dir:meta.dir,dec:meta.dec,notes:meta.notes,data:C.D[meta.id]};
   }),
-  narratives:{
-    aggressive:'Warming peaks at +1.2°C and begins easing by the 2040s. The grid runs 99% renewable, CO₂ is falling for the first time in industrial history, and the tipping points stay unbreached. The planet is not restored — but it is stabilizing.',
-    moderate:'Warming reaches +1.8°C and keeps climbing slowly. Renewables carry most of the grid, but the transition’s last mile stalls. Coral systems are functionally lost; other thresholds hold. A managed, wounded stability.',
-    bau:'Warming passes +2.9°C by 2050. Multiple tipping points come into range — Arctic summers ice-free in the 2030s, coral collapse, Amazon dieback risk. Coastal infrastructure spends the 2040s in managed retreat.',
-    worst:'+4.6°C by 2050. Cascading breaches — ice sheets, permafrost carbon, monsoon disruption. Habitable zones contract and climate-driven migration reshapes every border on Earth. This is the scenario the model exists to argue against.'
-  },
+  narratives:C.narratives,
   crossKey:'climate'
 });
+
+/* ── page-specific sections, inserted in narrative order ── */
+var main=document.querySelector('#app main');
+var narSection=document.querySelector('#sys-nar')?document.querySelector('#sys-nar').closest('.section'):null;
+var tipHTML='<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Six thresholds the planet must not cross</h2>'
+  +'<p class="lead">Tipping points are one-way doors: past each threshold, feedback loops take over and no policy pulls the system back. Status is evaluated at your chosen future’s 2050 warming.</p></div></div>'
+  +'<div id="tipping"></div></div></section>';
+var subHTML='<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Three fronts, three grades</h2>'
+  +'<p class="lead">The climate score is the composite of three sub-scores. Where each stands today, and where the chosen future takes it.</p></div></div>'
+  +'<div class="subscores" id="subscores"></div></div></section>';
+if(narSection){narSection.insertAdjacentHTML('beforebegin',tipHTML+subHTML)}
+else{main.insertAdjacentHTML('beforeend',tipHTML+subHTML)}
+
+var temp2050={};V3.SC_ORDER.forEach(function(sc){temp2050[sc]=C.D.temp[sc][C.D.temp[sc].length-1]});
+V3.thresholds('#tipping',C.tippingPoints.map(function(tp){
+  return {label:tp.name,
+    thresholdText:'breach at '+tp.thresholdLabel+' warming',
+    desc:tp.desc,scenarioNote:tp.scenarioNote,
+    value:function(sc){return temp2050[sc]},
+    fmt:function(v){return '+'+v.toFixed(2)+'°C'},
+    breach:function(v){return v>=tp.thresholdC},
+    near:function(v){return v>=tp.thresholdC-0.3}};
+}));
+
+var SUBS=[
+  {label:'Biodiversity',s:C.BIO_SCORE,ctx:'Species index, habitat integrity, extinction pressure. Life is the load-bearing wall of every other system on this page.'},
+  {label:'Energy & emissions',s:C.ENERGY_SCORE,ctx:'Renewable share, fossil phase-out, grid decarbonization. The fastest-moving front — and the one policy touches most directly.'},
+  {label:'Resources',s:C.RES_SCORE,ctx:'Crop yield, water stress, forest cover, ocean pH. What the planet can keep providing, at what strain.'}
+];
+function renderSubs(animate){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  document.getElementById('subscores').innerHTML=SUBS.map(function(x){
+    var p=x.s.projected[act];
+    return '<div class="stat"><div class="lbl">'+x.label+'</div>'
+      +'<div class="val">'+x.s.today+'<small> today</small> <span style="color:var(--ink-4);font-size:15px">→</span> '
+      +'<span class="num" style="color:'+m.color+'">'+p+'</span><small> 2050 · '+V3.grade(p)+'</small></div>'
+      +'<div class="delta flat"><span class="ctx">'+x.ctx+'</span></div></div>';
+  }).join('');
+  if(animate)V3.stagger(document.querySelectorAll('#subscores .stat'),30);
+}
+renderSubs(false);
+V3.scenario.onChange(function(){renderSubs(true)});
 </script>
 </body>
 </html>
