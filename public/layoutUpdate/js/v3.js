@@ -304,7 +304,7 @@ V3.traj=function(container,spec){
   var W,H=216,ML=8,MR=76,MT=10,MB=22,iw,ih;
   function X(i){return ML+iw*(i/(n-1))}
   function Y(v){return MT+ih*(1-(v-lo)/(hi-lo))}
-  var svg,gGhost={},pActive,pArea,dot,cursor,labels={},disp=null,raf=null,drawn=false,curYear=null;
+  var svg,gGhost={},pActive,pArea,dot,cursor,xhair,xdots={},xyear,labels={},disp=null,raf=null,drawn=false,curYear=null;
 
   function lineD(arr){var d='M';for(var i=0;i<n;i++){d+=(i?'L':'')+X(i).toFixed(1)+','+Y(arr[i]).toFixed(1)}return d}
   function areaD(arr){return lineD(arr)+'L'+X(n-1).toFixed(1)+','+(MT+ih)+'L'+ML+','+(MT+ih)+'Z'}
@@ -332,11 +332,22 @@ V3.traj=function(container,spec){
     svg.appendChild(pActive);
     dot=svgEl('circle',{r:3.6});svg.appendChild(dot);
     cursor=svgEl('line',{class:'cursor-line',y1:MT,y2:MT+ih,x1:-10,x2:-10});svg.appendChild(cursor);
+    /* hover crosshair: a vertical line + a marker on every series at
+       the hovered year, so the tooltip's numbers have a place on the
+       plot. Hidden until the pointer enters. */
+    xhair=svgEl('line',{class:'hover-line',y1:MT,y2:MT+ih,x1:-10,x2:-10});svg.appendChild(xhair);
+    xdots={};
+    V3.SC_ORDER.forEach(function(sc){
+      var c=svgEl('circle',{r:2.6,fill:V3.SC[sc].color,class:'hover-dot'});
+      c.style.opacity='0';xdots[sc]=c;svg.appendChild(c);
+    });
+    xyear=svgEl('text',{class:'hover-year','text-anchor':'middle',y:H-6});
+    xyear.style.opacity='0';svg.appendChild(xyear);
     V3.SC_ORDER.forEach(function(sc){
       var t=svgEl('text',{class:'endlbl',x:W-MR+12});labels[sc]=t;svg.appendChild(t);
     });
     svg.addEventListener('mousemove',onHover);
-    svg.addEventListener('mouseleave',V3.tipHide);
+    svg.addEventListener('mouseleave',hideHover);
     if(disp==null)disp=spec.data[V3.scenario.get()].slice();
     setActive(V3.scenario.get(),false);
     if(curYear!=null)setCursor(curYear);
@@ -394,12 +405,32 @@ V3.traj=function(container,spec){
     }
     raf=requestAnimationFrame(step);
   }
+  function hideHover(){
+    V3.tipHide();
+    xhair.setAttribute('x1',-10);xhair.setAttribute('x2',-10);
+    xyear.style.opacity='0';
+    V3.SC_ORDER.forEach(function(sc){xdots[sc].style.opacity='0'});
+  }
   function onHover(e){
     var r=svg.getBoundingClientRect();
     var fx=(e.clientX-r.left)/r.width*W;
     var idx=Math.round((fx-ML)/iw*(n-1));
-    if(idx<0||idx>n-1){V3.tipHide();return}
+    if(idx<0||idx>n-1){hideHover();return}
     var act=V3.scenario.get();
+    /* crosshair snaps to the year; markers land on every series; the
+       year rides the line along the axis — a true timeline indicator */
+    var cx=X(idx);
+    xhair.setAttribute('x1',cx);xhair.setAttribute('x2',cx);
+    xyear.setAttribute('x',Math.max(ML+16,Math.min(ML+iw-16,cx)));
+    xyear.textContent=years[idx];
+    xyear.style.opacity='1';
+    V3.SC_ORDER.forEach(function(sc){
+      var c=xdots[sc],on=sc===act;
+      c.setAttribute('cx',cx);
+      c.setAttribute('cy',Y(sc===act?disp[idx]:spec.data[sc][idx]));
+      c.setAttribute('r',on?3.4:2.4);
+      c.style.opacity=on?'1':'var(--ghost)';
+    });
     var rows=V3.SC_ORDER.slice().sort(function(a,b){return spec.data[b][idx]-spec.data[a][idx]})
       .map(function(sc){
         var m=V3.SC[sc];
