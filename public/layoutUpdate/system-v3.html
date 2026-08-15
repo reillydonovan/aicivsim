@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design System — AICIVSIM v3</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260815h">
+<style>
+/* page-local specimen chrome */
+.spec{border:1px solid var(--hairline);border-radius:var(--r);padding:24px;margin-top:16px}
+.spec-label{font-family:var(--font-mono);font-size:10px;color:var(--ink-4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.swatch-card{border:1px solid var(--hairline);border-radius:10px;overflow:hidden}
+.swatch-card i{display:block;height:52px}
+.swatch-card div{padding:9px 12px}
+.swatch-card b{display:block;font-size:12px;font-weight:600}
+.swatch-card span{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-4)}
+.type-row{display:flex;align-items:baseline;gap:20px;padding:12px 0;border-bottom:1px solid var(--hairline)}
+.type-row:last-child{border-bottom:none}
+.type-row .t-meta{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-4);min-width:190px}
+.rule-list li{margin:10px 0;color:var(--ink-2);font-size:14px;line-height:1.6}
+.rule-list b{color:var(--ink)}
+.demo-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.motion-demo-btn{padding:11px 20px;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;font-size:13.5px}
+.motion-demo-card{border:1px solid var(--hairline);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--ink-2)}
+.donts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.donts>div{border:1px solid var(--hairline);border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.6;color:var(--ink-3)}
+.donts b{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;margin-bottom:8px}
+.donts .do b{color:var(--good)} .donts .dont b{color:var(--bad)}
+@media(max-width:900px){.donts{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">AICIVSIM · Design system v3</span>
+  <h1 class="title-1">One system, every screen.</h1>
+  <p class="lead">The canonical reference for the v3 language — tokens, type, motion, data visualization, components, and voice. Everything on this page is rendered live by the same <span class="num" style="font-size:13px">css/v3.css</span> and <span class="num" style="font-size:13px">js/v3.js</span> that power the site, so the spec can never drift from the product.</p>
+</div></header>
+
+<main>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Principles</h2></div></div>
+  <ol class="rule-list" style="margin-left:20px">
+    <li><b>One story per screen.</b> Every screen has a protagonist; everything else supports it or leaves.</li>
+    <li><b>The scenario is the product.</b> The four futures are clickable in exactly one place per page, and that control is the legend for every chart.</li>
+    <li><b>Layouts resolve.</b> Lists for variable counts, grids only for fixed ones. No orphan cells, no accidental voids.</li>
+    <li><b>Hierarchy through scale, not caps.</b> Real type jumps, sentence case; tracked caps live in exactly one tier (the eyebrow).</li>
+    <li><b>Motion confirms, never gates.</b> Springs attached to intent — press, switch, arrive. Content is always readable; <span class="num" style="font-size:12px">prefers-reduced-motion</span> collapses everything to instant.</li>
+    <li><b>Data carries its own why.</b> Every chart states what its future means in words; every threshold states the consequence of crossing it.</li>
+  </ol>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Color</h2>
+  <p class="lead">Four jobs, strictly separated: interaction, scenario identity, system identity, and semantic deltas. A hue never moonlights.</p></div></div>
+  <div class="spec"><div class="spec-label">Interaction — links, CTAs, active states. The only decorative accent.</div>
+    <div class="swatches"><div class="swatch-card"><i style="background:#d4622a"></i><div><b>Accent</b><span>#d4622a</span></div></div></div>
+  </div>
+  <div class="spec"><div class="spec-label">Scenario identity — segments, chart series, projected values. Never decoration. Chart moderate is the validated #4a7fd4 (brand surfaces keep #5da5da).</div>
+    <div class="swatches">
+      <div class="swatch-card"><i style="background:#4ecdc4"></i><div><b>Aggressive</b><span>#4ecdc4</span></div></div>
+      <div class="swatch-card"><i style="background:#4a7fd4"></i><div><b>Moderate</b><span>#4a7fd4 · charts</span></div></div>
+      <div class="swatch-card"><i style="background:#e8a838"></i><div><b>As usual</b><span>#e8a838</span></div></div>
+      <div class="swatch-card"><i style="background:#d4622a"></i><div><b>Worst</b><span>#d4622a</span></div></div>
+    </div>
+  </div>
+  <div class="spec"><div class="spec-label">System identity — the tick beside a system's name. Marks, never fills.</div>
+    <div class="swatches">
+      <div class="swatch-card"><i style="background:#e8a838"></i><div><b>AI</b><span>#e8a838</span></div></div>
+      <div class="swatch-card"><i style="background:#4ecdc4"></i><div><b>Climate</b><span>#4ecdc4</span></div></div>
+      <div class="swatch-card"><i style="background:#9b87f5"></i><div><b>Governance</b><span>#9b87f5</span></div></div>
+      <div class="swatch-card"><i style="background:#5da5da"></i><div><b>Transition</b><span>#5da5da</span></div></div>
+      <div class="swatch-card"><i style="background:#e05c7e"></i><div><b>Civilization</b><span>#e05c7e</span></div></div>
+      <div class="swatch-card"><i style="background:#d4622a"></i><div><b>Strategy</b><span>#d4622a</span></div></div>
+    </div>
+  </div>
+  <div class="spec"><div class="spec-label">Semantic — deltas only, always paired with ▲▼ glyphs, never color alone. Plus the four-step ink ramp.</div>
+    <div class="swatches">
+      <div class="swatch-card"><i style="background:var(--good)"></i><div><b>Good</b><span>--good</span></div></div>
+      <div class="swatch-card"><i style="background:var(--bad)"></i><div><b>Bad</b><span>--bad</span></div></div>
+      <div class="swatch-card"><i style="background:var(--ink)"></i><div><b>Ink</b><span>primary text</span></div></div>
+      <div class="swatch-card"><i style="background:var(--ink-2)"></i><div><b>Ink-2</b><span>body</span></div></div>
+      <div class="swatch-card"><i style="background:var(--ink-3)"></i><div><b>Ink-3</b><span>secondary</span></div></div>
+      <div class="swatch-card"><i style="background:var(--ink-4)"></i><div><b>Ink-4</b><span>faint / axis</span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Type</h2>
+  <p class="lead">Space Grotesk for display, Inter for text, JetBrains Mono for every number. Sentence case everywhere; tracked caps in one tier only.</p></div></div>
+  <div class="spec">
+    <div class="type-row"><span class="t-meta">eyebrow · Inter 600 · 11px · .18em caps</span><span class="eyebrow">The only tracked-caps tier</span></div>
+    <div class="type-row"><span class="t-meta">title-1 · Grotesk 600 · 30–44px</span><span class="title-1" style="font-size:34px">Page headline</span></div>
+    <div class="type-row"><span class="t-meta">title-2 · Grotesk 600 · 28px</span><span class="title-2">Section headline</span></div>
+    <div class="type-row"><span class="t-meta">title-3 · Grotesk 600 · 19px</span><span class="title-3">Card title</span></div>
+    <div class="type-row"><span class="t-meta">lead · Inter 400 · 17px</span><span class="lead">Section intros argue, they don't label.</span></div>
+    <div class="type-row"><span class="t-meta">body · Inter 400 · 15px</span><span>Reading text at a readable size.</span></div>
+    <div class="type-row"><span class="t-meta">display · Mono 700 · 56–168px</span><span class="num" style="font-size:56px;font-weight:700;line-height:1">44</span></div>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Motion</h2>
+  <p class="lead">Powered by <a class="a" href="https://motion.dev" rel="noopener">motion.dev</a> (vanilla build, CDN — the three.js precedent), with a hand-rolled spring integrator for number counting and as full fallback. Everything below is live — try it.</p></div></div>
+  <div class="spec"><div class="spec-label">The vocabulary</div>
+    <ol class="rule-list" style="margin-left:20px">
+      <li><b>Press physics</b> — every interactive element squishes to 0.962 under the pointer and springs back with overshoot (stiffness 430, damping 16). Delegated, so re-rendered content keeps it.</li>
+      <li><b>Emphasis pop</b> — the element that just gained meaning (chosen segment's dot, newly-active landing dot, a threshold chip that changed state) overshoots ~1.25–1.7× and settles.</li>
+      <li><b>Morph</b> — the bold chart line reshapes point-by-point between futures (460ms ease-out); the area fill retints; the end value counts.</li>
+      <li><b>Glide</b> — indicators (landing bubble, score-band dot) travel on the shared spring easing, compiled to CSS <span class="num" style="font-size:12px">linear()</span>.</li>
+      <li><b>Entrance</b> — sections rise 20px on an inView spring (stiffness 130, damping 17), staggered ~55ms by sibling, preloaded 18% below the viewport. One-shot; never re-hides.</li>
+      <li><b>Count</b> — numbers arrive via the spring integrator (stiffness 170, damping 26), never fade-swap.</li>
+    </ol>
+  </div>
+  <div class="spec"><div class="spec-label">Live demos</div>
+    <div class="demo-row">
+      <button class="motion-demo-btn" id="demo-press">Press me — squish &amp; overshoot</button>
+      <button class="motion-demo-btn" id="demo-pop" style="background:var(--bg-press);color:var(--ink);box-shadow:inset 0 0 0 1px var(--hairline-strong)">Pop the dot <span class="dot" id="demo-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--sc-aggressive);margin-left:6px;vertical-align:-1px"></span></button>
+      <div class="motion-demo-card">Count: <b class="num" id="demo-count" style="color:var(--sc-aggressive)">28</b> <button class="a" id="demo-count-go" style="margin-left:8px">spring it →</button></div>
+    </div>
+  </div>
+  <div class="donts" style="margin-top:16px">
+    <div class="do"><b>DO</b>Attach motion to intent: press, switch, arrive, change of meaning. Respect reduced-motion by collapsing to instant state.</div>
+    <div class="dont"><b>DON'T</b>Gate legibility behind animation, animate on scroll position for decoration, or fade-swap a number that could count.</div>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Data visualization — one geometry, six forms</h2>
+  <p class="lead">Every chart shares one anatomy: hairline grid, mono axis labels in ink-4, no borders, no per-chart legends — the scenario control is the legend. The form is chosen by the data's job. All live below.</p></div></div>
+  <div class="chart-grid">
+    <div class="chart-card" id="spec-traj"></div>
+    <div class="chart-card" style="display:flex;flex-direction:column;gap:12px">
+      <div class="spec-label" style="margin:0">stat — one value + where it's heading</div>
+      <div id="spec-stat"></div>
+    </div>
+  </div>
+  <div class="spec"><div class="spec-label">landing — today's tick + all four futures on one rail (hover the dots)</div>
+    <div id="spec-landing"></div>
+  </div>
+  <div class="chart-grid" style="margin-top:16px">
+    <div class="spec" style="margin:0"><div class="spec-label">meter — a ratio against a cap, one hue</div><div id="spec-meter"></div></div>
+    <div class="spec" style="margin:0"><div class="spec-label">threshold — a line with a consequence</div><div id="spec-th" style="display:block"></div></div>
+  </div>
+  <ol class="rule-list" style="margin-left:20px;margin-top:24px">
+    <li><b>Emphasis, not category soup.</b> The chosen future is bold with an end value; the other three are ghosts with name labels. Identity is never color-alone.</li>
+    <li><b>Scenario hues only on scenario identity.</b> Single-measure charts use one neutral hue; semantic green/red only on deltas, always with ▲▼.</li>
+    <li><b>One tooltip.</b> Crosshair + year label + all four values, sorted, active row emphasized — identical on every chart.</li>
+    <li><b>End labels own the right rail.</b> Axis ticks yield to them; collision chains stay inside the plot.</li>
+  </ol>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Components</h2>
+  <p class="lead">The scenario control (live — it drives this page too), and the rule that governs it.</p></div></div>
+  <div class="spec"><div class="spec-label">scenario segmented control — compact (deck) form</div>
+    <div id="spec-seg"></div>
+    <p class="body-2" style="margin-top:14px"><b style="color:var(--ink)">The one-control rule:</b> the four futures are clickable in exactly one place per page. Pages with their own scenario instrument (Pathways) suppress the deck's segment via <span class="num" style="font-size:12px">deck.noSeg</span>. Cards that reflect the choice are display-only.</p>
+  </div>
+  <div class="spec"><div class="spec-label">the rest of the kit</div>
+    <p class="body-2">Stat tiles · landing tracks · trajectory cards · threshold cards · milestone rail · composition stack · income-bridge calculator · impact rows · ledger — all specified by their live use: see <a class="a" href="climate-v3.html">Climate</a> (thresholds, nine metrics), <a class="a" href="ai-v3.html">AI</a> (risks, milestones), <a class="a" href="governance-v3.html">Governance</a> (boards, stack, audit), <a class="a" href="transition-v3.html">Transition</a> (bridge calculator), <a class="a" href="pathways-v3.html">Pathways</a> (route instrument, slopes).</p>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Voice</h2></div></div>
+  <div class="donts">
+    <div class="do"><b>DO</b>Sentence case. Headlines that argue («Planetary systems don't negotiate»). Every metric answers "so what" in its chosen future's own words. Numbers in mono, always.</div>
+    <div class="dont"><b>DON'T</b>Label sections with nouns («Metrics»), stack tracked-caps tiers, or present a number without its consequence.</div>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Using the system</h2></div></div>
+  <ol class="rule-list" style="margin-left:20px">
+    <li><b>Files:</b> <span class="num" style="font-size:12px">css/v3.css</span> (tokens + components) · <span class="num" style="font-size:12px">js/v3.js</span> (chrome, scenario store, motion, chart kit) · <span class="num" style="font-size:12px">js/v3-data.js</span> (machine-extracted page data — regenerate, don't hand-edit) · motion.dev UMD from jsdelivr before v3.js.</li>
+    <li><b>Scenario contract:</b> default is always Business as usual; a user's choice persists sitewide via <span class="num" style="font-size:12px">aicivsim-scenario</span> + URL hash. Theme via <span class="num" style="font-size:12px">aicivsim-theme</span>.</li>
+    <li><b>Every consumer degrades gracefully:</b> no Motion CDN → spring fallback; no live-data network → baked baselines; no JS → content still readable (reveals are JS-gated).</li>
+    <li><b>Cache rule:</b> bump the <span class="num" style="font-size:12px">?v=</span> token on every deploy-bound change — same golden rule as the live site.</li>
+  </ol>
+</div></section>
+
+</main>
+</div>
+
+<script src="js/shared.js?v=20260815h"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260815h"></script>
+<script>
+V3.boot({deck:{sys:'civilization',context:'Tokens · type · motion · dataviz · voice'}});
+document.querySelector('.deck-title b').textContent='Design system';
+document.querySelector('.deck-title i').style.background='var(--accent)';
+
+/* live dataviz specimens — real site data, real kit calls */
+var years=[];for(var y=2026;y<=2050;y++)years.push(y);
+</script>
+<script src="js/v3-data.js?v=20260815h"></script>
+<script>
+var meta=V3DATA.climate.metrics.filter(function(m){return m.id==='temp'})[0];
+var spec={label:'Trajectory — temperature rise',unit:'°C',prefix:'+',dec:2,dir:'lower',
+  years:years,data:V3DATA.climate.D.temp,notes:meta.notes};
+V3.traj('#spec-traj',spec);
+V3.stat('#spec-stat',spec);
+V3.landing('#spec-landing',[(function(){
+  var d=V3DATA.climate.D.renewable,proj={};
+  V3.SC_ORDER.forEach(function(sc){proj[sc]=d[sc][d[sc].length-1]});
+  return {label:'Renewable share',sub:'%',today:d.bau[0],proj:proj,unit:'%',dir:'higher',min:25,max:104,dec:0};
+})()]);
+V3.meter(document.getElementById('spec-meter'),62,'62%');
+V3.thresholds('#spec-th',[{
+  label:'Specimen threshold',thresholdText:'breach at +2.5°C warming',
+  desc:'A tipping point is a line with a consequence — the card states both, and its status follows the chosen future.',
+  scenarioNote:{aggressive:'Held well below the line.',moderate:'Approaching the line.',bau:'Line crossed.',worst:'Far past the line.'},
+  value:function(sc){var d=V3DATA.climate.D.temp[sc];return d[d.length-1]},
+  fmt:function(v){return '+'+v.toFixed(2)+'°C'},
+  breach:function(v){return v>=2.5},near:function(v){return v>=2.2}
+}]);
+document.getElementById('spec-seg').innerHTML=V3.seg(true);
+
+/* motion demos */
+document.getElementById('demo-pop').addEventListener('click',function(){
+  V3.pop(document.getElementById('demo-dot'),2.1);
+});
+var flip=false;
+document.getElementById('demo-count-go').addEventListener('click',function(){
+  var el=document.getElementById('demo-count');
+  V3.tween(el,flip?28:85,{from:flip?85:28});
+  el.style.color=flip?'var(--sc-bau)':'var(--sc-aggressive)';
+  flip=!flip;
+});
+</script>
+</body>
+</html>

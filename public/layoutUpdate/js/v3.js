@@ -54,16 +54,31 @@ V3.scenario={
     try{localStorage.setItem('aicivsim-scenario',id)}catch(e){}
     if(history.replaceState)history.replaceState(null,'','#'+id);
     document.querySelectorAll('.sc-seg button').forEach(function(b){
-      b.setAttribute('aria-pressed',String(b.getAttribute('data-sc')===id));
+      var on=b.getAttribute('data-sc')===id;
+      b.setAttribute('aria-pressed',String(on));
+      if(on)V3.pop(b.querySelector('.dot'),1.7);
     });
     listeners.forEach(function(fn){fn(id)});
   },
   onChange:function(fn){listeners.push(fn)}
 };
 
-/* ════════ Motion ════════ */
+/* ════════ Motion ════════
+   Backbone: motion.dev (vanilla UMD, loaded from jsdelivr before this
+   file — same CDN precedent as three.js). When present, it drives
+   entrances (inView springs), press physics, and emphasis pops; the
+   hand-rolled spring engine below remains for number counting and as
+   the full fallback when the CDN is unreachable. */
 var REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 V3.REDUCED=REDUCED;
+var M=window.Motion&&window.Motion.animate?window.Motion:null;
+V3.M=M;
+/* emphasis pop — a playful overshoot on the element that just gained
+   meaning (active dot, chosen segment, changed status) */
+V3.pop=function(el,amount){
+  if(!M||REDUCED||!el)return;
+  M.animate(el,{scale:[1,amount||1.25,1]},{duration:.5,ease:[.22,1.4,.36,1]});
+};
 function springEasing(stiffness,damping){
   var m=1,x=1,v=0,dt=1/60,pts=[],dur=0;
   for(var t=0;t<3;t+=dt){
@@ -108,11 +123,26 @@ V3.stagger=function(nodes,perDelay){
   });
 };
 /* Entrance reveal: fast, triggered slightly BEFORE entering, one-shot.
-   Only elements captured at call time; later re-renders never re-hide. */
+   Only elements captured at call time; later re-renders never re-hide.
+   With motion.dev present, entrances are true springs via inView;
+   the CSS .pre path is the no-Motion fallback. */
+var REVEAL_SEL='.section-head,.stat,.chart-card,.t-card,.q-card,.impact-row,.spine-item,.land-row,.ledger-row,.lever,.action-card,.slope-card,.diff-row,.hero-stats,.narrative,.lever-delta';
 V3.reveal=function(){
   if(REDUCED)return;
-  var sel='.section-head,.stat,.chart-card,.t-card,.q-card,.impact-row,.spine-item,.land-row,.ledger-row,.lever,.action-card,.slope-card,.diff-row,.hero-stats,.narrative,.lever-delta';
-  var els=document.querySelectorAll(sel);
+  var els=document.querySelectorAll(REVEAL_SEL);
+  if(M){
+    els.forEach(function(el){
+      if(el.__rv)return;el.__rv=1;
+      var idx=Array.prototype.indexOf.call(el.parentNode.children,el);
+      el.style.opacity='0';
+      var stop=M.inView(el,function(){
+        stop();
+        M.animate(el,{opacity:[0,1],y:[20,0]},
+          {type:'spring',stiffness:130,damping:17,delay:Math.min(.3,idx*.055)});
+      },{margin:'0px 0px 18% 0px'});
+    });
+    return;
+  }
   var io=new IntersectionObserver(function(ents){
     ents.forEach(function(e){
       if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
@@ -126,6 +156,26 @@ V3.reveal=function(){
     io.observe(el);
   });
 };
+
+/* Press physics — every interactive element squishes under the pointer
+   and springs back with overshoot on release. Delegated, so content
+   re-rendered on scenario switches keeps the behavior. */
+function pressPhysics(){
+  if(!M||REDUCED)return;
+  var PRESS='button:not([disabled]),.t-card,.ledger-row,.land-dot,.menu a,.nav-link';
+  document.addEventListener('pointerdown',function(e){
+    var t=e.target.closest?e.target.closest(PRESS):null;
+    if(!t)return;
+    M.animate(t,{scale:.962},{duration:.09,ease:'easeOut'});
+    function release(){
+      M.animate(t,{scale:1},{type:'spring',stiffness:430,damping:16});
+      removeEventListener('pointerup',release);
+      removeEventListener('pointercancel',release);
+    }
+    addEventListener('pointerup',release);
+    addEventListener('pointercancel',release);
+  },{passive:true});
+}
 
 /* ════════ Chrome ════════ */
 var NAV=[
@@ -191,7 +241,7 @@ V3.footer=function(){
     +'<div class="foot-grid"><div><a class="wordmark" href="index-v3.html">AICIVSIM<em>.</em></a>'
     +'<p class="body-2" style="margin-top:14px;max-width:300px">A data-driven simulation framework for reasoning about the systems that decide civilizational outcomes. Open source; not a prediction engine.</p></div>'
     +'<div><h4>Systems</h4><a href="ai-v3.html">AI</a><a href="climate-v3.html">Climate</a><a href="governance-v3.html">Governance</a><a href="transition-v3.html">Transition</a><a href="civilization-v3.html">Civilization</a><a href="strategy-v3.html">Strategy</a></div>'
-    +'<div><h4>Explore</h4><a href="simulation-v3.html">Simulation</a><a href="pathways-v3.html">Pathways</a><a href="visualizer-v3.html">Visualizer</a><a href="data-v3.html">Live data</a><a href="research-v3.html">Research</a><a href="about-v3.html">About</a></div></div>'
+    +'<div><h4>Explore</h4><a href="simulation-v3.html">Simulation</a><a href="pathways-v3.html">Pathways</a><a href="visualizer-v3.html">Visualizer</a><a href="data-v3.html">Live data</a><a href="research-v3.html">Research</a><a href="about-v3.html">About</a><a href="system-v3.html">Design system</a></div></div>'
     +'<div class="foot-note"><span>AI Civilization Simulator · 2026 · grounded in live data from NOAA, Our World in Data, and the World Bank</span>'
     +'<span>Design v3 prototype — <a href="design-v3.html">read the proposal</a></span></div>'
     +'</div></footer>';
@@ -244,6 +294,14 @@ V3.boot=function(opts){
     var remap={'index.html':1,'ai.html':1,'civilization.html':1,'simulation.html':1,'visualizer.html':1,'climate.html':1,'transition.html':1,'governance.html':1,'strategy.html':1,'pathways.html':1,'timeline.html':1,'data.html':1,'research.html':1,'about.html':1};
     CMD_ITEMS.forEach(function(it){
       if(it.h&&remap[it.h])it.h=it.h.replace('.html','-v3.html');
+    });
+  }
+  /* press physics + a playful accent on the wordmark */
+  pressPhysics();
+  if(M&&!REDUCED&&M.hover){
+    M.hover('.wordmark',function(el){
+      var dot=el.querySelector('em');
+      if(dot)M.animate(dot,{y:[0,-5,0]},{duration:.5,ease:[.3,1.6,.4,1]});
     });
   }
   /* reveal after the page's synchronous scripts have rendered content */
@@ -560,7 +618,10 @@ V3.landing=function(container,rows){
       var P=function(v){return Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100))};
       var v=r.proj[act];
       el.querySelectorAll('.land-dot[data-row="'+ri+'"]').forEach(function(d){
-        d.setAttribute('data-active',String(d.getAttribute('data-sc')===act));
+        var on=d.getAttribute('data-sc')===act;
+        var was=d.getAttribute('data-active')==='true';
+        d.setAttribute('data-active',String(on));
+        if(on&&!was&&animate)V3.pop(d,1.35);
       });
       var bub=el.querySelector('.land-bubble[data-row="'+ri+'"]');
       bub.style.left=P(v)+'%';
@@ -654,9 +715,12 @@ V3.thresholds=function(container,items){
       var breached=it.breach(v);
       var near=!breached&&it.near(v);
       var stEl=card.querySelector('.th-state');
+      var newState=breached?'breached':near?'near':'clear';
+      var changed=card.getAttribute('data-state')&&card.getAttribute('data-state')!==newState;
       stEl.textContent=breached?'BREACHED':near?'AT RISK':'CLEAR';
       stEl.className='th-state num '+(breached?'bad':near?'warn':'good');
-      card.setAttribute('data-state',breached?'breached':near?'near':'clear');
+      card.setAttribute('data-state',newState);
+      if(changed&&animate)V3.pop(stEl,1.22);
       var vEl=card.querySelector('.th-val');
       vEl.style.color=m.color;
       if(animate&&lastVals[i]!=null)V3.tween(vEl,v,{from:lastVals[i],fmt:it.fmt});
