@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
-   AICIVSIM — DESIGN V3 runtime (experiment branch: design-v3)
+   AICIVSIM — v3 runtime (the shipped design system)
    Loads AFTER js/shared.js (data: VIZ_METRICS, SIM_ENGINE,
    STRATEGY_CATALOG, CROSS_SYSTEM, grade, simWorldState…).
 
@@ -27,13 +27,13 @@ V3.SC={
 };
 V3.SC_ORDER=['aggressive','moderate','bau','worst'];
 V3.SYS={
-  ai:{label:'AI',color:'#e8a838',href:'ai-v3.html'},
-  climate:{label:'Climate',color:'#4ecdc4',href:'climate-v3.html'},
-  governance:{label:'Governance',color:'#9b87f5',href:'governance-v3.html'},
-  transition:{label:'Transition',color:'#5da5da',href:'transition-v3.html'},
-  civilization:{label:'Civilization',color:'#e05c7e',href:'civilization-v3.html'},
-  strategy:{label:'Strategy',color:'#d4622a',href:'strategy-v3.html'},
-  simulation:{label:'Simulation',color:'#b8b6ae',href:'simulation-v3.html'}
+  ai:{label:'AI',color:'#e8a838',href:'ai.html'},
+  climate:{label:'Climate',color:'#4ecdc4',href:'climate.html'},
+  governance:{label:'Governance',color:'#9b87f5',href:'governance.html'},
+  transition:{label:'Transition',color:'#5da5da',href:'transition.html'},
+  civilization:{label:'Civilization',color:'#e05c7e',href:'civilization.html'},
+  strategy:{label:'Strategy',color:'#d4622a',href:'strategy.html'},
+  simulation:{label:'Simulation',color:'#b8b6ae',href:'simulation.html'}
 };
 V3.grade=window.grade||function(s){return s>=93?'A':s>=85?'A−':s>=80?'B+':s>=73?'B':s>=68?'B−':s>=63?'C+':s>=58?'C':s>=53?'C−':s>=48?'D+':s>=43?'D':s>=38?'D−':'F'};
 
@@ -179,27 +179,24 @@ function pressPhysics(){
 
 /* ════════ Chrome ════════ */
 var NAV=[
-  {label:'Overview',href:'index-v3.html'},
+  {label:'Overview',href:'index.html'},
   {label:'Systems',menu:['ai','climate','governance','transition','civilization','strategy'].map(function(k){
     return {href:V3.SYS[k].href,label:V3.SYS[k].label,tick:V3.SYS[k].color,hint:{ai:'48 today',climate:'42 today',governance:'40 today',transition:'43 today',civilization:'44 today',strategy:'35 today'}[k]};
   })},
   {label:'Tools',menu:[
-    {href:'simulation-v3.html',label:'Simulation',hint:'5 levers · 2027–2070'},
-    {href:'pathways-v3.html',label:'Pathways',hint:'between futures'},
-    {href:'visualizer-v3.html',label:'Visualizer',hint:'3D · XR'}]},
+    {href:'simulation.html',label:'Simulation',hint:'5 levers · 2027–2070'},
+    {href:'pathways.html',label:'Pathways',hint:'between futures'},
+    {href:'visualizer.html',label:'Visualizer',hint:'3D · XR'}]},
   {label:'Evidence',menu:[
-    {href:'data-v3.html',label:'Live data',hint:'8 feeds'},
-    {href:'timeline-v3.html',label:'Timeline',hint:'200K years'},
-    {href:'research-v3.html',label:'Research',hint:'the paper'}]},
+    {href:'data.html',label:'Live data',hint:'8 feeds'},
+    {href:'timeline.html',label:'Timeline',hint:'200K years'},
+    {href:'research.html',label:'Research',hint:'the paper'}]},
   {label:'Advisor',href:'chat.html'},
-  {label:'About',href:'about-v3.html'}
+  {label:'About',href:'about.html'}
 ];
-V3.protoNote=function(){
-  return '<div class="proto-note">Design v3 prototype — an experiment on the <b>design-v3</b> branch. Read the <a href="design-v3.html">audit &amp; proposal</a> · <a href="'+location.pathname.split('/').pop().replace('-v3','')+'" style="opacity:.85">current design</a></div>';
-};
 V3.nav=function(currentHref){
   var h='<nav class="nav" aria-label="Site"><div class="nav-inner">';
-  h+='<a class="wordmark" href="index-v3.html">AICIVSIM<em>.</em></a>';
+  h+='<a class="wordmark" href="index.html">AICIVSIM<em>.</em></a>';
   NAV.forEach(function(item){
     h+='<div class="nav-item">';
     if(item.menu){
@@ -238,19 +235,19 @@ V3.deck=function(sysKey,context,noSeg){
 };
 V3.footer=function(){
   return '<footer class="v3-footer"><div class="col">'
-    +'<div class="foot-grid"><div><a class="wordmark" href="index-v3.html">AICIVSIM<em>.</em></a>'
+    +'<div class="foot-grid"><div><a class="wordmark" href="index.html">AICIVSIM<em>.</em></a>'
     +'<p class="body-2" style="margin-top:14px;max-width:300px">A data-driven simulation framework for reasoning about the systems that decide civilizational outcomes. Open source; not a prediction engine.</p></div>'
-    +'<div><h4>Systems</h4><a href="ai-v3.html">AI</a><a href="climate-v3.html">Climate</a><a href="governance-v3.html">Governance</a><a href="transition-v3.html">Transition</a><a href="civilization-v3.html">Civilization</a><a href="strategy-v3.html">Strategy</a></div>'
-    +'<div><h4>Explore</h4><a href="simulation-v3.html">Simulation</a><a href="pathways-v3.html">Pathways</a><a href="visualizer-v3.html">Visualizer</a><a href="data-v3.html">Live data</a><a href="research-v3.html">Research</a><a href="about-v3.html">About</a><a href="system-v3.html">Design system</a></div></div>'
+    +'<div><h4>Systems</h4><a href="ai.html">AI</a><a href="climate.html">Climate</a><a href="governance.html">Governance</a><a href="transition.html">Transition</a><a href="civilization.html">Civilization</a><a href="strategy.html">Strategy</a></div>'
+    +'<div><h4>Explore</h4><a href="simulation.html">Simulation</a><a href="pathways.html">Pathways</a><a href="visualizer.html">Visualizer</a><a href="data.html">Live data</a><a href="research.html">Research</a><a href="about.html">About</a><a href="design-system.html">Design system</a></div></div>'
     +'<div class="foot-note"><span>AI Civilization Simulator · 2026 · grounded in live data from NOAA, Our World in Data, and the World Bank</span>'
-    +'<span>Design v3 prototype — <a href="design-v3.html">read the proposal</a></span></div>'
+    +'<span><a href="design-system.html">Built on the AICIVSIM design system</a></span></div>'
     +'</div></footer>';
 };
 V3.boot=function(opts){
   opts=opts||{};
-  var here=location.pathname.split('/').pop()||'index-v3.html';
+  var here=location.pathname.split('/').pop()||'index.html';
   document.body.insertAdjacentHTML('afterbegin',
-    V3.protoNote()+V3.nav(here)+(opts.deck?V3.deck(opts.deck.sys,opts.deck.context,opts.deck.noSeg):''));
+    V3.nav(here)+(opts.deck?V3.deck(opts.deck.sys,opts.deck.context,opts.deck.noSeg):''));
   document.body.insertAdjacentHTML('beforeend',V3.footer());
   try{if(localStorage.getItem('aicivsim-theme')==='light')document.body.classList.add('light')}catch(e){}
   document.getElementById('v3-theme').addEventListener('click',function(){
@@ -288,14 +285,6 @@ V3.boot=function(opts){
       if(openItem){openItem.classList.remove('open');openItem=null}
     });
   });
-  /* keep the ⌘K palette inside the demo: remap its page links to the
-     v3 equivalents (CMD_ITEMS is shared by reference with shared.js) */
-  if(window.CMD_ITEMS){
-    var remap={'index.html':1,'ai.html':1,'civilization.html':1,'simulation.html':1,'visualizer.html':1,'climate.html':1,'transition.html':1,'governance.html':1,'strategy.html':1,'pathways.html':1,'timeline.html':1,'data.html':1,'research.html':1,'about.html':1};
-    CMD_ITEMS.forEach(function(it){
-      if(it.h&&remap[it.h])it.h=it.h.replace('.html','-v3.html');
-    });
-  }
   /* press physics + a playful accent on the wordmark */
   pressPhysics();
   if(M&&!REDUCED&&M.hover){

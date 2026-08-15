@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Strategy — Action Catalog 2026</title>
 <meta name="description" content="Action catalog - 20+ strategies across individual, institutional, and systemic levels, scored by scenario.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://aicivsim.com/strategy.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AI Civilization Simulator">
@@ -15,236 +14,99 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Strategy — Action Catalog 2026">
 <meta name="twitter:description" content="Action catalog - 20+ strategies across individual, institutional, and systemic levels, scored by scenario.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260813b">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
 </head>
 <body>
-
-<!-- ============================================================
-     MASTHEAD
-     ============================================================ -->
-<div class="masthead">
-  <div class="page masthead-inner">
-    <span class="masthead-breadcrumb" style="color:var(--equity)"><a href="index.html" style="color:var(--equity)">AI Civ Sim</a> / Strategy &mdash; 2026</span>
-    <h1 class="t2-xl mt-3">Action Catalog</h1>
-    <p class="body mt-2">What you can do right now. Strategies across three levels of agency.</p>
-    <hr class="rule">
-  </div>
-</div>
-
-<!-- ============================================================
-     SITE NAV
-     ============================================================ -->
-<div id="site-nav-mount"></div>
-
-<!-- ============================================================
-     CONTROL BAR
-     ============================================================ -->
-<div class="control-bar" id="control-bar">
-  <div class="page">
-    <div class="control-bar-inner">
-      <div class="nav-tabs" id="nav-tabs">
-        <button class="nav-tab active" data-section="overview">Overview</button>
-        <button class="nav-tab" data-section="personal">Personal</button>
-        <button class="nav-tab" data-section="organization">Organization</button>
-        <button class="nav-tab" data-section="policy">Policy</button>
-      </div>
-      <div class="scenario-bar" id="scenario-bar"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     MAIN CONTENT
-     ============================================================ -->
-<main class="page">
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: OVERVIEW
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-overview">
-    <div class="section">
-      <span class="section-num">01</span>
-      <h2 class="t2">Today&rsquo;s Strategy Readiness</h2>
-      <hr class="rule">
-      <div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">
-        <span class="score-hero" style="color:var(--accent)">35</span>
-        <div>
-          <span class="score-sub">/100</span>
-          <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-            <span class="tag" style="font-size:18px;padding:6px 14px;border-color:var(--accent);color:var(--accent)">D&minus;</span>
-            <span class="delta delta-down" style="font-size:13px">limited adoption</span>
-          </div>
-        </div>
-      </div>
-      <p class="body mt-3">Composite readiness score measuring current adoption of climate, governance, and workforce strategies across personal, organizational, and policy levels. Baseline 2026 &mdash; before scenario interventions.</p>
-      <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="strat-projected"></div>
-      <div class="grid grid-3 mt-6" id="strat-summary-cards"></div>
-      <div class="mt-6" id="strat-narrative"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: PERSONAL
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-personal" style="display:none">
-    <div class="section">
-      <span class="section-num">02</span>
-      <h2 class="t2">Personal Actions</h2>
-      <hr class="rule">
-      <div class="grid grid-2 mt-4" id="personal-grid"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: ORGANIZATION
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-organization" style="display:none">
-    <div class="section">
-      <span class="section-num">03</span>
-      <h2 class="t2">Organization Actions</h2>
-      <hr class="rule">
-      <div class="grid grid-2 mt-4" id="org-grid"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: POLICY
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-policy" style="display:none">
-    <div class="section">
-      <span class="section-num">04</span>
-      <h2 class="t2">Policy Actions</h2>
-      <hr class="rule">
-      <div class="grid grid-2 mt-4" id="policy-grid"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: CROSS-SYSTEM IMPACT
-       ────────────────────────────────────────────────────────── -->
-  <div class="section">
-    <span class="section-num">05</span>
-    <p class="t2">Cross-System Impact</p>
-    <hr class="rule">
-    <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
-    <div id="cross-system-mount" class="mt-4"></div>
-  </div>
-
-</main>
-
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
-<div id="page-footer"></div>
-
-<!-- ============================================================
-     SCRIPTS
-     ============================================================ -->
-<script src="js/shared.js?v=20260813b"></script>
+<div id="app"></div>
+<script src="js/shared.js?v=20260816a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
-(function(){
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
-document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
+V3.boot({deck:{sys:'strategy',context:'Twenty actions across three levels'}});
+V3.systemPage({
+  sys:'strategy',
+  tagline:'Twenty levers anyone can pull.',
+  lead:'The action catalog — concrete interventions at personal, organizational, and policy scale — and how far each future actually pulls them. The same list exists in every scenario; what changes is whether it stays a list.',
+  today:35,
+  proj:STRATEGY_CATALOG.scores,
+  metrics:VIZ_METRICS.strategy,
+  narratives:STRATEGY_CATALOG.narratives,
+  crossKey:'strategy'
+});
 
-var scenarios=[
-  {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
-  {id:'moderate',name:'Moderate',color:'#5da5da'},
-  {id:'bau',name:'BAU',color:'#e8a838'},
-  {id:'worst',name:'Worst',color:'#d4622a'}
-];
-var scColors={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
-var active='bau';
+/* ── Catalog sections (page-specific) ── */
+var main=document.querySelector('#app main');
+main.insertAdjacentHTML('beforeend',
+  '<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Three levels of leverage</h2>'
+  +'<p class="lead">Adoption under the chosen future, level by level. Meters are share of eligible actors who have taken the action.</p></div></div>'
+  +'<div class="trio" id="cat-cards"></div></div></section>'
+  +'<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">The catalog</h2>'
+  +'<p class="lead">Every action, with its status under the chosen future. Statuses run from blocked to enforced — switch scenarios and watch the same list change meaning.</p></div>'
+  +'<div class="filter-seg" id="cat-filter" role="group" aria-label="Category"></div></div>'
+  +'<div class="actions-grid" id="action-cards"></div></div></section>');
 
-/* Catalog data lives in js/shared.js (STRATEGY_CATALOG) — the single
-   source of truth shared with pathways.html. */
-var personal=STRATEGY_CATALOG.actions.personal,
-    organization=STRATEGY_CATALOG.actions.organization,
-    policy=STRATEGY_CATALOG.actions.policy;
+var CATS=STRATEGY_CATALOG.categories;
+var CAT_COLORS={personal:'#4ecdc4',organization:'#5da5da',policy:'#9b87f5'};
+var filter='all';
 
-var diffColors={'Easy':'var(--green)','Medium':'var(--yellow)','Hard':'var(--red)'};
-function diffTag(level){
-  var c=diffColors[level]||'var(--text-muted)';
-  return '<span class="tag" style="border-color:'+c+';color:'+c+'">'+level+'</span>';
-}
-
-function scName(){ return scenarios.find(function(s){return s.id===active}).name; }
-
-function actionCard(a){
-  var clr=scColors[active];
-  var sd=a.scenario[active];
-  var impactColor=(a.co2&&a.co2.charAt(0)==='-')?'var(--green)':'var(--text-muted)';
-  var r=stratStatusRank(sd.status);
-  var statusClr=r===3?'var(--green)':r===2?clr:r===1?'#e8a838':'var(--red)';
-  return '<div class="cell">'
-    +'<div class="flex items-baseline gap-8 mb-1">'
-      +'<div style="font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-primary)">'+a.name+'</div>'
-      +'<span class="tag" style="border-color:'+statusClr+';color:'+statusClr+'">'+sd.status+'</span>'
-    +'</div>'
-    +'<p class="t4 mb-3" style="color:'+statusClr+'">'+sd.note+'</p>'
-    +'<div class="grid grid-4 mt-3" style="gap:1px">'
-      +'<div style="padding:8px 0"><span class="t3">Cost</span><p class="t4 mt-1">'+a.cost+'</p></div>'
-      +'<div style="padding:8px 0"><span class="t3">Difficulty</span><div class="mt-1">'+diffTag(a.difficulty)+'</div></div>'
-      +'<div style="padding:8px 0"><span class="t3">CO\u2082 Impact</span><p class="num-sm mt-1" style="color:'+impactColor+'">'+a.co2+'</p></div>'
-      +'<div style="padding:8px 0"><span class="t3">Timeline</span><p class="t4 mt-1">'+a.timeline+'</p></div>'
-    +'</div>'
-    +'<p class="t4 mt-3" style="border-top:1px solid var(--border);padding-top:8px">'+a.desc+'</p>'
-  +'</div>';
-}
-
-function renderGrid(targetId, data){
-  document.getElementById(targetId).innerHTML=data.map(actionCard).join('');
-}
-
-function renderSummaryCards(){
-  var cats=STRATEGY_CATALOG.categories.map(function(c){
-    return {key:c.key,label:c.label,count:STRATEGY_CATALOG.actions[c.key].length,color:c.color};
+function renderCats(){
+  var act=V3.scenario.get();
+  document.getElementById('cat-cards').innerHTML=CATS.map(function(c){
+    var s=STRATEGY_CATALOG.summaries[c.key][act];
+    var pct=parseFloat(s.adoption)||0;
+    return '<div class="t-card" style="cursor:default">'
+      +'<h3 style="color:'+CAT_COLORS[c.key]+'">'+c.label+'</h3>'
+      +'<div class="meter-mount" data-cat="'+c.key+'" style="margin:12px 0 4px"></div>'
+      +'<p style="min-height:56px">'+s.note+'</p>'
+      +'<div class="a-meta" style="border-top:1px solid var(--hairline);margin-top:12px;padding-top:12px;display:flex;gap:14px;font-family:var(--font-mono);font-size:11px;color:var(--ink-4)">'
+      +'<span>top <b style="color:var(--ink-3)">'+s.topImpact+'</b></span>'
+      +'<span>impact <b style="color:var(--ink-3)">'+s.avgImpact+'</b></span></div></div>';
+  }).join('');
+  CATS.forEach(function(c){
+    var s=STRATEGY_CATALOG.summaries[c.key][act];
+    var pct=parseFloat(s.adoption)||0;
+    V3.meter(document.querySelector('.meter-mount[data-cat="'+c.key+'"]'),pct,s.adoption,CAT_COLORS[c.key]);
   });
-  var h='';
-  cats.forEach(function(c){
-    var d=STRATEGY_CATALOG.summaries[c.key][active];
-    h+='<div class="cell">';
-    h+='<span class="t3" style="color:'+c.color+'">'+c.label+'</span>';
-    h+='<div class="num-lg mt-2" style="color:var(--text-primary)">'+c.count+'</div>';
-    h+='<p class="t4 mt-1">actions</p>';
-    h+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">';
-    h+='<div class="flex justify-between items-baseline mb-1"><span class="t3">Adoption</span><span class="num-sm" style="color:'+c.color+'">'+d.adoption+'</span></div>';
-    h+='<div class="bar-track"><div class="bar-fill" style="width:'+d.adoption+';background:'+c.color+';transition:width 0.4s ease"></div></div>';
-    h+='</div>';
-    h+='<div style="margin-top:10px"><span class="t3">Top Impact</span><p style="font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-primary);margin-top:4px">'+d.topImpact+'</p></div>';
-    h+='<div style="margin-top:10px"><span class="t3">Avg Impact</span><p class="num-sm mt-1" style="color:'+c.color+'">'+d.avgImpact+'</p></div>';
-    h+='<p class="t4 mt-2">'+d.note+'</p>';
-    h+='</div>';
+}
+function renderFilter(){
+  var opts=[{key:'all',label:'All'}].concat(CATS.map(function(c){return {key:c.key,label:c.label}}));
+  document.getElementById('cat-filter').innerHTML=opts.map(function(o){
+    return '<button data-f="'+o.key+'" aria-pressed="'+(filter===o.key)+'">'+o.label+'</button>';
+  }).join('');
+}
+function renderActions(){
+  var act=V3.scenario.get();
+  var list=[];
+  CATS.forEach(function(c){
+    if(filter!=='all'&&filter!==c.key)return;
+    STRATEGY_CATALOG.actions[c.key].forEach(function(a){list.push({cat:c.key,a:a})});
   });
-  document.getElementById('strat-summary-cards').innerHTML=h;
+  document.getElementById('action-cards').innerHTML=list.map(function(x){
+    var sc=x.a.scenario[act];
+    var rank=window.stratStatusRank?stratStatusRank(sc.status):2;
+    return '<div class="action-card">'
+      +'<div class="a-head"><h4>'+x.a.name+'</h4><span class="status s'+rank+'">'+sc.status+'</span></div>'
+      +'<div class="a-desc">'+x.a.desc+'</div>'
+      +'<div class="a-note">'+sc.note+'</div>'
+      +'<div class="a-meta"><span style="color:'+CAT_COLORS[x.cat]+'">●</span>'
+      +'<span>cost <b>'+x.a.cost+'</b></span><span>difficulty <b>'+x.a.difficulty+'</b></span>'
+      +(x.a.co2?'<span>CO₂ <b>'+x.a.co2+'</b></span>':'')
+      +'<span>timeline <b>'+x.a.timeline+'</b></span></div></div>';
+  }).join('');
+  V3.stagger(document.querySelectorAll('.action-card'),14);
 }
-
-function render(){
-  var clr=scColors[active];
-  var ps=STRATEGY_CATALOG.scores[active];
-  updateScenarioBar('#scenario-bar',active,scenarios);
-  document.getElementById('strat-projected').innerHTML=
-    '<span class="t3">Projected 2050 ('+scName()+'):</span> '
-    +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
-    +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
-    +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
-  document.getElementById('strat-narrative').innerHTML=
-    '<blockquote class="pullquote">'+STRATEGY_CATALOG.narratives[active]+'</blockquote>';
-  renderSummaryCards();
-  renderGrid('personal-grid',personal);
-  renderGrid('org-grid',organization);
-  renderGrid('policy-grid',policy);
-  var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('strategy',active);
-}
-
-initSectionNav('#nav-tabs','sec-','overview');
-initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
-render();
-document.getElementById('page-footer').innerHTML=renderFooter();
-
-})();
+document.getElementById('cat-filter').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  filter=b.getAttribute('data-f');renderFilter();renderActions();
+});
+renderCats();renderFilter();renderActions();
+V3.scenario.onChange(function(){renderCats();renderActions()});
 </script>
 </body>
 </html>

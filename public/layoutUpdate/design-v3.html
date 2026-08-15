@@ -104,7 +104,7 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
       <span>Reviewed <b>August 14, 2026</b></span>
       <span>Scope <b>15 pages, both themes, desktop + mobile</b></span>
     </div>
-    <a class="cta" href="index-v3.html">Tour the full demo</a>
+    <a class="cta" href="index.html">Tour the full demo</a>
     <a class="cta ghost" href="index.html">Current design</a>
   </div>
 </header>
@@ -129,7 +129,7 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
 
 <div class="finding"><div class="f-head"><span class="f-num">01</span><h3>Fifteen flat navigation items</h3><span class="sev high">High</span></div>
 <p>The nav is a single row of 15 links at 10px with 6px padding — recently tightened just to fit one line at 1080px. That is the symptom speaking: the IA has outgrown a flat list. Links of entirely different kinds (six system dashboards, three tools, four reference pages, a chat agent) sit side by side with identical weight, so nothing communicates structure and everything communicates clutter.</p>
-<p class="fix">Five top-level destinations — Overview · Systems ▾ · Tools ▾ · Evidence ▾ · About — with hover/focus menus that carry hints (today's score per system, "5 levers · 50 yr"). Bigger type, fewer decisions, the structure of the product visible in its chrome. Prototyped in <a href="index-v3.html">index-v3</a>.</p></div>
+<p class="fix">Five top-level destinations — Overview · Systems ▾ · Tools ▾ · Evidence ▾ · About — with hover/focus menus that carry hints (today's score per system, "5 levers · 50 yr"). Bigger type, fewer decisions, the structure of the product visible in its chrome. Prototyped in <a href="index.html">index-v3</a>.</p></div>
 
 <div class="finding"><div class="f-head"><span class="f-num">02</span><h3>The scenario switcher — the core interaction — looks like an afterthought</h3><span class="sev high">High</span></div>
 <p>Four tiny dot-buttons, right-aligned in a secondary bar, active state distinguishable only by color at 10px. This is the single control that changes every number on every page — the product's entire thesis — and a first-time visitor can miss it completely. The homepage then compensates with a four-step "How to use this site" manual.</p>
@@ -215,7 +215,7 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
 </table>
 
 <h2>The prototype — where it started</h2>
-<p><a href="index-v3.html"><b>index-v3.html</b></a> was the first proof. What to test on it:</p>
+<p><a href="index.html"><b>index.html</b></a> was the first proof. What to test on it:</p>
 <ul>
 <li><b>Switch scenarios</b> in the hero segmented control — score, delta bar, outcome sentence, all six ledger rows, and the quartet cards update together, with motion only on the numbers you changed.</li>
 <li><b>Hover the nav groups</b> — Systems/Tools/Evidence menus with per-item hints replace thirteen naked links.</li>
@@ -242,25 +242,25 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
 <p>Running the four brand scenario hues through a colorblind-safety validator confirmed what squinting at the current charts suggests: <b>aggressive teal (<span class="mono">#4ecdc4</span>) and moderate blue (<span class="mono">#5da5da</span>) are near-twins</b> — ΔE 12.7 for normal vision (the legibility floor is 15), 11.4 under deuteranopia. On a four-line chart they are the two hopeful futures — and the two you can't tell apart. The v3 charts shift moderate to <span class="mono" style="color:#4a7fd4;font-weight:700">#4a7fd4</span> — same blue family, deeper — lifting the worst adjacent pair to a passing ΔE 17.1 (now amber/orange, which the emphasis form and direct labels already disambiguate). Brand surfaces keep <span class="mono">#5da5da</span>; only data ink changes.</p>
 
 <h2>Motion — springs that confirm, never gate</h2>
-<p>The current site's one big motion idea — scroll-triggered opacity reveals — is finding 05: it gates reading. v3 replaces it with the approach popularized by <a href="https://motion.dev" rel="noopener">motion.dev</a>: <b>physical springs instead of duration curves, attached to user actions instead of scroll position.</b> Switch a scenario and nothing re-renders — everything <i>moves</i>: the bold trajectory morphs to its new shape, the landing bubble glides to the new dot, every 2050 number counts to its new value with the slight overshoot of a real object settling, and the score band's dot slides down the rail. The hero score counts up on arrival; trajectory lines draw in on first sight; sections rise into view on a fast, early-triggered reveal; the Simulation page can <b>play the whole run</b>, sweeping 2027→2070 while the world report rewrites itself. The demo now <b>ships on motion.dev</b> (vanilla UMD from jsdelivr — the same CDN precedent as three.js): inView springs drive entrances, delegated press physics squish every interactive element and spring back with overshoot, and emphasis pops mark whatever just gained meaning — the chosen segment's dot, a newly-active landing dot, a threshold chip that changed state. The hand-rolled spring integrator remains for number counting and as the full fallback when the CDN is unreachable; <span class="mono">prefers-reduced-motion</span> collapses everything to instant. The complete motion vocabulary, with live demos, is specified in the <a href="system-v3.html">design system</a>.</p>
+<p>The current site's one big motion idea — scroll-triggered opacity reveals — is finding 05: it gates reading. v3 replaces it with the approach popularized by <a href="https://motion.dev" rel="noopener">motion.dev</a>: <b>physical springs instead of duration curves, attached to user actions instead of scroll position.</b> Switch a scenario and nothing re-renders — everything <i>moves</i>: the bold trajectory morphs to its new shape, the landing bubble glides to the new dot, every 2050 number counts to its new value with the slight overshoot of a real object settling, and the score band's dot slides down the rail. The hero score counts up on arrival; trajectory lines draw in on first sight; sections rise into view on a fast, early-triggered reveal; the Simulation page can <b>play the whole run</b>, sweeping 2027→2070 while the world report rewrites itself. The demo now <b>ships on motion.dev</b> (vanilla UMD from jsdelivr — the same CDN precedent as three.js): inView springs drive entrances, delegated press physics squish every interactive element and spring back with overshoot, and emphasis pops mark whatever just gained meaning — the chosen segment's dot, a newly-active landing dot, a threshold chip that changed state. The hand-rolled spring integrator remains for number counting and as the full fallback when the CDN is unreachable; <span class="mono">prefers-reduced-motion</span> collapses everything to instant. The complete motion vocabulary, with live demos, is specified in the <a href="design-system.html">design system</a>.</p>
 
 <h2>The full demo — every page, rebuilt</h2>
 <p>The proposal is no longer a homepage — it is the entire site, working, on shared assets (<span class="mono">css/v3.css</span> + <span class="mono">js/v3.js</span>) and driven by the same data as the live pages (<span class="mono">shared.js</span>: VIZ_METRICS, SIM_ENGINE, STRATEGY_CATALOG, CROSS_SYSTEM; <span class="mono">live-data.js</span> for real-world feeds).</p>
 <table>
 <tr><th>Page</th><th>What to look at</th></tr>
-<tr><td><a href="index-v3.html">Overview</a></td><td>Hero scenario control; composite trajectory chart; systems ledger; live strip</td></tr>
-<tr><td><a href="ai-v3.html">AI</a></td><td>Six metrics with per-future context notes, five risk thresholds with breach states, five governance milestones — the original page's full scope, machine-extracted</td></tr>
-<tr><td><a href="climate-v3.html">Climate</a></td><td>All nine planetary metrics with the original's scenario notes, six tipping points evaluated at 2050 warming, three sub-scores</td></tr>
-<tr><td><a href="governance-v3.html">Governance</a></td><td>Charter status, three pillars, participation vitals, funding stack, five citizen assemblies, five governance modules, the audit program</td></tr>
-<tr><td><a href="transition-v3.html">Transition</a></td><td>Four labor vitals with context + the income-bridge calculator: six real career transitions priced under each future's dividend</td></tr>
-<tr><td><a href="civilization-v3.html">Civilization</a></td><td>Five cross-cutting KPIs, six-domain decomposition, the funding architecture, eight milestones to 2050</td></tr>
-<tr><td><a href="strategy-v3.html">Strategy</a></td><td>The 20-action catalog: adoption meters, per-scenario status chips, category filter</td></tr>
-<tr><td><a href="simulation-v3.html">Simulation</a></td><td>Lever readouts, the year scrubber, the generated world report, five trajectories with a year cursor</td></tr>
-<tr><td><a href="pathways-v3.html">Pathways</a></td><td>Origin = the sitewide scenario; pick a destination — slopes, lever deltas, and the 20-action status diff recompute</td></tr>
-<tr><td><a href="visualizer-v3.html">Visualizer</a></td><td>Hub for the three 3D instruments (which keep their own chrome by design)</td></tr>
-<tr><td><a href="data-v3.html">Live data</a></td><td>Eight live tiles with drift vs the 2026 baseline — real fetches, graceful fallback</td></tr>
-<tr><td><a href="timeline-v3.html">Timeline</a></td><td>The 200K-year spine without the voids; four scenario-reactive future chapters</td></tr>
-<tr><td><a href="research-v3.html">Research</a> · <a href="about-v3.html">About</a></td><td>Landing for the paper; scope, method, colophon</td></tr>
+<tr><td><a href="index.html">Overview</a></td><td>Hero scenario control; composite trajectory chart; systems ledger; live strip</td></tr>
+<tr><td><a href="ai.html">AI</a></td><td>Six metrics with per-future context notes, five risk thresholds with breach states, five governance milestones — the original page's full scope, machine-extracted</td></tr>
+<tr><td><a href="climate.html">Climate</a></td><td>All nine planetary metrics with the original's scenario notes, six tipping points evaluated at 2050 warming, three sub-scores</td></tr>
+<tr><td><a href="governance.html">Governance</a></td><td>Charter status, three pillars, participation vitals, funding stack, five citizen assemblies, five governance modules, the audit program</td></tr>
+<tr><td><a href="transition.html">Transition</a></td><td>Four labor vitals with context + the income-bridge calculator: six real career transitions priced under each future's dividend</td></tr>
+<tr><td><a href="civilization.html">Civilization</a></td><td>Five cross-cutting KPIs, six-domain decomposition, the funding architecture, eight milestones to 2050</td></tr>
+<tr><td><a href="strategy.html">Strategy</a></td><td>The 20-action catalog: adoption meters, per-scenario status chips, category filter</td></tr>
+<tr><td><a href="simulation.html">Simulation</a></td><td>Lever readouts, the year scrubber, the generated world report, five trajectories with a year cursor</td></tr>
+<tr><td><a href="pathways.html">Pathways</a></td><td>Origin = the sitewide scenario; pick a destination — slopes, lever deltas, and the 20-action status diff recompute</td></tr>
+<tr><td><a href="visualizer.html">Visualizer</a></td><td>Hub for the three 3D instruments (which keep their own chrome by design)</td></tr>
+<tr><td><a href="data.html">Live data</a></td><td>Eight live tiles with drift vs the 2026 baseline — real fetches, graceful fallback</td></tr>
+<tr><td><a href="timeline.html">Timeline</a></td><td>The 200K-year spine without the voids; four scenario-reactive future chapters</td></tr>
+<tr><td><a href="research.html">Research</a> · <a href="about.html">About</a></td><td>Landing for the paper; scope, method, colophon</td></tr>
 </table>
 <p><b>The scenario contract, everywhere:</b> every page defaults to <b>business as usual</b>. The moment you choose differently, the choice persists across every page — and back to the live site, via the same <span class="mono">aicivsim-scenario</span> key and <span class="mono">#hash</span> convention — until you change it again. The theme behaves identically via <span class="mono">aicivsim-theme</span>.</p>
 
@@ -274,7 +274,7 @@ footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);
 </main>
 
 <footer>
-  <div class="col">Design v3 audit &amp; proposal · branch <span class="mono">design-v3</span> · August 14, 2026 · <a href="index-v3.html">prototype</a> · <a href="index.html">current site</a></div>
+  <div class="col">Design v3 audit &amp; proposal · branch <span class="mono">design-v3</span> · August 14, 2026 · <a href="index.html">prototype</a> · <a href="index.html">current site</a></div>
 </footer>
 
 <script>

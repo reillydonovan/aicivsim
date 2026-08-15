@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>About — AI Civilization Simulator</title>
 <meta name="description" content="About the AI Civilization Simulator - scope, methodology, and technology.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://aicivsim.com/about.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AI Civilization Simulator">
@@ -15,338 +14,62 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="About — AI Civilization Simulator">
 <meta name="twitter:description" content="About the AI Civilization Simulator - scope, methodology, and technology.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260813b">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
 </head>
 <body>
 
-<!-- ── MASTHEAD ── -->
-<header class="masthead">
-<div class="page masthead-inner">
-  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / About</p>
-  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">About</h1>
-  <hr class="rule">
-</div>
-</header>
-
-<div id="site-nav-mount"></div>
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">About</span>
+  <h1 class="title-1">A planning tool, not a prophecy.</h1>
+  <p class="lead">An open simulation framework for reasoning about the interconnected systems that determine civilizational outcomes over generational timescales. It exists to make tradeoffs, feedback loops, and the cost of inaction visible — not to predict the future.</p>
+</div></header>
 
 <main>
 
-<!-- ═══════════════════════════════════════════════════════════
-     01 — WHAT IS THIS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="section">
-<div class="page">
-  <span class="section-num">01</span>
-  <p class="t2">What Is This</p>
-  <hr class="rule">
-  <div class="pullquote mt-4">
-    An open simulation framework for reasoning about the interconnected systems that determine civilizational outcomes over generational timescales.
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">What it is — and isn't</h2></div></div>
+  <div class="chart-grid">
+    <div class="chart-card"><div class="c-title" style="margin-bottom:8px">Scope</div>
+      <p class="body-2" style="font-size:13.5px">Six interconnected systems — AI, climate, governance, workforce transition, civilization health, and a strategy catalog — each a 0–100 "operating system" with today's score, projections to 2050, and the feedback weights that couple it to the rest. One simulation engine underneath them all.</p></div>
+    <div class="chart-card"><div class="c-title" style="margin-bottom:8px">Honesty</div>
+      <p class="body-2" style="font-size:13.5px">This is scenario analysis, not forecasting. Composite scores are modeled indices; the measurements underneath them are live — CO₂, warming, renewables, emissions, and poverty are fetched from public scientific APIs each time you visit. The rest is clearly labeled as model.</p></div>
   </div>
-  <div class="grid grid-2 mt-6">
-    <div class="cell">
-      <p class="t3" style="margin-bottom:8px">Scope</p>
-      <p class="body">The simulator models six interconnected dimensions of civilizational health: climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. Each dimension is tracked as a scored "operating system" with its own KPIs, projections, and scenario responses.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="margin-bottom:8px">Intent</p>
-      <p class="body">This is a planning tool, not a prediction engine. It provides a structured framework for exploring how policy decisions compound over decades. Projections are modeled and simulated; baselines are grounded in live measurements pulled from public scientific APIs (see <a href="data.html" style="color:var(--climate)">Live Data</a>). The site is entirely static&mdash;all computation, including the live fetches, happens client-side in your browser.</p>
-    </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">How it works</h2></div></div>
+  <div class="kpis">
+    <div class="stat"><div class="lbl">Systems</div><div class="val">6</div><div class="delta flat"><span class="ctx">plus the simulation engine that couples them</span></div></div>
+    <div class="stat"><div class="lbl">Scenarios</div><div class="val">4</div><div class="delta flat"><span class="ctx">four settings of the same five policy levers</span></div></div>
+    <div class="stat"><div class="lbl">Horizon</div><div class="val">50<small> yr</small></div><div class="delta flat"><span class="ctx">2026 baseline, projections through 2070</span></div></div>
+    <div class="stat"><div class="lbl">Live feeds</div><div class="val">8</div><div class="delta flat"><span class="ctx">NOAA · Our World in Data · World Bank</span></div></div>
   </div>
-</div>
-</div>
+</div></section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     02 — HOW IT WORKS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">02</span>
-  <p class="t2">How It Works</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-4">
-    <div class="cell">
-      <p class="num-lg" style="color:var(--text-primary)">6</p>
-      <p class="t3 mt-2">Operating Systems</p>
-      <p class="t4 mt-2">Each OS models one dimension: climate, governance, workforce, civilization (aggregate), strategy, and transition planning. Changes in one propagate through interconnected feedback loops.</p>
-    </div>
-    <div class="cell">
-      <p class="num-lg" style="color:var(--text-primary)">4</p>
-      <p class="t3 mt-2">Scenarios</p>
-      <p class="t4 mt-2">Four divergent scenarios vary the core policy levers and assumptions. Toggle between Aggressive Action, Moderate Reform, Business as Usual, and Worst Case to see different futures.</p>
-    </div>
-    <div class="cell">
-      <p class="num-lg" style="color:var(--text-primary)">50</p>
-      <p class="t3 mt-2">Year Horizon</p>
-      <p class="t4 mt-2">Projections span 2025 through 2075. Data visualizations show 10-to-50-year trajectories with decade markers. All timelines are synchronized across operating systems.</p>
-    </div>
-    <div class="cell">
-      <p class="num-lg" style="color:var(--text-primary)">8</p>
-      <p class="t3 mt-2">Live Data Feeds</p>
-      <p class="t4 mt-2">Real-world baselines &mdash; CO&#8322;, warming, renewables, emissions, methane, sea ice, poverty, unemployment &mdash; fetched in your browser from NOAA, Our World in Data, and the World Bank. Still no servers, no databases, no tracking. Projections remain modeled. <a href="data.html" style="color:var(--climate)">See the live data &rarr;</a></p>
-    </div>
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Colophon</h2></div></div>
+  <div class="trio">
+    <div class="t-card" style="cursor:default"><h3>Stack</h3><p>Hand-rolled HTML, CSS, and JavaScript — no framework, no build step. three.js powers the 3D instruments. The AI Advisor runs through a thin server proxy or your own key, never a third party.</p></div>
+    <div class="t-card" style="cursor:default"><h3>Type &amp; design</h3><p>Space Grotesk for display, Inter for text, JetBrains Mono for every number. Feltron-inspired editorial data design; the v3 language adds a real type scale, a validated chart palette, and spring-based motion.</p></div>
+    <div class="t-card" style="cursor:default"><h3>Open</h3><p>All code, data, and methodology on <a class="a" href="https://github.com/clawcode/aicivsim">GitHub</a>. Feedback, corrections, and contributions welcome. Built on the <a class="a" href="design-system.html">AICIVSIM design system</a>.</p></div>
   </div>
-
-  <div class="flex gap-16 mt-8 flex-wrap">
-    <div style="flex:1;min-width:240px">
-      <p class="t3" style="margin-bottom:12px">System Interconnections</p>
-      <p class="body">The six operating systems do not model their domains in isolation. Climate stress reduces workforce readiness. Governance failures amplify equity gaps. Technology misalignment erodes institutional trust. The simulator tracks these cross-domain feedback loops to produce more realistic composite trajectories.</p>
-    </div>
-    <div style="flex:1;min-width:240px">
-      <p class="t3" style="margin-bottom:12px">Scenario Mechanics</p>
-      <p class="body">Each scenario adjusts three primary policy levers&mdash;civic dividend rates, AI governance charter adoption, and climate investment as a share of GDP. Secondary effects cascade through the model: higher civic dividends reduce inequality, which increases institutional trust, which accelerates governance reform adoption. To see the gap between any two scenarios made explicit&mdash;lever deltas, which of the 20 catalog actions change status, and where the trajectories fork&mdash;see <a href="pathways.html" style="color:var(--accent)">Pathways</a>.</p>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     03 — METHODOLOGY
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">03</span>
-  <p class="t2">Methodology</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <p class="body mb-6" style="max-width:600px">The simulation uses scenario modeling with adjustable policy lever inputs. Trajectories are generated deterministically&mdash;the same inputs always produce the same outputs. The model is transparent and auditable.</p>
-
-  <div class="grid grid-3">
-    <div class="cell">
-      <p class="t3" style="color:var(--accent);margin-bottom:12px">Policy Levers</p>
-      <div class="flex flex-col gap-6">
-        <div>
-          <div class="flex justify-between items-baseline">
-            <p class="t4">Civic Dividend Rate</p>
-            <span class="num-sm" style="color:var(--text-secondary)">0&ndash;12%</span>
-          </div>
-          <div class="bar-track mt-1"><div class="bar-fill" style="width:50%;background:var(--equity)"></div></div>
-        </div>
-        <div>
-          <div class="flex justify-between items-baseline">
-            <p class="t4">AI Governance Charters</p>
-            <span class="num-sm" style="color:var(--text-secondary)">0&ndash;100%</span>
-          </div>
-          <div class="bar-track mt-1"><div class="bar-fill" style="width:35%;background:var(--governance)"></div></div>
-        </div>
-        <div>
-          <div class="flex justify-between items-baseline">
-            <p class="t4">Climate Investment Share</p>
-            <span class="num-sm" style="color:var(--text-secondary)">0&ndash;8% GDP</span>
-          </div>
-          <div class="bar-track mt-1"><div class="bar-fill" style="width:25%;background:var(--climate)"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="cell">
-      <p class="t3" style="color:var(--accent);margin-bottom:12px">Tracked Trajectories</p>
-      <div class="flex flex-col gap-4">
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:4px">
-          <p class="t4">GINI Inequality</p>
-          <span class="delta delta-down">rising</span>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:4px">
-          <p class="t4">Civic Trust Index</p>
-          <span class="delta delta-down">declining</span>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:4px">
-          <p class="t4">Emissions (GtCO2)</p>
-          <span class="delta delta-down">increasing</span>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:4px">
-          <p class="t4">Systemic Resilience</p>
-          <span class="delta delta-down">eroding</span>
-        </div>
-        <div class="flex justify-between items-baseline">
-          <p class="t4">AI Influence Score</p>
-          <span class="delta delta-up">expanding</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="cell">
-      <p class="t3" style="color:var(--accent);margin-bottom:12px">Key Performance Indicators</p>
-      <div class="flex flex-col gap-4">
-        <div>
-          <p class="t4">Poverty Rate</p>
-          <p class="num-sm" style="color:var(--equity)">target &lt; 5%</p>
-        </div>
-        <div>
-          <p class="t4">Average Reskill Time</p>
-          <p class="num-sm" style="color:var(--workforce)">target &lt; 6 months</p>
-        </div>
-        <div>
-          <p class="t4">Peak Emissions Year</p>
-          <p class="num-sm" style="color:var(--climate)">target 2030</p>
-        </div>
-        <div>
-          <p class="t4">Biodiversity Corridors</p>
-          <p class="num-sm" style="color:var(--climate)">target 30% coverage</p>
-        </div>
-        <div>
-          <p class="t4">AI Audit Coverage</p>
-          <p class="num-sm" style="color:var(--governance)">target 95%</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="rule mt-8">
-  <p class="t3 mt-4" style="margin-bottom:8px">Funding Model Reference</p>
-  <p class="body">The civic dividend mechanism modeled in the simulator is structurally based on the Alaska Permanent Fund&mdash;a sovereign wealth fund that distributes resource revenues directly to citizens. The simulation extends this model to AI-generated productivity gains, testing different distribution rates and their downstream effects on inequality, trust, and workforce adaptation.</p>
-
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     04 — TECH STACK
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">04</span>
-  <p class="t2">Tech Stack</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-2">
-    <div class="cell">
-      <p class="t3" style="color:var(--text-muted);margin-bottom:12px">Original Build</p>
-      <div class="flex flex-col gap-2">
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:6px">
-          <p class="t4">Framework</p>
-          <p class="num-xs" style="color:var(--text-secondary)">Next.js 14</p>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:6px">
-          <p class="t4">UI Library</p>
-          <p class="num-xs" style="color:var(--text-secondary)">React 18</p>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:6px">
-          <p class="t4">Language</p>
-          <p class="num-xs" style="color:var(--text-secondary)">TypeScript</p>
-        </div>
-        <div class="flex justify-between items-baseline">
-          <p class="t4">Styling</p>
-          <p class="num-xs" style="color:var(--text-secondary)">Tailwind CSS 3</p>
-        </div>
-      </div>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent);margin-bottom:12px">Current Build</p>
-      <div class="flex flex-col gap-2">
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:6px">
-          <p class="t4">Framework</p>
-          <p class="num-xs" style="color:var(--text-primary)">Static HTML</p>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:6px">
-          <p class="t4">Scripting</p>
-          <p class="num-xs" style="color:var(--text-primary)">Vanilla JS</p>
-        </div>
-        <div class="flex justify-between items-baseline" style="border-bottom:1px solid var(--border);padding-bottom:6px">
-          <p class="t4">Charts</p>
-          <p class="num-xs" style="color:var(--text-primary)">SVG (hand-rolled)</p>
-        </div>
-        <div class="flex justify-between items-baseline">
-          <p class="t4">Build Step</p>
-          <p class="num-xs" style="color:var(--text-primary)">None</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="rule mt-6">
-
-  <div class="grid grid-3 mt-4">
-    <div class="cell">
-      <p class="t3" style="margin-bottom:8px">Display</p>
-      <p class="t4">Space Grotesk</p>
-      <p class="t4" style="color:var(--text-faint)">Headings, section titles</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="margin-bottom:8px">Body</p>
-      <p class="t4">Inter</p>
-      <p class="t4" style="color:var(--text-faint)">Labels, annotations, prose</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="margin-bottom:8px">Data</p>
-      <p class="t4">JetBrains Mono</p>
-      <p class="t4" style="color:var(--text-faint)">Numerals, scores, code</p>
-    </div>
-  </div>
-
-  <p class="body mt-6">Design follows the Feltron editorial data-report tradition: dark backgrounds, systematic typography hierarchy, 12-column grid, data as the primary visual element. No decorative imagery. No emojis. Information density is the aesthetic.</p>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     05 — CREDITS + LINKS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">05</span>
-  <p class="t2">Credits</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-2">
-    <div class="cell">
-      <p class="t3" style="color:var(--accent);margin-bottom:12px">Project</p>
-      <p class="t4">Clawcode Research, 2026</p>
-      <p class="t4 mt-2" style="color:var(--text-faint)">An open simulation framework for modeling civilizational health across interconnected systems.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="margin-bottom:12px">Links</p>
-      <div class="flex flex-col gap-2">
-        <a href="https://github.com/reillyclawcode" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">GitHub &rarr;</a>
-        <a href="index.html" class="t4" style="color:var(--text-secondary);border-bottom:1px solid var(--border);padding-bottom:6px">Simulator Home &rarr;</a>
-      </div>
-    </div>
-  </div>
-  <hr class="rule mt-6">
-  <p class="t4 mt-4" style="color:var(--text-faint)">Design language inspired by Nicholas Felton's Annual Reports (2005&ndash;2014). The Feltron reports pioneered the use of personal data as narrative medium&mdash;systematic typography, editorial grids, and quantified observation. This project applies the same principles to civilizational-scale simulation data.</p>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     FOOTER
-     ═══════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-<div class="page">
-  <hr class="rule-long" style="margin-bottom:32px">
-  <div class="flex justify-between items-end flex-wrap gap-8">
-    <div>
-      <p class="t3" style="color:var(--accent);margin-bottom:8px">AICIVSIM</p>
-      <p class="t4">AI Civilization Simulator</p>
-      <p class="t4" style="color:var(--text-faint)">Clawcode Research &middot; 2026</p>
-    </div>
-    <div class="text-right">
-      <p class="t4" style="color:var(--text-faint)">Data: modeled projections + live real-world baselines</p>
-      <p class="t4" style="color:var(--text-faint)">Typography: Space Grotesk / Inter / JetBrains Mono</p>
-      <p class="t4" style="color:var(--text-faint)">Design: Feltron-inspired editorial data report</p>
-    </div>
-  </div>
-</div>
-</footer>
+</div></section>
 
 </main>
+</div>
 
-<script src="js/shared.js?v=20260813b"></script>
+<script src="js/shared.js?v=20260816a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
+V3.boot({deck:{sys:'civilization',context:'Scope, method, and colophon'}});
+document.querySelector('.deck-title b').textContent='About';
+document.querySelector('.deck-title i').style.background='var(--ink-3)';
 </script>
 </body>
 </html>

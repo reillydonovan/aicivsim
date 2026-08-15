@@ -5,478 +5,244 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Civilization Simulator — 2026</title>
 <meta name="description" content="A data-driven simulation of civilization-scale futures - seven systems, four scenarios, fifty years of projections.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="canonical" href="https://aicivsim.com/">
+<link rel="canonical" href="https://aicivsim.com/index.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AI Civilization Simulator">
 <meta property="og:title" content="AI Civilization Simulator — 2026">
 <meta property="og:description" content="A data-driven simulation of civilization-scale futures - seven systems, four scenarios, fifty years of projections.">
-<meta property="og:url" content="https://aicivsim.com/">
+<meta property="og:url" content="https://aicivsim.com/index.html">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AI Civilization Simulator — 2026">
 <meta name="twitter:description" content="A data-driven simulation of civilization-scale futures - seven systems, four scenarios, fifty years of projections.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260813b">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
 </head>
 <body>
 
-<!-- ── MASTHEAD ── -->
-<header class="masthead">
-<div class="page masthead-inner">
-  <p class="t3" style="color:var(--accent);letter-spacing:0.3em;margin-bottom:8px">AICIVSIM &mdash; 2026</p>
-  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">AI Civilization Simulator</h1>
-  <p class="body mt-3" style="max-width:480px">A data-driven simulation framework modeling the interconnected systems that shape civilizational outcomes. Six operating systems. Four scenarios. Fifty years of projections.</p>
-  <hr class="rule">
-</div>
+<header class="hero">
+  <div class="col hero-grid">
+    <div>
+      <span class="eyebrow">Civilization score · measured August 2026</span>
+      <div class="score-display" id="score-now" style="margin-top:18px">44</div>
+      <div class="score-sub">
+        <span class="grade-chip" id="grade-now" style="color:var(--accent)">D</span>
+        <span class="body-2">out of 100 · every tracked system declining</span>
+      </div>
+      <p class="lead hero-sentence">One composite number across AI alignment, climate, governance, work, and trust — refreshed from live sources each visit. What happens to it next is a choice.</p>
+      <div class="score-band" aria-label="Score today and in 2050">
+        <div class="sb-rail"></div>
+        <div class="sb-range" id="sb-range"></div>
+        <span class="sb-today" style="left:44%"><i></i><em><b>44</b> today</em></span>
+        <span class="sb-dot" id="sb-dot"></span>
+        <span class="sb-proj" id="sb-proj-lbl"><b class="num" id="sb-proj">28</b> in 2050 · <span id="sb-name">business as usual</span></span>
+        <div class="sb-ends"><span>0</span><span>100</span></div>
+      </div>
+    </div>
+    <div class="sc-block">
+      <span class="eyebrow">Choose a future</span>
+      <div id="hero-seg"></div>
+      <div class="sc-outcome">
+        <div class="headline"><span>2050 outcome:</span> <b class="num" id="out-score" style="color:var(--sc-bau)">28</b> <span id="out-verdict" class="body-2">systemic decline</span></div>
+        <p id="out-desc"></p>
+      </div>
+      <div class="live-strip">
+        <span class="pill">Live</span>
+        <span class="item">CO₂ <b data-live="co2ppm">427.9 ppm</b></span>
+        <span class="item">Warming <b data-live="tempAnomaly">+1.39 °C</b></span>
+        <span class="item">Extreme poverty <b data-live="poverty">10.4%</b></span>
+        <a href="data.html">All live data →</a>
+      </div>
+    </div>
+  </div>
 </header>
-
-<div id="site-nav-mount"></div>
 
 <main>
 
-<!-- SCENARIO BAR (home page) -->
-<div class="control-bar">
-<div class="page">
-  <div class="control-bar-inner">
-    <div></div>
-    <div class="scenario-bar" id="scenario-bar"></div>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     01 — HERO SCORE
-     ═══════════════════════════════════════════════════════════ -->
-<div class="section">
-<div class="page">
-  <span class="section-num">01</span>
-  <h2 class="t2">Today&rsquo;s Civilization Score</h2>
-  <hr class="rule">
-  <div id="hero-score"></div>
-  <div id="live-strip" class="mt-6"></div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     02 — SIX SYSTEMS INDEX
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">02</span>
-  <p class="t2">Systems Index &mdash; <span id="idx-scenario-label" style="color:#e8a838">Business as Usual</span></p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-6" id="systems-grid"></div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     03 — WHAT THIS IS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">03</span>
-  <p class="t2">What This Is</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="pullquote" style="max-width:640px">
-    A data-driven simulation framework that models the interconnected forces shaping long-term civilizational outcomes &mdash; climate, governance, workforce, equity, technology, and wellbeing.
-  </div>
-  <p class="body mt-4" style="max-width:640px">The world&rsquo;s most critical systems &mdash; climate, economy, governance, technology &mdash; don&rsquo;t operate in isolation. A policy decision about AI regulation ripples through labor markets. A failure in climate adaptation compounds inequality. A collapse in institutional trust undermines every other reform.</p>
-  <p class="body mt-3" style="max-width:640px">This simulator maps those interdependencies. It takes seven civilizational systems &mdash; including AI itself &mdash; connects them through feedback loops, and projects how different levels of policy intervention produce radically different outcomes over 50 years.</p>
-  <p class="body mt-3" style="max-width:640px"><strong style="color:var(--text-primary)">This is not a prediction engine.</strong> It is a planning tool &mdash; a structured way to reason about systemic tradeoffs, compounding effects, and the consequences of acting (or failing to act) at civilizational scale.</p>
-  <p class="body mt-3" style="max-width:640px">Projections are modeled from scenario analysis, calibrated against IPCC pathways, labor economics research, and institutional governance literature. Baselines are grounded in <a href="data.html" style="color:var(--climate)">live real-world measurements</a> &mdash; CO&#8322;, warming, renewables, emissions, and poverty are fetched directly from NOAA, Our World in Data, and the World Bank each time you visit. The composite 0&ndash;100 scores remain modeled indices; the measurements underneath them are today&rsquo;s.</p>
-
-  <div class="grid grid-3 mt-8">
-    <div class="cell">
-      <p class="num-lg" style="color:var(--accent)">7</p>
-      <p class="t3 mt-1">Systems</p>
-      <p class="t4 mt-2">AI, Climate, Governance, Workforce Transition, Civilization Health, Simulation Engine, and Strategy Catalog. Each models one dimension. Changes in one propagate across all others through feedback loops.</p>
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">The next twenty-four years</h2>
+        <p class="lead">Aggregate civilizational health, 2026–2050, under all four futures at once. The bold line is the one you chose above — switch scenarios and watch it move.</p>
+      </div>
+      <a class="section-link" href="civilization.html">The composite in depth →</a>
     </div>
-    <div class="cell">
-      <p class="num-lg" style="color:var(--accent)">4</p>
-      <p class="t3 mt-1">Policy Scenarios</p>
-      <p class="t4 mt-2">Every chart and projection can be toggled between Aggressive Action, Moderate Reform, Business as Usual, and Worst Case. Watch how the same metrics diverge radically under different assumptions.</p>
-    </div>
-    <div class="cell">
-      <p class="num-lg" style="color:var(--accent)">50</p>
-      <p class="t3 mt-1">Year Horizon</p>
-      <p class="t4 mt-2">Trajectories from 2025 through 2075. Some decisions compound slowly; others create sharp inflection points. The long view reveals dynamics invisible in short-term analysis.</p>
+    <div class="chart-grid one">
+      <div class="chart-card" id="composite-chart"></div>
     </div>
   </div>
-</div>
-</div>
+</section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     04 — HOW TO USE IT
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">04</span>
-  <p class="t2">How to Use This Site</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-2">
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">1. Start with the Score</p>
-      <p class="t4 mt-2">Every page opens with a <strong style="color:var(--text-primary)">Today&rsquo;s Score</strong> &mdash; a composite assessment of that system&rsquo;s current health, graded on 2026 baseline data. This is where we stand before any intervention.</p>
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">Six systems, one score</h2>
+        <p class="lead">Each system models a dimension of civilizational health. They feed back into each other — and into the composite above.</p>
+      </div>
     </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">2. Switch Scenarios</p>
-      <p class="t4 mt-2">Use the scenario buttons on each page to toggle between the four futures. Every chart, score, and narrative updates instantly to show how that system responds under different policy assumptions.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">3. Read the Charts</p>
-      <p class="t4 mt-2">Every graph shows all four scenarios simultaneously. The active scenario is highlighted with a bold line; inactive scenarios are dimmed but visible for comparison. End-of-line values show final outcomes.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">4. Explore the Simulation</p>
-      <p class="t4 mt-2">The <a href="simulation.html" style="color:var(--technology)">Simulation</a> page has interactive policy levers &mdash; adjust civic dividend rates, climate investment, AI governance, and more. Scrub the timeline from 2027 to 2070 and watch metrics evolve.</p>
-    </div>
+    <div class="ledger" id="ledger"></div>
   </div>
-</div>
-</div>
+</section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     VISUALIZER CTA
-     ═══════════════════════════════════════════════════════════ -->
-<div class="section" style="padding-top:0;padding-bottom:0">
-<div class="page">
-  <div style="border:1px solid rgba(78,205,196,0.15);border-radius:8px;padding:32px 36px;background:rgba(78,205,196,0.03);display:flex;align-items:center;gap:32px;flex-wrap:wrap">
-    <div style="flex:1;min-width:260px">
-      <p class="t3" style="color:var(--accent);margin-bottom:8px">Experience the Systems in 3D</p>
-      <p class="t4" style="max-width:480px;line-height:1.7">See all six operating systems as an interactive network. Switch scenarios and scrub through 50 years of projections while the nodes, connections, and ambient soundscape respond in real time. Three modes: a flagship 3D visualizer, an AI knowledge graph explorer, and immersive WebXR.</p>
-      <a href="visualizer.html" class="tag mt-4" style="display:inline-block;border-color:var(--accent);color:var(--accent);font-size:12px;padding:10px 20px;text-decoration:none;letter-spacing:0.06em">3D Experiences &rarr;</a>
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">Four futures, fully specified</h2>
+        <p class="lead">Not moods — policy configurations. Each scenario fixes the same five levers at different settings and lets fifty years of feedback loops run.</p>
+      </div>
+      <a class="section-link" href="pathways.html">How to move between them →</a>
     </div>
-    <div style="text-align:center;min-width:140px">
-      <p style="font-family:var(--font-mono);font-size:48px;font-weight:700;color:var(--accent);line-height:1">3D</p>
-      <p class="t4 mt-1" style="color:var(--text-muted)">Interactive<br>Network Graph</p>
-    </div>
+    <div class="quartet" id="quartet"></div>
   </div>
-</div>
-</div>
+</section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     3D EXPERIENCES CALLOUT
-     ═══════════════════════════════════════════════════════════ -->
-<div class="section" style="padding-top:0;padding-bottom:0">
-<div class="page">
-  <div style="border:1px solid rgba(78,205,196,0.12);border-radius:8px;padding:24px 28px;background:rgba(78,205,196,0.02);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
-    <div style="flex:1;min-width:220px">
-      <p class="t3" style="color:var(--accent);margin-bottom:6px">3 Experiences Under One Roof</p>
-      <p class="t4" style="line-height:1.7;max-width:440px">The Visualizer hub now includes the flagship 3D network, a <span style="color:#e8a838">Knowledge Explorer</span> (ask questions, grow a 3D graph), and an immersive <span style="color:#9b87f5">WebXR</span> mode for VR/AR headsets.</p>
+<section class="section">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">Don't read it. Drive it.</h2>
+        <p class="lead">The scores above are outputs of a live model you can operate yourself.</p>
+      </div>
     </div>
-    <a href="visualizer.html" class="tag" style="display:inline-block;border-color:var(--accent);color:var(--accent);font-size:11px;padding:10px 20px;text-decoration:none;letter-spacing:0.06em;white-space:nowrap">All 3D Experiences &rarr;</a>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     05 — THE FOUR SCENARIOS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">05</span>
-  <p class="t2">The Four Scenarios</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <p class="body mb-6" style="max-width:640px">Every projection is modeled under four divergent scenarios. Each varies the core policy levers &mdash; civic dividend rates, AI governance charter adoption, climate investment, workforce reskilling, and institutional transparency &mdash; to produce different long-term trajectories.</p>
-  <div class="grid grid-2" id="scenario-cards"></div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     06 — THE SYSTEMS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">06</span>
-  <p class="t2">The Seven Systems</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <p class="body mb-6" style="max-width:640px">Each operating system models a different dimension of civilizational health. Together they form a composite picture. Explore each to see detailed metrics, scenario projections, and supporting analysis.</p>
-
-  <div class="grid grid-2">
-    <div class="cell">
-      <a href="ai.html" style="text-decoration:none">
-        <p class="t3" style="color:#e8a838">AI &rarr;</p>
+    <div class="trio">
+      <a class="t-card" href="simulation.html">
+        <div class="kicker num">5</div>
+        <h3>Simulation</h3>
+        <p>Five policy levers, decades of consequences. Pick a year, read the world your settings produce — inequality, trust, emissions, resilience.</p>
+        <span class="go">Open the engine →</span>
       </a>
-      <p class="t4 mt-2">Artificial intelligence: alignment progress, autonomy risk, compute governance, model transparency, deployment safety, and public trust. 6 core metrics tracking whether AI capability growth is converging with &mdash; or diverging from &mdash; governance capacity.</p>
-    </div>
-    <div class="cell">
-      <a href="civilization.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--equity)">Civilization &rarr;</p>
+      <a class="t-card" href="pathways.html">
+        <div class="kicker num">+43</div>
+        <h3>Pathways</h3>
+        <p>The gap between any two futures, itemized: which levers move, which actions flip from aspiration to enforcement, where the curves fork.</p>
+        <span class="go">Map a route →</span>
       </a>
-      <p class="t4 mt-2">The aggregate view: composite scores across all seven systems, KPI trajectory comparisons, funding pool breakdowns, revenue source modeling, and the implementation timeline from discovery through continental-scale deployment.</p>
-    </div>
-    <div class="cell">
-      <a href="simulation.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--technology)">Simulation &rarr;</p>
+      <a class="t-card" href="visualizer.html">
+        <div class="kicker num">3D</div>
+        <h3>Visualizer</h3>
+        <p>The whole system as an interactive network — a flagship 3D graph, an AI knowledge explorer, and an immersive WebXR mode.</p>
+        <span class="go">Enter the network →</span>
       </a>
-      <p class="t4 mt-2">The interactive engine. Adjust 5 policy levers (dividends, climate capex, reskilling, transparency, AI charter), scrub the timeline from 2027 to 2070, and watch structural metrics evolve. Generates detailed narrative reports for every year and scenario.</p>
-    </div>
-    <div class="cell">
-      <a href="climate.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--climate)">Climate &rarr;</p>
-      </a>
-      <p class="t4 mt-2">Planetary systems: temperature trajectories, emissions pathways, biodiversity indices, ocean health, renewable energy transition, crop yields, water stress, sea level rise, and tipping point risk assessment. 8 core metrics across 6 sub-domains.</p>
-    </div>
-    <div class="cell">
-      <a href="transition.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--workforce)">Transition &rarr;</p>
-      </a>
-      <p class="t4 mt-2">Workforce and economic transition: poverty rates, reskilling timelines, placement rates, employment metrics, and the income bridge calculator &mdash; modeling how civic dividends offset career transition costs under each scenario.</p>
-    </div>
-    <div class="cell">
-      <a href="governance.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--governance)">Governance &rarr;</p>
-      </a>
-      <p class="t4 mt-2">Institutional infrastructure: civic participation rates, AI charter adoption, citizen assemblies, governance modules (participatory budgeting, open audits, algorithmic transparency), and safety audit coverage tracking.</p>
-    </div>
-    <div class="cell">
-      <a href="strategy.html" style="text-decoration:none">
-        <p class="t3" style="color:var(--accent)">Strategy &rarr;</p>
-      </a>
-      <p class="t4 mt-2">The action catalog: 50+ concrete intervention strategies organized across individual, institutional, and systemic implementation levels. Each strategy maps to the systems it would affect.</p>
     </div>
   </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     07 — THE ARC
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">07</span>
-  <p class="t2">The Arc of Civilization</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-2">
-    <div>
-      <p class="body" style="max-width:480px">Every civilization-defining technology changed what was possible. AI is the latest — and it may be the last one we get to choose how to deploy. <a href="timeline.html" style="color:var(--accent)">The Timeline</a> traces 200,000 years of human inflection points and asks: what do the next 25 years look like?</p>
-      <a href="timeline.html" class="tag mt-4" style="display:inline-block;border-color:var(--accent);color:var(--accent);font-size:12px;padding:8px 16px;text-decoration:none">Explore the Timeline &rarr;</a>
-    </div>
-    <div class="cell" style="text-align:center;padding:24px">
-      <p class="num-lg" style="color:var(--accent)">200K</p>
-      <p class="t3 mt-1">Years of Humanity</p>
-      <p class="t4 mt-3" style="color:var(--text-muted)">8 inflection points. Each compressed more change into less time. The gap between the last two is 15 years. The window for the next one is ~10.</p>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════
-     08 — METHODOLOGY
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">08</span>
-  <p class="t2">Methodology &amp; Data Sources</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <p class="body" style="max-width:640px">All projections are generated through scenario modeling calibrated against established research. The simulator is designed to illustrate systemic dynamics, not to produce forecasts.</p>
-  <div class="grid grid-3 mt-6">
-    <div class="cell">
-      <p class="t3">Climate Data</p>
-      <p class="t4 mt-2">IPCC AR6 shared socioeconomic pathways (SSP1&ndash;5), Global Carbon Budget 2024, IUCN Red List indices, FAO crop yield models, WHO water stress indicators.</p>
-    </div>
-    <div class="cell">
-      <p class="t3">Economic Models</p>
-      <p class="t4 mt-2">GINI coefficient projections from World Bank data, labor displacement estimates from OECD automation studies, civic dividend frameworks from UBI research literature.</p>
-    </div>
-    <div class="cell">
-      <p class="t3">Governance Metrics</p>
-      <p class="t4 mt-2">Edelman Trust Barometer baselines, OECD Government at a Glance, AI governance charter frameworks from IEEE and OECD AI principles.</p>
-    </div>
-  </div>
-  <p class="t4 mt-6" style="color:var(--text-faint);max-width:640px">This project is open source. All code, data, and methodology are available on <a href="https://github.com/clawcode/aicivsim" style="color:var(--accent)">GitHub</a>. Feedback, corrections, and contributions are welcome.</p>
-</div>
-</div>
-
-<!-- FOOTER -->
-<div id="page-footer"></div>
+</section>
 
 </main>
 
-<script src="js/shared.js?v=20260813b"></script>
-<script src="js/live-data.js?v=20260813b" defer></script>
+<script src="js/shared.js?v=20260816a"></script>
+<script src="js/live-data.js?v=20260816a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
-(function(){
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
-document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
-
-var SC=[
-  {id:'aggressive',name:'Aggressive Action',color:'#4ecdc4'},
-  {id:'moderate',name:'Moderate Reform',color:'#5da5da'},
-  {id:'bau',name:'Business as Usual',color:'#e8a838'},
-  {id:'worst',name:'Worst Case',color:'#d4622a'}
-];
-var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
-var active='bau';
+V3.boot({});                                   /* no deck — the hero hosts the control */
+document.getElementById('hero-seg').outerHTML=V3.seg(false);
 
 var SYSTEMS=[
-  {id:'ai',        label:'AI',             href:'ai.html',           color:'#e8a838',           today:48,
-   desc:'Alignment progress, autonomy risk, compute governance, model transparency, deployment safety',
-   projected:{aggressive:92,moderate:68,bau:32,worst:10}},
-  {id:'civilization',label:'Civilization',href:'civilization.html', color:'var(--equity)',     today:44,
-   desc:'Aggregate civilizational health across all domains',
-   projected:{aggressive:81,moderate:61,bau:30,worst:13}},
-  {id:'simulation',label:'Simulation',    href:'simulation.html',   color:'var(--technology)', today:null,
-   desc:'Interactive engine with 5 policy levers and 50-year narrative projections',
-   meta:'12 branches',projected:null},
-  {id:'climate',   label:'Climate',      href:'climate.html',      color:'var(--climate)',    today:42,
-   desc:'Climate resilience, emissions trajectories, biodiversity corridors',
-   projected:{aggressive:85,moderate:58,bau:28,worst:12}},
-  {id:'transition',label:'Transition',    href:'transition.html',   color:'var(--workforce)',  today:43,
-   desc:'Workforce readiness, reskilling rates, income bridge calculator',
-   projected:{aggressive:88,moderate:68,bau:28,worst:12}},
-  {id:'governance',label:'Governance',    href:'governance.html',   color:'var(--governance)', today:40,
-   desc:'Institutional trust, AI governance charters, civic participation',
-   projected:{aggressive:85,moderate:65,bau:30,worst:10}},
-  {id:'strategy',  label:'Strategy',      href:'strategy.html',     color:'var(--accent)',     today:35,
-   desc:'20 intervention strategies across 3 implementation levels',
-   projected:{aggressive:88,moderate:62,bau:22,worst:8}}
+  {key:'ai',today:48,desc:'Alignment progress, autonomy risk, compute governance, deployment safety',proj:{aggressive:92,moderate:68,bau:32,worst:10}},
+  {key:'climate',today:42,desc:'Climate resilience, emissions trajectories, biodiversity corridors',proj:{aggressive:85,moderate:58,bau:28,worst:12}},
+  {key:'governance',today:40,desc:'Institutional trust, AI governance charters, civic participation',proj:{aggressive:85,moderate:65,bau:30,worst:10}},
+  {key:'transition',today:43,desc:'Workforce readiness, reskilling rates, the income bridge',proj:{aggressive:88,moderate:68,bau:28,worst:12}},
+  {key:'civilization',today:44,desc:'Aggregate civilizational health across all domains',proj:{aggressive:81,moderate:61,bau:30,worst:13}},
+  {key:'strategy',today:35,desc:'20 intervention strategies across 3 implementation levels',proj:{aggressive:88,moderate:62,bau:22,worst:8}},
+  {key:'simulation',tool:true,desc:'Interactive engine — 5 policy levers, narrative projections to 2070'}
 ];
-
-var COMPOSITE_PROJECTED={aggressive:85,moderate:63,bau:28,worst:11};
-
 var SC_DESCS={
-  aggressive:'Full deployment of civic infrastructure. 10% civic dividends, enforced AI charter with citizen oversight, 25% GDP climate capex, 20% reskilling investment, 80% governance transparency. Coordinated global response at unprecedented scale.',
-  moderate:'Partial adoption of reforms. Pilot-region dividends, selective governance reform, 15% climate capex, gradual reskilling. Meaningful but uneven progress. Some institutions modernize; others lag.',
+  aggressive:'10% civic dividends, enforced AI charter with citizen oversight, 25% GDP climate capex, 20% reskilling, 80% transparency.',
+  moderate:'Pilot-region dividends, selective governance reform, 15% climate capex, gradual reskilling. Meaningful but uneven progress.',
   bau:'Current trajectory continues. No civic dividends, minimal AI governance, piecemeal climate response, insufficient reskilling. The system drifts toward structural decline through inaction.',
-  worst:'Institutional failure, democratic backsliding, civic disengagement, unchecked AI deployment, and compounding climate crises. Feedback loops accelerate decline across every domain.'
+  worst:'Institutional failure, democratic backsliding, unchecked AI deployment, and compounding climate crises accelerate decline across every domain.'
 };
-var SC_OUTCOMES={
-  aggressive:'systemic recovery underway',
-  moderate:'moderate improvement',
-  bau:'systemic decline',
-  worst:'civilizational failure'
-};
+var TODAY=44;
 
-function renderSystems(){
-  var clr=SC_COLORS[active];
-  var h='';
-  SYSTEMS.forEach(function(s){
-    var proj=s.projected?s.projected[active]:null;
-    var g=proj!=null?grade(proj):null;
-    var pClr=proj!=null?clr:s.color;
-    h+='<a href="'+s.href+'" class="cell">';
-    h+='<p class="t3" style="color:'+s.color+'">'+s.label+'</p>';
-    if(s.today!=null){
-      h+='<p class="num-lg mt-2">'+s.today+'</p>';
-      h+='<p class="t4 mt-1"><span class="tag" style="border-color:'+s.color+';color:'+s.color+'">'+grade(s.today)+'</span> <span class="t4" style="color:var(--text-faint)">today</span></p>';
-    } else {
-      h+='<p class="num-lg mt-2">'+s.meta+'</p>';
-    }
-    if(proj!=null){
-      h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:'+proj+'%;background:'+pClr+';transition:width 0.4s ease"></div></div>';
-      h+='<div class="flex items-baseline gap-4 mt-2">';
-      h+='<span class="num-sm" style="color:'+pClr+'">'+proj+'</span>';
-      h+='<span class="tag" style="border-color:'+pClr+';color:'+pClr+';font-size:10px;padding:2px 6px">'+g+'</span>';
-      h+='<span class="t4" style="color:var(--text-faint)">projected</span>';
-      h+='</div>';
-    } else {
-      h+='<div class="bar-track mt-3"><div class="bar-fill" style="width:24%;background:'+s.color+'"></div></div>';
-    }
-    h+='<p class="t4 mt-2">'+s.desc+'</p>';
-    h+='</a>';
+/* composite trajectory — civilization health from VIZ_METRICS */
+var years=[];for(var y=2026;y<=2050;y++)years.push(y);
+V3.traj('#composite-chart',{
+  label:'Composite civilization score',unit:'/100',dec:0,dir:'higher',
+  years:years,data:VIZ_METRICS.civilization[0].data,
+  read:function(v){var m=V3.scenario.meta();return '<b style="color:'+m.color+'">'+Math.round(v)+'/100 · '+V3.grade(v)+'</b> by 2050 · '+m.name.toLowerCase()+' — '+m.verdict}
+});
+
+/* ledger builds once; scenario switches tween each 2050 number in place */
+var ledgerBuilt=false,ledgerLast={};
+function renderLedger(animate){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  var wrap=document.getElementById('ledger');
+  if(!ledgerBuilt){
+    wrap.innerHTML=SYSTEMS.map(function(s){
+      var sys=V3.SYS[s.key];
+      if(s.tool)return '<a class="ledger-row tool" href="'+sys.href+'">'
+        +'<span class="name"><i style="background:var(--ink-4)"></i>'+sys.label+'</span>'
+        +'<span class="desc">'+s.desc+'</span><span class="go">Open →</span></a>';
+      return '<a class="ledger-row" href="'+sys.href+'" data-key="'+s.key+'">'
+        +'<span class="name"><i style="background:'+sys.color+'"></i>'+sys.label+'</span>'
+        +'<span class="desc">'+s.desc+'</span>'
+        +'<span class="today"><b>'+s.today+'</b><span>today</span></span>'
+        +'<span class="arrow">→</span>'
+        +'<span class="proj"><b class="p-num"></b><span>2050</span></span>'
+        +'<span class="chip"><span class="grade-chip sm p-grade"></span></span></a>';
+    }).join('');
+    ledgerBuilt=true;
+  }
+  SYSTEMS.forEach(function(s,i){
+    if(s.tool)return;
+    var row=wrap.querySelector('.ledger-row[data-key="'+s.key+'"]');
+    var p=s.proj[act];
+    var num=row.querySelector('.p-num'),gr=row.querySelector('.p-grade');
+    num.style.color=m.color;gr.style.color=m.color;
+    gr.textContent=V3.grade(p);
+    if(animate&&ledgerLast[s.key]!=null)setTimeout(function(){V3.tween(num,p,{from:ledgerLast[s.key]})},i*40);
+    else num.textContent=p;
+    ledgerLast[s.key]=p;
   });
-  document.getElementById('systems-grid').innerHTML=h;
 }
-
-function renderScenarioCards(){
-  var h='';
-  SC.forEach(function(s){
-    var isA=s.id===active;
-    var proj=COMPOSITE_PROJECTED[s.id];
-    var g=grade(proj);
-    h+='<div class="cell" style="'+(isA?'border:1px solid '+s.color+';':'opacity:0.6;')+'">';
-    h+='<div class="flex items-center gap-4 mb-3">';
-    h+='<span class="dot" style="background:'+s.color+';width:10px;height:10px"></span>';
-    h+='<p class="t3" style="color:'+s.color+'">'+s.name+'</p>';
-    if(isA) h+='<span class="tag" style="border-color:'+s.color+';color:'+s.color+';font-size:10px;padding:2px 6px">Active</span>';
-    h+='</div>';
-    h+='<p class="t4 mt-2" style="color:var(--text-secondary)">'+SC_DESCS[s.id]+'</p>';
-    h+='<p class="t4 mt-2" style="color:'+s.color+'">2050 outcome: <strong>'+proj+'/100</strong> ('+g+') &mdash; '+SC_OUTCOMES[s.id]+'</p>';
-    h+='</div>';
+/* Display-only — the hero segmented control is this page's ONE place
+   to switch futures; these cards just reflect the choice. (Clickable
+   cards duplicated the control and read as a conflict.) */
+function renderQuartet(){
+  var act=V3.scenario.get();
+  document.getElementById('quartet').innerHTML=V3.SC_ORDER.map(function(id){
+    var m=V3.SC[id];
+    return '<div class="q-card static" data-sc="'+id+'" data-active="'+(id===act)+'" style="--sc:'+m.color+'">'
+      +'<h3>'+m.name+'</h3><div class="proj-line">2050: '+m.proj+'/100 · '+V3.grade(m.proj)+'</div>'
+      +'<p>'+SC_DESCS[id]+'</p></div>';
+  }).join('');
+}
+function renderHero(prevProj){
+  var m=V3.scenario.meta();
+  var out=document.getElementById('out-score');
+  out.style.color=m.color;
+  V3.tween(out,m.proj,{from:prevProj});
+  document.getElementById('out-verdict').textContent=m.verdict;
+  document.getElementById('out-desc').textContent=SC_DESCS[m.id];
+  /* score band: dot glides to the 2050 landing; the range strip
+     spans today→2050 so direction reads at a glance */
+  var dot=document.getElementById('sb-dot');
+  dot.style.left=m.proj+'%';dot.style.background=m.color;
+  var range=document.getElementById('sb-range');
+  var lo=Math.min(TODAY,m.proj),wpc=Math.abs(m.proj-TODAY);
+  range.style.left=lo+'%';range.style.width=wpc+'%';
+  range.style.background='color-mix(in srgb,'+m.color+' 55%,transparent)';
+  var lbl=document.getElementById('sb-proj-lbl');
+  lbl.style.left=Math.max(12,Math.min(88,m.proj))+'%';
+  V3.tween(document.getElementById('sb-proj'),m.proj,{from:prevProj});
+  document.getElementById('sb-name').textContent=m.name.toLowerCase();
+}
+var lastProj=V3.scenario.meta().proj;
+renderHero(lastProj);renderLedger(false);renderQuartet();
+/* the score arrives on load */
+V3.tween(document.getElementById('score-now'),TODAY,{from:0,stiffness:120,damping:22});
+V3.scenario.onChange(function(){
+  renderHero(lastProj);lastProj=V3.scenario.meta().proj;
+  renderLedger(true);
+  document.querySelectorAll('.q-card').forEach(function(c){
+    c.setAttribute('data-active',String(c.getAttribute('data-sc')===V3.scenario.get()));
   });
-  document.getElementById('scenario-cards').innerHTML=h;
-}
-
-function renderHeroScore(){
-  var el=document.getElementById('hero-score');
-  var compositeToday=44;
-  var bauScore=COMPOSITE_PROJECTED.bau;
-  var ps=COMPOSITE_PROJECTED[active];
-  var clr=SC_COLORS[active];
-  var scLabel=SC.find(function(s){return s.id===active}).name;
-
-  var h='';
-  h+='<div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">';
-  h+='<span class="score-hero" style="color:var(--accent)">'+compositeToday+'</span>';
-  h+='<div>';
-  h+='<span class="score-sub">/100</span>';
-  h+='<div style="margin-top:8px;display:flex;align-items:center;gap:10px">';
-  h+='<span class="tag" style="font-size:18px;padding:6px 14px;border-color:var(--accent);color:var(--accent)">'+grade(compositeToday)+'</span>';
-  h+='<span class="delta delta-down" style="font-size:13px">all declining</span>';
-  h+='</div>';
-  h+='</div>';
-  h+='</div>';
-  h+='<p class="t3 mt-3" style="color:var(--text-muted)">As of '+fmtToday()+'</p>';
-
-  h+='<p class="body mt-3">Aggregate score across AI alignment, climate resilience, institutional governance, workforce readiness, systemic equity, technology alignment, and collective wellbeing. This is where we stand today \u2014 before any of the four scenarios are applied. Underlying measurements refresh from live sources each visit.</p>';
-  h+='<p class="t4 mt-2" style="color:var(--text-muted)">If trends continue: <span style="color:#d4622a">'+grade(bauScore)+' ('+bauScore+'/100)</span> by 2050</p>';
-
-  h+='<div style="display:flex;align-items:baseline;gap:12px;margin-top:20px">';
-  h+='<span class="t3">Projected 2050 ('+scLabel+'):</span> ';
-  h+='<span class="score-projected" style="color:'+clr+'">'+ps+'</span>';
-  h+='<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> ';
-  h+='<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
-  h+='</div>';
-
-  el.innerHTML=h;
-}
-
-function render(){
-  var clr=SC_COLORS[active];
-  var scLabel=SC.find(function(s){return s.id===active}).name;
-  updateScenarioBar('#scenario-bar',active,SC);
-  document.getElementById('idx-scenario-label').textContent=scLabel;
-  document.getElementById('idx-scenario-label').style.color=clr;
-  renderHeroScore();
-  renderSystems();
-  renderScenarioCards();
-}
-
-initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
-render();
-document.getElementById('page-footer').innerHTML=renderFooter();
-
-})();
+});
 </script>
 </body>
 </html>

@@ -5,171 +5,106 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Live Data — AI Civilization Simulator</title>
 <meta name="description" content="Real-time planetary and socioeconomic indicators - CO2, warming, renewables, emissions, poverty - fetched live and compared against the model's baselines.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://aicivsim.com/data.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AI Civilization Simulator">
 <meta property="og:title" content="Live Data — AI Civilization Simulator">
-<meta property="og:description" content="Real-time planetary and socioeconomic indicators - fetched live and compared against the model's baselines.">
+<meta property="og:description" content="Real-time planetary and socioeconomic indicators - CO2, warming, renewables, emissions, poverty - fetched live and compared against the model's baselines.">
 <meta property="og:url" content="https://aicivsim.com/data.html">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Live Data — AI Civilization Simulator">
-<meta name="twitter:description" content="Real-time planetary and socioeconomic indicators - fetched live and compared against the model's baselines.">
+<meta name="twitter:description" content="Real-time planetary and socioeconomic indicators - CO2, warming, renewables, emissions, poverty - fetched live and compared against the model's baselines.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260813b">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
+<style>
+.live-tile .asof{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-4);margin-top:6px}
+.live-tile .src{font-size:11px;color:var(--ink-4);margin-top:10px;padding-top:10px;border-top:1px solid var(--hairline)}
+.live-tile .src a{color:var(--ink-3)}
+.live-tile .src a:hover{color:var(--accent)}
+.status-line{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3)}
+.status-line .pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--good)}
+.status-line .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2.4s infinite}
+</style>
 </head>
 <body>
 
-<!-- ── MASTHEAD ── -->
-<header class="masthead">
-<div class="page masthead-inner">
-  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Live Data</p>
-  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">The World, Right Now</h1>
-  <p class="body mt-3" style="max-width:520px">Every other page on this site models <em>possible</em> futures from a fixed 2026 baseline. This page fetches the <em>actual</em> state of the world from public scientific APIs — live, in your browser — and puts it next to the model&rsquo;s assumptions.</p>
-  <hr class="rule">
-</div>
-</header>
-
-<div id="site-nav-mount"></div>
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">Evidence · Live data</span>
+  <h1 class="title-1">The world, right now.</h1>
+  <p class="lead">Every other page models <em>possible</em> futures from a fixed 2026 baseline. This page fetches the <em>actual</em> state of the world — live, in your browser, from public scientific APIs — and puts it next to the model's assumptions.</p>
+  <div style="margin-top:24px" class="status-line"><span class="pill">Live</span><span id="feed-status">fetching from NOAA, Our World in Data, and the World Bank…</span></div>
+</div></header>
 
 <main>
 
-<!-- ═══════════════════════════════════════════════════════════
-     01 — LIVE INDICATORS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="section">
-<div class="page">
-  <span class="section-num">01</span>
-  <h2 class="t2">Live Indicators <span id="live-status" class="t4" style="text-transform:none;letter-spacing:0;margin-left:8px;color:var(--text-faint)">fetching&hellip;</span></h2>
-  <hr class="rule">
-  <div class="grid grid-2" id="live-grid">
-    <!-- cards injected by JS; skeletons shown while loading -->
-  </div>
-  <p class="t4 mt-4" style="color:var(--text-faint);max-width:640px" id="live-fetched-at"></p>
-</div>
-</div>
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">Eight indicators</h2>
+    <p class="lead">Live value, measurement date, and drift against the model's 2026 baseline where a direct comparison exists. If a feed is unreachable, its tile says so and shows the baseline — the site never depends on the network.</p>
+  </div></div>
+  <div class="kpis" id="live-tiles" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))"></div>
+</div></section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     02 — HOW THIS WORKS
-     ═══════════════════════════════════════════════════════════ -->
-<div class="chapter-divider">
-<div class="page">
-  <span class="section-num">02</span>
-  <p class="t2">How This Works</p>
-</div>
-</div>
-
-<div class="section" style="padding-top:24px">
-<div class="page">
-  <div class="grid grid-3">
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">Zero Backend</p>
-      <p class="t4 mt-2">Your browser calls the sources directly &mdash; NOAA&rsquo;s Global Monitoring Laboratory (via global-warming.org), Our World in Data&rsquo;s grapher API, and the World Bank API. All are free, key-less, and CORS-open. Nothing passes through this site&rsquo;s server.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">Graceful Fallback</p>
-      <p class="t4 mt-2">If a source is unreachable, its card shows the model&rsquo;s static baseline instead and says so. The simulation never depends on the network &mdash; live values are an overlay, not a requirement. Results are cached in your browser for six hours.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">Apples &amp; Oranges</p>
-      <p class="t4 mt-2">The model&rsquo;s scores are composite 0&ndash;100 indices; live values are raw physical measurements. Where a direct comparison exists (CO&#8322; ppm, warming, renewable share, emissions, poverty) the card shows the drift between the model&rsquo;s 2026 assumption and reality.</p>
-    </div>
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">How this works</h2></div></div>
+  <div class="trio">
+    <div class="t-card" style="cursor:default"><h3>Zero backend</h3><p>Your browser calls the sources directly — NOAA's Global Monitoring Laboratory (via global-warming.org), Our World in Data's grapher API, and the World Bank API. All free, key-less, CORS-open. Nothing passes through this site's server.</p></div>
+    <div class="t-card" style="cursor:default"><h3>Graceful fallback</h3><p>Unreachable source → the tile shows the model's static baseline and says so. Live values are an overlay, never a requirement. Results cache in your browser for six hours.</p></div>
+    <div class="t-card" style="cursor:default"><h3>Apples &amp; oranges, labeled</h3><p>The model's scores are composite indices; live values are raw physical measurements. Where a direct comparison exists, the tile shows the drift. Where it doesn't — trust, alignment, governance — the value stays modeled, and says so.</p></div>
   </div>
-
-  <div class="mt-8">
-    <p class="t3 mb-3">Sources</p>
-    <div class="grid grid-2">
-      <div class="cell">
-        <p class="t4"><strong style="color:var(--text-primary)">global-warming.org</strong> &mdash; community mirror of NOAA GML (CO&#8322;, methane) and NSIDC (Arctic sea ice). Daily to monthly cadence.</p>
-      </div>
-      <div class="cell">
-        <p class="t4"><strong style="color:var(--text-primary)">Our World in Data</strong> &mdash; grapher CSV API. Temperature anomaly (vs 1861&ndash;1880), renewable electricity share (Ember), CO&#8322; emissions (Global Carbon Project). Annual.</p>
-      </div>
-      <div class="cell">
-        <p class="t4"><strong style="color:var(--text-primary)">World Bank Open Data</strong> &mdash; extreme poverty ($3.00/day, 2021 PPP) and ILO-modeled unemployment. Annual.</p>
-      </div>
-      <div class="cell">
-        <p class="t4"><strong style="color:var(--text-primary)">What&rsquo;s not live</strong> &mdash; trust in institutions, AI alignment, governance capacity. No public real-time series exists; those remain modeled values.</p>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
+</div></section>
 
 </main>
+</div>
 
-<div id="page-footer"></div>
-
-<script src="js/shared.js?v=20260813b"></script>
-<script src="js/live-data.js?v=20260813b"></script>
+<script src="js/shared.js?v=20260816a"></script>
+<script src="js/live-data.js?v=20260816a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
-document.getElementById('page-footer').innerHTML=renderFooter();
+V3.boot({deck:{sys:'climate',context:'Live measurements vs the 2026 baseline'}});
+document.querySelector('.deck-title b').textContent='Live data';
+document.querySelector('.deck-title i').style.background='var(--good)';
 
-(function(){
-  var grid=document.getElementById('live-grid');
-  var status=document.getElementById('live-status');
-  var fetchedAt=document.getElementById('live-fetched-at');
+/* static fallbacks so the page reads fine offline (fallback rule) */
+var FALLBACK={co2ppm:'427.9 ppm',tempAnomaly:'+1.39 °C',renewShare:'30.0%',co2emis:'38.6 Gt/yr',methane:'1940 ppb',seaice:'−2.10 M km²',poverty:'10.4%',unemployment:'4.8%'};
 
-  /* Skeletons while loading */
-  var skel='';
-  for(var i=0;i<8;i++){
-    skel+='<div class="cell"><div class="skeleton skeleton-text" style="width:60%"></div><div class="skeleton skeleton-score mt-2"></div><div class="skeleton skeleton-text" style="width:80%"></div></div>';
-  }
-  grid.innerHTML=skel;
-
-  function deltaHTML(ind){
-    if(ind.baseline==null||ind.value==null)return '';
-    var d=ind.value-ind.baseline;
-    var pct=ind.baseline!==0?(d/ind.baseline*100):0;
-    var sign=d>0?'+':'';
-    var clr=Math.abs(pct)<3?'var(--text-muted)':'var(--yellow)';
-    return '<p class="t4 mt-2" style="color:'+clr+'">'+sign+d.toFixed(2).replace(/\.00$/,'')+ind.unit+' vs '+ind.baselineLabel+' ('+ind.baselineDisplay+')</p>';
-  }
-
-  function card(ind){
-    var h='<div class="cell">';
-    h+='<p class="t3">'+ind.label+'</p>';
-    h+='<p class="num num-xl mt-2" style="color:var(--climate)">'+ind.display+'</p>';
-    h+='<p class="t4 mt-1" style="color:var(--text-muted)">as of '+ind.asOf+'</p>';
-    h+=deltaHTML(ind);
-    h+='<p class="t4 mt-2" style="color:var(--text-faint)"><a href="'+ind.url+'" target="_blank" rel="noopener" style="color:var(--text-muted)">'+ind.source+'</a></p>';
-    h+='</div>';
-    return h;
-  }
-
-  function fallbackCard(def){
-    var h='<div class="cell" style="opacity:0.6">';
-    h+='<p class="t3">'+def.label+'</p>';
-    if(def.baseline!=null){
-      h+='<p class="num num-xl mt-2" style="color:var(--text-muted)">'+(def.prefix||'')+def.baseline.toFixed(def.dec)+def.unit+'</p>';
-      h+='<p class="t4 mt-1" style="color:var(--text-faint)">static model baseline &mdash; live feed unavailable</p>';
+function renderTiles(res){
+  var wrap=document.getElementById('live-tiles');
+  wrap.innerHTML=LIVE_DATA.INDICATORS.map(function(ind){
+    var live=res&&res.indicators[ind.id];
+    var val=live?live.display:FALLBACK[ind.id];
+    var drift='';
+    if(live&&ind.baseline!=null){
+      var d=live.value-ind.baseline;
+      var worse={co2ppm:d>0,tempAnomaly:d>0,co2emis:d>0,poverty:d>0,renewShare:d<0}[ind.id];
+      var cls=Math.abs(d)<0.005?'flat':worse?'bad':'good';
+      var arrow=d>0?'▲':d<0?'▼':'—';
+      drift='<div class="delta '+cls+'">'+arrow+' '+(d>0?'+':'')+(Math.round(d*100)/100)+ind.unit+' <span class="ctx">vs baseline '+(ind.prefix||'')+ind.baseline+ind.unit+'</span></div>';
+    }else if(!live){
+      drift='<div class="delta flat">— <span class="ctx">feed unreachable · showing baseline</span></div>';
     }else{
-      h+='<p class="num num-xl mt-2" style="color:var(--text-faint)">&mdash;</p>';
-      h+='<p class="t4 mt-1" style="color:var(--text-faint)">live feed unavailable</p>';
+      drift='<div class="delta flat"><span class="ctx">no model baseline — context signal</span></div>';
     }
-    h+='<p class="t4 mt-2" style="color:var(--text-faint)">'+def.source+'</p>';
-    h+='</div>';
-    return h;
-  }
-
-  LIVE_DATA.fetchAll().then(function(res){
-    var h='';
-    LIVE_DATA.INDICATORS.forEach(function(def){
-      var ind=res.indicators[def.id];
-      h+=ind?card(ind):fallbackCard(def);
-    });
-    grid.innerHTML=h;
-    var n=res.ok||0;
-    status.textContent=n?('● '+n+'/'+LIVE_DATA.INDICATORS.length+' feeds live'):'all feeds unavailable — showing static baselines';
-    status.style.color=n?'var(--green)':'var(--red)';
-    if(res.fetchedAt&&n){
-      fetchedAt.textContent='Fetched '+new Date(res.fetchedAt).toLocaleString()+' in your browser. Cached for 6 hours. Live measurements and modeled indices differ in definition — treat deltas as directional signals, not errors.';
-    }
-  });
-})();
+    return '<div class="stat live-tile"><div class="lbl">'+ind.label+'</div>'
+      +'<div class="val" style="font-size:23px">'+val+'</div>'
+      +drift
+      +(live?'<div class="asof">as of '+live.asOf+'</div>':'')
+      +'<div class="src">source: <a href="'+ind.url+'" target="_blank" rel="noopener">'+ind.source+'</a></div></div>';
+  }).join('');
+  V3.stagger(document.querySelectorAll('.live-tile'),24);
+}
+renderTiles(null);
+LIVE_DATA.fetchAll().then(function(res){
+  renderTiles(res);
+  document.getElementById('feed-status').textContent=res.ok+'/'+LIVE_DATA.INDICATORS.length+' feeds live · fetched in your browser · cached 6h';
+}).catch(function(){
+  document.getElementById('feed-status').textContent='feeds unreachable — showing the model baseline';
+});
 </script>
 </body>
 </html>

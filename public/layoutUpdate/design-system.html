@@ -3,12 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Design System — AICIVSIM v3</title>
+<title>Design System — AI Civilization Simulator</title>
+<meta name="description" content="The AICIVSIM design system — tokens, type, motion, data visualization, components, and voice, rendered live.">
+<link rel="canonical" href="https://aicivsim.com/design-system.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Design System — AI Civilization Simulator">
+<meta property="og:description" content="The AICIVSIM design system — tokens, type, motion, data visualization, components, and voice, rendered live.">
+<meta property="og:url" content="https://aicivsim.com/design-system.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Design System — AI Civilization Simulator">
+<meta name="twitter:description" content="The AICIVSIM design system — tokens, type, motion, data visualization, components, and voice, rendered live.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260815h">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
 <style>
 /* page-local specimen chrome */
 .spec{border:1px solid var(--hairline);border-radius:var(--r);padding:24px;margin-top:16px}
@@ -165,7 +175,7 @@
     <p class="body-2" style="margin-top:14px"><b style="color:var(--ink)">The one-control rule:</b> the four futures are clickable in exactly one place per page. Pages with their own scenario instrument (Pathways) suppress the deck's segment via <span class="num" style="font-size:12px">deck.noSeg</span>. Cards that reflect the choice are display-only.</p>
   </div>
   <div class="spec"><div class="spec-label">the rest of the kit</div>
-    <p class="body-2">Stat tiles · landing tracks · trajectory cards · threshold cards · milestone rail · composition stack · income-bridge calculator · impact rows · ledger — all specified by their live use: see <a class="a" href="climate-v3.html">Climate</a> (thresholds, nine metrics), <a class="a" href="ai-v3.html">AI</a> (risks, milestones), <a class="a" href="governance-v3.html">Governance</a> (boards, stack, audit), <a class="a" href="transition-v3.html">Transition</a> (bridge calculator), <a class="a" href="pathways-v3.html">Pathways</a> (route instrument, slopes).</p>
+    <p class="body-2">Stat tiles · landing tracks · trajectory cards · threshold cards · milestone rail · composition stack · income-bridge calculator · impact rows · ledger — all specified by their live use: see <a class="a" href="climate.html">Climate</a> (thresholds, nine metrics), <a class="a" href="ai.html">AI</a> (risks, milestones), <a class="a" href="governance.html">Governance</a> (boards, stack, audit), <a class="a" href="transition.html">Transition</a> (bridge calculator), <a class="a" href="pathways.html">Pathways</a> (route instrument, slopes).</p>
   </div>
 </div></section>
 
@@ -190,9 +200,9 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260815h"></script>
+<script src="js/shared.js?v=20260816a"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260815h"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
 V3.boot({deck:{sys:'civilization',context:'Tokens · type · motion · dataviz · voice'}});
 document.querySelector('.deck-title b').textContent='Design system';
@@ -201,7 +211,7 @@ document.querySelector('.deck-title i').style.background='var(--accent)';
 /* live dataviz specimens — real site data, real kit calls */
 var years=[];for(var y=2026;y<=2050;y++)years.push(y);
 </script>
-<script src="js/v3-data.js?v=20260815h"></script>
+<script src="js/v3-data.js?v=20260816a"></script>
 <script>
 var meta=V3DATA.climate.metrics.filter(function(m){return m.id==='temp'})[0];
 var spec={label:'Trajectory — temperature rise',unit:'°C',prefix:'+',dec:2,dir:'lower',

@@ -66,10 +66,6 @@ svg{display:block}
 .a{color:var(--accent);font-weight:500}
 .a:hover{text-decoration:underline}
 
-/* ── Prototype banner ── */
-.proto-note{background:var(--accent);color:#fff;font-size:12.5px;font-weight:500;text-align:center;padding:7px 16px}
-.proto-note a{text-decoration:underline;font-weight:600;color:#fff}
-
 /* ── Nav ── */
 .nav{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--hairline)}
 .nav-inner{max-width:var(--col);margin:0 auto;padding:0 32px;height:52px;display:flex;align-items:center;gap:6px}
@@ -443,6 +439,11 @@ svg{display:block}
 }
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:var(--s4)}
+  .land-row{grid-template-columns:1fr;gap:10px;padding:16px 16px 14px}
+  .land-row .delta{text-align:left}
+  .th-line .th-val{font-size:20px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .stat .val{font-size:22px}
   .quartet{grid-template-columns:repeat(2,1fr)}
   .trio,.chart-grid,.actions-grid,.th-grid{grid-template-columns:1fr}
   .slopes,.subscores{grid-template-columns:repeat(2,1fr)}
@@ -458,14 +459,44 @@ svg{display:block}
   .impact-row{grid-template-columns:64px 1fr;grid-template-rows:auto auto}
   .impact-row .e{grid-column:1/3}
   .foot-grid{grid-template-columns:1fr}
-  .deck-inner{flex-wrap:wrap;gap:10px}
-  .deck-title{flex-basis:100%}
+  .deck-inner{flex-wrap:wrap;gap:8px}
+  .deck-title{flex-basis:100%;min-width:0}
+  .deck-title span{display:none}                 /* context line yields on phones */
+  /* the compact segment becomes a full-width 4-up grid — the old inline
+     row overflowed 390px viewports by ~45px */
+  .deck .sc-seg{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:3px}
+  .deck .sc-seg button{padding:7px 2px 6px;font-size:10.5px;flex-direction:column;gap:4px;justify-content:center}
+  .deck .sc-seg button .dot{margin:0 auto}
   .hero-stats{gap:var(--s3)}
   .hero-score .big{font-size:64px}
   .hero-proj .big{font-size:42px}
   .hero-arrow{padding-bottom:22px}
   .col{padding:0 20px}
   .nav-inner,.deck-inner{padding-left:20px;padding-right:20px}
+}
+@media(max-width:640px){
+  /* KPI tiles: the base minmax(190px) floor overflows a 390px viewport
+     once padding and gap are counted — go single column on phones */
+  .kpis{grid-template-columns:1fr!important}
+  /* section-head control rows stack under their heading and fill width */
+  .section-head{flex-direction:column;align-items:stretch}
+  .filter-seg{display:grid;grid-template-columns:repeat(4,1fr);width:100%}
+  .filter-seg button{padding:7px 4px;font-size:11.5px}
+  /* any standalone compact segment (e.g. the design-system specimen) */
+  .sc-seg.compact{display:grid;grid-template-columns:repeat(4,1fr);width:100%}
+  .sc-seg.compact button{padding:7px 2px 6px;font-size:10.5px;flex-direction:column;gap:4px;justify-content:center}
+  .sc-seg.compact button .dot{margin:0 auto}
+  /* wide rows and long specimens reflow rather than push the page */
+  .stack-legend,.ms-items{grid-template-columns:1fr}
+  .br-picker button{max-width:100%;white-space:normal;text-align:left}
+  .action-card .a-meta{gap:8px}
+  .swatches{grid-template-columns:1fr 1fr}
+  .type-row{flex-direction:column;gap:6px}
+  .type-row .t-meta{min-width:0}
+  .impact-row{padding:14px 16px}
+  .th-card,.chart-card{padding:16px}
+  .col{padding:0 16px}
+  .nav-inner,.deck-inner{padding-left:16px;padding-right:16px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
