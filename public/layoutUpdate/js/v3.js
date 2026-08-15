@@ -176,12 +176,15 @@ V3.seg=function(compact){
   });
   return h+'</div>';
 };
-V3.deck=function(sysKey,context){
+V3.deck=function(sysKey,context,noSeg){
   var s=V3.SYS[sysKey]||{label:context||'',color:'var(--ink-4)'};
   return '<div class="deck"><div class="deck-inner">'
     +'<div class="deck-title"><i style="background:'+(s.color||'var(--ink-4)')+'"></i><b>'+s.label+'</b>'
     +(context?'<span>'+context+'</span>':'')+'</div>'
-    +V3.seg(true)+'</div></div>';
+    /* noSeg: pages that host their own scenario instrument (Pathways)
+       must not repeat the four options in the deck — one page, one
+       place where those names are clickable. */
+    +(noSeg?'':V3.seg(true))+'</div></div>';
 };
 V3.footer=function(){
   return '<footer class="v3-footer"><div class="col">'
@@ -197,7 +200,7 @@ V3.boot=function(opts){
   opts=opts||{};
   var here=location.pathname.split('/').pop()||'index-v3.html';
   document.body.insertAdjacentHTML('afterbegin',
-    V3.protoNote()+V3.nav(here)+(opts.deck?V3.deck(opts.deck.sys,opts.deck.context):''));
+    V3.protoNote()+V3.nav(here)+(opts.deck?V3.deck(opts.deck.sys,opts.deck.context,opts.deck.noSeg):''));
   document.body.insertAdjacentHTML('beforeend',V3.footer());
   try{if(localStorage.getItem('aicivsim-theme')==='light')document.body.classList.add('light')}catch(e){}
   document.getElementById('v3-theme').addEventListener('click',function(){

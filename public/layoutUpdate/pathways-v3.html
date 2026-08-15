@@ -8,13 +8,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260815f">
+<link rel="stylesheet" href="css/v3.css?v=20260815g">
 <style>
 /* page-local: the DESTINATION picker — deliberately styled unlike the
    sitewide scenario control so the two can't be confused. Outlined
    pills with an arrow and the 2050 score; the current origin is shown
    struck-through and unclickable. */
-.to-picker-row{display:flex;align-items:center;gap:16px;margin-top:28px;flex-wrap:wrap}
+.route-controls{display:flex;align-items:flex-end;gap:20px;margin-top:32px;flex-wrap:wrap}
+.rc-col .eyebrow{display:block;margin-bottom:10px;font-size:10px}
+.rc-arrow{color:var(--ink-4);font-size:20px;padding-bottom:10px}
+.route-controls .sc-seg{display:inline-grid}
 .to-seg{display:inline-flex;gap:8px;flex-wrap:wrap}
 .to-seg button{padding:9px 16px;border-radius:999px;border:1.5px dashed var(--hairline-strong);font-size:12.5px;font-weight:600;color:var(--ink-3);display:flex;align-items:center;gap:8px;transition:all .18s}
 .to-seg button .go-arrow{color:var(--ink-4);font-size:12px}
@@ -44,21 +47,28 @@
 <header class="page-hero"><div class="col">
   <span class="eyebrow">Tool · Pathways</span>
   <h1 class="title-1">Every future is a destination.<br>This maps the route.</h1>
-  <p class="lead">Your <b style="color:var(--ink)">starting path</b> is the scenario chosen above — the same one every page shares. Pick a <b style="color:var(--ink)">destination</b> below and the page itemizes the climb: score, levers, actions, and where the curves fork.</p>
+  <p class="lead">Choose an <b style="color:var(--ink)">origin</b> and a <b style="color:var(--ink)">destination</b> below — the page itemizes the climb between them: score, levers, actions, and where the curves fork. The origin is the same scenario every other page shares; changing it here changes it everywhere.</p>
   <div class="route-line">
     <span><span class="big num" id="from-score">28</span><span class="body-2"> 2050 · <span id="from-name">business as usual</span></span></span>
     <span class="arrow">→</span>
     <span><span class="big num" id="to-score">85</span><span class="body-2"> 2050 · <span id="to-name">aggressive action</span></span></span>
     <span class="climb" id="climb">+57</span>
   </div>
-  <!-- The destination picker lives HERE, in the hero, styled unlike the
-       sitewide control in the deck — one is "where the world is heading"
-       (top bar, shared with every page), this is "where you want to go". -->
-  <div class="to-picker-row">
-    <span class="eyebrow">Destination</span>
-    <div class="to-seg" id="to-seg" role="group" aria-label="Destination scenario"></div>
+  <!-- THE route instrument — the only place on this page where the four
+       futures are clickable. Origin drives the sitewide scenario (the
+       deck's own control is suppressed here to prevent a duplicate);
+       destination is page-local, styled as dashed travel pills. -->
+  <div class="route-controls">
+    <div class="rc-col">
+      <span class="eyebrow">Origin — shared with every page</span>
+      <div id="from-seg"></div>
+    </div>
+    <div class="rc-col">
+      <span class="eyebrow">Destination — this page only</span>
+      <div class="to-seg" id="to-seg" role="group" aria-label="Destination scenario"></div>
+    </div>
   </div>
-  <p class="body-2" id="route-verdict" style="margin-top:14px;max-width:560px"></p>
+  <p class="body-2" id="route-verdict" style="margin-top:16px;max-width:560px"></p>
 </div></header>
 
 <main>
@@ -96,13 +106,17 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260815f"></script>
-<script src="js/v3.js?v=20260815f"></script>
+<script src="js/shared.js?v=20260815g"></script>
+<script src="js/v3.js?v=20260815g"></script>
 <script>
-V3.boot({deck:{sys:'simulation',context:'Pathways — moving between futures'}});
+/* noSeg: this page hosts its own route instrument — the deck must not
+   repeat the four scenario options (that duplication was confusing). */
+V3.boot({deck:{sys:'simulation',context:'Origin & destination — choose below',noSeg:true}});
 document.querySelector('.deck-title b').textContent='Pathways';
 document.querySelector('.deck-title i').style.background='var(--accent)';
-document.querySelector('.deck-title span').textContent='Starting path — shared with every page';
+
+/* origin control = the sitewide scenario, seated in the route instrument */
+document.getElementById('from-seg').outerHTML=V3.seg(true);
 
 var to='aggressive';
 function ensureDistinct(){
@@ -119,7 +133,7 @@ function renderToSeg(){
     var m=V3.SC[id];
     var isOrigin=id===V3.scenario.get();
     return '<button data-to="'+id+'" style="--sc:'+m.color+'" aria-pressed="'+(id===to)+'"'
-      +(isOrigin?' disabled title="This is the origin — set in the top bar"':'')
+      +(isOrigin?' disabled title="This is the origin — pick a different destination"':'')
       +'><span class="go-arrow">→</span>'+m.short+' <b>'+m.proj+'</b></button>';
   }).join('');
 }

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260815f">
+<link rel="stylesheet" href="css/v3.css?v=20260815g">
 </head>
 <body>
 
@@ -125,9 +125,9 @@
 
 </main>
 
-<script src="js/shared.js?v=20260815f"></script>
-<script src="js/live-data.js?v=20260815f"></script>
-<script src="js/v3.js?v=20260815f"></script>
+<script src="js/shared.js?v=20260815g"></script>
+<script src="js/live-data.js?v=20260815g"></script>
+<script src="js/v3.js?v=20260815g"></script>
 <script>
 V3.boot({});                                   /* no deck — the hero hosts the control */
 document.getElementById('hero-seg').outerHTML=V3.seg(false);
@@ -190,13 +190,16 @@ function renderLedger(animate){
     ledgerLast[s.key]=p;
   });
 }
+/* Display-only — the hero segmented control is this page's ONE place
+   to switch futures; these cards just reflect the choice. (Clickable
+   cards duplicated the control and read as a conflict.) */
 function renderQuartet(){
   var act=V3.scenario.get();
   document.getElementById('quartet').innerHTML=V3.SC_ORDER.map(function(id){
     var m=V3.SC[id];
-    return '<button class="q-card" data-sc="'+id+'" data-active="'+(id===act)+'" style="--sc:'+m.color+'">'
+    return '<div class="q-card static" data-sc="'+id+'" data-active="'+(id===act)+'" style="--sc:'+m.color+'">'
       +'<h3>'+m.name+'</h3><div class="proj-line">2050: '+m.proj+'/100 · '+V3.grade(m.proj)+'</div>'
-      +'<p>'+SC_DESCS[id]+'</p></button>';
+      +'<p>'+SC_DESCS[id]+'</p></div>';
   }).join('');
 }
 function renderHero(prevProj){
