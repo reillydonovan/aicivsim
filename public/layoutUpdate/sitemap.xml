@@ -15,6 +15,9 @@
   <url><loc>https://aicivsim.com/research.html</loc><priority>0.8</priority></url>
   <url><loc>https://aicivsim.com/chat.html</loc><priority>0.6</priority></url>
   <url><loc>https://aicivsim.com/about.html</loc><priority>0.6</priority></url>
+  <url><loc>https://aicivsim.com/paper.html</loc><priority>0.7</priority></url>
+  <url><loc>https://aicivsim.com/design-system.html</loc><priority>0.5</priority></url>
+  <url><loc>https://aicivsim.com/globe.html</loc><priority>0.6</priority></url>
   <url><loc>https://aicivsim.com/viz.html</loc><priority>0.7</priority></url>
   <url><loc>https://aicivsim.com/explorer.html</loc><priority>0.6</priority></url>
   <url><loc>https://aicivsim.com/xr.html</loc><priority>0.6</priority></url>
