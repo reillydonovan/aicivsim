@@ -117,7 +117,7 @@ V3.reveal=function(){
     ents.forEach(function(e){
       if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
     });
-  },{rootMargin:'0px 0px -4% 0px',threshold:.01});
+  },{rootMargin:'0px 0px 18% 0px',threshold:.01});
   els.forEach(function(el){
     if(el.classList.contains('pre'))return;
     el.classList.add('pre');
@@ -322,9 +322,13 @@ V3.traj=function(container,spec){
     plot.innerHTML='';
     svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,width:W,height:H});
     plot.appendChild(svg);
+    /* end labels own the right rail — tick numbers yield to them */
+    var endYs=V3.SC_ORDER.map(function(sc){var d=spec.data[sc];return Y(d[d.length-1])});
     niceTicks(lo,hi,3).forEach(function(t){
       var y=Y(t);if(y<MT-1||y>MT+ih+1)return;
       svg.appendChild(svgEl('line',{class:'grid',x1:ML,x2:W-MR+8,y1:y,y2:y}));
+      var collides=endYs.some(function(ey){return Math.abs(ey-y)<13});
+      if(collides)return;
       var tx=svgEl('text',{class:'axis',x:W-MR+12,y:y+3.5});tx.textContent=fmtVal(t,spec.dec);svg.appendChild(tx);
     });
     var x0=svgEl('text',{class:'axis',x:ML,y:H-6});x0.textContent=years[0];svg.appendChild(x0);
@@ -380,16 +384,23 @@ V3.traj=function(container,spec){
     var pos=V3.SC_ORDER.map(function(sc){
       return {sc:sc,on:sc===act,y:Y(spec.data[sc][n-1])};
     }).sort(function(a,b){return a.y-b.y});
+    /* resolve collisions downward, then shift the chain back up if it
+       ran past the plot floor — labels never stack on the x-axis */
     for(var i=1;i<pos.length;i++)if(pos[i].y-pos[i-1].y<13)pos[i].y=pos[i-1].y+13;
+    var over=pos[pos.length-1].y-(MT+ih);
+    if(over>0)for(var j=0;j<pos.length;j++)pos[j].y-=over;
+    for(var k=pos.length-2;k>=0;k--)if(pos[k+1].y-pos[k].y<13)pos[k].y=pos[k+1].y-13;
+    var activeSlot=null;
     pos.forEach(function(l){
       var t=labels[l.sc];
       t.setAttribute('fill',V3.SC[l.sc].color);
       t.setAttribute('class','endlbl'+(l.on?'':' ghosted'));
       if(!l.on){
-        t.setAttribute('y',Math.max(MT+8,Math.min(MT+ih,l.y))+3.5);
+        t.setAttribute('y',Math.max(MT+8,l.y)+3.5);
         t.textContent=V3.SC[l.sc].short.toLowerCase();
-      }
+      }else activeSlot=Math.max(MT+8,l.y)+3.5;
     });
+    return activeSlot;
   }
   function setActive(sc,animate){
     var m=V3.SC[sc],target=spec.data[sc];
@@ -398,7 +409,7 @@ V3.traj=function(container,spec){
     pArea.setAttribute('fill',m.color);
     pArea.setAttribute('fill-opacity',REDUCED?.07:.075);
     V3.SC_ORDER.forEach(function(g){gGhost[g].style.opacity=g===sc?0:''});
-    layoutLabels(sc);
+    var activeSlot=layoutLabels(sc);
     var last=target[n-1];
     read.innerHTML=spec.read?spec.read(last,spec):('<b style="color:'+m.color+'">'+(spec.prefix||'')+fmtVal(last,spec.dec)+(spec.unit||'')+'</b> by '+years[n-1]+' · '+m.name.toLowerCase());
     if(note){
@@ -409,13 +420,18 @@ V3.traj=function(container,spec){
       }else note.textContent=txt;
     }
     if(raf)cancelAnimationFrame(raf);
-    if(!animate||REDUCED){disp=target.slice();paintDisp();return}
+    if(!animate||REDUCED){
+      disp=target.slice();paintDisp();
+      if(activeSlot!=null)labels[sc].setAttribute('y',activeSlot);
+      return;
+    }
     var from=disp.slice(),t0=performance.now(),D=460;
     function step(t){
       var k=easeOut(Math.min(1,(t-t0)/D));
       for(var i=0;i<n;i++)disp[i]=from[i]+(target[i]-from[i])*k;
       paintDisp();
       if(k<1)raf=requestAnimationFrame(step);
+      else if(activeSlot!=null)labels[sc].setAttribute('y',activeSlot);
     }
     raf=requestAnimationFrame(step);
   }
