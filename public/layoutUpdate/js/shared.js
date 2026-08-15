@@ -4,6 +4,20 @@
 
 /* ── Grade helpers ── */
 function grade(s){return s>=93?'A':s>=85?'A\u2212':s>=80?'B+':s>=73?'B':s>=68?'B\u2212':s>=63?'C+':s>=58?'C':s>=53?'C\u2212':s>=48?'D+':s>=43?'D':s>=38?'D\u2212':'F'}
+function fmtToday(){return new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
+/* Extend a timeseries by `extra` points, easing from its last value
+   toward `target` (ease-out — most movement early, then plateau).
+   Used by dashboards whose hand-authored data ended at 2035 to carry
+   every chart out to the site-wide 2050 horizon. */
+function extendSeries(arr,target,extra,dec){
+  dec=dec==null?1:dec;
+  var out=arr.slice(),v=arr[arr.length-1],m=Math.pow(10,dec);
+  for(var i=1;i<=extra;i++){
+    var t=i/extra,e=1-Math.pow(1-t,2);
+    out.push(Math.round((v+(target-v)*e)*m)/m);
+  }
+  return out;
+}
 function gClr(s){return s>=73?'#4ecdc4':s>=53?'#e8a838':s>=38?'#c48a3f':'#d4622a'}
 function avg(arr){return Math.round(arr.reduce(function(a,b){return a+b},0)/arr.length)}
 function fmtK(n){return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(0)+'K':String(n)}
@@ -20,7 +34,9 @@ var PAGE_ORDER=[
   {href:'transition.html',label:'Transition'},
   {href:'governance.html',label:'Governance'},
   {href:'strategy.html',label:'Strategy'},
+  {href:'pathways.html',label:'Pathways'},
   {href:'timeline.html',label:'Timeline'},
+  {href:'data.html',label:'Live Data'},
   {href:'research.html',label:'Research'},
   {href:'chat.html',label:'Advisor'},
   {href:'about.html',label:'About'}
@@ -107,11 +123,14 @@ function initThemeToggle(){
 /* ================================================================
    SCENARIO PERSISTENCE — hash + localStorage
    ================================================================ */
+/* Site-wide default scenario. BAU — the world's current trajectory —
+   is the honest starting point; users opt into the other futures. */
+var DEFAULT_SCENARIO='bau';
 function getScenarioFromHash(){
   var h=window.location.hash.replace('#','');
   if(h&&/^(aggressive|moderate|bau|worst)$/.test(h)) return h;
   try{var ls=localStorage.getItem('aicivsim-scenario');if(ls&&/^(aggressive|moderate|bau|worst)$/.test(ls))return ls}catch(e){}
-  return null;
+  return DEFAULT_SCENARIO;
 }
 function setScenarioHash(id){
   if(window.history&&window.history.replaceState) window.history.replaceState(null,'','#'+id);
@@ -608,6 +627,127 @@ var SIM_ENGINE={
   }
 };
 
+/* ================================================================
+   STRATEGY CATALOG — single source of truth for the action catalog.
+   Consumed by strategy.html (full cards) and pathways.html (status
+   diffs between scenarios). Moved here from strategy.html.
+   ================================================================ */
+var STRATEGY_CATALOG={
+  baseline:{score:35,note:'limited adoption'},
+  scores:{aggressive:88,moderate:62,bau:22,worst:8},
+  narratives:{
+    aggressive:'Under aggressive action, all 20 strategies reach full or near-full adoption. Personal actions are incentivized through civic dividends, organizations operate under binding AI governance charters, and policy reforms have cleared legislative hurdles. The strategy pipeline is mature, well-funded, and self-reinforcing.',
+    moderate:'Moderate reform brings roughly half the strategy catalog into active deployment. Personal adoption is voluntary but growing, organizational compliance is patchy, and key policy reforms are in pilot phase. Progress is real but fragile — dependent on continued political will.',
+    bau:'Under business as usual, strategy adoption remains ad hoc. A few personal actions are common, but organizational and policy strategies lack institutional support. Without coordinated incentives, most high-impact strategies remain theoretical. The gap between knowledge and action widens.',
+    worst:'Institutional collapse prevents any coordinated strategy deployment. Personal actions are isolated. Organizations face no accountability. Policy reform has stalled or reversed. The strategy catalog exists on paper but has no implementation pathway. The window for high-leverage intervention is closing.'
+  },
+  summaries:{
+    personal:{
+      aggressive:{adoption:'92%',topImpact:'Home energy retrofit',avgImpact:'-3.2t CO₂/yr',note:'Civic dividends fund retrofit subsidies. Adoption is near-universal among eligible households.'},
+      moderate:{adoption:'58%',topImpact:'Public transit shift',avgImpact:'-2.1t CO₂/yr',note:'Moderate incentives drive partial adoption. Retrofits limited to motivated early adopters.'},
+      bau:{adoption:'18%',topImpact:'Diet shift',avgImpact:'-0.8t CO₂/yr',note:'Only low-cost, low-effort actions see meaningful uptake. Capital-intensive strategies are inaccessible.'},
+      worst:{adoption:'6%',topImpact:'None significant',avgImpact:'-0.2t CO₂/yr',note:'Economic precarity prevents discretionary action. Survival takes precedence over strategy.'}
+    },
+    organization:{
+      aggressive:{adoption:'85%',topImpact:'Renewable procurement',avgImpact:'-35% emissions',note:'Binding charters and procurement mandates drive rapid organizational transformation.'},
+      moderate:{adoption:'45%',topImpact:'Remote work policy',avgImpact:'-18% emissions',note:'Voluntary frameworks see uneven adoption. Leaders comply; laggards face no consequence.'},
+      bau:{adoption:'12%',topImpact:'Remote work policy',avgImpact:'-5% emissions',note:'Only actions with direct cost savings are adopted. No systemic accountability.'},
+      worst:{adoption:'3%',topImpact:'None significant',avgImpact:'-1% emissions',note:'Regulatory rollback removes incentives. Greenwashing replaces action.'}
+    },
+    policy:{
+      aggressive:{adoption:'95%',topImpact:'Carbon pricing',avgImpact:'-28% national',note:'All six policy reforms enacted and enforced. Cross-system integration multiplies impact.'},
+      moderate:{adoption:'50%',topImpact:'AI audit mandate',avgImpact:'-12% national',note:'Three of six reforms in active deployment. Others in pilot or legislative review.'},
+      bau:{adoption:'8%',topImpact:'Green finance regulation',avgImpact:'-2% national',note:'One reform partially enacted. The rest blocked by political gridlock.'},
+      worst:{adoption:'0%',topImpact:'None',avgImpact:'0%',note:'Policy infrastructure has collapsed. No new legislation is possible in the current environment.'}
+    }
+  },
+  categories:[
+    {key:'personal',label:'Personal',color:'var(--climate)'},
+    {key:'organization',label:'Organization',color:'var(--workforce)'},
+    {key:'policy',label:'Policy',color:'var(--governance)'}
+  ],
+  actions:{
+    personal:[
+      {name:'Switch to renewable energy',cost:'Low',difficulty:'Easy',co2:'-2.5t/yr',timeline:'1 month',
+       desc:'Switch utility provider or install rooftop solar.',
+       scenario:{aggressive:{status:'Subsidized',note:'Civic dividend covers 80% of switching costs.'},moderate:{status:'Incentivized',note:'Tax credits cover partial cost.'},bau:{status:'Available',note:'Market-rate, no subsidy.'},worst:{status:'Blocked',note:'Utility monopolies restrict switching.'}}},
+      {name:'Plant-based diet shift',cost:'No cost',difficulty:'Medium',co2:'-1.5t/yr',timeline:'Immediate',
+       desc:'Reduce meat consumption by 50% or more.',
+       scenario:{aggressive:{status:'Cultural norm',note:'Public campaigns and institutional menus accelerate shift.'},moderate:{status:'Growing trend',note:'Awareness rising but institutional support limited.'},bau:{status:'Niche',note:'Individual choice, no systemic support.'},worst:{status:'Declining',note:'Food insecurity pushes toward cheapest calories.'}}},
+      {name:'Public transit / cycling',cost:'Saves money',difficulty:'Medium',co2:'-2.0t/yr',timeline:'1 month',
+       desc:'Replace car commute with transit or cycling.',
+       scenario:{aggressive:{status:'Free transit',note:'Fully funded public transit eliminates cost barrier.'},moderate:{status:'Subsidized',note:'Reduced fares and expanded routes.'},bau:{status:'Underfunded',note:'Service cuts reduce viability.'},worst:{status:'Collapsed',note:'Transit systems defunded.'}}},
+      {name:'Home energy retrofit',cost:'$5–15K',difficulty:'Hard',co2:'-3.0t/yr',timeline:'3–6 months',
+       desc:'Insulation, heat pump, smart thermostat.',
+       scenario:{aggressive:{status:'Fully funded',note:'Government retrofit program covers full cost.'},moderate:{status:'Partial grants',note:'50% cost offset through grants.'},bau:{status:'Self-funded',note:'Full cost borne by homeowner.'},worst:{status:'Unaffordable',note:'No subsidies, rising material costs.'}}},
+      {name:'Reduce air travel',cost:'Saves money',difficulty:'Medium',co2:'-1.8t/yr',timeline:'Immediate',
+       desc:'Replace 1–2 flights/year with alternatives.',
+       scenario:{aggressive:{status:'Rail alternatives',note:'High-speed rail network provides viable substitutes.'},moderate:{status:'Some alternatives',note:'Regional rail expanding but gaps remain.'},bau:{status:'No alternatives',note:'Air travel remains dominant mode.'},worst:{status:'No alternatives',note:'Infrastructure investment has ceased.'}}},
+      {name:'Civic participation',cost:'Time only',difficulty:'Easy',co2:'Indirect',timeline:'Immediate',
+       desc:'Vote, attend assemblies, join civic organizations.',
+       scenario:{aggressive:{status:'Embedded',note:'Participatory budgeting and citizen assemblies are mainstream.'},moderate:{status:'Growing',note:'Pilot assemblies in select regions.'},bau:{status:'Declining',note:'Voter fatigue and institutional distrust.'},worst:{status:'Suppressed',note:'Democratic participation actively discouraged.'}}},
+      {name:'Ethical investing',cost:'No cost',difficulty:'Easy',co2:'-0.5t/yr',timeline:'1 month',
+       desc:'Move funds to ESG or impact-focused portfolios.',
+       scenario:{aggressive:{status:'Default option',note:'ESG is the regulatory standard for all funds.'},moderate:{status:'Available',note:'Growing options but not default.'},bau:{status:'Niche',note:'Greenwashing makes selection difficult.'},worst:{status:'Meaningless',note:'No enforcement or standardization.'}}},
+      {name:'Community organizing',cost:'Time only',difficulty:'Medium',co2:'Indirect',timeline:'Ongoing',
+       desc:'Build local coalitions for climate and equity action.',
+       scenario:{aggressive:{status:'Funded',note:'Community organizing receives public funding and infrastructure.'},moderate:{status:'Supported',note:'Some grants available for civic coalitions.'},bau:{status:'Volunteer-only',note:'No institutional support.'},worst:{status:'Risky',note:'Organizing faces legal and social barriers.'}}}
+    ],
+    organization:[
+      {name:'Remote work policy',cost:'No cost',difficulty:'Medium',co2:'-15% fleet emissions',timeline:'3 months',
+       desc:'Reduce commuting through hybrid/remote work.',
+       scenario:{aggressive:{status:'Standard',note:'Hybrid work is the regulatory default.'},moderate:{status:'Common',note:'Most large employers offer hybrid.'},bau:{status:'Voluntary',note:'Employer discretion.'},worst:{status:'Reversed',note:'Return-to-office mandates dominate.'}}},
+      {name:'Supply chain audit',cost:'Moderate',difficulty:'Hard',co2:'-10% scope 3',timeline:'6–12 months',
+       desc:'Map and reduce upstream emissions.',
+       scenario:{aggressive:{status:'Mandatory',note:'Supply chain transparency required by law.'},moderate:{status:'Expected',note:'Industry standards emerging.'},bau:{status:'Optional',note:'No enforcement mechanism.'},worst:{status:'Absent',note:'No disclosure requirements.'}}},
+      {name:'Renewable procurement',cost:'Moderate',difficulty:'Medium',co2:'-40% energy emissions',timeline:'6 months',
+       desc:'Purchase renewable energy credits or direct agreements.',
+       scenario:{aggressive:{status:'Required',note:'100% renewable procurement mandate for large orgs.'},moderate:{status:'Incentivized',note:'Tax benefits for renewable procurement.'},bau:{status:'Cost-driven',note:'Only when cheaper than fossil.'},worst:{status:'Penalized',note:'Fossil subsidies make renewables uncompetitive.'}}},
+      {name:'AI governance framework',cost:'Time investment',difficulty:'Hard',co2:'Indirect',timeline:'12 months',
+       desc:'Establish ethics board, audit pipeline, transparency standards.',
+       scenario:{aggressive:{status:'Binding charter',note:'AI charter compliance required for all systems.'},moderate:{status:'Voluntary standard',note:'Industry-led framework with partial adoption.'},bau:{status:'Absent',note:'No governance structure.'},worst:{status:'Blocked',note:'Lobbying prevents any oversight framework.'}}},
+      {name:'Living wage commitment',cost:'Increased payroll',difficulty:'Medium',co2:'Indirect',timeline:'6 months',
+       desc:'Ensure all workers and contractors earn a living wage.',
+       scenario:{aggressive:{status:'Legislated',note:'Universal living wage is law.'},moderate:{status:'Voluntary pledge',note:'Growing corporate commitments.'},bau:{status:'Market-rate',note:'No floor beyond minimum wage.'},worst:{status:'Eroding',note:'Minimum wage frozen, real wages declining.'}}},
+      {name:'Open data pledge',cost:'No cost',difficulty:'Easy',co2:'Indirect',timeline:'3 months',
+       desc:'Publish anonymized operational data for public benefit.',
+       scenario:{aggressive:{status:'Required',note:'Open data mandated for public-facing organizations.'},moderate:{status:'Encouraged',note:'Voluntary open data initiatives growing.'},bau:{status:'Rare',note:'Data treated as competitive asset.'},worst:{status:'Absent',note:'Data hoarding accelerates.'}}}
+    ],
+    policy:[
+      {name:'Carbon pricing',cost:'Complex',difficulty:'Hard',co2:'-25% national emissions',timeline:'2–4 years',
+       desc:'Economy-wide carbon tax or cap-and-trade system.',
+       scenario:{aggressive:{status:'Enacted',note:'$150/ton carbon price with border adjustments.'},moderate:{status:'Partial',note:'$50/ton, limited sector coverage.'},bau:{status:'Stalled',note:'Proposed but blocked by industry lobby.'},worst:{status:'Reversed',note:'Existing carbon policies repealed.'}}},
+      {name:'Universal reskilling',cost:'$50B+',difficulty:'Hard',co2:'Indirect',timeline:'3–5 years',
+       desc:'Publicly funded retraining for automation-displaced workers.',
+       scenario:{aggressive:{status:'Fully funded',note:'Transition reskilling reaches 95% of displaced workers.'},moderate:{status:'Pilot phase',note:'Reskilling programs in 40% of affected regions.'},bau:{status:'Unfunded',note:'Proposed but no budget allocation.'},worst:{status:'Abandoned',note:'Training infrastructure defunded.'}}},
+      {name:'AI audit mandate',cost:'Moderate',difficulty:'Medium',co2:'Indirect',timeline:'1–2 years',
+       desc:'Require safety and bias audits for high-risk AI systems.',
+       scenario:{aggressive:{status:'Enforced',note:'96% of high-risk AI systems audited annually.'},moderate:{status:'Enacted',note:'Law passed but enforcement uneven.'},bau:{status:'Voluntary',note:'Industry self-regulation only.'},worst:{status:'Blocked',note:'Tech lobbying prevents any mandate.'}}},
+      {name:'Housing as infrastructure',cost:'$100B+',difficulty:'Hard',co2:'-5% building emissions',timeline:'5–10 years',
+       desc:'Treat housing as public infrastructure with energy standards.',
+       scenario:{aggressive:{status:'Funded',note:'National retrofit and public housing program active.'},moderate:{status:'Piloted',note:'Regional pilots in 3 metro areas.'},bau:{status:'Proposed',note:'In policy discussions but unfunded.'},worst:{status:'Abandoned',note:'Housing treated as private market only.'}}},
+      {name:'Green finance regulation',cost:'Moderate',difficulty:'Medium',co2:'-15% financial sector',timeline:'2–3 years',
+       desc:'Mandate climate risk disclosure and sustainable investment.',
+       scenario:{aggressive:{status:'Mandatory',note:'All financial institutions report climate risk.'},moderate:{status:'Partial',note:'Large banks comply; smaller institutions exempt.'},bau:{status:'Voluntary',note:'Industry-led disclosure, inconsistent.'},worst:{status:'Deregulated',note:'Existing disclosure rules rolled back.'}}},
+      {name:'Civic dividend pilot',cost:'$500M–3B',difficulty:'Hard',co2:'Indirect',timeline:'2–3 years',
+       desc:'Test universal civic dividend funded by AI compute rents.',
+       scenario:{aggressive:{status:'Scaled',note:'Civic dividend at $192/mo reaching full population.'},moderate:{status:'Pilot',note:'$115/mo dividend in 3 pilot regions.'},bau:{status:'Concept',note:'Research published but no political support.'},worst:{status:'Rejected',note:'AI compute rents captured by private sector.'}}}
+    ]
+  },
+  /* Status → strength tier. Lists match strategy.html's original
+     status-color ternary verbatim; anything unlisted (Blocked,
+     Reversed, Abandoned, Suppressed, …) is the blocked tier (0). */
+  statusTones:{
+    strong:['Enacted','Enforced','Scaled','Fully funded','Funded','Mandatory','Required','Subsidized','Standard','Legislated','Default option','Embedded','Cultural norm','Free transit'],
+    partial:['Incentivized','Partial','Pilot','Pilot phase','Piloted','Expected','Growing','Supported','Available','Common','Encouraged','Growing trend','Partial grants','Some alternatives','Voluntary pledge','Voluntary standard'],
+    weak:['Voluntary','Niche','Stalled','Optional','Cost-driven','Rare','Unfunded','Proposed','Concept','Volunteer-only','Self-funded','Market-rate','Underfunded','No alternatives']
+  }
+};
+function stratStatusRank(st){
+  var T=STRATEGY_CATALOG.statusTones;
+  return T.strong.indexOf(st)!==-1?3:T.partial.indexOf(st)!==-1?2:T.weak.indexOf(st)!==-1?1:0;
+}
+
 function simInterp(arr,year){
   var idx=year-2027;
   if(idx<=0)return arr[0];if(idx>=43)return arr[43];
@@ -909,12 +1049,23 @@ function scenarioChart(opts){
   var keys=Object.keys(ds);
   keys.forEach(function(k){
     if(k===ak)return;
+    var sec=(k===opts.secondaryKey);
     var d=ds[k];var len=d.length;
     var pts=d.map(function(v,i){return xPos(i,len)+','+yPos(v)}).join(' ');
-    svg+='<polyline points="'+pts+'" fill="none" stroke="'+(colors[k]||'#888')+'" stroke-width="2" opacity="0.25" class="chart-line-bg"/>';
-    var endV=d[len-1];var ex=xPos(len-1,len);var eyl=yPos(endV);
-    svg+='<circle cx="'+ex+'" cy="'+eyl+'" r="5" fill="'+(colors[k]||'#888')+'" opacity="0.35"/>';
-    svg+='<text x="'+(ex+10)+'" y="'+(eyl+5)+'" fill="'+(colors[k]||'#888')+'" opacity="0.45" font-size="15" font-family="var(--font-mono)" class="chart-label">'+fVal(endV)+'</text>';
+    /* secondaryKey (e.g. a page's "current path") reads at near-full
+       strength, dashed to stay visually distinct from the solid
+       activeKey line, so switching it is as obvious as switching ak. */
+    if(sec){
+      svg+='<polyline points="'+pts+'" fill="none" stroke="'+(colors[k]||'#888')+'" stroke-width="3" stroke-dasharray="7,4" opacity="0.9" class="chart-line-secondary"/>';
+      var endV=d[len-1];var ex=xPos(len-1,len);var eyl=yPos(endV);
+      svg+='<circle cx="'+ex+'" cy="'+eyl+'" r="5.5" fill="var(--bg)" stroke="'+(colors[k]||'#888')+'" stroke-width="2"/>';
+      svg+='<text x="'+(ex+10)+'" y="'+(eyl+5)+'" fill="'+(colors[k]||'#888')+'" font-size="15" font-weight="600" font-family="var(--font-mono)" class="chart-label">'+fVal(endV)+'</text>';
+    }else{
+      svg+='<polyline points="'+pts+'" fill="none" stroke="'+(colors[k]||'#888')+'" stroke-width="2" opacity="0.25" class="chart-line-bg"/>';
+      var endV=d[len-1];var ex=xPos(len-1,len);var eyl=yPos(endV);
+      svg+='<circle cx="'+ex+'" cy="'+eyl+'" r="5" fill="'+(colors[k]||'#888')+'" opacity="0.35"/>';
+      svg+='<text x="'+(ex+10)+'" y="'+(eyl+5)+'" fill="'+(colors[k]||'#888')+'" opacity="0.45" font-size="15" font-family="var(--font-mono)" class="chart-label">'+fVal(endV)+'</text>';
+    }
   });
 
   var ad=ds[ak];if(ad){
@@ -935,12 +1086,17 @@ function scenarioChart(opts){
   html+='<div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;align-items:center">';
   scenarios.forEach(function(sc){
     var isA=sc.id===ak;
-    html+='<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:var(--font-body);letter-spacing:0.03em;color:'+(isA?sc.color:'rgba(255,255,255,0.3)')+'">';
-    html+='<span style="width:18px;height:'+(isA?'3':'1.5')+'px;background:'+sc.color+';opacity:'+(isA?1:0.35)+';display:inline-block;border-radius:1px"></span>';
+    var isSec=sc.id===opts.secondaryKey;
+    html+='<span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:var(--font-body);letter-spacing:0.03em;color:'+(isA||isSec?sc.color:'rgba(255,255,255,0.3)')+'">';
+    if(isSec){
+      html+='<span style="width:18px;height:0;border-top:2.5px dashed '+sc.color+';display:inline-block"></span>';
+    }else{
+      html+='<span style="width:18px;height:'+(isA?'3':'1.5')+'px;background:'+sc.color+';opacity:'+(isA?1:0.35)+';display:inline-block;border-radius:1px"></span>';
+    }
     html+=sc.name;
     if(ds[sc.id]){
       var ev=ds[sc.id][ds[sc.id].length-1];
-      html+=' <span style="font-family:var(--font-mono);font-weight:'+(isA?'600':'400')+';font-size:12px;opacity:'+(isA?1:0.5)+'">'+fVal(ev)+'</span>';
+      html+=' <span style="font-family:var(--font-mono);font-weight:'+(isA||isSec?'600':'400')+';font-size:12px;opacity:'+(isA||isSec?1:0.5)+'">'+fVal(ev)+'</span>';
     }
     html+='</span>';
   });
@@ -1102,7 +1258,7 @@ function renderFooter(){
     nav+
     '<div class="text-center">'+
     '<p class="t4">AI Civilization Simulator &middot; Clawcode Research &middot; 2026</p>'+
-    '<p class="t4 mt-2" style="color:var(--text-faint)">Data: simulated projections. Methodology: scenario modeling with policy lever inputs.<br>Typography: Space Grotesk, Inter, JetBrains Mono. Layout: 12-column editorial grid.</p>'+
+    '<p class="t4 mt-2" style="color:var(--text-faint)">Data: scenario projections grounded in <a href="data.html" style="color:var(--text-muted)">live real-world baselines</a> (NOAA &middot; Our World in Data &middot; World Bank).<br>Typography: Space Grotesk, Inter, JetBrains Mono. Layout: 12-column editorial grid.</p>'+
     '</div>'+
   '</div></footer>';
 }
@@ -1135,7 +1291,9 @@ var CMD_ITEMS=[
   {g:'Pages',l:'Transition',d:'Workforce — poverty, reskilling, income bridge calculator',h:'transition.html',icon:'📊'},
   {g:'Pages',l:'Governance',d:'Institutions — participation, AI charter, citizen assemblies',h:'governance.html',icon:'⚖'},
   {g:'Pages',l:'Strategy',d:'Action catalog — 50+ interventions across 3 levels',h:'strategy.html',icon:'🎯'},
+  {g:'Pages',l:'Pathways',d:'What it takes to move from one scenario to another',h:'pathways.html',icon:'🧭'},
   {g:'Pages',l:'Timeline',d:'200,000 years of inflection points',h:'timeline.html',icon:'📅'},
+  {g:'Pages',l:'Live Data',d:'Real-world indicators fetched live — CO₂, warming, poverty',h:'data.html',icon:'📡'},
   {g:'Pages',l:'Research',d:'19-section civic roadmap',h:'research.html',icon:'📄'},
   {g:'Pages',l:'Advisor',d:'AI chat assistant with page-aware context',h:'chat.html',icon:'💬'},
   {g:'Pages',l:'About',d:'Project scope, methodology, technology stack',h:'about.html',icon:'ℹ'},
@@ -1301,10 +1459,43 @@ var CMD_ITEMS=[
   if(document.querySelector('.site-nav')) initSiteNav();
 })();
 
-/* ── Chat Widget: inject on every page ── */
+/* ── "As of today" stamp — every page carrying graph data shows the
+      current date so it reads as a report on TODAY, not a fixed 2026
+      artifact. Content pages get it in the masthead breadcrumb; the
+      fullscreen 3D apps get it next to their title. ── */
 (function(){
+  function init(){
+    var bc=document.querySelector('.masthead-breadcrumb');
+    if(bc){
+      var s=document.createElement('span');
+      s.style.color='var(--text-muted)';
+      s.textContent=' · As of '+fmtToday();
+      bc.appendChild(s);
+      return;
+    }
+    var title=document.querySelector('.site-title');
+    if(title){
+      var short=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      var s2=document.createElement('span');
+      s2.style.cssText='color:rgba(255,255,255,0.3);font-size:11px;font-weight:400';
+      s2.textContent=' · '+short;
+      title.appendChild(s2);
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+
+/* ── Chat Widget: inject on every page except fullscreen 3D apps ──
+   viz/explorer/xr render their own canvas UI in the bottom corners;
+   the floating chat bubble overlaps their panels and (on explorer)
+   duplicates its built-in LLM input. ── */
+(function(){
+  var path=window.location.pathname;
+  var NO_WIDGET=['viz.html','explorer.html','xr.html'];
+  for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260221d';
+  s.src='js/chat-widget.js?v=20260816a';
   s.defer=true;
   document.body.appendChild(s);
 })();

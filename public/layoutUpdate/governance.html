@@ -4,671 +4,166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Governance — AI Civilization Simulator</title>
+<meta name="description" content="Governance dashboard - AI charter adoption, citizen assemblies, audit coverage, and civic participation.">
+<link rel="canonical" href="https://aicivsim.com/governance.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Governance — AI Civilization Simulator">
+<meta property="og:description" content="Governance dashboard - AI charter adoption, citizen assemblies, audit coverage, and civic participation.">
+<meta property="og:url" content="https://aicivsim.com/governance.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Governance — AI Civilization Simulator">
+<meta name="twitter:description" content="Governance dashboard - AI charter adoption, citizen assemblies, audit coverage, and civic participation.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260221d">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
 </head>
 <body>
-
-<!-- MASTHEAD -->
-<header class="masthead">
-<div class="page masthead-inner">
-  <p class="masthead-breadcrumb"><a href="index.html">AICIVSIM</a> / Governance</p>
-  <p class="t3" style="color:var(--governance);letter-spacing:0.3em;margin-bottom:8px">GOVERNANCE &mdash; 2026</p>
-  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">Democratic Infrastructure</h1>
-  <p class="body mt-3" style="max-width:480px">Citizen assemblies, participatory budgeting, and AI governance charters. Building the institutional scaffolding for accountable machine intelligence through deliberative democracy.</p>
-  <hr class="rule">
-</div>
-</header>
-
-<!-- SITE NAV -->
-<div id="site-nav-mount"></div>
-
-<!-- CONTROL BAR -->
-<div class="control-bar">
-<div class="page">
-  <div class="control-bar-inner">
-    <div class="nav-tabs" id="tabs">
-      <button class="nav-tab active" data-section="overview">Overview</button>
-      <button class="nav-tab" data-section="assemblies">Assemblies</button>
-      <button class="nav-tab" data-section="modules">Modules</button>
-      <button class="nav-tab" data-section="audit">Audit Timeline</button>
-    </div>
-    <div class="scenario-bar" id="scenario-bar"></div>
-  </div>
-</div>
-</div>
-
-<main>
-
-<!-- OVERVIEW -->
-<div id="sec-overview">
-
-  <div class="section"><div class="page">
-    <span class="section-num">01</span>
-    <p class="t2">Today&rsquo;s Governance Score</p>
-    <hr class="rule">
-    <div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">
-      <span class="score-hero" style="color:var(--governance)">40</span>
-      <div>
-        <span class="score-sub">/100</span>
-        <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-          <span class="tag" style="font-size:18px;padding:6px 14px;border-color:var(--governance);color:var(--governance)">D</span>
-          <span class="delta delta-down" style="font-size:13px">declining</span>
-        </div>
-      </div>
-    </div>
-    <p class="body mt-3">Composite governance score across institutional trust, AI charter adoption, civic participation, and democratic infrastructure. Measured 2026 baseline &mdash; before any scenario intervention.</p>
-    <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="gov-projected"></div>
-    <div class="grid grid-4 mt-6" id="gov-metric-cards"></div>
-  </div></div>
-
-  <div class="section"><div class="page">
-    <span class="section-num">02</span>
-    <p class="t2">Policy Levers</p>
-    <hr class="rule">
-    <p class="body mt-2">Adjust levers to see how governance infrastructure investments affect projected outcomes.</p>
-    <div class="grid grid-3 mt-4">
-      <div class="cell">
-        <div class="slider-group">
-          <div class="slider-label"><span class="t3">Charter Enforcement</span><span class="num-md" id="val-lever-charter" style="color:var(--governance)">70%</span></div>
-          <input type="range" class="slider-track mt-2" id="sl-lever-charter" min="0" max="100" step="5" value="70">
-          <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">100%</span></div>
-          <p class="t4 mt-2">Binding power of AI governance charters.</p>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="slider-group">
-          <div class="slider-label"><span class="t3">Assembly Frequency</span><span class="num-md" id="val-lever-assembly" style="color:var(--governance)">12/yr</span></div>
-          <input type="range" class="slider-track mt-2" id="sl-lever-assembly" min="2" max="24" step="1" value="12">
-          <div class="flex justify-between mt-1"><span class="t4">2/yr</span><span class="t4">24/yr</span></div>
-          <p class="t4 mt-2">How often citizen assemblies convene.</p>
-        </div>
-      </div>
-      <div class="cell">
-        <div class="slider-group">
-          <div class="slider-label"><span class="t3">Audit Coverage</span><span class="num-md" id="val-lever-audit" style="color:var(--governance)">60%</span></div>
-          <input type="range" class="slider-track mt-2" id="sl-lever-audit" min="0" max="100" step="5" value="60">
-          <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">100%</span></div>
-          <p class="t4 mt-2">Percentage of AI systems under mandatory audit.</p>
-        </div>
-      </div>
-    </div>
-    <div id="lever-impact" class="mt-4"></div>
-  </div></div>
-
-  <div class="section"><div class="page">
-    <span class="section-num">03</span>
-    <p class="t2">Participation &mdash; <span id="ov-scenario-label">Aggressive</span></p>
-    <hr class="rule">
-    <div id="participation-grid"></div>
-  </div></div>
-
-  <div class="chapter-divider"><div class="page">
-    <p class="t2">Civic AI Charter</p>
-  </div></div>
-  <div class="section" style="padding-top:24px"><div class="page">
-    <div id="charter-pillars"></div>
-  </div></div>
-
-  <div class="chapter-divider"><div class="page">
-    <p class="t2">Funding Stack</p>
-  </div></div>
-  <div class="section" style="padding-top:24px"><div class="page">
-    <div id="funding-stack"></div>
-  </div></div>
-
-</div>
-
-<!-- ASSEMBLIES -->
-<div id="sec-assemblies" style="display:none">
-  <div class="section"><div class="page">
-    <span class="section-num">04</span>
-    <p class="t2">Citizen Assemblies</p>
-    <hr class="rule">
-    <p class="body mb-6">Standing deliberative bodies with binding authority over AI policy domains. Members selected by civic lottery, rotating on staggered two-year terms. Decisions require supermajority and pass through a transparency review before implementation.</p>
-    <div id="assembly-list"></div>
-  </div></div>
-</div>
-
-<!-- MODULES -->
-<div id="sec-modules" style="display:none">
-  <div class="section"><div class="page">
-    <span class="section-num">05</span>
-    <p class="t2">Governance Modules</p>
-    <hr class="rule">
-    <p class="body mb-6">Modular governance infrastructure. Each module operates independently with standardized APIs for cross-system coordination. Status reflects production readiness and audit compliance.</p>
-    <div id="module-list"></div>
-  </div></div>
-</div>
-
-<!-- AUDIT TIMELINE -->
-<div id="sec-audit" style="display:none">
-  <div class="section"><div class="page">
-    <span class="section-num">06</span>
-    <p class="t2">Audit Coverage</p>
-    <hr class="rule">
-    <p class="body mb-6">Percentage of high-risk AI systems audited through participatory safety review. Target: 100% by 2035. Incidents track bias, safety, and governance failures detected.</p>
-    <div id="audit-sparks"></div>
-    <div id="audit-table" class="mt-8"></div>
-  </div></div>
-</div>
-
-<!-- CROSS-SYSTEM IMPACT -->
-<div class="section"><div class="page">
-  <span class="section-num">07</span>
-  <p class="t2">Cross-System Impact</p>
-  <hr class="rule">
-  <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
-  <div id="cross-system-mount" class="mt-4"></div>
-</div></div>
-
-</main>
-
-<div id="page-footer"></div>
-
-<script src="js/shared.js?v=20260221d"></script>
+<div id="app"></div>
+<script src="js/shared.js?v=20260816a"></script>
+<script src="js/v3-data.js?v=20260816a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
-(function(){
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
-document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
+V3.boot({deck:{sys:'governance',context:'Charter, assemblies, modules, audits'}});
+var G=V3DATA.governance;
 
-var GOV='#9b87f5';
-var SCENARIOS=[
-  {id:'aggressive',name:'Aggressive',color:'#4ecdc4'},
-  {id:'moderate',name:'Moderate',color:'#5da5da'},
-  {id:'bau',name:'BAU',color:'#e8a838'},
-  {id:'worst',name:'Worst Case',color:'#d4622a'}
-];
-var SC_COLORS={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
-var active='aggressive';
-var GOV_SCORES={aggressive:85, moderate:65, bau:30, worst:10};
+V3.systemPage({
+  sys:'governance',
+  tagline:'Trust is infrastructure.',
+  lead:'Civic participation and institutional trust from 2026 to 2050 — plus the machinery underneath them: an AI charter, five citizen assemblies, five deployable governance modules, and a safety-audit program. Every other system in the model is only as strong as what’s on this page.',
+  today:40,
+  proj:G.GOV_SCORES,
+  metrics:VIZ_METRICS.governance,
+  narratives:{
+    aggressive:'Participatory budgeting, open audits, and citizen assemblies rebuild the machinery in public view. Participation reaches 82%, trust 80% — not because institutions are loved, but because they are legible and answerable.',
+    moderate:'Reform where the pressure is highest, inertia elsewhere. Trust climbs to 55% — institutions are no longer actively distrusted, which turns out to be enough for most policy to function. Fragile, but functioning.',
+    bau:'Participation flatlines at 15%. Trust decays to 26% as institutions announce reforms, partially fund them, and quietly abandon them. Every crisis is managed; none is prevented.',
+    worst:'Trust collapses below 20% and stays there. Emergency powers become permanent, elections become rituals, and governance capacity is consumed entirely by crisis response.'
+  },
+  crossKey:'governance'
+});
 
-var GOV_METRICS=[
-  {id:'civic',   label:'Civic Participation',  color:GOV,      unit:'%', baseline:42, dir:'higher',
-    note:'Registered residents who actively participate in governance.',
-    aggressive:78, moderate:58, bau:35, worst:12},
-  {id:'charter', label:'Charter Adoption',     color:'#4ecdc4', unit:'%', baseline:10, dir:'higher',
-    note:'AI systems operating under ratified governance charters.',
-    aggressive:92, moderate:55, bau:8, worst:0},
-  {id:'trust',   label:'Institutional Trust',  color:'#5da5da', unit:'%', baseline:43, dir:'higher',
-    note:'Survey-derived composite of confidence in public institutions.',
-    aggressive:72, moderate:56, bau:32, worst:18},
-  {id:'audit',   label:'Audit Coverage',       color:'#e8a838', unit:'%', baseline:10, dir:'higher',
-    note:'High-risk AI systems that have been safety-audited.',
-    aggressive:96, moderate:68, bau:15, worst:3}
-];
+var narSection=document.querySelector('#sys-nar').closest('.section');
+narSection.insertAdjacentHTML('beforebegin',
+  /* charter + pillars */
+  '<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">The AI charter</h2>'
+  +'<p class="lead">The binding agreement that makes every other module enforceable — its status is the single strongest predictor of the 2050 score.</p></div></div>'
+  +'<div class="narrative" style="margin-bottom:40px"><div class="who" id="charter-who"></div><p id="charter-status"></p></div>'
+  +'<div class="trio" id="pillars"></div></div></section>'
+  /* participation + funding */
+  +'<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Who shows up, who pays</h2>'
+  +'<p class="lead">Participation vitals under the chosen future, and where governance funding actually comes from.</p></div></div>'
+  +'<div class="kpis" id="part-tiles" style="margin-bottom:40px"></div>'
+  +'<div id="fund-stack" style="max-width:640px"></div></div></section>'
+  /* assemblies */
+  +'<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Five citizen assemblies</h2>'
+  +'<p class="lead">Randomly selected, professionally staffed, with real teeth — the share of their decisions that bind is the number to watch.</p></div></div>'
+  +'<div class="impacts" id="assemblies"></div></div></section>'
+  /* modules */
+  +'<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">Five governance modules</h2>'
+  +'<p class="lead">Deployable civic software — representation, budgeting, audits, transparency, oversight — each shipping (or not) depending on the future.</p></div></div>'
+  +'<div class="chart-grid" id="modules"></div></div></section>'
+  /* audit program */
+  +'<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">The safety-audit program</h2>'
+  +'<p class="lead">Share of deployed AI systems independently audited each year, and what the auditors find. Coverage is the leading indicator; unresolved incidents are the lagging cost.</p></div></div>'
+  +'<div class="chart-grid"><div class="chart-card" id="audit-chart"></div><div class="chart-card" id="audit-tiles" style="border:none;padding:0"><div class="kpis" style="grid-template-columns:1fr 1fr" id="audit-kpis"></div></div></div>'
+  +'</div></section>');
 
-/* ── PER-SCENARIO DATA ── */
+/* charter + pillars */
+function renderCharter(animate){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  document.getElementById('charter-who').textContent=m.name+' · charter status';
+  document.getElementById('charter-status').textContent=G.CHARTER_STATUS[act];
+  if(animate)V3.stagger(document.querySelectorAll('#pillars .t-card'),40);
+}
+document.getElementById('pillars').innerHTML=G.PILLARS.map(function(p){
+  return '<div class="t-card" style="cursor:default"><h3 style="color:'+p.color+'">'+p.name+'</h3>'
+    +'<p>'+p.desc+'</p>'
+    +'<p style="margin-top:12px;padding-top:12px;border-top:1px solid var(--hairline);color:var(--ink-2);font-size:12.5px">“'+p.principle+'”</p></div>';
+}).join('');
 
-var PARTICIPATION={
-  aggressive:[
-    {label:'Total Residents',value:'10M',note:'Municipal population base'},
-    {label:'Registered',value:'4.2M',note:'42% of residents enrolled'},
-    {label:'Active Voters',value:'2.8M',note:'67% of registered participate'},
-    {label:'Turnout',value:'67%',note:'Last assembly cycle average'}],
-  moderate:[
-    {label:'Total Residents',value:'10M',note:'Municipal population base'},
-    {label:'Registered',value:'3.5M',note:'35% of residents enrolled'},
-    {label:'Active Voters',value:'2.1M',note:'60% of registered participate'},
-    {label:'Turnout',value:'60%',note:'Last assembly cycle average'}],
-  bau:[
-    {label:'Total Residents',value:'10M',note:'Municipal population base'},
-    {label:'Registered',value:'2.1M',note:'21% of residents enrolled'},
-    {label:'Active Voters',value:'0.8M',note:'38% of registered participate'},
-    {label:'Turnout',value:'38%',note:'Last assembly cycle average'}],
-  worst:[
-    {label:'Total Residents',value:'10M',note:'Municipal population base'},
-    {label:'Registered',value:'1.2M',note:'12% of residents enrolled'},
-    {label:'Active Voters',value:'0.3M',note:'25% of registered participate'},
-    {label:'Turnout',value:'25%',note:'Last assembly cycle average'}]
-};
+/* participation tiles */
+function renderParticipation(animate){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  document.getElementById('part-tiles').innerHTML=G.PARTICIPATION[act].map(function(p){
+    return '<div class="stat"><div class="lbl">'+p.label+'</div>'
+      +'<div class="val" style="color:'+m.color+'">'+p.value+'</div>'
+      +'<div class="delta flat"><span class="ctx">'+p.note+'</span></div></div>';
+  }).join('');
+  if(animate)V3.stagger(document.querySelectorAll('#part-tiles .stat'),28);
+}
+V3.stack('#fund-stack',function(sc){return G.FUNDING_STACK[sc]});
 
-var PILLARS=[
-  {name:'Representation',color:GOV,desc:'Civic lottery selection, binding assemblies, delegate accountability frameworks',principle:'Every affected community has a seat at the table'},
-  {name:'Finance',color:'#4ecdc4',desc:'Participatory budgeting, civic dividend disbursement, transparent allocation protocols',principle:'Public money follows public deliberation'},
-  {name:'Transparency',color:'#5da5da',desc:'Algorithmic audit registries, open decision logs, real-time compliance dashboards',principle:'No opaque system governs public life'}
-];
-
-var CHARTER_STATUS={
-  aggressive:'All three charter pillars are fully ratified and enforced. Binding authority established.',
-  moderate:'Two of three pillars ratified. Transparency pillar in pilot phase with limited enforcement.',
-  bau:'Charter drafted but not ratified. No binding authority. Voluntary compliance only.',
-  worst:'No charter exists. Governance infrastructure has not been established. AI systems operate without oversight.'
-};
-
-var FUNDING_STACK={
-  aggressive:[
-    {name:'Civic Dividend Pool',range:'$3B / yr',pct:72,color:GOV},
-    {name:'Climate Portfolio',range:'$250M / yr',pct:30,color:'#4ecdc4'},
-    {name:'Transition OS',range:'$60M / yr',pct:7,color:'#5da5da'},
-    {name:'Governance Operations',range:'$25M / yr',pct:3,color:'#e8a838'},
-    {name:'Participation Infrastructure',range:'$15M / yr',pct:2,color:'#d4622a'}],
-  moderate:[
-    {name:'Civic Dividend Pool',range:'$1.5B / yr',pct:62,color:GOV},
-    {name:'Climate Portfolio',range:'$150M / yr',pct:22,color:'#4ecdc4'},
-    {name:'Transition OS',range:'$40M / yr',pct:6,color:'#5da5da'},
-    {name:'Governance Operations',range:'$20M / yr',pct:3,color:'#e8a838'},
-    {name:'Participation Infrastructure',range:'$10M / yr',pct:2,color:'#d4622a'}],
-  bau:[
-    {name:'Civic Dividend Pool',range:'$100M / yr',pct:35,color:GOV},
-    {name:'Climate Portfolio',range:'$30M / yr',pct:15,color:'#4ecdc4'},
-    {name:'Transition OS',range:'$10M / yr',pct:8,color:'#5da5da'},
-    {name:'Governance Operations',range:'$10M / yr',pct:8,color:'#e8a838'},
-    {name:'Participation Infrastructure',range:'$5M / yr',pct:4,color:'#d4622a'}],
-  worst:[
-    {name:'Civic Dividend Pool',range:'$20M / yr',pct:18,color:GOV},
-    {name:'Climate Portfolio',range:'$5M / yr',pct:5,color:'#4ecdc4'},
-    {name:'Transition OS',range:'$2M / yr',pct:2,color:'#5da5da'},
-    {name:'Governance Operations',range:'$8M / yr',pct:8,color:'#e8a838'},
-    {name:'Participation Infrastructure',range:'$2M / yr',pct:2,color:'#d4622a'}]
-};
-
-var ASSEMBLIES=[
-  {name:'AI Safety',color:GOV,
-    aggressive:{members:150,turnout:91,binding:88,meetings:12,decisions:8,status:'Active'},
-    moderate:  {members:120,turnout:78,binding:70,meetings:8,decisions:5,status:'Active'},
-    bau:       {members:40,turnout:45,binding:20,meetings:3,decisions:1,status:'Limited'},
-    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Dissolved'}},
-  {name:'Climate & Energy',color:'#4ecdc4',
-    aggressive:{members:120,turnout:88,binding:83,meetings:10,decisions:6,status:'Active'},
-    moderate:  {members:100,turnout:75,binding:65,meetings:7,decisions:4,status:'Active'},
-    bau:       {members:20,turnout:30,binding:10,meetings:2,decisions:0,status:'Advisory only'},
-    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Dissolved'}},
-  {name:'Housing & Land Use',color:'#5da5da',
-    aggressive:{members:100,turnout:85,binding:80,meetings:8,decisions:5,status:'Active'},
-    moderate:  {members:80,turnout:70,binding:60,meetings:5,decisions:3,status:'Active'},
-    bau:       {members:15,turnout:25,binding:0,meetings:1,decisions:0,status:'Advisory only'},
-    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Not formed'}},
-  {name:'Digital Rights',color:'#e8a838',
-    aggressive:{members:80,turnout:82,binding:75,meetings:6,decisions:4,status:'Active'},
-    moderate:  {members:60,turnout:68,binding:55,meetings:4,decisions:2,status:'Active'},
-    bau:       {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Not formed'},
-    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Not formed'}},
-  {name:'Budget & Finance',color:'#45b7d1',
-    aggressive:{members:100,turnout:90,binding:86,meetings:9,decisions:7,status:'Active'},
-    moderate:  {members:70,turnout:72,binding:58,meetings:5,decisions:3,status:'Active'},
-    bau:       {members:30,turnout:40,binding:15,meetings:2,decisions:0,status:'Limited'},
-    worst:     {members:0,turnout:0,binding:0,meetings:0,decisions:0,status:'Dissolved'}}
-];
-
-var MODULES=[
-  {name:'Representation',color:GOV,
-    aggressive:{status:'GA',version:'v1.2',metrics:[{l:'Active Voters',v:'78K'},{l:'Delegates',v:'1,200'},{l:'Assemblies',v:'5'}],
-      features:['Civic lottery selection engine','Delegate accountability scoring','Quorum enforcement protocol','Multi-language deliberation support']},
-    moderate:{status:'GA',version:'v1.0',metrics:[{l:'Active Voters',v:'52K'},{l:'Delegates',v:'800'},{l:'Assemblies',v:'4'}],
-      features:['Civic lottery selection engine','Delegate accountability scoring','Quorum enforcement protocol']},
-    bau:{status:'Beta',version:'v0.5',metrics:[{l:'Active Voters',v:'8K'},{l:'Delegates',v:'120'},{l:'Assemblies',v:'2'}],
-      features:['Basic civic registration','Minimal accountability framework']},
-    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Active Voters',v:'\u2014'},{l:'Delegates',v:'\u2014'},{l:'Assemblies',v:'0'}],
-      features:['No governance infrastructure exists']}},
-  {name:'Finance',color:'#4ecdc4',
-    aggressive:{status:'GA',version:'v1.1',metrics:[{l:'Disbursed',v:'$1.25B'},{l:'Transactions',v:'8.4M'},{l:'Settlement',v:'12 sec'}],
-      features:['Participatory budget allocation','Civic dividend distribution','Real-time treasury audit trail','Multi-currency settlement layer']},
-    moderate:{status:'GA',version:'v0.9',metrics:[{l:'Disbursed',v:'$620M'},{l:'Transactions',v:'4.1M'},{l:'Settlement',v:'18 sec'}],
-      features:['Participatory budget allocation','Civic dividend distribution','Basic treasury audit trail']},
-    bau:{status:'Alpha',version:'v0.3',metrics:[{l:'Disbursed',v:'$40M'},{l:'Transactions',v:'210K'},{l:'Settlement',v:'48 sec'}],
-      features:['Basic budget allocation','Limited disbursement']},
-    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Disbursed',v:'$0'},{l:'Transactions',v:'\u2014'},{l:'Settlement',v:'\u2014'}],
-      features:['No civic financial infrastructure']}},
-  {name:'Transparency',color:'#5da5da',
-    aggressive:{status:'GA',version:'v1.0',metrics:[{l:'Systems Audited',v:'142'},{l:'Incidents',v:'23 (21 resolved)'},{l:'Dashboard Views',v:'340K'}],
-      features:['Algorithmic audit registry','Open decision log with provenance','Compliance dashboard','Whistleblower protection module']},
-    moderate:{status:'Beta',version:'v0.7',metrics:[{l:'Systems Audited',v:'68'},{l:'Incidents',v:'14 (10 resolved)'},{l:'Dashboard Views',v:'120K'}],
-      features:['Algorithmic audit registry','Open decision log','Limited compliance dashboard']},
-    bau:{status:'Not deployed',version:'\u2014',metrics:[{l:'Systems Audited',v:'0'},{l:'Incidents',v:'Unknown'},{l:'Dashboard Views',v:'\u2014'}],
-      features:['No audit infrastructure deployed']},
-    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Systems Audited',v:'0'},{l:'Incidents',v:'Unknown'},{l:'Dashboard Views',v:'\u2014'}],
-      features:['No transparency infrastructure']}},
-  {name:'Identity',color:'#e8a838',
-    aggressive:{status:'Beta',version:'v0.8',metrics:[{l:'IDs Issued',v:'92K'},{l:'Verifications / Day',v:'15K'},{l:'Privacy Incidents',v:'0'}],
-      features:['Self-sovereign identity issuance','Zero-knowledge verification','Privacy-preserving authentication','Selective disclosure protocol']},
-    moderate:{status:'Alpha',version:'v0.4',metrics:[{l:'IDs Issued',v:'12K'},{l:'Verifications / Day',v:'2K'},{l:'Privacy Incidents',v:'0'}],
-      features:['Self-sovereign identity issuance','Basic verification']},
-    bau:{status:'Not deployed',version:'\u2014',metrics:[{l:'IDs Issued',v:'0'},{l:'Verifications / Day',v:'\u2014'},{l:'Privacy Incidents',v:'\u2014'}],
-      features:['No identity infrastructure']},
-    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'IDs Issued',v:'0'},{l:'Verifications / Day',v:'\u2014'},{l:'Privacy Incidents',v:'\u2014'}],
-      features:['No identity infrastructure']}},
-  {name:'Measurement',color:'#45b7d1',
-    aggressive:{status:'GA',version:'v1.3',metrics:[{l:'Events / Day',v:'12M'},{l:'Data Sources',v:'45'},{l:'Reports Generated',v:'156'}],
-      features:['Real-time event ingestion pipeline','Cross-module metric aggregation','Automated anomaly detection','Scenario impact modeling']},
-    moderate:{status:'Beta',version:'v0.8',metrics:[{l:'Events / Day',v:'3M'},{l:'Data Sources',v:'22'},{l:'Reports Generated',v:'45'}],
-      features:['Event ingestion pipeline','Basic metric aggregation','Manual anomaly detection']},
-    bau:{status:'Not deployed',version:'\u2014',metrics:[{l:'Events / Day',v:'\u2014'},{l:'Data Sources',v:'0'},{l:'Reports Generated',v:'0'}],
-      features:['No measurement infrastructure']},
-    worst:{status:'Not deployed',version:'\u2014',metrics:[{l:'Events / Day',v:'\u2014'},{l:'Data Sources',v:'0'},{l:'Reports Generated',v:'0'}],
-      features:['No measurement infrastructure']}}
-];
-
-var AUDIT={
-  aggressive:[
-    {yr:2026,audited:10,total:100,pct:10,incidents:5,resolved:4},
-    {yr:2027,audited:28,total:115,pct:24,incidents:8,resolved:7},
-    {yr:2028,audited:55,total:130,pct:42,incidents:12,resolved:11},
-    {yr:2029,audited:82,total:142,pct:58,incidents:10,resolved:10},
-    {yr:2030,audited:120,total:155,pct:77,incidents:7,resolved:7},
-    {yr:2031,audited:148,total:165,pct:90,incidents:4,resolved:4},
-    {yr:2032,audited:165,total:172,pct:96,incidents:3,resolved:3},
-    {yr:2033,audited:176,total:178,pct:99,incidents:2,resolved:2},
-    {yr:2034,audited:182,total:182,pct:100,incidents:1,resolved:1},
-    {yr:2035,audited:185,total:185,pct:100,incidents:1,resolved:1}],
-  moderate:[
-    {yr:2026,audited:10,total:100,pct:10,incidents:5,resolved:4},
-    {yr:2027,audited:22,total:115,pct:19,incidents:8,resolved:6},
-    {yr:2028,audited:38,total:130,pct:29,incidents:11,resolved:9},
-    {yr:2029,audited:55,total:142,pct:39,incidents:14,resolved:12},
-    {yr:2030,audited:72,total:155,pct:46,incidents:12,resolved:10},
-    {yr:2031,audited:88,total:165,pct:53,incidents:9,resolved:8},
-    {yr:2032,audited:100,total:172,pct:58,incidents:7,resolved:6},
-    {yr:2033,audited:112,total:178,pct:63,incidents:5,resolved:5},
-    {yr:2034,audited:122,total:182,pct:67,incidents:4,resolved:4},
-    {yr:2035,audited:130,total:185,pct:70,incidents:3,resolved:3}],
-  bau:[
-    {yr:2026,audited:10,total:100,pct:10,incidents:5,resolved:4},
-    {yr:2027,audited:14,total:115,pct:12,incidents:9,resolved:5},
-    {yr:2028,audited:18,total:130,pct:14,incidents:14,resolved:7},
-    {yr:2029,audited:22,total:142,pct:15,incidents:18,resolved:8},
-    {yr:2030,audited:28,total:155,pct:18,incidents:22,resolved:9},
-    {yr:2031,audited:32,total:165,pct:19,incidents:25,resolved:10},
-    {yr:2032,audited:36,total:172,pct:21,incidents:28,resolved:10},
-    {yr:2033,audited:40,total:178,pct:22,incidents:30,resolved:11},
-    {yr:2034,audited:44,total:182,pct:24,incidents:32,resolved:12},
-    {yr:2035,audited:50,total:185,pct:27,incidents:33,resolved:13}],
-  worst:[
-    {yr:2026,audited:10,total:100,pct:10,incidents:5,resolved:4},
-    {yr:2027,audited:8,total:115,pct:7,incidents:12,resolved:4},
-    {yr:2028,audited:7,total:130,pct:5,incidents:20,resolved:5},
-    {yr:2029,audited:6,total:142,pct:4,incidents:28,resolved:4},
-    {yr:2030,audited:6,total:155,pct:4,incidents:35,resolved:3},
-    {yr:2031,audited:5,total:165,pct:3,incidents:42,resolved:3},
-    {yr:2032,audited:5,total:172,pct:3,incidents:48,resolved:2},
-    {yr:2033,audited:4,total:178,pct:2,incidents:52,resolved:2},
-    {yr:2034,audited:4,total:182,pct:2,incidents:55,resolved:1},
-    {yr:2035,audited:3,total:185,pct:2,incidents:58,resolved:1}]
-};
-
-/* ── RENDER ── */
-
-function renderParticipation(){
-  var data=PARTICIPATION[active];
-  var clr=SC_COLORS[active];
-  var h='<div class="grid grid-4">';
-  data.forEach(function(p){
-    h+='<div class="cell">';
-    h+='<p class="t3">'+p.label+'</p>';
-    h+='<p class="num-lg mt-2" style="color:'+clr+'">'+p.value+'</p>';
-    h+='<p class="t4 mt-1">'+p.note+'</p>';
-    h+='</div>';
-  });
-  h+='</div>';
-  document.getElementById('participation-grid').innerHTML=h;
+/* assemblies board */
+function renderAssemblies(animate){
+  var act=V3.scenario.get();
+  var TONE={Active:'good',Limited:'warn',Advisory:'warn',Dissolved:'bad',Suspended:'bad','Not formed':'bad'};
+  document.getElementById('assemblies').innerHTML=G.ASSEMBLIES.map(function(a){
+    var s=a[act];
+    return '<div class="impact-row" style="grid-template-columns:150px 110px 1fr">'
+      +'<span class="t"><i style="background:'+a.color+'"></i>'+a.name+'</span>'
+      +'<span class="th-state num '+(TONE[s.status]||'warn')+'" style="justify-self:start">'+s.status.toUpperCase()+'</span>'
+      +'<span class="e num" style="font-size:12px">'+s.members+' members · '+s.turnout+'% turnout · '+s.binding+'% of decisions binding · '+s.meetings+' meetings/yr</span></div>';
+  }).join('');
+  if(animate)V3.stagger(document.querySelectorAll('#assemblies .impact-row'),26);
 }
 
-function renderCharter(){
-  var clr=SC_COLORS[active];
-  var status=CHARTER_STATUS[active];
-  var h='<div class="grid grid-3">';
-  PILLARS.forEach(function(p){
-    var pillarActive=(active==='aggressive')||(active==='moderate'&&p.name!=='Transparency');
-    h+='<div class="cell" style="'+(pillarActive?'':'opacity:0.4')+'">';
-    h+='<p class="t3" style="color:'+(pillarActive?p.color:'var(--text-faint)')+'">'+p.name+'</p>';
-    h+='<p class="t4 mt-2" style="color:var(--text-secondary)">'+p.desc+'</p>';
-    h+='<p class="t4 mt-3" style="color:'+(pillarActive?p.color:'var(--text-faint)')+';font-style:italic">&ldquo;'+p.principle+'&rdquo;</p>';
-    if(!pillarActive) h+='<p class="t4 mt-2" style="color:var(--red)">Not active under this scenario</p>';
-    h+='</div>';
-  });
-  h+='</div>';
-  h+='<p class="body mt-4" style="color:'+clr+'">'+status+'</p>';
-  document.getElementById('charter-pillars').innerHTML=h;
+/* modules board */
+function renderModules(animate){
+  var act=V3.scenario.get();
+  var TONE={GA:'good',Beta:'warn',Alpha:'warn','Not deployed':'bad'};
+  document.getElementById('modules').innerHTML=G.MODULES.map(function(mod){
+    var s=mod[act];
+    return '<div class="chart-card"><div class="c-head">'
+      +'<span class="c-title" style="color:'+mod.color+'">'+mod.name+'</span>'
+      +'<span class="th-state num '+(TONE[s.status]||'warn')+'">'+s.status.toUpperCase()+(s.version&&s.version!=='—'&&s.version!=='-'?' · '+s.version:'')+'</span></div>'
+      +'<div style="display:flex;gap:22px;margin:12px 0 10px">'+ (s.metrics||[]).map(function(mt){
+        return '<div><b class="num" style="font-size:16px;font-weight:700">'+mt.v+'</b><div style="font-size:10.5px;color:var(--ink-4)">'+mt.l+'</div></div>';
+      }).join('')+'</div>'
+      +'<div class="ms-items" style="margin-top:6px">'+(s.features||[]).map(function(f){return '<span>'+f+'</span>'}).join('')+'</div></div>';
+  }).join('');
+  if(animate)V3.stagger(document.querySelectorAll('#modules .chart-card'),30);
 }
 
-function renderFundingStack(){
-  var data=FUNDING_STACK[active];
-  var maxPct=Math.max.apply(null,data.map(function(f){return f.pct}));
-  var h='<div class="flex flex-col gap-6" style="max-width:560px">';
-  data.forEach(function(f){
-    h+='<div>';
-    h+='<div class="flex justify-between items-baseline mb-1">';
-    h+='<span class="t4" style="color:var(--text-secondary)">'+f.name+'</span>';
-    h+='<span class="num-sm" style="color:'+f.color+'">'+f.range+'</span>';
-    h+='</div>';
-    h+='<div class="bar-track"><div class="bar-fill" style="width:'+Math.round((f.pct/maxPct)*100)+'%;background:'+f.color+'"></div></div>';
-    h+='</div>';
-  });
-  h+='</div>';
-  document.getElementById('funding-stack').innerHTML=h;
+/* audit chart + tiles */
+var auditPct={};V3.SC_ORDER.forEach(function(sc){auditPct[sc]=G.AUDIT[sc].map(function(r){return r.pct})});
+var auditYears=[];for(var y=2026;y<=2050;y++)auditYears.push(y);
+V3.traj('#audit-chart',{label:'Audit coverage',unit:'%',dec:0,dir:'higher',years:auditYears,data:auditPct,
+  notes:{aggressive:'Universal coverage by the late 2030s: every deployed system audited annually, findings public, incidents resolved in-cycle.',
+    moderate:'Coverage climbs past half of deployed systems. The audited half behaves; the unaudited half is where the incidents live.',
+    bau:'Coverage stalls near a quarter. Auditing depends on volunteer compliance, and the systems most likely to fail are least likely to volunteer.',
+    worst:'The audit program is dismantled. What isn’t measured can’t be governed — which is the point.'}});
+function renderAuditTiles(animate){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  var last=G.AUDIT[act][G.AUDIT[act].length-1];
+  var open=last.incidents-last.resolved;
+  document.getElementById('audit-kpis').innerHTML=[
+    {l:'Systems audited · 2050',v:last.audited+'<small> of '+last.total+'</small>',c:'flat',ctx:'independent annual review'},
+    {l:'Coverage',v:last.pct+'<small>%</small>',c:last.pct>=60?'good':last.pct>=35?'flat':'bad',ctx:'of all deployed AI systems'},
+    {l:'Incidents found · 2050',v:String(last.incidents),c:'flat',ctx:'safety findings requiring action'},
+    {l:'Left unresolved',v:String(open),c:open<=2?'good':open<=10?'flat':'bad',ctx:'the debt that compounds into failures'}
+  ].map(function(x){
+    return '<div class="stat"><div class="lbl">'+x.l+'</div>'
+      +'<div class="val" style="color:'+m.color+'">'+x.v+'</div>'
+      +'<div class="delta '+x.c+'"><span class="ctx">'+x.ctx+'</span></div></div>';
+  }).join('');
+  if(animate)V3.stagger(document.querySelectorAll('#audit-kpis .stat'),26);
 }
 
-function assemblyScore(d){
-  if(d.members===0) return 0;
-  return Math.round((d.turnout*0.35)+(d.binding*0.35)+(Math.min(d.decisions/8,1)*100*0.2)+(Math.min(d.members/150,1)*100*0.1));
+function paintAll(animate){
+  renderCharter(animate);renderParticipation(animate);
+  renderAssemblies(animate);renderModules(animate);renderAuditTiles(animate);
 }
-function renderAssemblies(){
-  var clr=SC_COLORS[active];
-  var h='<div class="flex flex-col">';
-  ASSEMBLIES.forEach(function(a){
-    var d=a[active];
-    var sc=assemblyScore(d);
-    var g=grade(sc);
-    var inactive=d.members===0;
-    var opacity=inactive?'opacity:0.4':'';
-    var statusClr=inactive?'var(--text-faint)':a.color;
-    var gClr=sc>=80?'var(--green)':sc>=60?a.color:sc>=40?'#e8a838':'var(--red)';
-    if(inactive) gClr='var(--text-faint)';
-    h+='<div style="display:grid;grid-template-columns:200px 1fr;gap:32px;padding:24px 0;border-top:1px solid var(--border);'+opacity+'">';
-    h+='<div>';
-    h+='<p class="t2-lg" style="color:'+a.color+'">'+a.name+'</p>';
-    h+='<div class="flex items-baseline gap-6 mt-2">';
-    h+='<span class="num-lg" style="color:'+gClr+'">'+sc+'</span>';
-    h+='<span class="tag" style="border-color:'+gClr+';color:'+gClr+'">'+g+'</span>';
-    h+='</div>';
-    if(inactive){
-      h+='<p class="t4 mt-1" style="color:var(--text-faint)">'+d.status+'</p>';
-    } else {
-      h+='<p class="num-md mt-2">'+d.members+' <span class="t4">members</span></p>';
-      h+='<p class="t4 mt-1">'+d.meetings+' meetings &middot; '+d.decisions+' decisions</p>';
-      h+='<span class="tag mt-2" style="border-color:'+statusClr+';color:'+statusClr+'">'+d.status+'</span>';
-    }
-    h+='</div>';
-    h+='<div>';
-    h+='<div class="flex gap-16 items-start">';
-    h+='<div style="flex:1">';
-    h+='<div class="flex justify-between items-baseline mb-1">';
-    h+='<span class="t3">Turnout</span>';
-    h+='<span class="num-sm" style="color:'+statusClr+'">'+d.turnout+'%</span>';
-    h+='</div>';
-    h+='<div class="bar-track"><div class="bar-fill" style="width:'+d.turnout+'%;background:'+a.color+';transition:width 0.4s ease"></div></div>';
-    h+='</div>';
-    h+='<div style="flex:1">';
-    h+='<div class="flex justify-between items-baseline mb-1">';
-    h+='<span class="t3">Binding Rate</span>';
-    h+='<span class="num-sm" style="color:'+statusClr+'">'+d.binding+'%</span>';
-    h+='</div>';
-    h+='<div class="bar-track"><div class="bar-fill" style="width:'+d.binding+'%;background:'+a.color+';transition:width 0.4s ease"></div></div>';
-    h+='</div>';
-    h+='</div>';
-    h+='</div>';
-    h+='</div>';
-  });
-  h+='</div>';
-  document.getElementById('assembly-list').innerHTML=h;
-}
-
-var MODULE_SCORES={
-  GA:90,Beta:65,Alpha:40,'Not deployed':0
-};
-function renderModules(){
-  var h='<div class="flex flex-col">';
-  MODULES.forEach(function(mod){
-    var d=mod[active];
-    var statusColor=d.status==='GA'?'#4ecdc4':d.status==='Beta'?'#e8a838':d.status==='Alpha'?'#d4622a':'var(--text-faint)';
-    var inactive=d.status==='Not deployed';
-    var opacity=inactive?'opacity:0.4':'';
-    var sc=MODULE_SCORES[d.status]||0;
-    var g=grade(sc);
-    var gClr=sc>=80?'var(--green)':sc>=60?mod.color:sc>=40?'#e8a838':'var(--text-faint)';
-    h+='<div style="padding:32px 0;border-top:1px solid var(--border);'+opacity+'">';
-    h+='<div class="flex items-baseline gap-8 mb-3">';
-    h+='<p class="t2-lg" style="color:'+mod.color+'">'+mod.name+'</p>';
-    h+='<span class="num-lg" style="color:'+gClr+'">'+sc+'</span>';
-    h+='<span class="tag" style="border-color:'+gClr+';color:'+gClr+'">'+g+'</span>';
-    h+='<span class="tag" style="border-color:'+statusColor+';color:'+statusColor+'">'+d.status+'</span>';
-    h+='<span class="num-xs" style="color:var(--text-muted)">'+d.version+'</span>';
-    h+='</div>';
-    h+='<div class="grid grid-3" style="margin-bottom:16px">';
-    d.metrics.forEach(function(met){
-      h+='<div class="cell">';
-      h+='<p class="t3">'+met.l+'</p>';
-      h+='<p class="num-md mt-1" style="color:'+mod.color+'">'+met.v+'</p>';
-      h+='</div>';
-    });
-    h+='</div>';
-    h+='<div class="flex flex-col gap-2">';
-    d.features.forEach(function(f){
-      h+='<p class="t4" style="color:var(--text-secondary)">&mdash; '+f+'</p>';
-    });
-    h+='</div>';
-    h+='</div>';
-  });
-  h+='</div>';
-  document.getElementById('module-list').innerHTML=h;
-}
-
-function renderAudit(){
-  var data=AUDIT[active];
-  var clr=SC_COLORS[active];
-  var coverageData=data.map(function(a){return a.pct});
-  var incidentData=data.map(function(a){return a.incidents});
-  var lastCov=coverageData[coverageData.length-1];
-  var lastInc=incidentData[incidentData.length-1];
-  var peakInc=Math.max.apply(null,incidentData);
-  var peakYear=data[incidentData.indexOf(peakInc)].yr;
-  var incTrend=lastInc<=incidentData[0]?'declining':'rising';
-
-  var covDs={},incDs={};
-  var scKeys=['aggressive','moderate','bau','worst'];
-  scKeys.forEach(function(k){
-    covDs[k]=AUDIT[k].map(function(a){return a.pct});
-    incDs[k]=AUDIT[k].map(function(a){return a.incidents});
-  });
-
-  var covEnd=covDs[active][covDs[active].length-1];
-  var incEnd=incDs[active][incDs[active].length-1];
-  var covBase=covDs[active][0];
-  var incBase=incDs[active][0];
-  var s='<div class="grid grid-2">';
-  s+='<div class="cell">';
-  s+=chartHeader({label:'Audit Coverage',value:covEnd,unit:'%',dec:0,dir:'higher',baseline:covBase,color:SC_COLORS[active],endYear:2035});
-  s+=scenarioChart({datasets:covDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'%',dec:0,dir:'higher',note:'Percentage of high-risk AI systems audited. Under aggressive governance, full coverage is achieved by 2034. Without intervention, audit capacity stagnates below 30%.',height:160,exportId:'gov-audit-coverage'});
-  s+='</div>';
-
-  s+='<div class="cell">';
-  s+=chartHeader({label:'Incidents Resolved',value:incEnd,unit:'',dec:0,dir:'lower',baseline:incBase,color:SC_COLORS[active],endYear:2035});
-  s+=scenarioChart({datasets:incDs,colors:SC_COLORS,scenarios:SCENARIOS,activeKey:active,startYear:2026,endYear:2035,unit:'',dec:0,dir:'lower',note:'Safety incidents detected per year. Strong governance catches more early then drives incidents down. Weak governance sees compounding undetected failures.',height:160,exportId:'gov-incidents'});
-  s+='</div>';
-  s+='</div>';
-  document.getElementById('audit-sparks').innerHTML=s;
-  registerChartExport('gov-audit-coverage',covDs,2026,2035,'%','');
-  registerChartExport('gov-incidents',incDs,2026,2035,'','');
-
-  var t='<div style="display:inline-grid;grid-template-columns:60px 80px 80px 80px 80px 80px;gap:1px;background:var(--border)">';
-  var cols=['Year','Audited','Total','Coverage','Incidents','Resolved'];
-  cols.forEach(function(c){
-    t+='<div style="background:var(--bg);padding:10px 8px"><p class="t3">'+c+'</p></div>';
-  });
-  data.forEach(function(a){
-    t+='<div style="background:var(--bg);padding:8px"><span class="num-xs">'+a.yr+'</span></div>';
-    t+='<div style="background:var(--bg);padding:8px"><span class="num-xs" style="color:'+clr+'">'+a.audited+'</span></div>';
-    t+='<div style="background:var(--bg);padding:8px"><span class="num-xs">'+a.total+'</span></div>';
-    t+='<div style="background:var(--bg);padding:8px"><span class="num-xs" style="color:'+clr+'">'+a.pct+'%</span></div>';
-    t+='<div style="background:var(--bg);padding:8px"><span class="num-xs" style="color:'+(a.incidents>20?'#d4622a':a.incidents>10?'#e8a838':'#4ecdc4')+'">'+a.incidents+'</span></div>';
-    t+='<div style="background:var(--bg);padding:8px"><span class="num-xs">'+a.resolved+'</span></div>';
-  });
-  t+='</div>';
-  document.getElementById('audit-table').innerHTML=t;
-}
-
-function renderGovMetricCards(){
-  var el=document.getElementById('gov-metric-cards');
-  var h='';
-  GOV_METRICS.forEach(function(m){
-    var v=m[active];
-    var better=v>m.baseline;
-    var worse=v<m.baseline;
-    var trendLabel=better?'improving':worse?'declining':'stable';
-    var trendCls=better?'delta delta-up':worse?'delta delta-down':'delta delta-flat';
-    var barW=Math.min(100,v);
-    h+='<div class="cell">';
-    h+='<p class="t3" style="color:'+m.color+'">'+m.label+'</p>';
-    h+='<p class="num-lg mt-2">'+v+'<span class="t4" style="margin-left:2px">'+m.unit+'</span></p>';
-    h+='<span class="'+trendCls+'">'+trendLabel+'</span>';
-    h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+barW+'%;background:'+m.color+';transition:width 0.4s ease"></div></div>';
-    h+='<p class="t4 mt-2">'+m.note+'</p>';
-    h+='</div>';
-  });
-  el.innerHTML=h;
-}
-
-/* ── Policy Levers ── */
-function initLevers(){
-  var charterSl=document.getElementById('sl-lever-charter');
-  var assemblySl=document.getElementById('sl-lever-assembly');
-  var auditSl=document.getElementById('sl-lever-audit');
-  if(!charterSl)return;
-  function updateLevers(){
-    var charter=parseInt(charterSl.value);
-    var assembly=parseInt(assemblySl.value);
-    var audit=parseInt(auditSl.value);
-    document.getElementById('val-lever-charter').textContent=charter+'%';
-    document.getElementById('val-lever-assembly').textContent=assembly+'/yr';
-    document.getElementById('val-lever-audit').textContent=audit+'%';
-    var baseScore=GOV_SCORES[active];
-    var charterEffect=(charter-70)/100*8;
-    var assemblyEffect=(assembly-12)/24*4;
-    var auditEffect=(audit-60)/100*6;
-    var adjusted=Math.max(0,Math.min(100,Math.round(baseScore+charterEffect+assemblyEffect+auditEffect)));
-    var el=document.getElementById('lever-impact');
-    var clr=gClr(adjusted);
-    el.innerHTML='<div class="flex items-baseline gap-8 mt-2"><span class="t3">Lever-Adjusted Score:</span><span class="num-lg" style="color:'+clr+'">'+adjusted+'</span><span class="t4">/100</span><span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(adjusted)+'</span><span class="t4" style="color:var(--text-muted)">(base: '+baseScore+')</span></div>';
-  }
-  charterSl.addEventListener('input',updateLevers);
-  assemblySl.addEventListener('input',updateLevers);
-  auditSl.addEventListener('input',updateLevers);
-  updateLevers();
-}
-
-/* ── MASTER RENDER ── */
-function render(){
-  updateScenarioBar('#scenario-bar',active,SCENARIOS);
-  var scLabel=SCENARIOS.find(function(s){return s.id===active}).name;
-  var clr=SC_COLORS[active];
-  var ps=GOV_SCORES[active];
-  document.getElementById('ov-scenario-label').textContent=scLabel;
-  document.getElementById('ov-scenario-label').style.color=clr;
-  document.getElementById('gov-projected').innerHTML=
-    '<span class="t3">Projected 2035 ('+scLabel+'):</span> '
-    +'<span class="score-projected" style="color:'+clr+'">'+ps+'</span>'
-    +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
-    +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+clr+';color:'+clr+'">'+grade(ps)+'</span>';
-  renderGovMetricCards();
-  renderParticipation();
-  renderCharter();
-  renderFundingStack();
-  renderAssemblies();
-  renderModules();
-  renderAudit();
-  var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('governance',active);
-  initLevers();
-}
-
-/* ── INIT ── */
-initSectionNav('#tabs','sec-','overview');
-initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
-render();
-document.getElementById('page-footer').innerHTML=renderFooter();
-
-})();
+paintAll(false);
+V3.scenario.onChange(function(){paintAll(true)});
 </script>
 </body>
 </html>

@@ -949,7 +949,7 @@ export default function StrategyOSDashboard() {
           <a href="/governance" style={{ color: "#8b5cf6" }}>{"\u{1F3DB}\uFE0F"} GovernanceOS</a>
           <a href="/civilization" style={{ color: "#06b6d4" }}>{"\u{1F30D}"} CivilizationOS</a>
           <a href="/simulation" style={{ color: "#f43f5e" }}>{"\u{1F52C}"} Simulation</a>
-          <a href="https://github.com/reillyclawcode/strategyOS" target="_blank" rel="noopener" style={{ color: "var(--text-faint)" }}>{"\u{1F4BB}"} GitHub</a>
+          <a href="https://github.com/reillydonovan/aicivsim" target="_blank" rel="noopener" style={{ color: "var(--text-faint)" }}>{"\u{1F4BB}"} GitHub</a>
         </div>
       </footer>
     </main>

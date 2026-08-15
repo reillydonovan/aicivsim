@@ -33,6 +33,7 @@ public/layoutUpdate/
 ├── civilization.html      # Civilization — composite health index, KPI trajectories, funding
 ├── governance.html        # Governance — charter status, assemblies, audit coverage
 ├── strategy.html          # Strategy — 20 actions with scenario-aware status/adoption, Today's Score + projected
+├── pathways.html          # Pathways — the gap between any two scenarios: score delta, policy-lever deltas, action-status diff, trajectory divergence
 ├── timeline.html          # Timeline — 200K-year arc of civilization, AI as inflection point, scenario-aware futures
 ├── visualizer.html        # Visualizer landing page — describes the 3D experience before entering
 ├── viz.html               # 3D network visualization — Three.js interactive systems graph
@@ -40,14 +41,20 @@ public/layoutUpdate/
 ├── about.html             # About page
 ├── chat.html              # AI Advisor landing page — setup guide, example questions, roadmap
 ├── explorer.html          # Knowledge Explorer — Three.js knowledge graph, LLM-powered node spawning
-├── xr.html                # WebXR — immersive VR/AR visualization of the 7-system network
+├── xr.html                # WebXR — immersive VR/AR visualization of the systems network
+├── data.html              # Live Data — real-world indicators fetched client-side vs model baselines
+├── 404.html               # Branded 404 (wired via .htaccess ErrorDocument)
+├── favicon.svg            # Network-mark favicon (also linked from every page)
+├── robots.txt / sitemap.xml
+├── .htaccess              # ErrorDocument 404 + asset cache headers
 ├── api/
 │   ├── chat.php           # Streaming PHP proxy — holds API key server-side, forwards to LLM provider
 │   ├── config.example.php # Config template (committed) — copy to config.php or above web root
 │   └── .htaccess          # Blocks direct web access to config files
 ├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading, command palette, scroll animations, reading progress bar, back-to-top, enhanced hover states
-├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection, command palette, reading progress bar, back-to-top, scroll-reveal animations
+├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), STRATEGY_CATALOG (20-action catalog + scores/narratives — single source of truth, shared by strategy.html and pathways.html), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection, command palette, reading progress bar, back-to-top, scroll-reveal animations
 ├── js/chat-widget.js      # Persistent AI Advisor chat widget — floating panel, LLM integration, page awareness, message persistence
+├── js/live-data.js        # Live data layer — key-free CORS APIs (NOAA/OWID/World Bank), sessionStorage cache, graceful fallback
 └── styleguide.md          # Feltron design guide used to build the site
 ```
 
@@ -68,6 +75,7 @@ public/layoutUpdate/
   - **Civilization timeline** — Each milestone has per-scenario scores, grades, goal comparison, status tags, and narrative notes.
   - **Climate tipping points** — Risk levels (low/moderate/high/critical) calculated dynamically from projected temperature vs. threshold, with BREACHED indicators, margin display, and scenario-specific notes.
   - **Strategy** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
+- **Pathways** — `pathways.html` answers "what would it actually take to move from scenario X to scenario Y" (in either direction, including backsliding toward Worst). A FROM scenario (shared scenario bar, with a 2026/2030/2035/2040/2050 starting-year checkpoint) and a page-local TO scenario (always evaluated at 2050) drive: a headline score/grade gap with a magnitude band (course correction → civilizational turnaround); a policy-lever delta table (civic dividend, climate capex, reskilling, transparency, AI charter) with a per-lever 4-scenario bar comparison; an action-status diff over all 20 `STRATEGY_CATALOG` entries, split into "must change"/"already aligned" (or "what would have to break" when the direction is degrading); and trajectory charts for the five `SIM_ENGINE` metrics with the current path rendered as a dashed line and the destination as a solid one. A live-data "Reality Check" panel (`mountRealityPanel()`) sits alongside as real-world evidence, deliberately not mapped onto the 0–100 scores. No cross-system panel — Pathways is a meta-lens over whole scenarios, not an 8th system.
   - **Index page** — Seven Systems cards (including AI) show today + projected scores, hero projected score, and scenario descriptions all update dynamically. A dedicated CTA section links to the Visualizer hub, with an additional "3 Experiences Under One Roof" callout linking to the hub page where all three 3D modes are accessible.
 - **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
 - **Scenario persistence (hash + localStorage)** — Active scenario is stored in the URL hash (e.g. `#aggressive`) AND in `localStorage`. Sharing a link preserves the selected scenario; navigating between pages automatically maintains the selected scenario via localStorage fallback.
@@ -151,7 +159,8 @@ public/layoutUpdate/
 - **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
 - **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
 - **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260221d`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger).
+- **Single-row site nav** — All 15 nav links plus the theme toggle fit one row inside the 1000px content width (tight 6px link padding, no wrapping). Below 1080px the container is narrower than that, so the nav collapses to the hamburger menu there. Adding a nav link means re-checking that budget.
+- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260813b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger), or use the `bump-cache-version` skill (`.claude/skills/bump-cache-version/`, see [SKILLS.md](SKILLS.md)).
 
 ### Scenario system
 
@@ -240,7 +249,8 @@ No install, no build. Open any HTML file directly or serve with any static file 
 - [ ] **Consider PHP includes or a static site generator** — For deeper componentization (layouts, mastheads, head tags), evaluate PHP includes (Hostinger supports natively) or a lightweight SSG like 11ty/Hugo.
 - [ ] **Real-time cross-system feedback** — Cross-system panels now reflect the active scenario, but adjusting a policy lever on one page does not yet propagate score changes to other pages in real time.
 - [ ] **Multiplayer scenario mode** — Allow multiple users to collaboratively adjust policy levers and compare outcomes in real time.
-- [ ] **Data source integration** — Connect to real-world data APIs (World Bank, NOAA, ILO) to ground baseline values in actual measurements.
+- [x] ~~Data source integration~~ — `js/live-data.js` + `data.html` fetch current real-world values client-side (CO₂/methane/Arctic ice from NOAA via global-warming.org, temperature anomaly/renewable share/CO₂ emissions from Our World in Data, poverty/unemployment from the World Bank). Key-free, CORS-open, cached in sessionStorage for 6h, with graceful fallback to the static baselines when offline. The homepage shows a compact live-signal strip; `data.html` compares every live value against the model's 2026 baseline.
+- [x] ~~Scenario-to-scenario transition page~~ — `pathways.html` computes the gap between any FROM and TO scenario: score/grade delta, policy-lever deltas, an action-status diff over the (now shared) `STRATEGY_CATALOG`, and trajectory divergence charts. Direction-aware copy — "what we'd have to change" when climbing, "what would have to break" when falling.
 - [ ] **Scenario builder** — Allow users to create custom scenarios beyond the four presets by defining their own policy lever configurations.
 - [ ] **Globe view (viz.html)** — Revisit the globe mode that remaps the network onto a wireframe icosphere. Currently hidden; JS infrastructure remains in place for re-enabling.
 - [ ] **Accessibility audit** — Full WCAG 2.1 AA compliance review, focus management, screen reader testing.
@@ -255,14 +265,14 @@ No install, no build. Open any HTML file directly or serve with any static file 
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 
 ```html
-<link rel="stylesheet" href="css/style.css?v=20260221d">
-<script src="js/shared.js?v=20260221d"></script>
+<link rel="stylesheet" href="css/style.css?v=20260711b">
+<script src="js/shared.js?v=20260711b"></script>
 ```
 
-Before deploying, do a **find-and-replace across all 16 HTML files** in `public/layoutUpdate/`:
+Before deploying, do a **find-and-replace across all HTML files** in `public/layoutUpdate/` (19 as of this writing — always all identical, see `grep -oh 'v=[0-9]\{8\}[a-z]' public/layoutUpdate/index.html | head -1` to check the current value):
 
-- Find: `v=20260221d` (or whatever the current value is)
-- Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260222a`
+- Find: `v=20260711b` (or whatever the current value is)
+- Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260712a`
 
 This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.
 

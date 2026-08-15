@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Civilization Simulator — Knowledge Explorer</title>
+<meta name="description" content="AI-powered 3D knowledge graph - ask questions and watch the answers grow into an explorable network.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://aicivsim.com/explorer.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="AI Civilization Simulator — Knowledge Explorer">
+<meta property="og:description" content="AI-powered 3D knowledge graph - ask questions and watch the answers grow into an explorable network.">
+<meta property="og:url" content="https://aicivsim.com/explorer.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI Civilization Simulator — Knowledge Explorer">
+<meta name="twitter:description" content="AI-powered 3D knowledge graph - ask questions and watch the answers grow into an explorable network.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -83,13 +94,31 @@ canvas{display:block}
 .sdot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px}
 .sdot.ok{background:#4ecdc4}.sdot.none{background:rgba(255,255,255,0.15)}
 
-.hint{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.15);text-align:center;line-height:1.6;pointer-events:none}
+.hint{position:absolute;bottom:130px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.15);text-align:center;line-height:1.6;pointer-events:none}
+
+/* Starter question chips */
+.starters{position:absolute;bottom:84px;left:50%;transform:translateX(-50%);width:600px;max-width:calc(100vw - 48px);display:flex;flex-wrap:wrap;gap:6px;justify-content:center;pointer-events:auto;transition:opacity 0.4s}
+.starters.gone{opacity:0;pointer-events:none}
+.starter-chip{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,0.45);background:rgba(6,6,14,0.7);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:6px 12px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s;white-space:nowrap}
+.starter-chip:hover{color:#e8a838;border-color:rgba(232,168,56,0.3);background:rgba(232,168,56,0.06)}
+
+/* Boot / error overlay */
+.boot{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#080810;transition:opacity 0.5s;pointer-events:none}
+.boot.gone{opacity:0}
+.boot-spinner{width:28px;height:28px;border:2px solid rgba(255,255,255,0.08);border-top-color:#e8a838;border-radius:50%;animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.boot-msg{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+.boot.error .boot-spinner{display:none}
+.boot.error{pointer-events:auto}
+.boot.error .boot-msg{color:#d4622a;max-width:420px;text-align:center;text-transform:none;letter-spacing:0.02em;line-height:1.7}
+.boot a{color:#4ecdc4}
 
 @media(max-width:768px){
   .input-bar{width:calc(100vw - 24px);bottom:16px}
-  .detail{top:auto;bottom:80px;right:12px;left:12px;width:auto;max-height:50vh}
+  .detail{top:auto;bottom:130px;right:12px;left:12px;width:auto;max-height:45vh}
   .top-bar{padding:12px 16px}
   .hint{display:none}
+  .starters{bottom:72px}
   .settings-btn{bottom:16px;right:12px}
   .settings-panel{bottom:56px;right:12px}
 }
@@ -98,6 +127,11 @@ canvas{display:block}
 <body>
 <div id="cv"></div>
 
+<div class="boot" id="boot">
+  <div class="boot-spinner"></div>
+  <div class="boot-msg" id="boot-msg">Loading 3D engine&hellip;</div>
+</div>
+
 <div id="labels"></div>
 
 <div id="ui">
@@ -105,11 +139,11 @@ canvas{display:block}
     <div>
       <div class="brand"><strong>AICIVSIM</strong> &mdash; Explorer</div>
       <div class="site-title">Knowledge Graph</div>
-      <a href="index.html" class="back-link">&larr; Back to site</a>
+      <a href="visualizer.html" class="back-link">&larr; Back to Visualizer</a>
     </div>
     <div class="top-right">
       <div class="node-count" id="node-count">0</div>
-      <div class="node-count-lbl">Nodes</div>
+      <div class="node-count-lbl" id="node-count-lbl">Questions</div>
     </div>
   </div>
 
@@ -137,10 +171,37 @@ canvas{display:block}
     <select id="api-model"></select>
   </div>
 
-  <div class="hint">Ask a question to spawn your first knowledge node<br>Click nodes to read &middot; Drag to orbit &middot; Scroll to zoom</div>
+  <div class="starters" id="starters">
+    <button class="starter-chip">Which scenario avoids the climate tipping points?</button>
+    <button class="starter-chip">How does AI alignment affect governance?</button>
+    <button class="starter-chip">What happens to workers under Business as Usual?</button>
+    <button class="starter-chip">What are the highest-leverage strategies?</button>
+  </div>
+
+  <div class="hint">Ask a question to spawn your first knowledge node<br>Click nodes to read &middot; Click satellites to explore deeper &middot; Drag to orbit &middot; Scroll to zoom</div>
 </div>
 
-<script src="js/shared.js?v=20260221d"></script>
+<script src="js/shared.js?v=20260816a"></script>
+<script>
+/* Boot watchdog — the 3D module below loads three.js from a CDN.
+   If it fails (offline, CDN down, old browser), surface a message
+   instead of a silent black screen. */
+(function(){
+  var boot=document.getElementById('boot');
+  function fail(msg){
+    if(!boot||boot.classList.contains('gone'))return;
+    boot.classList.add('error');
+    document.getElementById('boot-msg').innerHTML=msg;
+  }
+  window.__explorerBootFail=fail;
+  window.addEventListener('error',function(e){
+    if(e.target&&(e.target.tagName==='SCRIPT'))fail('Could not load the 3D engine (network/CDN error).<br>Check your connection and refresh, or <a href="visualizer.html">go back to the Visualizer hub</a>.');
+  },true);
+  setTimeout(function(){
+    if(!window.__explorerBooted)fail('The 3D engine did not start.<br>Your browser may not support WebGL2 / ES modules.<br><a href="visualizer.html">Back to the Visualizer hub</a>');
+  },10000);
+})();
+</script>
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -171,7 +232,8 @@ const COLORS={
 const SITE_PAGES={
   'index.html':'Home','ai.html':'AI','climate.html':'Climate','simulation.html':'Simulation',
   'transition.html':'Transition','civilization.html':'Civilization','governance.html':'Governance',
-  'strategy.html':'Strategy','timeline.html':'Timeline','visualizer.html':'Visualizer',
+  'strategy.html':'Strategy','pathways.html':'Pathways','timeline.html':'Timeline',
+  'data.html':'Live Data','visualizer.html':'Visualizer',
   'viz.html':'3D Network','research.html':'Research','chat.html':'Advisor','about.html':'About'
 };
 
@@ -263,24 +325,47 @@ const graphNodes=[];     // {id,type,question,answer,topics,pages,mesh,wire,ring
 const graphEdges=[];     // {from,to,line,lineGeo}
 const topicNodes=[];     // {id,parentId,label,mesh,pos,orbitAngle,orbitSpeed}
 const hitTargets=[];
+let hitMeshesDirty=true;
 let selectedNode=null;
 let hoveredNode=null;
 let nodeIdCounter=0;
 let streaming=false;
+
+/* Intro chrome (hint + starter chips) — removed on first interaction */
+function dismissIntro(){
+  document.querySelector('.hint')?.remove();
+  const st=document.getElementById('starters');
+  if(st&&!st.classList.contains('gone')){st.classList.add('gone');setTimeout(()=>st.remove(),450)}
+}
 
 /* ================================================================
    NODE CREATION
    ================================================================ */
 function goldenAngle(n){return n*2.399963;}
 
-function spawnNode(question){
+/* Pseudo graph-node wrapping the seed so edges can anchor to it */
+const seedNode={id:'seed',mesh:seedMesh,expanded:1,connections:[]};
+
+function spawnNode(question,parentNode){
   const id=nodeIdCounter++;
   const n=graphNodes.length;
-  const angle=goldenAngle(n);
-  const r=SPAWN_RADIUS+n*0.4;
-  const x=Math.cos(angle)*r;
-  const z=Math.sin(angle)*r;
-  const y=0.5+(Math.random()-0.5)*1.5;
+  let x,y,z;
+  if(parentNode&&parentNode.targetPos){
+    /* Topic drill-down: cluster near the parent, pushed away from the seed */
+    const away=parentNode.targetPos.clone().sub(seedMesh.position);
+    if(away.lengthSq()<0.01)away.set(1,0,0);
+    away.normalize();
+    const jitter=new THREE.Vector3((Math.random()-0.5),(Math.random()-0.3)*0.8,(Math.random()-0.5)).normalize().multiplyScalar(1.2);
+    const p=parentNode.targetPos.clone().add(away.multiplyScalar(2.2)).add(jitter);
+    x=p.x;y=Math.max(0.3,p.y);z=p.z;
+  }else{
+    /* Root question: bounded golden-angle shell around the seed */
+    const angle=goldenAngle(n);
+    const r=SPAWN_RADIUS+Math.sqrt(n)*1.1;
+    x=Math.cos(angle)*r;
+    z=Math.sin(angle)*r;
+    y=0.6+Math.sin(n*1.7)*1.4+(Math.random()-0.5)*0.6;
+  }
 
   const color=new THREE.Color().setHSL((n*0.13)%1,0.6,0.55);
   const hex=color.getHex();
@@ -310,11 +395,11 @@ function spawnNode(question){
 
   graphNodes.push(node);
   hitTargets.push({mesh:hitSphere,node});
+  hitMeshesDirty=true;
 
-  /* Edge from last node or seed */
-  if(graphNodes.length>1){
-    addEdge(graphNodes[graphNodes.length-2],node);
-  }
+  /* Edge to the true parent: the originating node for drill-downs,
+     the central seed for root questions. */
+  addEdge(parentNode||seedNode,node);
 
   updateNodeCount();
   return node;
@@ -351,6 +436,7 @@ function spawnTopics(parentNode,topics){
       orbitAngle:angle,orbitSpeed:0.3+Math.random()*0.2,expanded:0,isTopic:true};
     topicNodes.push(tn);
     hitTargets.push({mesh:hitSphere,node:tn});
+    hitMeshesDirty=true;
 
     const pts=[];for(let j=0;j<=12;j++)pts.push(new THREE.Vector3());
     const geo=new THREE.BufferGeometry().setFromPoints(pts);
@@ -364,10 +450,9 @@ function spawnTopics(parentNode,topics){
 function exploreTopic(topicNode){
   if(streaming)return;
   const question='Tell me more about '+topicNode.label+' in the context of AICIVSIM civilization systems.';
-  inputEl.value=question;
+  dismissIntro();
   const parentQA=topicNode.parentNode;
-  const newNode=spawnNode(question);
-  addEdge(parentQA,newNode);
+  const newNode=spawnNode(question,parentQA);
   showDetail(newNode);
 
   streaming=true;sendBtn.disabled=true;
@@ -402,7 +487,9 @@ function exploreTopic(topicNode){
 }
 
 function updateNodeCount(){
-  document.getElementById('node-count').textContent=graphNodes.length+topicNodes.length;
+  document.getElementById('node-count').textContent=graphNodes.length;
+  document.getElementById('node-count-lbl').textContent=
+    topicNodes.length?('Questions · '+topicNodes.length+' topics'):'Questions';
 }
 
 /* ================================================================
@@ -437,9 +524,12 @@ document.getElementById('detail-close').addEventListener('click',hideDetail);
    ================================================================ */
 let flyPos=null,flyTarget=null,flyProgress=1;
 function flyTo(node){
-  const dir=new THREE.Vector3().subVectors(camera.position,node.mesh.position).normalize();
-  flyPos=node.mesh.position.clone().add(dir.multiplyScalar(3)).add(new THREE.Vector3(0,1.5,0));
-  flyTarget=node.mesh.position.clone();
+  /* Fly to where the node is HEADED (targetPos), not its spawn point —
+     freshly spawned nodes are still lerping away from the seed. */
+  const dest=node.targetPos||node.mesh.position;
+  const dir=new THREE.Vector3().subVectors(camera.position,dest).normalize();
+  flyPos=dest.clone().add(dir.multiplyScalar(3)).add(new THREE.Vector3(0,1.5,0));
+  flyTarget=dest.clone();
   flyProgress=0;ctrl.autoRotate=false;
 }
 
@@ -448,7 +538,9 @@ function flyTo(node){
    ================================================================ */
 function renderMd(raw){
   if(!raw)return'';
-  let s=raw.replace(/```json[\s\S]*?```/g,'');
+  /* Strip json metadata blocks — including a still-streaming block with
+     no closing fence yet, so partial JSON never flashes as body text. */
+  let s=raw.replace(/```json[\s\S]*?(?:```|$)/g,'');
   s=s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   s=s.replace(/^####?\s+(.+)$/gm,'<h4>$1</h4>');
   s=s.replace(/^###?\s+(.+)$/gm,'<h4>$1</h4>');
@@ -460,6 +552,8 @@ function renderMd(raw){
     return '<a href="'+href+'" target="_blank" rel="noopener">'+text+'</a>';
   });
   s=s.replace(/^[\-\*]\s+(.+)$/gm,'<li>$1</li>');
+  s=s.replace(/^\d+\.\s+(.+)$/gm,'<li class="ol">$1</li>');
+  s=s.replace(/((?:<li class="ol">.*<\/li>\n?)+)/g,'<ol>$1</ol>');
   s=s.replace(/((?:<li>.*<\/li>\n?)+)/g,'<ul>$1</ul>');
   s=s.replace(/\n{2,}/g,'</p><p>');
   s=s.replace(/\n/g,'<br>');
@@ -467,7 +561,7 @@ function renderMd(raw){
   if(!s.endsWith('>'))s=s+'</p>';
   s=s.replace(/<p><\/p>/g,'');
   s=s.replace(/<p>(<h4>)/g,'$1').replace(/(<\/h4>)<\/p>/g,'$1');
-  s=s.replace(/<p>(<ul>)/g,'$1').replace(/(<\/ul>)<\/p>/g,'$1');
+  s=s.replace(/<p>(<ul>|<ol>)/g,'$1').replace(/(<\/ul>|<\/ol>)<\/p>/g,'$1');
   return s;
 }
 
@@ -499,7 +593,7 @@ apiModelEl.addEventListener('change',()=>{localStorage.setItem('aicivsim_api_mod
 function updateModels(){
   apiModelEl.innerHTML='';
   if(apiProviderEl.value==='openai'){addOpt('gpt-4o-mini','GPT-4o Mini');addOpt('gpt-4o','GPT-4o')}
-  else{addOpt('claude-sonnet-4-20250514','Claude Sonnet');addOpt('claude-haiku-4-20250514','Claude Haiku')}
+  else{addOpt('claude-sonnet-4-5','Claude Sonnet 4.5');addOpt('claude-haiku-4-5','Claude Haiku 4.5')}
   function addOpt(v,t){const o=document.createElement('option');o.value=v;o.textContent=t;apiModelEl.appendChild(o)}
   localStorage.setItem('aicivsim_api_model',apiModelEl.value);
 }
@@ -509,11 +603,9 @@ document.getElementById('settings-btn').addEventListener('click',()=>{
   document.getElementById('settings-panel').classList.toggle('show');
 });
 
-(function probeProxy(){
-  fetch('api/chat.php',{method:'OPTIONS'}).then(r=>{
-    proxyAvailable=(r.ok||r.status===405);updateDot();
-  }).catch(()=>{proxyAvailable=false;updateDot()});
-})();
+const proxyProbe=fetch('api/chat.php',{method:'OPTIONS'}).then(r=>{
+  proxyAvailable=(r.ok||r.status===405);updateDot();return proxyAvailable;
+}).catch(()=>{proxyAvailable=false;updateDot();return false});
 
 function callLLM(messages,onChunk){
   if(proxyAvailable&&!apiKeyEl.value)callProxy(messages,onChunk);
@@ -552,7 +644,11 @@ function streamReadOpenAI(r,onChunk){
       lines.forEach(l=>{
         if(!l.startsWith('data: '))return;
         const d=l.slice(6);if(d==='[DONE]'){onChunk('',true);return}
-        try{const j=JSON.parse(d);const c=j.choices?.[0]?.delta;if(c?.content)onChunk(c.content,false)}catch(e){}
+        try{
+          const j=JSON.parse(d);
+          if(j.error){onChunk('\n*Error: '+(j.error.message||JSON.stringify(j.error))+'*',true);return}
+          const c=j.choices?.[0]?.delta;if(c?.content)onChunk(c.content,false)
+        }catch(e){}
       });
       read();
     }).catch(e=>onChunk('\n*Error: '+e.message+'*',true));
@@ -570,7 +666,8 @@ function streamRead(r,onChunk){
         const d=l.slice(6);if(d==='[DONE]'){onChunk('',true);return}
         try{
           const j=JSON.parse(d);
-          if(j.type==='content_block_delta'&&j.delta?.text)onChunk(j.delta.text,false);
+          if(j.error)onChunk('\n*Error: '+(j.error.message||JSON.stringify(j.error))+'*',true);
+          else if(j.type==='content_block_delta'&&j.delta?.text)onChunk(j.delta.text,false);
           else if(j.type==='message_stop')onChunk('',true);
           else if(j.choices?.[0]?.delta?.content)onChunk(j.choices[0].delta.content,false);
         }catch(e){}
@@ -590,15 +687,26 @@ inputEl.addEventListener('input',function(){this.style.height='auto';this.style.
 inputEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
 sendBtn.addEventListener('click',send);
 
-function send(){
+/* Starter question chips */
+document.querySelectorAll('.starter-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    if(streaming)return;
+    inputEl.value=chip.textContent;
+    send();
+  });
+});
+
+async function send(){
   const text=inputEl.value.trim();
   if(!text||streaming)return;
+  /* Wait for the proxy probe before deciding the user needs a key */
+  if(proxyAvailable===null)await proxyProbe;
   if(!apiKeyEl.value&&!proxyAvailable){
     document.getElementById('settings-panel').classList.add('show');
     apiKeyEl.focus();return;
   }
 
-  document.querySelector('.hint')?.remove();
+  dismissIntro();
   streaming=true;sendBtn.disabled=true;
   inputEl.value='';inputEl.style.height='auto';
 
@@ -639,41 +747,46 @@ function send(){
 const raycaster=new THREE.Raycaster();
 const mouse=new THREE.Vector2();
 let pointerDown=new THREE.Vector2();
+let hitMeshes=[];
+
+function getHitMeshes(){
+  if(hitMeshesDirty){hitMeshes=hitTargets.map(h=>h.mesh);hitMeshesDirty=false}
+  return hitMeshes;
+}
+
+function pickNode(clientX,clientY){
+  mouse.set((clientX/window.innerWidth)*2-1,-(clientY/window.innerHeight)*2+1);
+  raycaster.setFromCamera(mouse,camera);
+  const hits=raycaster.intersectObjects(getHitMeshes());
+  if(!hits.length)return null;
+  const ht=hitTargets.find(h=>h.mesh===hits[0].object);
+  return(ht&&ht.node.expanded>0.3)?ht.node:null;
+}
 
 renderer.domElement.addEventListener('pointerdown',e=>{pointerDown.set(e.clientX,e.clientY)});
 renderer.domElement.addEventListener('click',e=>{
   if(Math.abs(e.clientX-pointerDown.x)+Math.abs(e.clientY-pointerDown.y)>6)return;
-  mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
-  raycaster.setFromCamera(mouse,camera);
-  const targets=hitTargets.map(h=>h.mesh);
-  const hits=raycaster.intersectObjects(targets);
-  if(hits.length){
-    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
-    if(ht&&ht.node.expanded>0.3){
-      if(ht.node.isTopic){
-        exploreTopic(ht.node);
-      }else{
-        if(selectedNode===ht.node)hideDetail();
-        else showDetail(ht.node);
-      }
-    }
+  const node=pickNode(e.clientX,e.clientY);
+  if(node){
+    if(node.isTopic)exploreTopic(node);
+    else if(selectedNode===node)hideDetail();
+    else showDetail(node);
   }else{hideDetail()}
 });
 
-renderer.domElement.addEventListener('mousemove',e=>{
-  mouse.set((e.clientX/window.innerWidth)*2-1,-(e.clientY/window.innerHeight)*2+1);
-  raycaster.setFromCamera(mouse,camera);
-  const targets=hitTargets.map(h=>h.mesh);
-  const hits=raycaster.intersectObjects(targets);
-  hoveredNode=null;
-  if(hits.length){
-    const ht=hitTargets.find(h=>h.mesh===hits[0].object);
-    if(ht&&ht.node.expanded>0.3){hoveredNode=ht.node;renderer.domElement.style.cursor='pointer'}
-    else renderer.domElement.style.cursor='default';
-  }else renderer.domElement.style.cursor='default';
-});
+/* Hover picking, throttled to animation frames */
+let pendingHover=null;
+renderer.domElement.addEventListener('mousemove',e=>{pendingHover={x:e.clientX,y:e.clientY}});
+function processHover(){
+  if(!pendingHover)return;
+  hoveredNode=pickNode(pendingHover.x,pendingHover.y);
+  renderer.domElement.style.cursor=hoveredNode?'pointer':'default';
+  pendingHover=null;
+}
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideDetail();e.preventDefault()}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&selectedNode){hideDetail();e.preventDefault()}
+});
 
 /* ================================================================
    ANIMATION LOOP
@@ -684,6 +797,8 @@ function tick(){
   requestAnimationFrame(tick);
   const dt=Math.min(clock.getDelta(),0.05);
   const t=clock.getElapsedTime();
+
+  processHover();
 
   /* Camera fly */
   if(flyProgress<1){
@@ -729,13 +844,15 @@ function tick(){
 
     node.mesh.material.emissiveIntensity=isSelected?0.5:isHovered?0.35:0.15;
 
-    /* Label */
+    /* Label — fade with camera distance so far clusters don't clutter */
     const v=node.pos.clone().add(new THREE.Vector3(0,NODE_SIZE*2,0));
+    const camDist=camera.position.distanceTo(node.pos);
+    const distFade=Math.max(0,Math.min(1,(26-camDist)/14));
     v.project(camera);
     const x2=(v.x*0.5+0.5)*window.innerWidth;
     const y2=(-v.y*0.5+0.5)*window.innerHeight;
     node.label.style.left=x2+'px';node.label.style.top=y2+'px';
-    node.label.style.opacity=e>0.3&&v.z<1?String(0.6*e):'0';
+    node.label.style.opacity=e>0.3&&v.z<1?String(0.7*e*distFade):'0';
   });
 
   /* Edges */
@@ -775,11 +892,18 @@ function tick(){
     if(tn.hitSphere)tn.hitSphere.position.copy(tn.mesh.position);
 
     if(tn.labelEl){
-      const lv=tn.mesh.position.clone().add(new THREE.Vector3(0,TOPIC_SIZE*2.5,0));
-      lv.project(camera);
-      tn.labelEl.style.left=((lv.x*0.5+0.5)*window.innerWidth)+'px';
-      tn.labelEl.style.top=((-lv.y*0.5+0.5)*window.innerHeight)+'px';
-      tn.labelEl.style.opacity=e>0.3&&lv.z<1?String(0.5*e):'0';
+      /* Topic labels only when relevant — hovered, or parent selected —
+         so dozens of satellites don't blanket the screen in text */
+      const relevant=isHov||selectedNode===parent;
+      if(relevant){
+        const lv=tn.mesh.position.clone().add(new THREE.Vector3(0,TOPIC_SIZE*2.5,0));
+        lv.project(camera);
+        tn.labelEl.style.left=((lv.x*0.5+0.5)*window.innerWidth)+'px';
+        tn.labelEl.style.top=((-lv.y*0.5+0.5)*window.innerHeight)+'px';
+        tn.labelEl.style.opacity=e>0.3&&lv.z<1?String(0.7*e):'0';
+      }else{
+        tn.labelEl.style.opacity='0';
+      }
     }
 
     if(tn.line){
@@ -797,6 +921,11 @@ function tick(){
   composer.render();
 }
 tick();
+
+/* Boot complete — clear the watchdog overlay */
+window.__explorerBooted=true;
+const bootEl=document.getElementById('boot');
+if(bootEl){bootEl.classList.add('gone');setTimeout(()=>bootEl.remove(),600)}
 </script>
 </body>
 </html>

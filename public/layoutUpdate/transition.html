@@ -4,453 +4,55 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Transition — Workforce Transition Dashboard 2026</title>
+<meta name="description" content="Workforce transition dashboard - reskilling, poverty, placement, and the income bridge calculator.">
+<link rel="canonical" href="https://aicivsim.com/transition.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Transition — Workforce Transition Dashboard 2026">
+<meta property="og:description" content="Workforce transition dashboard - reskilling, poverty, placement, and the income bridge calculator.">
+<meta property="og:url" content="https://aicivsim.com/transition.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Transition — Workforce Transition Dashboard 2026">
+<meta name="twitter:description" content="Workforce transition dashboard - reskilling, poverty, placement, and the income bridge calculator.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20260221d">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260816a">
 </head>
 <body>
-
-<!-- ============================================================
-     MASTHEAD
-     ============================================================ -->
-<div class="masthead">
-  <div class="page masthead-inner">
-    <span class="masthead-breadcrumb"><a href="index.html">AI Civ Sim</a> / Transition &mdash; 2026</span>
-    <h1 class="t2-xl mt-3">Workforce Transition Dashboard</h1>
-    <p class="body mt-2">Reskilling pathways, income bridges, and employment projections for the automation wave. Four policy scenarios modeled from 2025 to 2035.</p>
-    <hr class="rule">
-  </div>
-</div>
-
-<!-- ============================================================
-     SITE NAV
-     ============================================================ -->
-<div id="site-nav-mount"></div>
-
-<!-- ============================================================
-     CONTROL BAR
-     ============================================================ -->
-<div class="control-bar" id="control-bar">
-  <div class="page">
-    <div class="control-bar-inner">
-      <div class="nav-tabs" id="nav-tabs">
-        <button class="nav-tab active" data-section="overview">Overview</button>
-        <button class="nav-tab" data-section="bridges">Income Bridges</button>
-        <button class="nav-tab" data-section="projections">Projections</button>
-      </div>
-      <div class="scenario-bar" id="scenario-bar"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     MAIN CONTENT
-     ============================================================ -->
-<main class="page">
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: OVERVIEW
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-overview">
-    <div class="section">
-      <span class="section-num">01</span>
-      <h2 class="t2">Today&rsquo;s Workforce Score</h2>
-      <hr class="rule">
-      <div style="display:flex;align-items:baseline;gap:16px;margin-top:20px">
-        <span class="score-hero" style="color:var(--workforce)">43</span>
-        <div>
-          <span class="score-sub">/100</span>
-          <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-            <span class="tag" style="font-size:18px;padding:6px 14px;border-color:var(--workforce);color:var(--workforce)">D+</span>
-            <span class="delta delta-down" style="font-size:13px">declining</span>
-          </div>
-        </div>
-      </div>
-      <p class="body mt-3">Composite workforce readiness score across poverty rate, reskilling time, placement rate, and employment. Measured 2026 baseline &mdash; before scenario interventions.</p>
-      <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px" id="trans-projected"></div>
-      <div class="grid grid-4 mt-6" id="trans-metric-cards"></div>
-    </div>
-
-    <div class="section">
-      <span class="section-num">02</span>
-      <p class="t2">Policy Levers</p>
-      <hr class="rule">
-      <p class="body mt-2">Adjust levers to see how workforce transition investments affect projected outcomes.</p>
-      <div class="grid grid-3 mt-4">
-        <div class="cell">
-          <div class="slider-group">
-            <div class="slider-label"><span class="t3">Civic Dividend</span><span class="num-md" id="val-lever-div" style="color:var(--workforce)">$1,200/mo</span></div>
-            <input type="range" class="slider-track mt-2" id="sl-lever-div" min="0" max="2400" step="100" value="1200">
-            <div class="flex justify-between mt-1"><span class="t4">$0</span><span class="t4">$2,400</span></div>
-            <p class="t4 mt-2">Monthly universal civic dividend distributed to displaced workers.</p>
-          </div>
-        </div>
-        <div class="cell">
-          <div class="slider-group">
-            <div class="slider-label"><span class="t3">Reskill Budget</span><span class="num-md" id="val-lever-reskill" style="color:var(--workforce)">15%</span></div>
-            <input type="range" class="slider-track mt-2" id="sl-lever-reskill" min="0" max="30" step="1" value="15">
-            <div class="flex justify-between mt-1"><span class="t4">0%</span><span class="t4">30%</span></div>
-            <p class="t4 mt-2">Share of transition budget allocated to reskilling and placement programs.</p>
-          </div>
-        </div>
-        <div class="cell">
-          <div class="slider-group">
-            <div class="slider-label"><span class="t3">Automation Pace</span><span class="num-md" id="val-lever-auto" style="color:var(--workforce)">Medium</span></div>
-            <input type="range" class="slider-track mt-2" id="sl-lever-auto" min="1" max="3" step="1" value="2">
-            <div class="flex justify-between mt-1"><span class="t4">Slow</span><span class="t4">Fast</span></div>
-            <p class="t4 mt-2">Rate of AI-driven automation deployment across industries.</p>
-          </div>
-        </div>
-      </div>
-      <div id="lever-impact" class="mt-4"></div>
-    </div>
-
-    <div class="section">
-      <span class="section-num">03</span>
-      <h2 class="t2">Scenario Projection &mdash; <span id="ov-scenario-label">Baseline</span></h2>
-      <hr class="rule">
-      <div class="grid grid-2 mt-4" id="overview-grid"></div>
-      <div class="mt-6" id="ov-narrative"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: INCOME BRIDGES
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-bridges" style="display:none">
-    <div class="section">
-      <span class="section-num">04</span>
-      <h2 class="t2">Income Bridge Calculator</h2>
-      <hr class="rule">
-      <p class="t4 mt-3" style="max-width:560px" id="bridges-desc">How civic dividends cover the income gap during career transitions.</p>
-      <div class="grid grid-2 mt-6" id="bridges-grid"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: PROJECTIONS
-       ────────────────────────────────────────────────────────── -->
-  <div id="sec-projections" style="display:none">
-    <div class="section">
-      <span class="section-num">05</span>
-      <h2 class="t2">Scenario Projections &mdash; <span id="proj-scenario-label">Baseline</span></h2>
-      <hr class="rule">
-      <div class="grid grid-2 mt-4" id="projections-grid"></div>
-    </div>
-  </div>
-
-  <!-- ──────────────────────────────────────────────────────────
-       SECTION: CROSS-SYSTEM IMPACT
-       ────────────────────────────────────────────────────────── -->
-  <div class="section">
-    <span class="section-num">06</span>
-    <p class="t2">Cross-System Impact</p>
-    <hr class="rule">
-    <p class="body mt-3" style="max-width:640px">Changes in this system ripple across the simulator. These feedback loops show how metrics here influence other operating systems.</p>
-    <div id="cross-system-mount" class="mt-4"></div>
-  </div>
-
-</main>
-
-<!-- ============================================================
-     FOOTER
-     ============================================================ -->
-<div id="page-footer"></div>
-
-<!-- ============================================================
-     SCRIPTS
-     ============================================================ -->
-<script src="js/shared.js?v=20260221d"></script>
+<div id="app"></div>
+<script src="js/shared.js?v=20260816a"></script>
+<script src="js/v3-data.js?v=20260816a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260816a"></script>
 <script>
-(function(){
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
-document.getElementById('scenario-bar').innerHTML=renderScenarioButtons();
+V3.boot({deck:{sys:'transition',context:'Work, reskilling, and the income bridge'}});
+var T=V3DATA.transition;
 
-  var scenarios=[
-    {id:'aggressive', name:'Aggressive', color:'#4ecdc4'},
-    {id:'moderate',   name:'Moderate',   color:'#5da5da'},
-    {id:'bau',        name:'BAU',        color:'#e8a838'},
-    {id:'worst',      name:'Worst',      color:'#d4622a'}
-  ];
-  var scColors={aggressive:'#4ecdc4',moderate:'#5da5da',bau:'#e8a838',worst:'#d4622a'};
-  var active='aggressive';
+V3.systemPage({
+  sys:'transition',
+  tagline:'What happens to work decides what happens to everything.',
+  lead:'Four labor-market vitals as automation rewrites the economy: poverty, reskilling, job placement, employment. The scenarios differ on one question — when a job disappears, is there a funded bridge to the next one, or a gap people fall through? The bridge calculator below prices six real transitions.',
+  today:43,
+  proj:T.TRANS_SCORES,
+  metrics:T.indicators.map(function(meta){
+    return {label:meta.label,unit:meta.unit,dir:meta.dir,dec:meta.dec,
+      notes:T.CARD_DESCS[meta.id]||null,
+      data:T.D[meta.id]};
+  }),
+  narratives:T.narratives,
+  crossKey:'transition'
+});
 
-  var years=[2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
-
-  var D={
-    poverty:{
-      aggressive: [13,12,10.8,9.5,8.2,7,6,5.2,4.5,4,3.5],
-      moderate:   [13,12.5,12,11.3,10.5,9.8,9.2,8.5,8,7.5,7],
-      bau:        [13,13.2,13.5,13.9,14.4,15,15.8,16.5,17.2,18,18.5],
-      worst:      [13,14,15.2,16.8,18.5,20.5,22.5,24.5,26.5,28,30]
-    },
-    reskill:{
-      aggressive: [18,15.5,13,11,9.5,8,7,6.2,5.5,5,4.5],
-      moderate:   [18,16.5,15,13.5,12,11,10,9.2,8.5,8,7.5],
-      bau:        [18,18,18.2,18.5,19,19.5,20,20.5,21,21.5,22],
-      worst:      [18,19,20.5,22,24,26,28,30,32,34,36]
-    },
-    placement:{
-      aggressive: [62,67,72,77,81,84,87,89,91,92,93],
-      moderate:   [62,65,68,71,74,76,78,80,82,83,84],
-      bau:        [62,61,60,59,58,57,56,55,54,53,52],
-      worst:      [62,59,55,51,47,43,39,36,33,30,28]
-    },
-    employment:{
-      aggressive: [94,94.5,95.2,95.8,96.3,96.7,97,97.2,97.4,97.5,97.6],
-      moderate:   [94,94.2,94.5,94.8,95.1,95.4,95.6,95.8,96,96.2,96.3],
-      bau:        [94,93.8,93.5,93.1,92.6,92,91.3,90.5,89.7,88.8,88],
-      worst:      [94,93,91.5,89.8,87.5,85,82.5,80,77.5,75,72]
-    }
-  };
-
-  var indicators=[
-    {id:'poverty',    label:'Poverty Rate',       unit:'%', baseline:13,  dec:1, dir:'lower',
-     note:'Regional poverty rate. Lower is better. Baseline 13% (2025).'},
-    {id:'reskill',    label:'Median Reskill Time', unit:'mo',baseline:18,  dec:1, dir:'lower',
-     note:'Median months to complete career transition. Lower is better.'},
-    {id:'placement',  label:'Placement Rate',      unit:'%', baseline:62,  dec:0, dir:'higher',
-     note:'Percentage of transitioned workers placed in new roles. Higher is better.'},
-    {id:'employment', label:'Employment Rate',      unit:'%', baseline:94,  dec:1, dir:'higher',
-     note:'Overall employment rate including gig/cooperative work. Higher is better.'}
-  ];
-
-  var TRANS_SCORES={aggressive:88, moderate:68, bau:28, worst:12};
-
-  var narratives={
-    aggressive:'Full-stack integration layers universal basic services, cooperative employment networks, and civic dividend income bridges. Poverty falls to 3.5%, reskill time compresses to 4.5 months, and placement reaches 93%. Employment rises to 97.6% as gig, cooperative, and traditional pathways converge into a unified labor market.',
-    moderate:'Targeted reskilling pipelines and civic dividend income bridges cushion the automation wave. Poverty drops to 7%, median reskill time compresses to 7.5 months, and placement rates climb to 84%. The dividend mechanism covers gap income during transitions, reducing dropout rates by more than half.',
-    bau:'Under business-as-usual conditions, automation displacement accelerates without compensating policy. Poverty rises from 13% to 18.5% by 2035, median reskilling time drifts upward to 22 months, and placement rates decline steadily. The workforce bears the full cost of structural transformation.',
-    worst:'Active deregulation and austerity compound automation displacement. Poverty surges to 30%, reskilling time doubles to 36 months as public programs collapse, and placement rates crater to 28%. Employment drops to 72% as gig protections erode and cooperative networks are defunded. A lost generation of workers is stranded without viable transition pathways.'
-  };
-
-  var DIV_RATE={aggressive:192, moderate:115, bau:0, worst:0};
-
-  var bridges=[
-    {from:'Truck Driver',   to:'Logistics Coordinator',  loss:2800, trainMo:8,  trainCost:12000, post:52000, payback_base:18, net10yr_base:85000},
-    {from:'Retail Cashier',  to:'Community Health Worker', loss:2200, trainMo:12, trainCost:15000, post:45000, payback_base:24, net10yr_base:62000},
-    {from:'Factory Worker',  to:'Solar Technician',        loss:3000, trainMo:6,  trainCost:8000,  post:58000, payback_base:12, net10yr_base:98000},
-    {from:'Data Entry Clerk',to:'UX Designer',             loss:2500, trainMo:18, trainCost:22000, post:72000, payback_base:14, net10yr_base:145000},
-    {from:'Call Center Rep', to:'AI Trainer',               loss:2400, trainMo:4,  trainCost:5000,  post:55000, payback_base:8,  net10yr_base:110000},
-    {from:'Taxi Driver',     to:'Fleet Manager',            loss:2600, trainMo:10, trainCost:14000, post:62000, payback_base:16, net10yr_base:120000}
-  ];
-
-  var CARD_COLORS={poverty:'#d4622a',reskill:'#e8a838',placement:'#5da5da',employment:'#4ecdc4'};
-  var CARD_DESCS={
-    poverty:{aggressive:'Near-elimination through universal services.',moderate:'Declining via income bridges and reskilling.',bau:'Rising without intervention.',worst:'Surging as safety nets collapse under austerity.'},
-    reskill:{aggressive:'Minimized through integrated systems.',moderate:'Compressed via structured pipelines.',bau:'Increasing as pathways fragment.',worst:'Doubling as public programs are defunded.'},
-    placement:{aggressive:'Near-universal placement via cooperative networks.',moderate:'Growing as reskilling programs mature.',bau:'Declining as displaced workers compete.',worst:'Cratering as transition support disappears.'},
-    employment:{aggressive:'Expanding through diversified labor markets.',moderate:'Stabilized with new sector growth.',bau:'Eroding under automation pressure.',worst:'Collapsing as gig protections and cooperatives are dismantled.'}
-  };
-
-  function scName(id){ var s=scenarios.find(function(x){return x.id===id}); return s?s.name:id; }
-  function last(arr){ return arr[arr.length-1]; }
-  function dirClr(m,v){
-    if(m.dir==='lower')  return v<=m.baseline?'var(--green)':'var(--red)';
-    return v>=m.baseline?'var(--green)':'var(--red)';
-  }
-
-  function renderMetricCards(){
-    var el=document.getElementById('trans-metric-cards');
-    var h='';
-    indicators.forEach(function(m){
-      var endVal=last(D[m.id][active]);
-      var clr=CARD_COLORS[m.id]||scColors[active];
-      var better=(m.dir==='lower')?(endVal<m.baseline):(endVal>m.baseline);
-      var worse=(m.dir==='lower')?(endVal>m.baseline):(endVal<m.baseline);
-      var trend=better?'up':worse?'down':'flat';
-      var trendLabel=better?'improving':worse?'declining':'stable';
-      var trendCls=better?'delta delta-up':worse?'delta delta-down':'delta delta-flat';
-      var barW=m.id==='reskill'?Math.min(100,endVal/25*100):Math.min(100,endVal);
-      var desc=CARD_DESCS[m.id]?CARD_DESCS[m.id][active]||m.note:m.note;
-      h+='<div class="cell">';
-      h+='<p class="t3" style="color:'+clr+'">'+m.label+'</p>';
-      h+='<p class="num-lg mt-2">'+endVal.toFixed(m.dec)+'<span class="t4" style="margin-left:2px">'+m.unit+'</span></p>';
-      h+='<span class="'+trendCls+'">'+trendLabel+'</span>';
-      h+='<div class="bar-track mt-2"><div class="bar-fill" style="width:'+barW+'%;background:'+clr+'"></div></div>';
-      h+='<p class="t4 mt-2">'+desc+'</p>';
-      h+='</div>';
-    });
-    el.innerHTML=h;
-  }
-  function fmtDollar(n){
-    if(n>=1000) return '$'+Math.round(n/1000)+'K';
-    return '$'+n;
-  }
-  function fmtDollarFull(n){
-    return '$'+n.toLocaleString();
-  }
-
-  /* ── Render: Overview ── */
-  function renderOverview(){
-    var el=document.getElementById('overview-grid');
-    var html='';
-    indicators.forEach(function(m){
-      var ds={};
-      scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
-      var endVal=ds[active][ds[active].length-1];
-      html+='<div class="cell">'
-        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2035})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:140,exportId:'transition-ov-'+m.id})
-        +'</div>';
-    });
-    el.innerHTML=html;
-    indicators.forEach(function(m){
-      registerChartExport('transition-ov-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2035,m.unit,'');
-    });
-  }
-
-  function renderNarrative(){
-    document.getElementById('ov-narrative').innerHTML=
-      '<blockquote class="pullquote">'+narratives[active]+'</blockquote>';
-  }
-
-  /* ── Render: Income Bridges ── */
-  function renderBridges(){
-    var el=document.getElementById('bridges-grid');
-    var rate=DIV_RATE[active];
-    var clr=scColors[active];
-    var html='';
-
-    if(rate===0){
-      html+='<div class="cell" style="grid-column:1/-1;padding:32px 20px">'
-        +'<p class="t2-lg" style="color:var(--red);margin-bottom:8px">No Civic Dividend Under '+scName(active)+'</p>'
-        +'<p class="body">Without civic dividend infrastructure, workers bear 100% of transition costs. Training expenses, income loss, and reskilling time are unsubsidized. This is the core barrier to equitable workforce transition.</p>'
-        +'</div>';
-    }
-
-    bridges.forEach(function(b){
-      var divTotal=rate*b.trainMo;
-      var oop=Math.max(0,b.trainCost-divTotal);
-      var salaryGain=b.post-(b.loss*12);
-      var payback=rate>0?Math.max(1,Math.round(oop/(salaryGain/12))):Math.round(b.trainCost/(salaryGain/12));
-      var net10yr=salaryGain*10-oop;
-
-      html+='<div class="cell" style="padding:24px 20px">'
-        +'<div class="t2-lg" style="font-size:16px">'+b.from+' &rarr; '+b.to+'</div>'
-        +'<div class="grid grid-3 mt-4" style="background:transparent;gap:16px">'
-          +'<div>'
-            +'<span class="t3">Monthly Loss</span>'
-            +'<div class="num-md mt-1" style="color:var(--red)">-$'+b.loss.toLocaleString()+'</div>'
-          +'</div>'
-          +'<div>'
-            +'<span class="t3">Training</span>'
-            +'<div class="num-md mt-1" style="color:var(--text-primary)">'+b.trainMo+'<span class="t4" style="margin-left:2px">mo</span></div>'
-            +'<p class="t4 mt-1">'+fmtDollarFull(b.trainCost)+' total</p>'
-          +'</div>'
-          +'<div>'
-            +'<span class="t3">Net 10yr Gain</span>'
-            +'<div class="num-md mt-1" style="color:'+(net10yr>0?'var(--green)':'var(--red)')+'">'+((net10yr>0?'+':'')+fmtDollar(net10yr))+'</div>'
-          +'</div>'
-        +'</div>'
-        +'<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">';
-
-      if(rate>0){
-        html+='<p class="t4">Dividend offset: <span class="num-xs" style="color:'+clr+'">$'+rate+'</span>/mo &times; '+b.trainMo+' months = <span class="num-sm" style="color:'+clr+'">'+fmtDollarFull(divTotal)+'</span></p>';
-      } else {
-        html+='<p class="t4" style="color:var(--red)">No dividend offset &mdash; full cost borne by worker</p>';
-      }
-
-      html+='<div class="flex justify-between items-baseline mt-2">'
-          +'<span class="t4">Out-of-pocket after dividend</span>'
-          +'<span class="num-sm" style="color:'+(oop>b.trainCost*0.5?'var(--red)':'var(--text-secondary)')+'">'+fmtDollarFull(oop)+'</span>'
-        +'</div>'
-        +'<div class="flex justify-between items-baseline mt-1">'
-          +'<span class="t4">Post-transition salary</span>'
-          +'<span class="num-sm" style="color:var(--green)">'+fmtDollar(b.post)+'/yr</span>'
-        +'</div>'
-        +'<div class="flex justify-between items-baseline mt-1">'
-          +'<span class="t4">Payback period</span>'
-          +'<span class="num-sm" style="color:var(--text-secondary)">'+payback+' months</span>'
-        +'</div>'
-      +'</div>'
-    +'</div>';
-    });
-    el.innerHTML=html;
-  }
-
-  /* ── Render: Projections ── */
-  function renderProjections(){
-    var el=document.getElementById('projections-grid');
-    var html='';
-    indicators.forEach(function(m){
-      var ds={};
-      scenarios.forEach(function(s){ ds[s.id]=D[m.id][s.id]; });
-      var endVal=ds[active][ds[active].length-1];
-      html+='<div class="cell">'
-        +chartHeader({label:m.label,value:endVal,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,color:scColors[active],endYear:2035})
-        +scenarioChart({datasets:ds,colors:scColors,scenarios:scenarios,activeKey:active,startYear:2025,endYear:2035,unit:m.unit,dec:m.dec,dir:m.dir,baseline:m.baseline,note:m.note,height:180,exportId:'transition-proj-'+m.id})
-        +'</div>';
-    });
-    el.innerHTML=html;
-    indicators.forEach(function(m){
-      registerChartExport('transition-proj-'+m.id,{aggressive:D[m.id].aggressive,moderate:D[m.id].moderate,bau:D[m.id].bau,worst:D[m.id].worst},2025,2035,m.unit,'');
-    });
-  }
-
-  /* ── Policy Levers ── */
-  function initLevers(){
-    var divSl=document.getElementById('sl-lever-div');
-    var reskillSl=document.getElementById('sl-lever-reskill');
-    var autoSl=document.getElementById('sl-lever-auto');
-    if(!divSl)return;
-    function updateLevers(){
-      var div=parseInt(divSl.value);
-      var rsk=parseInt(reskillSl.value);
-      var aut=parseInt(autoSl.value);
-      var autoLabel=['Slow','Medium','Fast'];
-      document.getElementById('val-lever-div').textContent='$'+div.toLocaleString()+'/mo';
-      document.getElementById('val-lever-reskill').textContent=rsk+'%';
-      document.getElementById('val-lever-auto').textContent=autoLabel[aut-1];
-      var baseScore=TRANS_SCORES[active];
-      var divEffect=(div-1200)/2400*8;
-      var rskEffect=(rsk-15)/30*6;
-      var autEffect=(2-aut)*5;
-      var adjusted=Math.max(0,Math.min(100,Math.round(baseScore+divEffect+rskEffect+autEffect)));
-      var el=document.getElementById('lever-impact');
-      var clr=gClr(adjusted);
-      el.innerHTML='<div class="flex items-baseline gap-8 mt-2"><span class="t3">Lever-Adjusted Score:</span><span class="num-lg" style="color:'+clr+'">'+adjusted+'</span><span class="t4">/100</span><span class="tag" style="border-color:'+clr+';color:'+clr+'">'+grade(adjusted)+'</span><span class="t4" style="color:var(--text-muted)">(base: '+baseScore+')</span></div>';
-    }
-    divSl.addEventListener('input',updateLevers);
-    reskillSl.addEventListener('input',updateLevers);
-    autoSl.addEventListener('input',updateLevers);
-    updateLevers();
-  }
-
-  /* ── Master render ── */
-  function render(){
-    document.getElementById('ov-scenario-label').textContent=scName(active);
-    document.getElementById('proj-scenario-label').textContent=scName(active);
-    updateScenarioBar('#scenario-bar',active,scenarios);
-    var rate=DIV_RATE[active];
-    document.getElementById('bridges-desc').innerHTML=rate>0
-      ?'How civic dividends cover the income gap during career transitions. <span class="num-xs" style="color:'+scColors[active]+'">$'+rate+'/mo</span> dividend offsets training costs under <strong style="color:'+scColors[active]+'">'+scName(active)+'</strong>.'
-      :'Under <strong style="color:'+scColors[active]+'">'+scName(active)+'</strong>, there are no civic dividends. Workers bear full transition costs without income bridge support.';
-    var ps=TRANS_SCORES[active]; var pc=scColors[active];
-    document.getElementById('trans-projected').innerHTML=
-      '<span class="t3">Projected 2035 ('+scName(active)+'):</span> '
-      +'<span class="score-projected" style="color:'+pc+'">'+ps+'</span>'
-      +'<span class="score-sub" style="font-size:18px;margin-left:4px">/100</span> '
-      +'<span class="tag" style="font-size:16px;padding:5px 12px;border-color:'+pc+';color:'+pc+'">'+grade(ps)+'</span>'
-      +(active==='bau'?' <span class="t4" style="color:var(--red)">If trends continue</span>':active==='worst'?' <span class="t4" style="color:var(--red)">Accelerated decline</span>':'');
-    renderMetricCards();
-    renderOverview();
-    renderNarrative();
-    renderBridges();
-    renderProjections();
-    var csEl=document.getElementById('cross-system-mount');if(csEl)csEl.innerHTML=renderCrossSystem('transition',active);
-    initLevers();
-  }
-
-  /* ── Init ── */
-  initSectionNav('#nav-tabs','sec-','overview');
-  initScenarioSelector('#scenario-bar',function(id){ active=id; render(); });
-  render();
-
-  document.getElementById('page-footer').innerHTML=renderFooter();
-
-})();
+/* ── the income bridge — the page's signature interactive ── */
+var narSection=document.querySelector('#sys-nar').closest('.section');
+narSection.insertAdjacentHTML('beforebegin',
+  '<section class="section"><div class="col">'
+  +'<div class="section-head"><div><h2 class="title-2">The income bridge, priced</h2>'
+  +'<p class="lead">Six real career transitions out of automated work. Pick one; the numbers show what the move costs, what it pays, and how much of the burden the chosen future’s civic dividend absorbs. This is the difference between the scenarios, in one worker’s budget.</p></div></div>'
+  +'<div id="bridge"></div></div></section>');
+V3.bridges('#bridge',T.bridges,T.DIV_RATE);
 </script>
 </body>
 </html>

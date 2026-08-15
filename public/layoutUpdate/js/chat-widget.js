@@ -137,7 +137,9 @@ var PAGES={
   'civilization.html':{l:'Civilization',d:'Composite health index, KPI trajectories, funding models, aggregate projections'},
   'governance.html':{l:'Governance',d:'AI charter status, citizen assemblies, audit coverage, civic participation, institutional trust'},
   'strategy.html':{l:'Strategy',d:'20+ policy actions across individual/institutional/systemic levels with adoption rates'},
+  'pathways.html':{l:'Pathways',d:'Scenario-to-scenario transitions — what changes between a FROM and TO scenario: policy lever deltas, action status changes, forking metric curves, feasibility'},
   'timeline.html':{l:'Timeline',d:'200K-year civilization arc, AI as inflection point, major historical transitions'},
+  'data.html':{l:'Live Data',d:'Real-world indicators fetched live in the browser (CO₂ ppm, warming, renewable share, emissions, extreme poverty, unemployment, Arctic ice) from NOAA/global-warming.org, Our World in Data, and the World Bank — compared against the model\'s 2026 baseline'},
   'visualizer.html':{l:'Visualizer',d:'3D Three.js interactive system network with audio, connections, scenario timeline'},
   'viz.html':{l:'3D Network',d:'Three.js node graph with nested sub-orbits, curved connections, scenario-aware coloring'},
   'research.html':{l:'Research',d:'19-section civic roadmap paper with policy recommendations and references'},
@@ -197,6 +199,12 @@ var TABS={
     overview:'The Arc — 200K-year visual timeline of civilization inflection points',
     inflection:'The Inflection — why this decade is different, convergence of crises',
     futures:'Possible Futures — scenario-aware era-by-era projections through 2050'
+  },
+  'pathways.html':{
+    overview:'Two Worlds — side-by-side comparison of the FROM and TO scenario at 2050',
+    levers:'The Policy Delta — which of the 5 policy levers move, and by how much, to make the transition',
+    actions:'The Action Ledger — which catalog actions change status between the two scenarios, and which already align',
+    trajectory:'Where the Curves Fork — per-metric projection charts showing where the two scenarios diverge'
   }
 };
 
@@ -283,8 +291,10 @@ A (90+), A− (85+), B+ (80+), B (70+), B− (65+), C+ (60+), C (50+), C− (45+
 - [Transition Dashboard](transition.html) — Workforce poverty, reskilling, employment
 - [Governance Dashboard](governance.html) — Charter, assemblies, audit coverage
 - [Strategy Dashboard](strategy.html) — 20+ actions across levels
+- [Pathways](pathways.html) — How to move between scenarios: lever deltas, action changes, forking curves
 - [Civilization Dashboard](civilization.html) — Composite health, KPI trajectories
 - [Timeline](timeline.html) — 200K-year arc, AI inflection point
+- [Live Data](data.html) — Live real-world indicators (CO₂, warming, renewables, poverty) vs the model's 2026 baseline
 - [Visualizer](visualizer.html) — 3D experience hub: flagship visualizer, Knowledge Explorer (β), and WebXR (β)
 - [Explorer](explorer.html) — 3D knowledge graph (accessed via Visualizer hub)
 - [WebXR](xr.html) — Immersive VR/AR visualization (accessed via Visualizer hub)
@@ -369,7 +379,7 @@ function updateModels(){
   if(providerEl.value==='openai'){
     addOpt('gpt-4o-mini','GPT-4o Mini');addOpt('gpt-4o','GPT-4o');
   }else{
-    addOpt('claude-sonnet-4-20250514','Claude Sonnet');addOpt('claude-haiku-4-20250514','Claude Haiku');
+    addOpt('claude-sonnet-4-5','Claude Sonnet 4.5');addOpt('claude-haiku-4-5','Claude Haiku 4.5');
   }
   function addOpt(v,t){var o=document.createElement('option');o.value=v;o.textContent=t;modelEl.appendChild(o)}
   localStorage.setItem('aicivsim_api_model',modelEl.value);

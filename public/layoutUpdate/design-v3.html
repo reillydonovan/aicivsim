@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design v3 — Audit &amp; Proposal · AI Civilization Simulator</title>
+<meta name="description" content="A full design and flow audit of aicivsim.com, with a proposed direction and working prototype.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111112; --bg-elev:#19191b; --bg-press:#1f1f22;
+  --hairline:rgba(255,255,255,.08); --hairline-strong:rgba(255,255,255,.16);
+  --ink:#f2f1ed; --ink-2:#b9b7af; --ink-3:#83817a; --ink-4:#575550;
+  --accent:#d4622a; --good:#4ecdc4; --warn:#e8a838;
+  --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+body.light{
+  --bg:#f5f4f0; --bg-elev:#fdfcf9; --bg-press:#efede8;
+  --hairline:rgba(0,0,0,.09); --hairline-strong:rgba(0,0,0,.18);
+  --ink:#1b1a18; --ink-2:#4c4a43; --ink-3:#7c7a72; --ink-4:#aaa89f;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.col{max-width:820px;margin:0 auto;padding:0 32px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:var(--font-display);font-size:clamp(30px,4.5vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1.15}
+h2{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-.015em;margin:72px 0 16px;padding-top:40px;border-top:1px solid var(--hairline)}
+h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin:28px 0 8px}
+p{margin:12px 0;color:var(--ink-2)}
+p b,li b{color:var(--ink);font-weight:600}
+ul,ol{margin:12px 0 12px 22px;color:var(--ink-2)}
+li{margin:7px 0}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.lead{font-size:17px;color:var(--ink-2)}
+header{padding:88px 0 48px;border-bottom:1px solid var(--hairline)}
+.meta-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;font-size:12.5px;color:var(--ink-3)}
+.meta-row b{color:var(--ink-2);font-weight:600}
+.cta{display:inline-block;margin-top:28px;padding:11px 20px;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;font-size:14px}
+.cta:hover{text-decoration:none;filter:brightness(1.08)}
+.cta.ghost{background:none;border:1px solid var(--hairline-strong);color:var(--ink);margin-left:10px}
+
+.finding{border:1px solid var(--hairline);border-radius:12px;padding:22px 24px;margin:16px 0;background:var(--bg-elev)}
+.finding .f-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.finding .f-num{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--ink-4)}
+.finding h3{margin:0;flex:1;min-width:200px}
+.sev{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:6px;border:1px solid currentColor}
+.sev.high{color:var(--accent)} .sev.med{color:var(--warn)} .sev.low{color:var(--ink-3)}
+.finding p{font-size:13.5px;margin:10px 0 0;color:var(--ink-3)}
+.finding p.fix{color:var(--ink-2)}
+.finding p.fix::before{content:'Proposal — ';font-weight:600;color:var(--good)}
+
+.keep{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.keep div{border:1px solid var(--hairline);border-radius:10px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
+.keep div b{display:block;color:var(--ink);margin-bottom:3px;font-family:var(--font-display)}
+
+.principle{display:flex;gap:16px;margin:18px 0;align-items:baseline}
+.principle .p-num{font-family:var(--font-mono);font-weight:700;color:var(--accent);font-size:15px;flex-shrink:0}
+.principle div b{display:block;font-family:var(--font-display);font-size:16px;color:var(--ink);margin-bottom:3px}
+.principle div span{font-size:13.5px;color:var(--ink-3)}
+
+.ia{border:1px solid var(--hairline);border-radius:12px;padding:20px 22px;margin:16px 0;overflow-x:auto}
+.ia .row-label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px}
+.ia .flat{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:22px}
+.ia .flat span{font-size:11px;padding:4px 8px;border:1px solid var(--hairline);border-radius:6px;color:var(--ink-3);white-space:nowrap}
+.ia .groups{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:8px}
+.ia .group{border:1px solid var(--hairline-strong);border-radius:9px;padding:10px 12px}
+.ia .group b{display:block;font-family:var(--font-display);font-size:13px;color:var(--ink);margin-bottom:7px}
+.ia .group span{display:block;font-size:11.5px;color:var(--ink-3);padding:2px 0}
+
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);padding:8px 12px;border-bottom:1px solid var(--hairline-strong)}
+td{padding:9px 12px;border-bottom:1px solid var(--hairline);color:var(--ink-2);vertical-align:top}
+td:first-child{color:var(--ink);font-weight:500}
+.swatch{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:7px}
+
+.phase{display:flex;gap:16px;margin:14px 0;border:1px solid var(--hairline);border-radius:10px;padding:16px 18px;align-items:baseline}
+.phase .ph-n{font-family:var(--font-mono);font-weight:700;color:var(--accent);flex-shrink:0}
+.phase div b{display:block;color:var(--ink);font-family:var(--font-display);margin-bottom:2px}
+.phase div span{font-size:13px;color:var(--ink-3)}
+.phase .effort{margin-left:auto;font-size:11px;color:var(--ink-4);white-space:nowrap;flex-shrink:0}
+
+footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--hairline);font-size:12.5px;color:var(--ink-4)}
+.theme-btn{position:fixed;top:18px;right:18px;padding:9px;border-radius:9px;background:var(--bg-elev);border:1px solid var(--hairline);color:var(--ink-3);cursor:pointer;display:flex}
+.theme-btn:hover{color:var(--ink)}
+@media(max-width:700px){.keep{grid-template-columns:1fr}.ia .groups{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<button class="theme-btn" id="theme-toggle" aria-label="Toggle theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
+
+<header>
+  <div class="col">
+    <span class="eyebrow">Design review · aicivsim.com</span>
+    <h1 style="margin-top:14px">Design v3 — audit &amp; proposal</h1>
+    <p class="lead" style="margin-top:16px;max-width:620px">A full-site design and flow review of the AI Civilization Simulator, conducted the way a platform design team would run a design crit: what the product is trying to say, where the current design says it well, where it gets in its own way, and a working prototype of a stronger direction.</p>
+    <div class="meta-row">
+      <span>Branch <b class="mono">design-v3</b></span>
+      <span>Reviewed <b>August 14, 2026</b></span>
+      <span>Scope <b>15 pages, both themes, desktop + mobile</b></span>
+    </div>
+    <a class="cta" href="index.html">Tour the full demo</a>
+    <a class="cta ghost" href="index.html">Current design</a>
+  </div>
+</header>
+
+<main class="col">
+
+<h2>Executive summary</h2>
+<p>This site has a real point of view — a Feltron-inspired editorial data language that most dashboards never achieve — and content strong enough to carry it. The problems are not aesthetic. They are structural: <b>every screen presents ten things with equal weight, so no screen is about anything.</b> The navigation lists fifteen destinations in one flat row of 10-pixel links. The product's central interaction — choosing a scenario and watching civilization's trajectory change — is rendered as a row of tiny dot-buttons tucked into a control bar. Grids don't resolve (seven items in six columns), motion gates legibility instead of confirming action, and the type system uses one voice — small uppercase tracked labels — for five different levels of hierarchy.</p>
+<p>The proposal keeps the brand (dark editorial, Space Grotesk / Inter / JetBrains Mono, the orange accent, the four scenario hues) and re-architects the presentation around one principle: <b>one story per screen, and the scenario choice is the product.</b></p>
+
+<h2>What's working — keep it</h2>
+<div class="keep">
+  <div><b>The editorial identity</b>Dark, dense, confident. Distinctive against every SaaS-styled dashboard. The brand survives v3 intact.</div>
+  <div><b>The score narrative</b>"Today's score → projected 2050" is the right spine for every page. It just needs typographic staging.</div>
+  <div><b>Scenario color system</b>Four fixed hues used consistently across charts, chips, and text. Rare discipline; preserve exactly.</div>
+  <div><b>Live-data grounding</b>Fetching NOAA / OWID / World Bank baselines client-side is a genuine credibility feature no competitor has.</div>
+  <div><b>The year slider</b>The Simulation page's giant "2035" with a hairline scrubber is the best control on the site — a model for the rest.</div>
+  <div><b>The writing</b>"Every number is a lever; every scenario a possible world." The copy is better than the layout it sits in.</div>
+</div>
+
+<h2>Findings</h2>
+
+<div class="finding"><div class="f-head"><span class="f-num">01</span><h3>Fifteen flat navigation items</h3><span class="sev high">High</span></div>
+<p>The nav is a single row of 15 links at 10px with 6px padding — recently tightened just to fit one line at 1080px. That is the symptom speaking: the IA has outgrown a flat list. Links of entirely different kinds (six system dashboards, three tools, four reference pages, a chat agent) sit side by side with identical weight, so nothing communicates structure and everything communicates clutter.</p>
+<p class="fix">Five top-level destinations — Overview · Systems ▾ · Tools ▾ · Evidence ▾ · About — with hover/focus menus that carry hints (today's score per system, "5 levers · 50 yr"). Bigger type, fewer decisions, the structure of the product visible in its chrome. Prototyped in <a href="index.html">index-v3</a>.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">02</span><h3>The scenario switcher — the core interaction — looks like an afterthought</h3><span class="sev high">High</span></div>
+<p>Four tiny dot-buttons, right-aligned in a secondary bar, active state distinguishable only by color at 10px. This is the single control that changes every number on every page — the product's entire thesis — and a first-time visitor can miss it completely. The homepage then compensates with a four-step "How to use this site" manual.</p>
+<p class="fix">A first-class segmented control seated in the hero, directly under the score it changes. Switching tweens the score, repaints the projection, rewrites the outcome sentence — the site teaches itself in one click and the instruction manual disappears. Prototyped.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">03</span><h3>No focal hierarchy — every screen is ten equal things</h3><span class="sev high">High</span></div>
+<p>The homepage presents the score block, a seven-card systems grid, a pullquote, three stat cells, a four-step guide, two stacked 3D banners, four scenario cards, a timeline teaser, and a methodology block — all at similar visual temperature. The eye has no landing sequence; scanning is work.</p>
+<p class="fix">Each screen gets one protagonist (home: the score and the choice), one supporting section, and everything else recedes into links. The prototype homepage is three sections and a footer, and it says more than the current nine.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">04</span><h3>Grids that don't resolve</h3><span class="sev med">Medium</span></div>
+<p>Seven system cards flow into a six-column grid, orphaning "Strategy" beside a large empty slab. "The Seven Systems" repeats the failure in two columns with a visible empty bordered cell. A layout that ends mid-thought reads as unfinished regardless of styling.</p>
+<p class="fix">Content whose count can change lives in lists, not fixed grids. The prototype's systems ledger is a table that resolves at any row count — and gains a per-row today→2050 comparison the cards never had.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">05</span><h3>Scroll-reveal gates legibility</h3><span class="sev med">Medium</span></div>
+<p>Sections sit at near-zero opacity until an IntersectionObserver fires — including content already in the viewport after anchor jumps and tab switches (a known quirk documented in the repo's own skills). Half the audit screenshots caught ghost text. Motion that makes users wait to read is decoration at the content's expense.</p>
+<p class="fix">Motion confirms, never gates: numbers tween when the user acts, bars re-fill on scenario change, and content is always at full opacity. If entrance animation is kept, start at 60%+ opacity with an 8px rise, 200ms, triggered one viewport early — and honor <span class="mono">prefers-reduced-motion</span>.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">06</span><h3>One typographic voice doing five jobs</h3><span class="sev med">Medium</span></div>
+<p>Section numbers, section titles, card labels, tab labels, and metadata all use the same ~10px uppercase letterspaced treatment. When everything whispers in the same voice, hierarchy flattens and density stops being a style and becomes a tax. Body text at 13px over 1080px measures is below comfortable reading size.</p>
+<p class="fix">A real scale with real jumps — 11 eyebrow / 13.5 caption / 15 body / 17 lead / 19–28 titles / display numerals — sentence case for headings, caps-tracking reserved for exactly one tier (the eyebrow). Tokenized in the prototype's CSS.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">07</span><h3>Accent color means four different things</h3><span class="sev med">Medium</span></div>
+<p>Orange (#d4622a) is simultaneously the brand accent, the "worst case" scenario hue, the danger color for declining scores, and the link color. Cyan doubles as "aggressive scenario" and ad-hoc highlight for lever values; blue appears un-systematically for adoption stats. The palette has discipline in charts and none in UI.</p>
+<p class="fix">One rule: orange is for interaction (links, buttons, active states); scenario hues appear only on scenario identity (segments, chart series, projected values); semantic red/green only on deltas. Where "worst case" and the accent collide, the scenario context wins.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">08</span><h3>Two stacked control bars with drifting layouts</h3><span class="sev med">Medium</span></div>
+<p>Every content page carries a site-nav row plus a sticky control bar of page tabs and scenario dots — six tabs and four scenario buttons share one row on Climate, alignment differing page to page. Two rows of chrome before content, with the global control (scenario) visually subordinate to local ones (tabs).</p>
+<p class="fix">One bar: navigation. Scenario control lives with the content it changes (hero-seated, as prototyped). Page sections become an on-page contents rail or plain anchor sections — Apple product pages don't tab; they scroll.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">09</span><h3>Vertical rhythm swings from cramped to void</h3><span class="sev low">Low</span></div>
+<p>Timeline entries float in ~400px of empty column; the homepage ends in a near-empty viewport before a one-line footer; elsewhere score blocks sit 24px from unrelated sections. Whitespace reads as intent only when it's consistent.</p>
+<p class="fix">Fixed rhythm on an 8px base — 96px between sections, 40px head-to-content, 24px inside cards — and a real footer (wordmark, link columns, data credits) so pages end on purpose. Prototyped.</p></div>
+
+<div class="finding"><div class="f-head"><span class="f-num">10</span><h3>Copy and chrome drift</h3><span class="sev low">Low</span></div>
+<p>The hero says "six operating systems"; the homepage lists seven cards; a section is titled "The Seven Systems"; About says six domains. Page H1s ("The World, Right Now") diverge from nav labels ("Live Data") without a connecting pattern. Chart legends repeat four scenario entries under every single chart — eight times on Climate alone.</p>
+<p class="fix">Decide the number (six systems + the Simulation engine as a tool is the honest count), align hero/nav/About, and hoist chart legends to one shared legend per section. Small edits, outsized credibility gain.</p></div>
+
+<h2>Design principles for v3</h2>
+<div class="principle"><span class="p-num">1</span><div><b>One story per screen</b><span>Every screen has a protagonist. Everything else supports it or leaves.</span></div></div>
+<div class="principle"><span class="p-num">2</span><div><b>The scenario is the product</b><span>The choice between futures is the thesis — give it the best control on the site, seated where its consequences are visible.</span></div></div>
+<div class="principle"><span class="p-num">3</span><div><b>Layouts resolve</b><span>No orphan cells, no accidental voids. Lists for variable counts, grids only for fixed ones.</span></div></div>
+<div class="principle"><span class="p-num">4</span><div><b>Hierarchy through scale, not caps</b><span>Real type jumps, sentence case, tracking reserved for one tier. Density stays; strain goes.</span></div></div>
+<div class="principle"><span class="p-num">5</span><div><b>Motion confirms, never gates</b><span>Animate consequences of user action. Content is always readable. Reduced-motion respected.</span></div></div>
+<div class="principle"><span class="p-num">6</span><div><b>Show, don't instruct</b><span>If the interface needs a usage manual on the homepage, the interface is the bug.</span></div></div>
+
+<h2>Information architecture</h2>
+<div class="ia">
+  <div class="row-label">Today — 15 flat items</div>
+  <div class="flat"><span>Home</span><span>AI</span><span>Civilization</span><span>Simulation</span><span>Visualizer</span><span>Climate</span><span>Transition</span><span>Governance</span><span>Strategy</span><span>Pathways</span><span>Timeline</span><span>Live Data</span><span>Research</span><span>Advisor</span><span>About</span></div>
+  <div class="row-label">Proposed — 5 destinations</div>
+  <div class="groups">
+    <div class="group"><b>Overview</b><span>The score</span><span>The choice</span></div>
+    <div class="group"><b>Systems ▾</b><span>AI</span><span>Climate</span><span>Governance</span><span>Transition</span><span>Civilization</span><span>Strategy</span></div>
+    <div class="group"><b>Tools ▾</b><span>Simulation</span><span>Pathways</span><span>Visualizer</span></div>
+    <div class="group"><b>Evidence ▾</b><span>Live data</span><span>Timeline</span><span>Research</span></div>
+    <div class="group"><b>About</b><span>+ Advisor</span></div>
+  </div>
+</div>
+<p>Every existing URL keeps working — this is a re-grouping of the same pages, not a re-platforming. The Advisor stays one click from everywhere (nav item + widget).</p>
+
+<h2>Tokens</h2>
+<h3>Type scale</h3>
+<table>
+<tr><th>Token</th><th>Spec</th><th>Role</th></tr>
+<tr><td>display</td><td class="mono">96–168px · JetBrains Mono 700</td><td>The score. One per site.</td></tr>
+<tr><td>title-1</td><td class="mono">30–44px · Space Grotesk 600</td><td>Page headline</td></tr>
+<tr><td>title-2</td><td class="mono">28px · Space Grotesk 600</td><td>Section headline — sentence case</td></tr>
+<tr><td>title-3</td><td class="mono">17–19px · Space Grotesk 600</td><td>Card / row titles</td></tr>
+<tr><td>lead</td><td class="mono">17px · Inter 400</td><td>Section intros</td></tr>
+<tr><td>body</td><td class="mono">15px · Inter 400</td><td>Reading text (up from 13px)</td></tr>
+<tr><td>caption</td><td class="mono">12.5–13.5px · Inter 400</td><td>Secondary detail</td></tr>
+<tr><td>eyebrow</td><td class="mono">11px · Inter 600 · .18em caps</td><td>The only tracked-caps tier</td></tr>
+</table>
+<h3>Color roles</h3>
+<table>
+<tr><th>Color</th><th>Value</th><th>Means exactly</th></tr>
+<tr><td><span class="swatch" style="background:#d4622a"></span>Accent</td><td class="mono">#d4622a</td><td>Interaction: links, CTAs, active states</td></tr>
+<tr><td><span class="swatch" style="background:#4ecdc4"></span>Aggressive</td><td class="mono">#4ecdc4</td><td rowspan="4">Scenario identity only — segments, chart series, projected values. Never decoration.</td></tr>
+<tr><td><span class="swatch" style="background:#4a7fd4"></span>Moderate</td><td class="mono">#4a7fd4 <span style="color:var(--ink-4)">(charts · brand keeps #5da5da)</span></td></tr>
+<tr><td><span class="swatch" style="background:#e8a838"></span>Business as usual</td><td class="mono">#e8a838</td></tr>
+<tr><td><span class="swatch" style="background:#d4622a;outline:1px solid rgba(255,255,255,.3)"></span>Worst case</td><td class="mono">#d4622a</td></tr>
+<tr><td>Ink tiers</td><td class="mono">ink · ink-2 · ink-3 · ink-4</td><td>Four steps of text emphasis, both themes</td></tr>
+</table>
+
+<h2>The prototype — where it started</h2>
+<p><a href="index.html"><b>index.html</b></a> was the first proof. What to test on it:</p>
+<ul>
+<li><b>Switch scenarios</b> in the hero segmented control — score, delta bar, outcome sentence, all six ledger rows, and the quartet cards update together, with motion only on the numbers you changed.</li>
+<li><b>Hover the nav groups</b> — Systems/Tools/Evidence menus with per-item hints replace thirteen naked links.</li>
+<li><b>The systems ledger</b> — seven rows, no orphans, each row a complete today→2050 sentence.</li>
+<li><b>Toggle the theme</b> (nav, far right) — both themes share the token system; the choice persists to the live site's key.</li>
+<li><b>Resize below 900px</b> — the ledger reflows to a two-line row; the quartet goes 2-up; nothing wraps into a second nav row.</li>
+</ul>
+<p>It reads the live site's <span class="mono">aicivsim-scenario</span> and <span class="mono">aicivsim-theme</span> localStorage keys and hash (<span class="mono">#aggressive…</span>), so it drops into the existing persistence model unchanged.</p>
+
+<h2>The dataviz system — one geometry, six forms</h2>
+<p>The current site has charts of many species: four-line trajectory charts with a four-item legend repeated under every single plot, slider clusters, adoption bars in a third accent color, tipping-point cards, dot ledgers. Each is individually reasonable; together they read as accumulation, not intent. The v3 rule: <b>diversity of form, unity of anatomy.</b> Every chart shares one skeleton — hairline grid, mono axis labels in the faintest ink, no borders, no per-chart legends — and the <i>form</i> is chosen by the data's job, never by novelty:</p>
+<table>
+<tr><th>Form</th><th>The data's job</th><th>Where</th></tr>
+<tr><td>Stat tile</td><td>One value + where it's heading (delta + sparkline)</td><td>KPI rows on every system page</td></tr>
+<tr><td>Trajectory</td><td>Change over time, <b>one future is the point</b> — active scenario bold with an area fill and direct end-label, the other three ghosted context; switching futures <b>morphs</b> the bold line to its new shape</td><td>All projections, 2026–2050 and 2027–2070</td></tr>
+<tr><td>Landing track</td><td>Today's tick plus <b>all four futures on one rail</b> — the ringed dot is yours; the value bubble glides between futures on switch</td><td>"Where each future lands"</td></tr>
+<tr><td>Meter</td><td>A ratio against a cap, one hue</td><td>Strategy adoption</td></tr>
+<tr><td>Slope</td><td>Two states compared</td><td>Pathways origin → destination</td></tr>
+<tr><td>Narrative panel</td><td>Sometimes the answer is a sentence, not a chart</td><td>Simulation world reports, "what that world feels like"</td></tr>
+</table>
+<p>Three rules do most of the work. <b>The scenario control is the legend</b> — it sits in the same place on every page, so charts never repeat one. <b>Scenario hues appear only on scenario identity</b> — segments, series, projected values; single-measure charts use one neutral hue; semantic green/red appears only on deltas and always with a ▲▼ glyph, never color alone. <b>Every chart answers hover the same way</b> — a crosshair and one tooltip listing all four futures, sorted, active row emphasized.</p>
+
+<h3>A palette that survives — validated, not eyeballed</h3>
+<p>Running the four brand scenario hues through a colorblind-safety validator confirmed what squinting at the current charts suggests: <b>aggressive teal (<span class="mono">#4ecdc4</span>) and moderate blue (<span class="mono">#5da5da</span>) are near-twins</b> — ΔE 12.7 for normal vision (the legibility floor is 15), 11.4 under deuteranopia. On a four-line chart they are the two hopeful futures — and the two you can't tell apart. The v3 charts shift moderate to <span class="mono" style="color:#4a7fd4;font-weight:700">#4a7fd4</span> — same blue family, deeper — lifting the worst adjacent pair to a passing ΔE 17.1 (now amber/orange, which the emphasis form and direct labels already disambiguate). Brand surfaces keep <span class="mono">#5da5da</span>; only data ink changes.</p>
+
+<h2>Motion — springs that confirm, never gate</h2>
+<p>The current site's one big motion idea — scroll-triggered opacity reveals — is finding 05: it gates reading. v3 replaces it with the approach popularized by <a href="https://motion.dev" rel="noopener">motion.dev</a>: <b>physical springs instead of duration curves, attached to user actions instead of scroll position.</b> Switch a scenario and nothing re-renders — everything <i>moves</i>: the bold trajectory morphs to its new shape, the landing bubble glides to the new dot, every 2050 number counts to its new value with the slight overshoot of a real object settling, and the score band's dot slides down the rail. The hero score counts up on arrival; trajectory lines draw in on first sight; sections rise into view on a fast, early-triggered reveal; the Simulation page can <b>play the whole run</b>, sweeping 2027→2070 while the world report rewrites itself. The demo now <b>ships on motion.dev</b> (vanilla UMD from jsdelivr — the same CDN precedent as three.js): inView springs drive entrances, delegated press physics squish every interactive element and spring back with overshoot, and emphasis pops mark whatever just gained meaning — the chosen segment's dot, a newly-active landing dot, a threshold chip that changed state. The hand-rolled spring integrator remains for number counting and as the full fallback when the CDN is unreachable; <span class="mono">prefers-reduced-motion</span> collapses everything to instant. The complete motion vocabulary, with live demos, is specified in the <a href="design-system.html">design system</a>.</p>
+
+<h2>The full demo — every page, rebuilt</h2>
+<p>The proposal is no longer a homepage — it is the entire site, working, on shared assets (<span class="mono">css/v3.css</span> + <span class="mono">js/v3.js</span>) and driven by the same data as the live pages (<span class="mono">shared.js</span>: VIZ_METRICS, SIM_ENGINE, STRATEGY_CATALOG, CROSS_SYSTEM; <span class="mono">live-data.js</span> for real-world feeds).</p>
+<table>
+<tr><th>Page</th><th>What to look at</th></tr>
+<tr><td><a href="index.html">Overview</a></td><td>Hero scenario control; composite trajectory chart; systems ledger; live strip</td></tr>
+<tr><td><a href="ai.html">AI</a></td><td>Six metrics with per-future context notes, five risk thresholds with breach states, five governance milestones — the original page's full scope, machine-extracted</td></tr>
+<tr><td><a href="climate.html">Climate</a></td><td>All nine planetary metrics with the original's scenario notes, six tipping points evaluated at 2050 warming, three sub-scores</td></tr>
+<tr><td><a href="governance.html">Governance</a></td><td>Charter status, three pillars, participation vitals, funding stack, five citizen assemblies, five governance modules, the audit program</td></tr>
+<tr><td><a href="transition.html">Transition</a></td><td>Four labor vitals with context + the income-bridge calculator: six real career transitions priced under each future's dividend</td></tr>
+<tr><td><a href="civilization.html">Civilization</a></td><td>Five cross-cutting KPIs, six-domain decomposition, the funding architecture, eight milestones to 2050</td></tr>
+<tr><td><a href="strategy.html">Strategy</a></td><td>The 20-action catalog: adoption meters, per-scenario status chips, category filter</td></tr>
+<tr><td><a href="simulation.html">Simulation</a></td><td>Lever readouts, the year scrubber, the generated world report, five trajectories with a year cursor</td></tr>
+<tr><td><a href="pathways.html">Pathways</a></td><td>Origin = the sitewide scenario; pick a destination — slopes, lever deltas, and the 20-action status diff recompute</td></tr>
+<tr><td><a href="visualizer.html">Visualizer</a></td><td>Hub for the three 3D instruments (which keep their own chrome by design)</td></tr>
+<tr><td><a href="data.html">Live data</a></td><td>Eight live tiles with drift vs the 2026 baseline — real fetches, graceful fallback</td></tr>
+<tr><td><a href="timeline.html">Timeline</a></td><td>The 200K-year spine without the voids; four scenario-reactive future chapters</td></tr>
+<tr><td><a href="research.html">Research</a> · <a href="about.html">About</a></td><td>Landing for the paper; scope, method, colophon</td></tr>
+</table>
+<p><b>The scenario contract, everywhere:</b> every page defaults to <b>business as usual</b>. The moment you choose differently, the choice persists across every page — and back to the live site, via the same <span class="mono">aicivsim-scenario</span> key and <span class="mono">#hash</span> convention — until you change it again. The theme behaves identically via <span class="mono">aicivsim-theme</span>.</p>
+
+<h2>Rollout plan</h2>
+<div class="phase"><span class="ph-n">P1</span><div><b>Tokens + navigation, sitewide</b><span>Ship the type scale, ink tiers, and the five-group nav to every page. Pure CSS + shared.js nav renderer change; zero content edits.</span></div><span class="effort">~1 day · low risk</span></div>
+<div class="phase"><span class="ph-n">P2</span><div><b>Hero pattern + scenario control</b><span>Seat the segmented control under each page's score block; retire the scenario dots from the control bar. Homepage adopts the prototype layout.</span></div><span class="effort">~2 days · medium</span></div>
+<div class="phase"><span class="ph-n">P3</span><div><b>Grids → ledgers, rhythm pass, footer</b><span>Convert orphaning grids to lists, apply the 96px section rhythm, install the real footer, align the six/seven-systems copy.</span></div><span class="effort">~2 days · low</span></div>
+<div class="phase"><span class="ph-n">P4</span><div><b>Charts + motion</b><span>Shared per-section legends, larger end-value labels, replace opacity-gating reveals with action-confirming motion, reduced-motion support.</span></div><span class="effort">~2 days · medium</span></div>
+<p style="margin-top:20px">Each phase ships independently behind the usual <span class="mono">?v=</span> bump; nothing breaks existing URLs, the scenario system, or the 3D pages (which keep their own chrome).</p>
+
+</main>
+
+<footer>
+  <div class="col">Design v3 audit &amp; proposal · branch <span class="mono">design-v3</span> · August 14, 2026 · <a href="index.html">prototype</a> · <a href="index.html">current site</a></div>
+</footer>
+
+<script>
+(function(){
+  var saved=null;try{saved=localStorage.getItem('aicivsim-theme')}catch(e){}
+  if(saved==='light')document.body.classList.add('light');
+  document.getElementById('theme-toggle').addEventListener('click',function(){
+    var light=document.body.classList.toggle('light');
+    try{localStorage.setItem('aicivsim-theme',light?'light':'dark')}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
