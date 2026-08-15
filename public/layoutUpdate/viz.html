@@ -188,6 +188,68 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   .mode-bar{flex-wrap:wrap}
   .mode-bar .mode-btn{font-size:9px;padding:5px 8px}
 }
+
+/* ════════════════════════════════════════════════════════════════
+   V3 SKIN — brings this instrument's chrome into the site's design
+   system (see design-system.html). Overrides only the HUD: surfaces,
+   radii, type, and control styling. The 3D scene is untouched.
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  --v-bg-elev:rgba(25,25,27,.86); --v-hair:rgba(255,255,255,.09);
+  --v-hair-2:rgba(255,255,255,.17);
+  --v-ink:#f2f1ed; --v-ink2:#b9b7af; --v-ink3:#83817a; --v-ink4:#575550;
+  --v-accent:#d4622a; --v-r:12px;
+}
+/* labels use Inter like the rest of the site; numerals stay mono */
+.site-title,.info-desc,.info-when,.info-nav,.ws-feel,.ws-section p,
+.agg-status,.hint,.sc-btn,.mode-btn,.play-btn{font-family:'Inter',sans-serif}
+.brand{font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--v-ink3)}
+.brand strong{color:var(--v-accent)}
+.site-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--v-ink);margin-top:4px}
+.back-link{font-size:12.5px;color:var(--v-ink3);margin-top:8px;font-family:'Inter',sans-serif}
+.back-link:hover{color:var(--v-accent)}
+
+/* segmented controls — match the site's scenario control */
+.sc-bar,.mode-bar{background:var(--v-bg-elev);border:1px solid var(--v-hair);
+  border-radius:var(--v-r);padding:4px;gap:3px;backdrop-filter:blur(14px)}
+.sc-btn,.mode-btn{font-size:12px;font-weight:600;letter-spacing:0;padding:9px 15px;
+  border-radius:9px;color:var(--v-ink3);transition:color .15s,background .2s}
+.sc-btn:hover,.mode-btn:hover{color:var(--v-ink2)}
+.sc-btn.active{color:var(--v-ink);background:rgba(255,255,255,.07);
+  box-shadow:inset 0 0 0 1px var(--v-hair-2)}
+.mode-btn.on{color:var(--v-ink);background:rgba(212,98,42,.14);
+  box-shadow:inset 0 0 0 1px rgba(212,98,42,.4)}
+.compare-sel{font-family:'Inter',sans-serif;font-size:11.5px;padding:6px 10px;
+  background:rgba(0,0,0,.5);color:var(--v-ink2);border:1px solid var(--v-hair);border-radius:8px}
+
+/* readouts */
+.agg-score{font-size:56px;letter-spacing:-.03em}
+.agg-sub{font-size:10.5px;letter-spacing:.16em;color:var(--v-ink4);margin-top:4px}
+.agg-grade{font-size:14px;font-weight:700}
+.agg-status{font-size:12px;color:var(--v-ink3);max-width:200px;line-height:1.5}
+
+/* floating panels */
+.year-bar,.info,.world-panel{background:var(--v-bg-elev);border:1px solid var(--v-hair);
+  border-radius:var(--v-r);backdrop-filter:blur(16px);
+  box-shadow:0 16px 48px rgba(0,0,0,.45)}
+.year-bar{padding:10px 22px;gap:16px;bottom:32px}
+.yr-lbl{font-size:10.5px;letter-spacing:.16em;color:var(--v-ink4)}
+.yr-val{font-size:20px;font-weight:700}
+input[type=range]{height:3px;background:var(--v-hair-2);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{width:16px;height:16px;background:var(--v-accent);border:3px solid #111112}
+.play-btn{font-size:12px;font-weight:600;padding:7px 15px;border-radius:9px;
+  border:1px solid var(--v-hair-2);color:var(--v-ink2);transition:all .15s}
+.play-btn:hover{color:var(--v-ink);background:rgba(255,255,255,.06)}
+.info{padding:20px;width:270px;bottom:32px;right:32px}
+.info-name{font-family:'Space Grotesk',sans-serif;font-size:14px}
+.info-score{font-size:38px;letter-spacing:-.02em}
+.info-grade{border-radius:6px;padding:2px 8px;font-weight:700}
+.info-desc{font-size:12px;color:var(--v-ink3);line-height:1.6}
+.info-when,.info-nav{color:var(--v-ink4);font-size:11.5px}
+.world-panel{border-radius:var(--v-r)}
+.world-panel-title{font-size:10.5px;letter-spacing:.16em;color:var(--v-ink4)}
+.ws-section p{font-size:12px;color:var(--v-ink3);line-height:1.6}
+.ws-feel{font-size:12.5px;color:var(--v-ink3)}
 </style>
 </head>
 <body>
@@ -272,7 +334,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   1-4 scenarios &middot; Space play &middot; M sound &middot; &larr;&rarr; year &middot; Esc deselect</div>
 </div>
 
-<script src="js/shared.js?v=20260816b"></script>
+<script src="js/shared.js?v=20260816c"></script>
 <script>
 /* Boot watchdog — surface CDN/module failures instead of a black screen */
 (function(){
