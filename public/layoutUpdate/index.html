@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260816c">
+<link rel="stylesheet" href="css/v3.css?v=20260816d">
 </head>
 <body>
 
@@ -40,6 +40,16 @@
         <span class="sb-proj" id="sb-proj-lbl"><b class="num" id="sb-proj">28</b> in 2050 · <span id="sb-name">business as usual</span></span>
         <div class="sb-ends"><span>0</span><span>100</span></div>
       </div>
+      <!-- Live measurements belong to TODAY's score, not to the chosen
+           future — they never move when the scenario changes, so they
+           sit in the measured half of the hero. -->
+      <div class="live-strip">
+        <span class="pill">Measured now</span>
+        <span class="item">CO₂ <b data-live="co2ppm">427.9 ppm</b></span>
+        <span class="item">Warming <b data-live="tempAnomaly">+1.39 °C</b></span>
+        <span class="item">Extreme poverty <b data-live="poverty">10.4%</b></span>
+        <a href="data.html">All live data →</a>
+      </div>
     </div>
     <div class="sc-block">
       <span class="eyebrow">Choose a future</span>
@@ -48,13 +58,7 @@
         <div class="headline"><span>2050 outcome:</span> <b class="num" id="out-score" style="color:var(--sc-bau)">28</b> <span id="out-verdict" class="body-2">systemic decline</span></div>
         <p id="out-desc"></p>
       </div>
-      <div class="live-strip">
-        <span class="pill">Live</span>
-        <span class="item">CO₂ <b data-live="co2ppm">427.9 ppm</b></span>
-        <span class="item">Warming <b data-live="tempAnomaly">+1.39 °C</b></span>
-        <span class="item">Extreme poverty <b data-live="poverty">10.4%</b></span>
-        <a href="data.html">All live data →</a>
-      </div>
+      <p class="body-2" style="margin-top:16px;font-size:12.5px">Everything on the right is <b style="color:var(--ink-2)">modeled</b> — one setting of five policy levers, run forward. Everything on the left is <b style="color:var(--ink-2)">measured</b>.</p>
     </div>
   </div>
 </header>
@@ -70,8 +74,15 @@
       </div>
       <a class="section-link" href="civilization.html">The composite in depth →</a>
     </div>
-    <div class="chart-grid one">
+    <div class="chart-grid story-grid">
       <div class="chart-card" id="composite-chart"></div>
+      <div class="chart-card story-card">
+        <div class="eyebrow" id="story-who">Business as usual · what happens</div>
+        <h3 class="title-3" id="story-head"></h3>
+        <p id="story-body"></p>
+        <div class="beats" id="story-beats"></div>
+        <a class="go" id="story-link" href="civilization.html">Follow this thread →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -134,10 +145,10 @@
 
 </main>
 
-<script src="js/shared.js?v=20260816c"></script>
-<script src="js/live-data.js?v=20260816c"></script>
+<script src="js/shared.js?v=20260816d"></script>
+<script src="js/live-data.js?v=20260816d"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260816c"></script>
+<script src="js/v3.js?v=20260816d"></script>
 <script>
 V3.boot({});                                   /* no deck — the hero hosts the control */
 document.getElementById('hero-seg').outerHTML=V3.seg(false);
@@ -158,6 +169,47 @@ var SC_DESCS={
   worst:'Institutional failure, democratic backsliding, unchecked AI deployment, and compounding climate crises accelerate decline across every domain.'
 };
 var TODAY=44;
+
+/* ── the composite's story, per future ──
+   Prose says what happens; the beats underneath are computed from the
+   same series the chart draws, so the narrative can't drift from data. */
+var STORY={
+  aggressive:{head:'The curve turns in the early 2030s.',
+    body:'Early investment compounds: dividends fund reskilling, reskilling steadies trust, and trust is what makes the AI charter enforceable rather than aspirational. The loops that erode a civilization run in the other direction once they catch.'},
+  moderate:{head:'Real progress, unevenly shared.',
+    body:'Reform arrives where the pressure is highest and stalls everywhere else. The composite climbs for two decades — genuine improvement that still leaves a widening gap between the regions that modernized and the regions that were promised modernization.'},
+  bau:{head:'Nothing breaks. Everything erodes.',
+    body:'No single year contains a catastrophe — which is exactly what makes this trajectory hard to act on. Each system quietly passes its weakness to the next until the decline is structural and correcting it costs more than preventing it would have.'},
+  worst:{head:'The loops run in reverse.',
+    body:'Climate failure breaks work, broken work breaks trust, and broken trust breaks every remaining response. This is the scenario the model exists to argue against: a civilization spending everything it has on consequences it chose not to prevent.'}
+};
+function firstCross(arr,limit,dir){
+  for(var i=1;i<arr.length;i++){
+    if(dir==='above'&&arr[i-1]<limit&&arr[i]>=limit)return years[i];
+    if(dir==='below'&&arr[i-1]>=limit&&arr[i]<limit)return years[i];
+  }
+  return null;
+}
+function renderStory(animate){
+  var act=V3.scenario.get(),m=V3.SC[act];
+  var d=VIZ_METRICS.civilization[0].data[act];
+  var end=d[d.length-1],net=Math.round(end-TODAY);
+  var beats=[];
+  beats.push({v:(net>0?'+':'')+net,t:'points of composite health between today and 2050',
+    c:net>0?'var(--good)':'var(--bad)'});
+  var up=firstCross(d,50,'above'),down=firstCross(d,35,'below');
+  if(up)beats.push({v:up,t:'the year the composite crosses back above 50 — a passing grade',c:'var(--good)'});
+  else if(down)beats.push({v:down,t:'the year it falls below 35, where decline becomes self-reinforcing',c:'var(--bad)'});
+  else beats.push({v:V3.grade(end),t:'the grade this trajectory earns by 2050',c:m.color});
+  beats.push({v:Math.round(end),t:'out of 100 in 2050 · '+m.verdict,c:m.color});
+  document.getElementById('story-who').textContent=m.name+' · what happens';
+  document.getElementById('story-head').textContent=STORY[act].head;
+  document.getElementById('story-body').textContent=STORY[act].body;
+  document.getElementById('story-beats').innerHTML=beats.map(function(b){
+    return '<div class="beat"><b style="color:'+b.c+'">'+b.v+'</b><span>'+b.t+'</span></div>';
+  }).join('');
+  if(animate)V3.stagger(document.querySelectorAll('#story-beats .beat'),40);
+}
 
 /* composite trajectory — civilization health from VIZ_METRICS */
 var years=[];for(var y=2026;y<=2050;y++)years.push(y);
@@ -233,12 +285,12 @@ function renderHero(prevProj){
   document.getElementById('sb-name').textContent=m.name.toLowerCase();
 }
 var lastProj=V3.scenario.meta().proj;
-renderHero(lastProj);renderLedger(false);renderQuartet();
+renderHero(lastProj);renderLedger(false);renderQuartet();renderStory(false);
 /* the score arrives on load */
 V3.tween(document.getElementById('score-now'),TODAY,{from:0,stiffness:120,damping:22});
 V3.scenario.onChange(function(){
   renderHero(lastProj);lastProj=V3.scenario.meta().proj;
-  renderLedger(true);
+  renderLedger(true);renderStory(true);
   document.querySelectorAll('.q-card').forEach(function(c){
     c.setAttribute('data-active',String(c.getAttribute('data-sc')===V3.scenario.get()));
   });
