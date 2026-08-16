@@ -18,14 +18,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260816g">
+<link rel="stylesheet" href="css/v3.css?v=20260816h">
 </head>
 <body>
 <div id="app"></div>
-<script src="js/shared.js?v=20260816g"></script>
-<script src="js/v3-data.js?v=20260816g"></script>
+<script src="js/shared.js?v=20260816h"></script>
+<script src="js/v3-data.js?v=20260816h"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260816g"></script>
+<script src="js/v3.js?v=20260816h"></script>
 <script>
 V3.boot({deck:{sys:'transition',context:'Work, reskilling, and the income bridge'}});
 var T=V3DATA.transition;
@@ -50,9 +50,9 @@ var narSection=document.querySelector('#sys-nar').closest('.section');
 narSection.insertAdjacentHTML('beforebegin',
   '<section class="section"><div class="col">'
   +'<div class="section-head"><div><h2 class="title-2">The income bridge, priced</h2>'
-  +'<p class="lead">Six real career transitions out of automated work. Pick one; the numbers show what the move costs, what it pays, and how much of the burden the chosen future’s civic dividend absorbs. This is the difference between the scenarios, in one worker’s budget.</p></div></div>'
+  +'<p class="lead">Six real career transitions out of automated work. Pick one: the left column is the job’s own economics — identical in every future — and the right column is what policy changes. That split <em>is</em> the argument. Same worker, same move, four very different outcomes.</p></div></div>'
   +'<div id="bridge"></div></div></section>');
-V3.bridges('#bridge',T.bridges,T.DIV_RATE);
+V3.bridges('#bridge',T.bridges,T.DIV_RATE,T.D.placement);
 </script>
 </body>
 </html>

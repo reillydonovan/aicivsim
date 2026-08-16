@@ -801,17 +801,36 @@ V3.stack=function(container,getSegments){
 };
 
 /* ── bridges — the income-bridge calculator (transition) ──
+   Two kinds of number, kept visually distinct because they answer
+   different questions:
+     · JOB ECONOMICS (dip, sticker cost, destination salary) are
+       properties of the transition itself — identical in every future,
+       and labelled as such so an unchanging value never reads as a bug.
+     · POLICY (the civic dividend that offsets cost, and the model's
+       placement rate — the odds the retraining actually lands a job)
+       change with the scenario, and drive the derived figures.
    Original math preserved: dividend covers rate×months of training
    cost; payback = out-of-pocket ÷ monthly salary gain. */
-V3.bridges=function(container,bridges,DIV_RATE){
+V3.bridges=function(container,bridges,DIV_RATE,placement){
   var el=typeof container==='string'?document.querySelector(container):container;
   var sel=0;
   el.innerHTML='<div class="br-picker" role="group" aria-label="Career transition"></div>'
     +'<div class="br-callout"></div>'
-    +'<div class="br-detail kpis" style="margin-top:12px"></div>';
-  var picker=el.querySelector('.br-picker'),callout=el.querySelector('.br-callout'),detail=el.querySelector('.br-detail');
+    +'<div class="br-split">'
+    +'<div><div class="br-head">Set by the job — the same in every future</div>'
+    +'<div class="br-fixed kpis"></div></div>'
+    +'<div><div class="br-head">Set by policy — this is what the scenario changes</div>'
+    +'<div class="br-policy kpis"></div></div>'
+    +'</div>';
+  var picker=el.querySelector('.br-picker'),callout=el.querySelector('.br-callout');
+  var fixedWrap=el.querySelector('.br-fixed'),policyWrap=el.querySelector('.br-policy');
   function fmtD(v){return '$'+Math.round(Math.abs(v)).toLocaleString()}
-  function update(){
+  function tile(x){
+    return '<div class="stat"><div class="lbl">'+x.l+'</div>'
+      +'<div class="val" style="font-size:22px"'+(x.color?' style="color:'+x.color+'"':'')+'>'+x.v+'</div>'
+      +'<div class="delta '+x.c+'"><span class="ctx">'+x.ctx+'</span></div></div>';
+  }
+  function update(animate){
     var act=V3.scenario.get(),m=V3.SC[act],rate=DIV_RATE[act];
     picker.innerHTML=bridges.map(function(b,i){
       return '<button data-b="'+i+'" aria-pressed="'+(i===sel)+'">'+b.from+' → '+b.to+'</button>';
@@ -822,28 +841,38 @@ V3.bridges=function(container,bridges,DIV_RATE){
     var salaryGain=b.post-(b.loss*12);
     var payback=rate>0?Math.max(1,Math.round(oop/(salaryGain/12))):Math.round(b.trainCost/(salaryGain/12));
     var net10=salaryGain*10-oop;
+    /* placement: the model's own rate for this future, at 2050 */
+    var pl=placement&&placement[act]?placement[act][placement[act].length-1]:null;
+
     callout.innerHTML=rate>0
-      ?'<span class="pill-dot" style="background:'+m.color+'"></span>Under '+m.name.toLowerCase()+', a civic dividend of <b class="num" style="color:'+m.color+'">$'+rate+'/mo</b> covers <b class="num">'+fmtD(Math.min(divTotal,b.trainCost))+'</b> of this retraining.'
-      :'<span class="pill-dot" style="background:'+m.color+'"></span>Under '+m.name.toLowerCase()+' there is <b style="color:var(--bad)">no civic dividend</b> — the worker carries every dollar of this transition.';
-    detail.innerHTML=[
-      {l:'Income dip during training',v:'−$'+b.loss.toLocaleString()+'/mo',c:'bad',ctx:b.trainMo+' months of retraining'},
-      {l:'Training cost',v:fmtD(b.trainCost),c:'flat',ctx:rate>0?fmtD(oop)+' out of pocket after dividend':'entirely out of pocket'},
-      {l:'New salary',v:fmtD(b.post)+'/yr',c:'good',ctx:'+'+fmtD(salaryGain)+'/yr over the displaced income'},
+      ?'<span class="pill-dot" style="background:'+m.color+'"></span>Under '+m.name.toLowerCase()+', a civic dividend of <b class="num" style="color:'+m.color+'">$'+rate+'/mo</b> covers <b class="num">'+fmtD(Math.min(divTotal,b.trainCost))+'</b> of this retraining'
+        +(pl!=null?', and <b class="num" style="color:'+m.color+'">'+Math.round(pl)+'%</b> of people who retrain actually land the new role.':'.')
+      :'<span class="pill-dot" style="background:'+m.color+'"></span>Under '+m.name.toLowerCase()+' there is <b style="color:var(--bad)">no civic dividend</b> — the worker carries every dollar'
+        +(pl!=null?', and only <b class="num" style="color:var(--bad)">'+Math.round(pl)+'%</b> of those who retrain land the new role.':'.');
+
+    fixedWrap.innerHTML=[
+      {l:'Income dip during training',v:'−$'+b.loss.toLocaleString()+'/mo',c:'bad',ctx:b.trainMo+' months without the old wage'},
+      {l:'Training cost',v:fmtD(b.trainCost),c:'flat',ctx:'sticker price of the retraining itself'},
+      {l:'New salary',v:fmtD(b.post)+'/yr',c:'good',ctx:'+'+fmtD(salaryGain)+'/yr over the displaced income'}
+    ].map(tile).join('');
+
+    var policyTiles=[
+      {l:'Out of pocket',v:fmtD(oop),c:oop===0?'good':oop<b.trainCost?'flat':'bad',
+       ctx:rate>0?(oop===0?'the dividend covers it entirely':'after the dividend’s '+fmtD(Math.min(divTotal,b.trainCost))):'no dividend — the full sticker price'},
       {l:'Payback time',v:payback+' mo',c:payback<=18?'good':'bad',ctx:'until the move pays for itself'},
       {l:'10-year net',v:(net10>0?'+':'−')+fmtD(net10),c:net10>0?'good':'bad',ctx:'lifetime value of making the jump'}
-    ].map(function(x){
-      return '<div class="stat"><div class="lbl">'+x.l+'</div>'
-        +'<div class="val" style="font-size:22px">'+x.v+'</div>'
-        +'<div class="delta '+x.c+'"><span class="ctx">'+x.ctx+'</span></div></div>';
-    }).join('');
-    V3.stagger(detail.querySelectorAll('.stat'),26);
+    ];
+    if(pl!=null)policyTiles.push({l:'Placement rate',v:Math.round(pl)+'%',
+      c:pl>=70?'good':pl>=45?'flat':'bad',ctx:'of retrained workers who land the role, in 2050'});
+    policyWrap.innerHTML=policyTiles.map(tile).join('');
+    if(animate)V3.stagger(policyWrap.querySelectorAll('.stat'),26);
   }
   el.addEventListener('click',function(e){
     var b=e.target.closest?e.target.closest('button[data-b]'):null;
-    if(b){sel=+b.getAttribute('data-b');update()}
+    if(b){sel=+b.getAttribute('data-b');update(true)}
   });
-  update();
-  V3.scenario.onChange(update);
+  update(false);
+  V3.scenario.onChange(function(){update(true)});
 };
 
 /* ════════ System dashboard template ════════ */

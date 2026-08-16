@@ -310,6 +310,13 @@ svg{display:block}
 .br-picker button[aria-pressed="true"]{color:var(--ink);background:var(--bg-elev);border-color:var(--hairline-strong);box-shadow:inset 0 0 0 1px var(--hairline-strong)}
 .br-callout{border-left:2px solid var(--hairline-strong);padding:4px 0 4px 18px;font-size:14px;color:var(--ink-2);line-height:1.6}
 .br-callout .pill-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:1px}
+/* the split that makes "why didn't this number move?" answerable */
+.br-split{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;margin-top:24px}
+.br-head{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--hairline)}
+.br-split .kpis{grid-template-columns:1fr}
+.br-fixed .stat{opacity:.82}
+@media(max-width:900px){.br-split{grid-template-columns:1fr;gap:20px}}
 
 /* ── Sub-score strip ── */
 .subscores{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
