@@ -261,33 +261,52 @@ V3.boot=function(opts){
     var b=e.target.closest?e.target.closest('.sc-seg button'):null;
     if(b)V3.scenario.set(b.getAttribute('data-sc'));
   });
-  /* menu intent: open instantly, switch between menus instantly,
-     close only after a short grace so stray pointer exits don't kill
-     the menu — but sweeping the bar never leaves a trail */
+  /* ── Menus: exactly one open, ever ──
+     One state variable owns visibility; hover, click, and keyboard all
+     route through openMenu()/closeMenu(). Opening one always closes the
+     other first, so no combination of gestures can show two at once. */
   var openItem=null,closeTimer=null;
+  function closeMenu(){
+    clearTimeout(closeTimer);
+    if(openItem){openItem.classList.remove('open');openItem=null}
+  }
+  function openMenu(item){
+    clearTimeout(closeTimer);
+    if(openItem===item)return;
+    if(openItem)openItem.classList.remove('open');   /* never two */
+    item.classList.add('open');openItem=item;
+  }
   document.querySelectorAll('.nav-item').forEach(function(item){
-    if(!item.querySelector('.menu'))return;
+    var hasMenu=!!item.querySelector('.menu');
     item.addEventListener('mouseenter',function(){
-      clearTimeout(closeTimer);
-      if(openItem&&openItem!==item)openItem.classList.remove('open');
-      item.classList.add('open');openItem=item;
+      hasMenu?openMenu(item):closeMenu();
     });
+    if(!hasMenu)return;
     item.addEventListener('mouseleave',function(){
       clearTimeout(closeTimer);
-      closeTimer=setTimeout(function(){
-        item.classList.remove('open');
-        if(openItem===item)openItem=null;
-      },160);
+      closeTimer=setTimeout(closeMenu,160);          /* grace on stray exits */
+    });
+    /* clicking the trigger toggles — and never leaves a stuck menu
+       behind when the pointer moves on (the old :focus-within bug) */
+    var trigger=item.querySelector('.nav-link');
+    if(trigger&&trigger.tagName==='BUTTON'){
+      trigger.addEventListener('click',function(e){
+        e.preventDefault();
+        openItem===item?closeMenu():openMenu(item);
+      });
+    }
+    /* keyboard: tabbing in opens, tabbing out closes */
+    item.addEventListener('focusin',function(){openMenu(item)});
+    item.addEventListener('focusout',function(e){
+      if(!item.contains(e.relatedTarget))closeMenu();
     });
   });
-  /* sweeping onto a plain link (no menu) closes any open menu at once */
-  document.querySelectorAll('.nav-item').forEach(function(item){
-    if(item.querySelector('.menu'))return;
-    item.addEventListener('mouseenter',function(){
-      clearTimeout(closeTimer);
-      if(openItem){openItem.classList.remove('open');openItem=null}
-    });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&openItem){closeMenu();document.activeElement.blur()}
   });
+  document.addEventListener('pointerdown',function(e){
+    if(openItem&&!e.target.closest('.nav-item'))closeMenu();
+  },true);
   /* press physics + a playful accent on the wordmark */
   pressPhysics();
   if(M&&!REDUCED&&M.hover){

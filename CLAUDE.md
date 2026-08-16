@@ -24,7 +24,15 @@ Branches: `main` = Next.js original · `layoutUpdate-v2` = current live site ·
   `shared.js` injects `js/chat-widget.js?v=YYYYMMDDx`. Find/replace the version
   string across ALL HTML files in `public/layoutUpdate/` AND in `js/shared.js`
   (chat-widget injector) before deploy. Use the `bump-cache-version` skill.
-- **`js/shared.js` is the single source of truth** for nav (`PAGE_ORDER`,
+- **The site runs on the v3 design system.** `css/v3.css` + `js/v3.js`,
+  with `css/v3-bridge.css` (old-vocabulary documents like `paper.html`)
+  and `css/v3-instrument.css` (the 3D HUDs). `css/style.css` is retired —
+  nothing loads it. **`design-system.html` is the living spec**; read it
+  in a browser before designing anything, and see the `design-system`
+  skill for the rules that are easy to break (one scenario control per
+  page; one menu open ever — never via CSS `:focus-within`; the scenario
+  control *is* the chart legend; BAU default persisted sitewide).
+- **`js/shared.js` is still the source of truth** for data (`SCENARIOS`,
   `NAV_PARENTS`), scenarios (`SCENARIOS`, colors), cross-system weights
   (`CROSS_SYSTEM`), per-system timeseries (`VIZ_METRICS`), the simulation engine
   (`SIM_ENGINE`, `simWorldState`), the action catalog (`STRATEGY_CATALOG` —

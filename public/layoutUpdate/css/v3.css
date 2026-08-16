@@ -81,7 +81,11 @@ svg{display:block}
    travel down without leaving the item; open/close state is managed
    in v3.js (instant open, instant switch, short grace on stray exits) */
 .menu::before{content:'';position:absolute;top:-14px;left:-10px;right:-10px;height:14px}
-.nav-item.open .menu,.nav-item:focus-within .menu{opacity:1;transform:none;pointer-events:auto}
+/* .open is the SINGLE source of truth for menu visibility — never add
+   :focus-within here. A clicked trigger keeps focus, so a focus-based
+   rule would hold its menu open while hover opened a second one. All
+   opening (hover, click, keyboard focus) runs through v3.js. */
+.nav-item.open .menu{opacity:1;transform:none;pointer-events:auto}
 .menu a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500}
 .menu a:hover{background:var(--bg-press)}
 .menu .tick{width:8px;height:8px;border-radius:2px;flex-shrink:0}

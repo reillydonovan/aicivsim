@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260816e">
+<link rel="stylesheet" href="css/v3.css?v=20260816f">
 <style>
 /* page-local specimen chrome */
 .spec{border:1px solid var(--hairline);border-radius:var(--r);padding:24px;margin-top:16px}
@@ -174,6 +174,15 @@
     <div id="spec-seg"></div>
     <p class="body-2" style="margin-top:14px"><b style="color:var(--ink)">The one-control rule:</b> the four futures are clickable in exactly one place per page. Pages with their own scenario instrument (Pathways) suppress the deck's segment via <span class="num" style="font-size:12px">deck.noSeg</span>. Cards that reflect the choice are display-only.</p>
   </div>
+  <div class="spec"><div class="spec-label">navigation menus — the one-menu rule</div>
+    <p class="body-2" style="margin-bottom:12px">Hover a group in the top bar to open it; the menus are the site's only disclosure component, so their behavior is specified tightly:</p>
+    <ol class="rule-list" style="margin-left:20px">
+      <li><b>Exactly one menu is open, ever.</b> Opening one always closes the other first. A single state variable in <span class="num" style="font-size:12px">v3.js</span> owns visibility — hover, click, and keyboard focus all route through it.</li>
+      <li><b>Never open a menu from CSS <span class="num" style="font-size:12px">:focus-within</span>.</b> A clicked trigger keeps focus, so a focus-based rule holds that menu open while hover opens a second — two menus at once. This was a real bug; the CSS carries a comment so it isn't reintroduced.</li>
+      <li><b>Open instantly, switch instantly, close on a 160ms grace.</b> Sweeping the bar leaves no trail; a stray pointer exit doesn't kill the menu you were reaching for. An invisible bridge spans the trigger→menu gap.</li>
+      <li><b>Every gesture closes it:</b> hovering a menu-less item, clicking the trigger again, <span class="num" style="font-size:12px">Escape</span>, pointer-down anywhere outside, or tabbing out.</li>
+    </ol>
+  </div>
   <div class="spec"><div class="spec-label">the rest of the kit</div>
     <p class="body-2">Stat tiles · landing tracks · trajectory cards · threshold cards · milestone rail · composition stack · income-bridge calculator · impact rows · ledger — all specified by their live use: see <a class="a" href="climate.html">Climate</a> (thresholds, nine metrics), <a class="a" href="ai.html">AI</a> (risks, milestones), <a class="a" href="governance.html">Governance</a> (boards, stack, audit), <a class="a" href="transition.html">Transition</a> (bridge calculator), <a class="a" href="pathways.html">Pathways</a> (route instrument, slopes).</p>
   </div>
@@ -190,7 +199,8 @@
 <section class="section"><div class="col">
   <div class="section-head"><div><h2 class="title-2">Using the system</h2></div></div>
   <ol class="rule-list" style="margin-left:20px">
-    <li><b>Files:</b> <span class="num" style="font-size:12px">css/v3.css</span> (tokens + components) · <span class="num" style="font-size:12px">js/v3.js</span> (chrome, scenario store, motion, chart kit) · <span class="num" style="font-size:12px">js/v3-data.js</span> (machine-extracted page data — regenerate, don't hand-edit) · motion.dev UMD from jsdelivr before v3.js.</li>
+    <li><b>Files:</b> <span class="num" style="font-size:12px">css/v3.css</span> (tokens + components) · <span class="num" style="font-size:12px">css/v3-bridge.css</span> (translates the original design's class vocabulary — for long-form docs like the paper) · <span class="num" style="font-size:12px">css/v3-instrument.css</span> (HUD skin for the full-screen 3D instruments) · <span class="num" style="font-size:12px">js/v3.js</span> (chrome, scenario store, motion, chart kit) · <span class="num" style="font-size:12px">js/v3-data.js</span> (machine-extracted page data — regenerate, don't hand-edit) · motion.dev UMD from jsdelivr before v3.js.</li>
+    <li><b>Every page belongs to one of three tiers:</b> <b>native</b> (v3.css + v3.js — all content pages), <b>bridged</b> (v3.css + v3-bridge.css, for documents written against the old vocabulary), or <b>instrument</b> (own canvas UI + v3-instrument.css). Nothing loads the retired <span class="num" style="font-size:12px">style.css</span>.</li>
     <li><b>Scenario contract:</b> default is always Business as usual; a user's choice persists sitewide via <span class="num" style="font-size:12px">aicivsim-scenario</span> + URL hash. Theme via <span class="num" style="font-size:12px">aicivsim-theme</span>.</li>
     <li><b>Every consumer degrades gracefully:</b> no Motion CDN → spring fallback; no live-data network → baked baselines; no JS → content still readable (reveals are JS-gated).</li>
     <li><b>Cache rule:</b> bump the <span class="num" style="font-size:12px">?v=</span> token on every deploy-bound change — same golden rule as the live site.</li>
@@ -200,9 +210,9 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260816e"></script>
+<script src="js/shared.js?v=20260816f"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260816e"></script>
+<script src="js/v3.js?v=20260816f"></script>
 <script>
 V3.boot({deck:{sys:'civilization',context:'Tokens · type · motion · dataviz · voice',noSeg:true}});
 document.querySelector('.deck-title b').textContent='Design system';
@@ -211,7 +221,7 @@ document.querySelector('.deck-title i').style.background='var(--accent)';
 /* live dataviz specimens — real site data, real kit calls */
 var years=[];for(var y=2026;y<=2050;y++)years.push(y);
 </script>
-<script src="js/v3-data.js?v=20260816e"></script>
+<script src="js/v3-data.js?v=20260816f"></script>
 <script>
 var meta=V3DATA.climate.metrics.filter(function(m){return m.id==='temp'})[0];
 var spec={label:'Trajectory — temperature rise',unit:'°C',prefix:'+',dec:2,dir:'lower',

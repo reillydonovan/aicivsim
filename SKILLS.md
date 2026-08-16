@@ -5,6 +5,20 @@ recipes that would otherwise have to be re-derived (or re-broken) every
 session. Invoke with `/skill-name` or let Claude Code pick them up
 automatically when the task matches.
 
+## `design-system`
+
+**Use when:** adding or restyling any page, component, or chart in
+`public/layoutUpdate/`.
+
+The site runs on one design system (v3). The skill covers the file map
+(`v3.css` / `v3-bridge.css` / `v3-instrument.css` / `v3.js` / `v3-data.js`),
+the three page tiers (native · bridged · instrument), and the rules that
+are easy to break — one scenario control per page, one menu open ever
+(never `:focus-within`), the scenario control *is* the chart legend, BAU
+default with sitewide persistence, and "every metric carries its context."
+`design-system.html` is the living spec and renders through the same
+CSS/JS as the product, so it can't drift.
+
 ## `bump-cache-version`
 
 **Use when:** any CSS/JS under `public/layoutUpdate/` changed and the site
