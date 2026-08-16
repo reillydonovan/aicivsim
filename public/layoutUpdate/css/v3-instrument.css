@@ -1,0 +1,97 @@
+/* ════════════════════════════════════════════════════════════════
+   AICIVSIM — V3 INSTRUMENT SKIN
+   The design system's chrome for the full-screen 3D instruments
+   (viz · explorer · xr · globe). They keep their own canvas UI by
+   design — this styles the HUD around it so they belong to the same
+   product: shared surfaces, hairlines, ink ramp, radii, and controls.
+
+   Load AFTER each instrument's own <style> block. The 3D scenes are
+   never touched.
+   ════════════════════════════════════════════════════════════════ */
+:root{
+  --v-bg-elev:rgba(25,25,27,.86);
+  --v-hair:rgba(255,255,255,.09); --v-hair-2:rgba(255,255,255,.17);
+  --v-ink:#f2f1ed; --v-ink2:#b9b7af; --v-ink3:#83817a; --v-ink4:#575550;
+  --v-accent:#d4622a; --v-r:12px;
+}
+
+/* ── masthead ── */
+.brand{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.18em;color:var(--v-ink3)}
+.brand strong{color:var(--v-accent);font-weight:700}
+.site-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;
+  color:var(--v-ink);margin-top:4px}
+.back-link{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--v-ink3);
+  margin-top:8px;transition:color .15s}
+.back-link:hover{color:var(--v-accent)}
+.hint{font-family:'Inter',sans-serif;font-size:11.5px;color:var(--v-ink4);line-height:1.6}
+
+/* ── segmented controls: scenario · mode · layer ── */
+.sc-bar,.mode-bar,.layer-bar,.xr-btns{background:var(--v-bg-elev);
+  border:1px solid var(--v-hair);border-radius:var(--v-r);padding:4px;gap:3px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.sc-btn,.mode-btn,.layer-btn,.xr-btn{font-family:'Inter',sans-serif;font-size:12px;
+  font-weight:600;letter-spacing:0;padding:9px 15px;border-radius:9px;
+  color:var(--v-ink3);transition:color .15s,background .2s}
+.sc-btn:hover,.mode-btn:hover,.layer-btn:hover,.xr-btn:hover{color:var(--v-ink2)}
+.sc-btn.active,.layer-btn.active,.layer-btn.on{color:var(--v-ink);
+  background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px var(--v-hair-2)}
+.mode-btn.on,.xr-btn.on{color:var(--v-ink);background:rgba(212,98,42,.14);
+  box-shadow:inset 0 0 0 1px rgba(212,98,42,.4)}
+
+/* ── readouts ── */
+.agg-score{font-size:56px;letter-spacing:-.03em}
+.agg-sub,.node-count-lbl{font-family:'Inter',sans-serif;font-size:10.5px;
+  font-weight:600;letter-spacing:.16em;color:var(--v-ink4);margin-top:4px}
+.agg-grade{font-size:14px;font-weight:700}
+.agg-status{font-family:'Inter',sans-serif;font-size:12px;color:var(--v-ink3);
+  max-width:200px;line-height:1.5}
+.node-count{font-size:42px;letter-spacing:-.03em;color:var(--v-accent)}
+
+/* ── floating panels ── */
+.year-bar,.info,.world-panel,.detail,.legend,.settings-panel,.hover-tip{
+  background:var(--v-bg-elev);border:1px solid var(--v-hair);border-radius:var(--v-r);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 16px 48px rgba(0,0,0,.45)}
+.year-bar{padding:10px 22px;gap:16px}
+.yr-lbl,.legend-title,.world-panel-title{font-family:'Inter',sans-serif;
+  font-size:10.5px;font-weight:600;letter-spacing:.16em;color:var(--v-ink4)}
+.yr-val,.world-panel-year{font-size:20px;font-weight:700}
+input[type=range]{height:3px;background:var(--v-hair-2);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{width:16px;height:16px;background:var(--v-accent);
+  border:3px solid #111112}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--v-accent);
+  border:3px solid #111112}
+.play-btn,.settings-btn{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+  padding:7px 15px;border-radius:9px;border:1px solid var(--v-hair-2);
+  color:var(--v-ink2);transition:all .15s}
+.play-btn:hover,.settings-btn:hover{color:var(--v-ink);background:rgba(255,255,255,.06)}
+
+/* ── detail / info panels ── */
+.info{padding:20px}
+.info-name,.detail-q{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600}
+.info-score{font-size:38px;letter-spacing:-.02em}
+.info-grade,.ws-grade{border-radius:6px;padding:2px 8px;font-weight:700}
+.info-desc,.detail-body,.legend-desc,.ws-section p{font-family:'Inter',sans-serif;
+  font-size:12px;color:var(--v-ink3);line-height:1.6}
+.info-when,.info-nav{font-family:'Inter',sans-serif;color:var(--v-ink4);font-size:11.5px}
+.ws-feel{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--v-ink3)}
+.ws-section-label,.detail-head{letter-spacing:.14em}
+
+/* ── explorer input bar ── */
+.input-field{background:var(--v-bg-elev);border:1px solid var(--v-hair);
+  border-radius:var(--v-r);font-family:'Inter',sans-serif;font-size:13.5px;
+  color:var(--v-ink);backdrop-filter:blur(14px)}
+.input-field:focus{border-color:var(--v-accent)}
+.input-field::placeholder{color:var(--v-ink4)}
+.send-btn{font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;
+  letter-spacing:0;text-transform:none;border-radius:var(--v-r);
+  background:var(--v-accent);color:#fff;border:none;padding:12px 20px;transition:filter .15s}
+.send-btn:hover:not(:disabled){filter:brightness(1.08);background:var(--v-accent)}
+.starter-chip{font-family:'Inter',sans-serif;font-size:12px;border-radius:999px;
+  border:1px solid var(--v-hair-2);color:var(--v-ink3);padding:7px 14px;transition:all .15s}
+.starter-chip:hover{color:var(--v-ink);border-color:var(--v-accent)}
+.page-ref{border-radius:6px!important}
+
+/* ── boot overlay ── */
+.boot-msg{font-family:'Inter',sans-serif;font-size:13px;color:var(--v-ink3)}

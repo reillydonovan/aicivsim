@@ -9,52 +9,60 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css?v=20260816d">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/v3.css?v=20260816e">
 </head>
 <body>
 
-<header class="masthead">
-<div class="page masthead-inner">
-  <p class="masthead-breadcrumb"><a href="/index.html">AICIVSIM</a> / 404</p>
-  <h1 style="font-family:var(--font-display);font-size:32px;font-weight:600;letter-spacing:-0.02em;color:var(--text-primary);line-height:1.2">Trajectory Not Found</h1>
-  <hr class="rule">
-</div>
-</header>
-
-<div id="site-nav-mount"></div>
-
-<main>
-<div class="section">
-<div class="page">
-  <p class="score-hero" style="color:var(--accent)">404</p>
-  <p class="t3 mt-2">Scenario: Missing Page</p>
-  <p class="body mt-4" style="max-width:540px">This page doesn&rsquo;t exist in any of the four scenarios &mdash; not even Worst Case. The URL may have changed, or the link that brought you here has drifted off the timeline.</p>
-
-  <div class="grid grid-3 mt-8">
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">Start Over</p>
-      <p class="t4 mt-2"><a href="/index.html" style="color:var(--climate)">Home</a> &mdash; today&rsquo;s civilization score and the seven systems index.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">Explore in 3D</p>
-      <p class="t4 mt-2"><a href="/visualizer.html" style="color:var(--climate)">Visualizer hub</a> &mdash; the 3D network, Knowledge Explorer, and WebXR.</p>
-    </div>
-    <div class="cell">
-      <p class="t3" style="color:var(--accent)">Search</p>
-      <p class="t4 mt-2">Press <span class="num" style="color:var(--text-primary)">Ctrl+K</span> (or <span class="num" style="color:var(--text-primary)">&#8984;K</span>) to search every page, scenario, and action.</p>
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">404 · page not found</span>
+  <h1 class="title-1">Trajectory not found.</h1>
+  <p class="lead">This page doesn't exist in any of the four futures — not even the worst case. The URL may have changed, or the link that brought you here has drifted off the timeline.</p>
+  <div class="hero-stats">
+    <div class="hero-score">
+      <div class="big num" style="color:var(--accent)">404</div>
+      <div class="sub"><span class="body-2">no such scenario</span></div>
     </div>
   </div>
-</div>
-</div>
+</div></header>
+
+<main>
+<section class="section"><div class="col">
+  <div class="section-head"><div>
+    <h2 class="title-2">Three ways back</h2>
+  </div></div>
+  <div class="trio">
+    <a class="t-card" href="/index.html">
+      <div class="kicker num">44</div>
+      <h3>Start over</h3>
+      <p>Today's civilization score, the six systems that produce it, and the four futures it could become.</p>
+      <span class="go">Go home →</span>
+    </a>
+    <a class="t-card" href="/visualizer.html">
+      <div class="kicker num">3D</div>
+      <h3>Explore in space</h3>
+      <p>The 3D network, the knowledge explorer, immersive WebXR, and the globe — the model rendered as places you can move through.</p>
+      <span class="go">Open the instruments →</span>
+    </a>
+    <a class="t-card" href="/design-system.html">
+      <div class="kicker num">⌘K</div>
+      <h3>Search everything</h3>
+      <p>Press <b style="color:var(--ink-2)">Ctrl</b> or <b style="color:var(--ink-2)">⌘</b> + <b style="color:var(--ink-2)">K</b> anywhere on the site to jump to any page, system, or future.</p>
+      <span class="go">See the design system →</span>
+    </a>
+  </div>
+</div></section>
 </main>
+</div>
 
-<div id="page-footer"></div>
-
-<script src="/js/shared.js?v=20260816d"></script>
+<script src="/js/shared.js?v=20260816e"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="/js/v3.js?v=20260816e"></script>
 <script>
-document.getElementById('site-nav-mount').outerHTML=renderSiteNav();initSiteNav();
-document.getElementById('page-footer').innerHTML=renderFooter();
+V3.boot({deck:{sys:'civilization',context:'The page you asked for isn’t here',noSeg:true}});
+document.querySelector('.deck-title b').textContent='404';
+document.querySelector('.deck-title i').style.background='var(--accent)';
 </script>
 </body>
 </html>
