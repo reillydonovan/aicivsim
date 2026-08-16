@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260816f">
+<link rel="stylesheet" href="css/v3.css?v=20260816g">
 </head>
 <body>
 
@@ -26,39 +26,47 @@
 <header class="page-hero"><div class="col">
   <span class="eyebrow">Tool · Visualizer</span>
   <h1 class="title-1">The whole system, as a place you can stand in.</h1>
-  <p class="lead">Four ways to see the civilization network — the same six systems and feedback loops as every dashboard, rendered as explorable space. Your chosen scenario carries in from wherever you set it — the nodes, connections, and soundscape respond.</p>
+  <p class="lead">See the civilization network as explorable space — the same six systems and feedback loops as every dashboard. Your chosen scenario carries in from wherever you set it; the nodes, connections, and soundscape respond.</p>
 </div></header>
 
 <main>
 
 <section class="section"><div class="col">
-  <div class="trio quad">
+  <div class="trio" style="grid-template-columns:repeat(2,1fr)">
     <a class="t-card" href="viz.html">
       <div class="kicker num">01</div>
       <h3>3D Network</h3>
       <p>The flagship. Six systems as orbiting nodes with nested sub-metrics, curved influence connections, a 50-year timeline scrubber, and an ambient soundscape that darkens with the scenario.</p>
       <span class="go">Enter →</span>
     </a>
-    <a class="t-card" href="explorer.html">
-      <div class="kicker num">02</div>
-      <h3>Knowledge Explorer <span class="grade-chip sm" style="color:var(--sc-bau);margin-left:6px">β</span></h3>
-      <p>Ask questions; watch the answers grow into a 3D knowledge graph. Each response spawns explorable topic nodes linked back to the site's pages.</p>
-      <span class="go">Ask →</span>
-    </a>
     <a class="t-card" href="xr.html">
-      <div class="kicker num">03</div>
+      <div class="kicker num">02</div>
       <h3>WebXR <span class="grade-chip sm" style="color:var(--sc-bau);margin-left:6px">β</span></h3>
       <p>The network in room scale. Step inside the six-system graph in VR or AR on a headset — same data, no walls.</p>
       <span class="go">Put it on →</span>
     </a>
-    <a class="t-card" href="globe.html">
-      <div class="kicker num">04</div>
-      <h3>Globe</h3>
-      <p>The planet itself: resource flows, undersea cables, sea-level rise, and emissions rendered on a rotating globe — where the model's numbers land geographically.</p>
-      <span class="go">Spin it →</span>
-    </a>
   </div>
   <p class="body-2" style="margin-top:24px">The 3D experiences keep their own full-screen chrome by design — they are instruments, not pages. They read the same scenario state you set here and return you to the site when you exit.</p>
+
+  <!-- In development: the Globe and the Knowledge Explorer are being
+       built out properly. Links are withheld until they earn a place
+       beside the network. Restore the cards above when they ship. -->
+  <div class="section-head" style="margin-top:64px;margin-bottom:20px"><div>
+    <h2 class="title-2">In development</h2>
+    <p class="lead">Two instruments are being built out rather than shipped thin.</p>
+  </div></div>
+  <div class="trio" style="grid-template-columns:repeat(2,1fr)">
+    <div class="t-card" style="cursor:default;opacity:.62">
+      <div class="kicker num" style="color:var(--ink-3)">◷</div>
+      <h3>Globe <span class="grade-chip sm" style="color:var(--ink-3);margin-left:6px">soon</span></h3>
+      <p>Where the model's numbers actually land: sea-level rise against real coastlines, emissions by region, the grid and cable infrastructure the transition depends on. The most provocative view of the model — and the one that most deserves to be done properly.</p>
+    </div>
+    <div class="t-card" style="cursor:default;opacity:.62">
+      <div class="kicker num" style="color:var(--ink-3)">◷</div>
+      <h3>Knowledge Explorer <span class="grade-chip sm" style="color:var(--ink-3);margin-left:6px">soon</span></h3>
+      <p>Ask a question, watch the answer grow into an explorable graph of linked topics. Returning once the answers are as good as the rendering.</p>
+    </div>
+  </div>
 </div></section>
 
 <section class="section"><div class="col">
@@ -76,9 +84,9 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260816f"></script>
+<script src="js/shared.js?v=20260816g"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260816f"></script>
+<script src="js/v3.js?v=20260816g"></script>
 <script>
 V3.boot({deck:{sys:'simulation',context:'Four instruments · 3D, XR, and the globe',noSeg:true}});
 document.querySelector('.deck-title b').textContent='Visualizer';
