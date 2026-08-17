@@ -7,8 +7,9 @@ Guidance for Claude Code when working in this repository.
 Two sites live side by side in one repo:
 
 1. **`public/layoutUpdate/` — the LIVE site** (aicivsim.com, Hostinger shared hosting).
-   Vanilla HTML/CSS/JS, zero dependencies, no build step. Feltron-style editorial
-   dark design. This is where almost all active work happens.
+   Vanilla HTML/CSS/JS, no build step. Runs on the **v3 design system**
+   (see below); motion.dev and three.js load from CDN. Editorial dark
+   design. This is where almost all active work happens.
 2. **`app/` — the original Next.js 14 app** (App Router, static export via
    `output:"export"`). Kept for the blog/research pipeline and history. It does
    NOT link to or share code with layoutUpdate.
@@ -20,10 +21,11 @@ Branches: `main` = Next.js original · `layoutUpdate-v2` = current live site ·
 ## Golden rules
 
 - **Bump the cache version on every deploy-bound change.** Every HTML file
-  references `css/style.css?v=YYYYMMDDx` and `js/shared.js?v=YYYYMMDDx`, and
+  references `css/v3.css?v=YYYYMMDDx`, `js/v3.js`, `js/shared.js` (and where
+  used `js/v3-data.js`, `css/v3-bridge.css`, `css/v3-instrument.css`), and
   `shared.js` injects `js/chat-widget.js?v=YYYYMMDDx`. Find/replace the version
   string across ALL HTML files in `public/layoutUpdate/` AND in `js/shared.js`
-  (chat-widget injector) before deploy. Use the `bump-cache-version` skill.
+  before deploy. Use the `bump-cache-version` skill.
 - **The site runs on the v3 design system.** `css/v3.css` + `js/v3.js`,
   with `css/v3-bridge.css` (old-vocabulary documents like `paper.html`)
   and `css/v3-instrument.css` (the 3D HUDs). `css/style.css` is retired —
@@ -32,14 +34,25 @@ Branches: `main` = Next.js original · `layoutUpdate-v2` = current live site ·
   skill for the rules that are easy to break (one scenario control per
   page; one menu open ever — never via CSS `:focus-within`; the scenario
   control *is* the chart legend; BAU default persisted sitewide).
-- **`js/shared.js` is still the source of truth** for data (`SCENARIOS`,
-  `NAV_PARENTS`), scenarios (`SCENARIOS`, colors), cross-system weights
+- **`js/shared.js` is still the data source of truth** — scenarios and colors
+  (`SCENARIOS`), the command palette (`CMD_ITEMS`), cross-system weights
   (`CROSS_SYSTEM`), per-system timeseries (`VIZ_METRICS`), the simulation engine
   (`SIM_ENGINE`, `simWorldState`), the action catalog (`STRATEGY_CATALOG` —
   20 actions across personal/organization/policy, `stratStatusRank()`; shared
   by `strategy.html` and `pathways.html`), chart renderers (`scenarioChart`,
   `timelineSVG`), footer, command palette, and theme. Add data/pages there, not
   in per-page copies.
+- **Nav, chrome, and page shells come from `js/v3.js`** (`V3.boot`,
+  `V3.nav/deck/footer`, `V3.systemPage`) — not from `shared.js`'s
+  `renderSiteNav`/`renderFooter`, which now serve only legacy pages.
+- **`js/v3-data.js` is machine-extracted** from the original pages' inline
+  scripts (climate/AI/governance/transition/civilization data). Regenerate it
+  with the extractor rather than hand-editing.
+- **Two features are intentionally switched off**, both one-line reversible:
+  the **Advisor** (`ADVISOR_ENABLED` at the bottom of `shared.js`, plus its nav
+  entry in `v3.js`) and the **Globe / Knowledge Explorer** links (the
+  "In development" block on `visualizer.html` and the palette entries in
+  `shared.js`). The pages and engines are intact.
 - **Known duplication:** `viz.html` and `xr.html` each carry a copy of
   `SYS`/`SC_META`/`SUB_NODE_DATA`/`SUB_SUB_NODE_DATA` ("mirrors viz.html").
   If you change scores/projections, change BOTH files (or better, promote the

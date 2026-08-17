@@ -5,9 +5,13 @@ description: Bump the ?v= cache-busting version across all layoutUpdate HTML fil
 
 # Bump cache version
 
-Browsers and Hostinger's edge cache aggressively cache `style.css`, `shared.js`,
-and `chat-widget.js`. Every deploy MUST ship a new `?v=` string or visitors see
-stale assets.
+Browsers and Hostinger's edge cache aggressively cache every stylesheet and
+script — `v3.css`, `v3-bridge.css`, `v3-instrument.css`, `v3.js`, `v3-data.js`,
+`shared.js`, `live-data.js`, `chat-widget.js`. Every deploy MUST ship a new
+`?v=` string or visitors see stale assets.
+
+The `sed` below already covers all of them: it rewrites the token wherever it
+appears, and every asset reference in every HTML file uses the same token.
 
 ## Steps
 
@@ -24,7 +28,7 @@ stale assets.
 
    ```bash
    cd public/layoutUpdate
-   OLD=v=20260221d NEW=v=$(date +%Y%m%d)a
+   OLD=v=20260816h NEW=v=$(date +%Y%m%d)a
    sed -i "s/$OLD/$NEW/g" *.html js/shared.js
    ```
 

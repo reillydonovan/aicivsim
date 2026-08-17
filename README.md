@@ -19,148 +19,69 @@ Use AI to simulate, measure, and navigate civilization-scale challenges. Seven i
 
 ## Layout Update v2 (current live site)
 
-A complete redesign built as vanilla HTML/CSS/JS with no framework dependencies. Inspired by Nicholas Felton's annual reports — dense, editorial, narrative data design. See [`styleguide.md`](public/layoutUpdate/styleguide.md) for the full design reference.
+A complete redesign built as vanilla HTML/CSS/JS with no framework dependencies.
+The **v3 design system** governs every page — see
+[`design-system.html`](public/layoutUpdate/design-system.html), which is the
+canonical living spec and renders through the same CSS/JS as the product, so it
+cannot drift. (`styleguide.md` documents the original Feltron reference the
+design grew out of.)
+
+### Design system
+
+| File | Role |
+|------|------|
+| `css/v3.css` | Tokens + every component. The system. |
+| `css/v3-bridge.css` | Translates the original design's class vocabulary (`.page`, `.cell`, `.t1`–`.t4`, `--text-*`) onto v3 tokens — for long-form documents like the paper. |
+| `css/v3-instrument.css` | HUD skin for the full-screen 3D instruments. |
+| `js/v3.js` | Chrome (nav/deck/footer), scenario store, motion, chart kit, `V3.systemPage()`. |
+| `js/v3-data.js` | Page data machine-extracted from the original pages. **Regenerate, never hand-edit.** |
+
+Every page is exactly one of three tiers: **native** (`v3.css` + `v3.js`),
+**bridged** (adds `v3-bridge.css`, for old-vocabulary documents), or
+**instrument** (own canvas UI + `v3-instrument.css`). `css/style.css` is
+retired — nothing loads it.
+
+Core rules (full list in the `design-system` skill): one scenario control per
+page · one nav menu open ever · the scenario control *is* the chart legend ·
+Business as Usual is always the default, persisted sitewide · every metric
+carries its own context copy.
+
+Motion is powered by [motion.dev](https://motion.dev) (pinned UMD from jsDelivr,
+loaded before `v3.js`), with a hand-rolled spring integrator for number counting
+and as the fallback when the CDN is unreachable.
 
 ### Architecture
 
 ```
 public/layoutUpdate/
-├── index.html             # Landing page — project overview, scenario guide, 7-system map
-├── ai.html                # AI — alignment, transparency, safety, compute governance, autonomy risk, public trust
-├── climate.html           # Climate — 7 tabs, 9 planetary metrics (incl. ocean pH), tipping points
-├── simulation.html        # Simulation — 5 policy levers, 50-year timeline, narrative reports, Visualizer CTA
-├── transition.html        # Transition — workforce reskilling, income bridge calculator
-├── civilization.html      # Civilization — composite health index, KPI trajectories, funding
-├── governance.html        # Governance — charter status, assemblies, audit coverage
-├── strategy.html          # Strategy — 20 actions with scenario-aware status/adoption, Today's Score + projected
-├── pathways.html          # Pathways — the gap between any two scenarios: score delta, policy-lever deltas, action-status diff, trajectory divergence
-├── timeline.html          # Timeline — 200K-year arc of civilization, AI as inflection point, scenario-aware futures
-├── visualizer.html        # Visualizer landing page — describes the 3D experience before entering
-├── viz.html               # 3D network visualization — Three.js interactive systems graph
-├── research.html          # Research paper — 19 sections, TOC, print-friendly CSS for PDF export
-├── about.html             # About page
-├── chat.html              # AI Advisor landing page — setup guide, example questions, roadmap
-├── explorer.html          # Knowledge Explorer — Three.js knowledge graph, LLM-powered node spawning
-├── xr.html                # WebXR — immersive VR/AR visualization of the systems network
-├── data.html              # Live Data — real-world indicators fetched client-side vs model baselines
+├── index.html             # Landing — today's score (measured) vs a chosen future (modeled), composite trajectory + story, systems ledger
+├── ai.html                # AI — 6 metrics, 5 risk thresholds, 5 governance milestones
+├── climate.html           # Climate — 9 planetary metrics, 6 tipping points, 3 sub-scores
+├── governance.html        # Governance — charter, pillars, participation, funding stack, assemblies, modules, audit program
+├── transition.html        # Transition — 4 labor vitals + the income-bridge calculator (job economics vs policy)
+├── civilization.html      # Civilization — the composite: KPIs, 6 domains, funding architecture, 8 milestones
+├── strategy.html          # Strategy — the 20-action catalog with adoption meters and per-scenario status
+├── simulation.html        # Simulation — 5 policy levers, year scrubber + play, generated world report, 3D CTA
+├── pathways.html          # Pathways — one route instrument (From ⇄ To), slopes, lever deltas, action diff
+├── timeline.html          # Timeline — the 200K-year spine + scenario-reactive future chapters
+├── data.html              # Live Data — 8 real-world indicators vs the model's 2026 baseline
+├── visualizer.html        # 3D experiences hub (Globe + Knowledge Explorer withheld while they're built out)
+├── viz.html               # 3D network — Three.js systems graph (instrument tier)
+├── xr.html                # WebXR — immersive VR/AR network (instrument tier)
+├── globe.html             # Globe — in development, links withheld (instrument tier)
+├── explorer.html          # Knowledge Explorer — in development, links withheld (instrument tier)
+├── research.html          # Research landing — what the paper argues
+├── paper.html             # The full 19-section paper (bridged tier, print-friendly)
+├── design-system.html     # The living design-system spec
+├── about.html             # About — scope, method, colophon
+├── chat.html              # Advisor — disabled pending a v3 pass (engine intact, see ADVISOR_ENABLED)
 ├── 404.html               # Branded 404 (wired via .htaccess ErrorDocument)
-├── favicon.svg            # Network-mark favicon (also linked from every page)
-├── robots.txt / sitemap.xml
-├── .htaccess              # ErrorDocument 404 + asset cache headers
-├── api/
-│   ├── chat.php           # Streaming PHP proxy — holds API key server-side, forwards to LLM provider
-│   ├── config.example.php # Config template (committed) — copy to config.php or above web root
-│   └── .htaccess          # Blocks direct web access to config files
-├── css/style.css          # All styles — Feltron typography, responsive grid, dark theme, print styles, skeleton loading, command palette, scroll animations, reading progress bar, back-to-top, enhanced hover states
-├── js/shared.js           # Shared utilities — renderSiteNav, renderScenarioButtons, scenarioChart, chartHeader, sparkSVG, comparisonSVG, VIZ_METRICS (per-system timeseries incl. AI), SIM_ENGINE (simulation data + narrative), simWorldState, CROSS_SYSTEM (7-system feedback weights), STRATEGY_CATALOG (20-action catalog + scores/narratives — single source of truth, shared by strategy.html and pathways.html), dark/light mode, localStorage persistence, CSV export, comparison mode, animated transitions, ARIA, renderFooter, chat widget injection, command palette, reading progress bar, back-to-top, scroll-reveal animations
-├── js/chat-widget.js      # Persistent AI Advisor chat widget — floating panel, LLM integration, page awareness, message persistence
-├── js/live-data.js        # Live data layer — key-free CORS APIs (NOAA/OWID/World Bank), sessionStorage cache, graceful fallback
-└── styleguide.md          # Feltron design guide used to build the site
+├── favicon.svg · robots.txt · sitemap.xml · .htaccess
+├── api/                   # chat.php streaming proxy + config template (unchanged)
+├── css/                   # v3.css · v3-bridge.css · v3-instrument.css · style.css (retired)
+├── js/                    # shared.js (data + palette) · v3.js · v3-data.js · live-data.js · chat-widget.js
+└── styleguide.md          # The original Feltron design reference
 ```
-
-### Key features
-
-- **Zero dependencies** — No npm, no build step, no framework. Plain HTML/CSS/JS served as static files.
-- **AI dashboard** — Dedicated `ai.html` page tracking 6 AI-specific domains: Alignment Index, Model Transparency, Safety Protocol Coverage, Compute Governance, Autonomy Safety, and Public Trust in AI. Includes 6 tabs (Overview with policy levers and 6 projection charts, Scenarios comparison grid, Safety sub-domain, Compute sub-domain, Risks with 5 threshold cards and scenario-specific notes, Milestones with 5-phase development timeline), plus always-visible cross-system impact and a 4-scenario summary panel at the bottom. Follows the same Feltron editorial pattern as every other page.
-- **3D Experiences hub** — `visualizer.html` serves as the hub page for all three 3D experiences: the flagship Visualizer, Knowledge Explorer β, and WebXR β. Four editorial sections (What It Is, What You Can Do, How It Works, Controls Reference) describe the core visualizer, followed by Section 05 — "Three Ways to Experience the Data" with three stacked launch cards, each with descriptions, feature stats, and styled CTAs. The main nav links to this hub under "Visualizer"; `viz.html`, `explorer.html`, and `xr.html` are the actual 3D apps. A `NAV_PARENTS` mapping in `shared.js` highlights the "Visualizer" nav link when on any child page, and the footer shows a "Back to Visualizer" link instead of generic prev/next. The Simulation page also includes a direct CTA to the Visualizer.
-- **Today's Score + Projected Score on every page** — Each dashboard and sub-tab opens with a prominent "Today's Score" (static baseline, color-coded by grade) followed by the scenario-projected score with letter grade, delta comparison, and trend. Climate sub-tabs (Biodiversity, Energy & Emissions, Resources) each display their own today/projected pair. The index page shows all seven systems with today + projected scores that update with scenario selection.
-- **Standardized 4-scenario system** — All pages now use the same four scenarios (Aggressive, Moderate, BAU, Worst) with consistent colors (#4ecdc4, #5da5da, #e8a838, #d4622a). Transition was migrated from its original 3-scenario system (Baseline/Transition/Full Stack) to match.
-- **Standardized chart headers** — Every graph uses a consistent `chartHeader()` function (defined in `shared.js`) that renders a Feltron domain-card style header: uppercase `t3` metric label, large `num-lg` projected value colored to the active scenario, trend arrow (green/red based on direction preference), end-year target, and baseline reference.
-- **Multi-scenario comparison charts** — Every graph displays all four scenarios simultaneously. The active scenario is highlighted with a bold line and filled area; inactive scenarios are dimmed. Implemented via a unified `scenarioChart()` function in `shared.js`.
-- **Narrative simulation reports** — Simulation generates natural-language dispatches from the future that evolve across four era phases (Dawn, Divergence, Maturity, Legacy). The narrative tells a human story — not a metrics readout — covering people & livelihoods, climate & energy, trust & governance, AI & the future, and the road ahead. Letter grades update dynamically.
-- **Dynamic scenario-aware data** — Switching scenarios updates every chart, score, description, domain card, and narrative paragraph on every page. No static content remains when scenarios change. This includes:
-  - **Governance assemblies and modules** — All 5 assemblies and 5 modules persist across scenarios with per-scenario values, grades, and status labels (Active/Limited/Dissolved/Not deployed).
-  - **Governance overview metric cards** — Civic Participation, Charter Adoption, Institutional Trust, and Audit Coverage update dynamically.
-  - **Transition metric cards** — Poverty Rate, Reskill Time, Placement Rate, and Employment update with scenario-specific values and descriptions.
-  - **Civilization timeline** — Each milestone has per-scenario scores, grades, goal comparison, status tags, and narrative notes.
-  - **Climate tipping points** — Risk levels (low/moderate/high/critical) calculated dynamically from projected temperature vs. threshold, with BREACHED indicators, margin display, and scenario-specific notes.
-  - **Strategy** — Full scenario awareness with per-action status tags, adoption rates, and scenario-specific impact narratives.
-- **Pathways** — `pathways.html` answers "what would it actually take to move from scenario X to scenario Y" (in either direction, including backsliding toward Worst). A FROM scenario (shared scenario bar, with a 2026/2030/2035/2040/2050 starting-year checkpoint) and a page-local TO scenario (always evaluated at 2050) drive: a headline score/grade gap with a magnitude band (course correction → civilizational turnaround); a policy-lever delta table (civic dividend, climate capex, reskilling, transparency, AI charter) with a per-lever 4-scenario bar comparison; an action-status diff over all 20 `STRATEGY_CATALOG` entries, split into "must change"/"already aligned" (or "what would have to break" when the direction is degrading); and trajectory charts for the five `SIM_ENGINE` metrics with the current path rendered as a dashed line and the destination as a solid one. A live-data "Reality Check" panel (`mountRealityPanel()`) sits alongside as real-world evidence, deliberately not mapped onto the 0–100 scores. No cross-system panel — Pathways is a meta-lens over whole scenarios, not an 8th system.
-  - **Index page** — Seven Systems cards (including AI) show today + projected scores, hero projected score, and scenario descriptions all update dynamically. A dedicated CTA section links to the Visualizer hub, with an additional "3 Experiences Under One Roof" callout linking to the hub page where all three 3D modes are accessible.
-- **9 climate metrics** — Temperature Rise, Sea Level Rise, CO₂ Concentration, Biodiversity Index, Renewable Share, Crop Yield Index, Water Stress, Forest Cover, and Ocean pH. Each with 4-scenario data (25 data points, 2026–2050) and scenario-specific narrative descriptions.
-- **Scenario persistence (hash + localStorage)** — Active scenario is stored in the URL hash (e.g. `#aggressive`) AND in `localStorage`. Sharing a link preserves the selected scenario; navigating between pages automatically maintains the selected scenario via localStorage fallback.
-- **Prev/Next page navigation** — Footer includes contextual navigation links to the previous and next page in the site order.
-- **Print styles** — `@media print` CSS in `style.css` provides clean PDF export for all dashboard pages (hides nav/scenario bars, white background, proper contrast).
-- **Accessibility** — ARIA `role="tablist"` / `role="tab"` / `aria-selected` on section tabs, `aria-pressed` and `aria-label` on scenario buttons, `role="img"` on chart SVGs.
-- **Skeleton loading styles** — CSS shimmer animation classes (`.skeleton`, `.skeleton-chart`, `.skeleton-score`) for use during JS initialization.
-- **Civilizational Timeline** — A narrative editorial page (`timeline.html`) tracing 200,000 years of human inflection points — fire, agriculture, writing, printing press, industrial revolution, computing, internet — culminating in AI as the current inflection. Three tabs: "The Arc" (visual alternating timeline with population/time-to-next-leap stats), "The Inflection" (why this decade is different, with convergence of climate/labor/democracy/inequality), and "Possible Futures" (scenario-aware era-by-era projections through 2050 with grades and verdicts).
-- **3D network visualization** — `viz.html` renders all seven systems as an interactive Three.js node graph orbiting a central "Civilization" aggregate node. The perimeter nodes are Climate, Simulation, Transition, AI, Governance, and Strategy. Every node connects to every other node AND to the center, forming a full hub-and-spoke + mesh network. Features include:
-  - **Scenario-aware connections** — Lines between all node pairs AND from each node to the center are colored (green positive / red negative) and opacity-scaled by cross-system influence weights from `shared.js` CROSS_SYSTEM data. Center connections use system health to scale opacity (0.06–0.36), making the hub-spoke topology clearly visible.
-  - **Directional particles** — Flow along connections in the direction of stronger influence; scatter under low aggregate health.
-  - **Camera fly-to** — Clicking a node smoothly animates the camera to center on it; clicking the same node again flies back to the overview. Escape also returns to overview. Dragging to orbit preserves your camera position — the view never resets on accidental clicks.
-  - **Hover tooltips** — Cursor-following tooltip shows system name, score, grade, and interaction hints on all nodes including the center aggregate.
-  - **Connection tooltips** — Hovering highlighted connections (when a node is selected) shows bidirectional impact percentages and effect descriptions. Center connections show the system's health score, grade, and contribution narrative to the aggregate.
-  - **Node detail panel** — Clicking any node (including the center aggregate) opens a detail card showing current score, grade, projected 2050 score for the active scenario, description, and navigation hint. The projected score updates live when switching scenarios.
-  - **Tipping point shockwaves** — Predefined tipping points (Arctic ice-free, governance collapse, etc.) fire red shockwave animations and text overlays when the timeline passes their threshold year.
-  - **Timeline playback** — Year slider (2026–2050) with play/pause; scores, node sizes, and connection weights interpolate over time.
-  - **Timeline trail** — Small spheres mark the central node's position each year during playback, color-coded by health.
-  - **Scenario comparison panel** — "Compare" toggle opens a right-side data panel showing all 6 system scores + aggregate for two scenarios side-by-side with color-coded deltas. Updates live with the year slider.
-  - **Globe mode** — *(Currently disabled; listed in roadmap for revisit.)* Toggle switches from hexagonal network to positions on a wireframe icosphere with great-circle arc connections. JS infrastructure remains in place.
-  - **Health-driven node behavior (per-system)** — Each node independently responds to its scenario score: wireframe spin speed scales with health (fast when healthy, near-stop when critical); bob amplitude and frequency shift from gentle to erratic with high-frequency jitter below 35%; individual alarm pulse rings appear below 55% health, pulsing faster and shifting from system color to alarm orange as severity increases; glow aura scales from large/bright to small/dim; color desaturates toward gray as health drops; opacity fades on sick nodes.
-  - **Collective atmosphere** — Aggregate health drives global scene state: orbit auto-rotate slows from 0.6 to 0.1; bloom dims from 1.25 to 0.25; fog thickens; ground grid shifts from cool blue to warning red; central pulse ring accelerates and reddens; center node shrinks and fades.
-  - **Cosmic symphony audio** — Each of the 6 perimeter systems is a voice in a Cmaj9 chord (C3, E3, G3, B3, D4, A3). When all systems are healthy, the voices form a consonant, slowly-breathing harmonic unity — a quiet shimmer pad with each voice pulsing in sync. As individual systems deteriorate, their pitch drifts toward dissonant microtonal intervals (semitone rubs, tritones), vibrato widens and speeds up, their rhythmic pulse desyncs from the collective, and a lowpass filter muffles them. Each voice also has a quiet fifth-above shimmer that fades with health. The result: at Aggressive Action the visualization hums with a warm, unified chord; at Worst Case the chord fractures into an uneasy, beating polytonal texture — subtle enough to be ambient, expressive enough to feel the difference.
-  - **Collective atmosphere audio** — Sub-bass drone sinks in pitch as aggregate health drops. Upper shimmer pad (3 partials) detunes toward minor intervals. A sub-bass alarm throb emerges gently below 35% aggregate health. Filtered noise hiss fades in below 45%. Master volume kept deliberately low (0.3) for non-intrusive ambience. Sound defaults to on, auto-initializing on the first user gesture.
-  - **Smooth scenario transitions** — Switching scenarios or scrubbing the year slider never causes instant visual jumps. A per-frame lerp system (`lerpScenario`) smoothly interpolates all node sizes, colors, opacities, connection weights, bloom, fog, grid color, and auto-rotate speed toward their target values using exponential easing (~80% in 0.35s). Audio follows the same smooth path since `updateAudio()` runs every frame and reads the continuously-lerping health values. Position animations (bob, jitter, ring pulse) use incremental phase accumulation (`phase += freq * dt`) rather than `t * freq`, preventing discontinuous jumps when health-dependent frequencies change during transitions.
-  - **Timeline-aware sparkline charts** — When a system node is selected, the detail panel shows multi-scenario sparkline charts (via `timelineSVG()` from `shared.js`) for 2–3 headline metrics — e.g., Temperature Rise, Renewable Share, CO₂ for Climate. The chart distinguishes past from projected future: solid line up to the current year, dashed line for the remainder, with a vertical year marker and a dot on the active scenario at the current position. All four scenarios are visible; the active line is highlighted. When the center aggregate is selected, a summary sparkline per system is shown instead.
-  - **Floating chart overlays** — "Charts" toggle projects mini sparkline cards onto each 3D node in screen-space, tracking node positions as the camera orbits. Each card uses the same timeline-aware chart with solid past / dashed future split, updating live with scenario and year changes.
-  - **`timelineSVG()` in shared.js** — A new SVG chart function that extends `comparisonSVG` with year-index awareness: splits each scenario line into solid (past) and dashed (future) segments, draws a vertical year marker, places a dot at the current position on the active line, and fills only the past area. Used by `viz.html` for all sparkline displays.
-  - **Drag-safe click handling** — Pointer-down position is tracked and compared to click position; movements greater than 6px are treated as orbit drags and ignored by the selection logic, preventing accidental node selection/deselection while rotating the scene.
-  - **Centralized VIZ_METRICS data** — A `VIZ_METRICS` object in `shared.js` provides 25-point (2026–2050) timeseries for 2–3 headline metrics per system (including AI: Alignment Index + Model Transparency) across all 4 scenarios. This single data source is referenced by `viz.html` and available to all dashboard pages for cross-referencing.
-  - **World State panel** — "World State" toggle opens a scrollable left-side panel showing a condensed Simulation-style narrative for the current year and scenario. Includes simulation score with grade, era label (Dawn/Divergence/Maturity/Legacy), era feel text, and five narrative sections (People & Livelihoods, Climate & Energy, Trust & Governance, AI & the Future, The Road Ahead) with a compact "by the numbers" grid showing GINI, Trust, Emissions, Resilience, and AI Influence vs baselines. Updates live as you scrub the year slider or switch scenarios. Data and narrative logic are sourced from `SIM_ENGINE` in `shared.js` — the same canonical data that powers `simulation.html` — so edits to the simulation page propagate automatically.
-  - **SIM_ENGINE in shared.js** — The simulation's 44-point timeseries (2027–2070) for GINI, Trust, Emissions, Resilience, and AI Influence across all 4 scenarios, plus narrative generation functions (`simWorldState`, `simScore`, `simEra`, `simInterp`), now live in `shared.js` as a single source of truth. `simulation.html` references this instead of a local copy.
-  - **Compact mode bar** — Compare, Charts, World, and Sound toggles styled as an inline button group matching the scenario bar pattern. Globe hidden pending redesign.
-  - **Keyboard shortcuts** — 1–4 switch scenarios, Space toggles play, Left/Right step years, Escape deselects and returns to overview.
-  - **Double-click navigation** — Double-clicking an unselected system node opens its dashboard page. Guarded against accidental triggers during deselect.
-- **AI Advisor (persistent chat widget)** — A floating chat panel (`js/chat-widget.js`) that persists across every page of the site. Features include:
-  - **LLM integration** — Supports OpenAI (GPT-4o, GPT-4o Mini) and Anthropic (Claude Sonnet, Claude Haiku) with streaming responses. API key stored in browser `localStorage` only — never committed to source or sent to any server besides the chosen provider.
-  - **Deep site knowledge** — System prompt encodes all 7 systems with scores and 2050 projections, 42 cross-system feedback loops, 4 scenarios with policy configurations, simulation eras, tipping points, grade scale, and policy levers.
-  - **Page + sub-tab awareness** — Every message includes the user's current page AND active sub-tab as context. The advisor knows you're on "Climate → Biodiversity" vs "Climate → Tipping Points" and tailors answers to the specific data visible. The header tag updates live as you switch tabs. Detailed tab descriptions for all 8 tabbed pages (Climate, AI, Simulation, Transition, Civilization, Governance, Strategy, Timeline).
-  - **Navigation tracking** — When the advisor links to a page and the user clicks it, the navigation is recorded and the advisor acknowledges the transition on the next message. Internal page links render as styled pill buttons.
-  - **Persistent conversation** — Messages, API settings, and open/collapsed state all stored in `localStorage`, surviving page navigations and browser refreshes.
-  - **Collapse/expand** — Three states: closed (bubble only), collapsed (header bar), expanded (full panel). Defaults to open+collapsed on the homepage for discoverability.
-  - **Advisor landing page** — `chat.html` provides setup instructions, example questions, and a three-phase roadmap (Chat → 3D Explorer → WebXR).
-  - **Markdown rendering** — Responses render headers, bold, italic, code, lists, and links with auto-detection of internal page references.
-  - **Responsive mobile layout** — Desktop: floating 380×520 panel. Mobile (≤768px): panel stacks above the toggle bubble using `100dvh` for correct iPhone viewport sizing, with the input/send area always above the chat toggle. Landscape-aware height adjustment. Close button in header for dismissing the panel on touch devices.
-  - **Server-side API proxy** — PHP streaming proxy (`api/chat.php`) holds the API key server-side so visitors never need their own key. Supports both OpenAI and Anthropic. Config loads from above the web root (`/home/<user>/aicivsim_config.php`) for maximum security, with `.htaccess` fallback protection. Includes per-IP rate limiting (20 req/min) and CORS origin locking.
-  - **Dual mode** — If the server proxy is active, the widget auto-detects it and shows "Server API" — no setup needed for visitors. Users can still override with their own key if preferred.
-- **Knowledge Explorer (Beta)** — `explorer.html` is a Three.js knowledge graph that transforms LLM conversations into an interactive 3D spatial experience. Features include:
-  - **Question → Node spawning** — Each question spawns an icosahedron node in 3D space using golden-angle placement, connected to previous nodes via curved Bézier connections. The knowledge graph grows organically as you ask more questions.
-  - **Topic satellites** — The LLM returns structured JSON metadata with each answer, including 2–5 keyword topics and relevant site pages. Topics spawn as smaller orbiting satellite nodes around their parent answer node.
-  - **Streaming responses** — Same dual-mode LLM integration as the chat widget: server proxy auto-detected first, fallback to user-provided API key (OpenAI or Anthropic). Responses stream in real-time and render into a detail panel with markdown formatting.
-  - **Detail panel** — Clicking any node opens a slide-in panel showing the original question, full rendered answer, and page-reference pill links to relevant site pages.
-  - **Camera fly-to** — Selecting a node smoothly animates the camera to focus on it with orbital controls.
-  - **Feltron aesthetic** — Dark editorial theme matching `viz.html` with bloom post-processing, fog, ground grid, node bob/rotation animations, and wireframe overlays. Each node gets a unique hue via golden-ratio HSL distribution.
-  - **Responsive** — Input bar and detail panel adapt for mobile viewports.
-- **WebXR immersive visualization (Beta)** — `xr.html` renders the 7-system civilization network in an immersive VR/AR experience using the WebXR Device API. Features include:
-  - **Dual XR modes** — "Enter VR" for immersive-vr and "Enter AR" for immersive-ar sessions, with feature detection that enables buttons only on supported hardware. Requires `local-floor` reference space.
-  - **Controller interaction** — Two tracked controllers with XRControllerModelFactory models, ray pointers, and select event handlers for node picking in immersive space.
-  - **7-system node network** — The same 6 perimeter systems (Climate, Simulation, Transition, AI, Governance, Strategy) orbiting a central Civilization aggregate node, with curved Bézier connections. Hub-and-spoke topology plus inter-node mesh connections.
-  - **Scenario switching** — Full 4-scenario system (Aggressive, Moderate, BAU, Worst) with live score updates, color transitions, node size scaling, and connection opacity changes matching the desktop visualizer behavior.
-  - **Three-layer nesting** — System nodes expand to show sub-nodes (e.g., Climate → Temperature, Emissions, Energy), and sub-nodes expand to show sub-sub-nodes (e.g., Temperature → Arctic, Surface Temp, Heat Extremes). Full `SUB_SUB_NODE_DATA` from `viz.html` ported over.
-  - **Year timeline** — Slider (2026–2050) with play/pause, keyboard shortcuts (1–4 scenarios, Space play, Left/Right year, Escape deselect). Scores interpolate over time and drive all visuals.
-  - **Health-driven visuals** — Node scale responds to health score (`0.7 + 0.6 * score`), color desaturates toward gray at low health, jitter animation below 35%, bloom/fog/grid shift with aggregate health. All three nesting layers respond independently.
-  - **Cosmic symphony audio** — "Sound" toggle initializes Web Audio: sub-bass drone, harmonic shimmer pad, and per-system chord voices (Cmaj9). Each voice's volume, filter cutoff, and pitch stability respond to its system's health — healthy systems are warm and consonant, sick systems detune.
-  - **World State panel** — "World" toggle opens left-side narrative panel using `simWorldState` from `shared.js` with era label, score, grade, and narrative sections matching `viz.html`.
-  - **Info panel** — Shows selected node name, score, grade, year, scenario, description, and sub-metric breakdown for all three nesting levels.
-  - **Camera fly-to/fly-back** — Clicking a node flies the camera to focus on it; clicking again or pressing Escape flies back to the overview position.
-  - **Desktop fallback** — Full OrbitControls with auto-rotate, bloom, labels, and raycasting when no headset is connected. The page functions as a standalone 3D viewer on any WebGL device.
-- **Command palette (Ctrl+K / Cmd+K)** — A Spotlight/VS Code-style search overlay accessible from any page. Fuzzy-searches across all pages (13), 3D experiences (3), scenarios (4), and actions (theme toggle). Full keyboard navigation with arrow keys and Enter. Grouped results with emoji icons and descriptions. Clicking a scenario item sets it globally and reloads. Styled for both dark and light mode.
-- **Reading progress bar** — A 2px accent-colored bar fixed to the top of the viewport that fills proportionally as you scroll. Fades in after the first scroll and disappears at the top. Provides a subtle reading-depth indicator on long editorial pages like Research and Timeline.
-- **Back-to-top button** — A floating circular button (bottom-right, offset to avoid the chat widget) that appears after 400px of scroll. Smooth-scrolls to top on click with an accent-colored hover state. Hidden in print stylesheets.
-- **Scroll-triggered entrance animations** — All `.cell`, `.pullquote`, `.chapter-divider`, and `.section-num` elements use IntersectionObserver to fade and slide up into view as they enter the viewport. Each element animates once and stays visible. Respects `prefers-reduced-motion` for accessibility. Renders normally in print. Does not affect 3D pages since they use canvas-based UI.
-- **Enhanced cell hover states** — Grid cells show a 3px accent-colored left border bar on hover, adding a subtle editorial highlight effect to data cards across all dashboard pages.
-- **Responsive mobile design** — Collapsing hamburger navigation, stacked scenario selectors, single-column chart grids on small screens.
-- **Research paper** — Full 19-section civic roadmap converted to Feltron style with table of contents, per-row hover states, all tables and phase cards, 16 references, and built-in `@media print` CSS for one-click PDF export via browser print.
-- **JS-templated navigation** — Site nav bar, mobile hamburger toggle, and scenario buttons are generated from `shared.js` via `renderSiteNav()` and `renderScenarioButtons()`. Adding a new page or link requires editing only `PAGE_ORDER` in `shared.js`. The first four items after Home are **AI → Civilization → Simulation → Visualizer**, mirroring the site name. A `NAV_PARENTS` map allows child pages (e.g., `explorer.html`, `xr.html`, `viz.html`) to highlight their parent nav item ("Visualizer") and render a "Back to Visualizer" footer link instead of generic prev/next.
-- **Dark / light mode** — Theme toggle in the nav bar switches between dark (default) and light mode. Preference persists in localStorage. Light mode overrides CSS custom properties for backgrounds, text, borders, and chart elements.
-- **Data export (CSV)** — Every chart includes a "CSV" download button. Click to export all scenario data for that metric as a CSV file. Powered by `registerChartExport()` + `downloadCSV()` in `shared.js`.
-- **Cross-system feedback loops (scenario-aware)** — Each dashboard page includes a "Cross-System Impact" panel showing how its metrics influence all other operating systems (42 total cross-system relationships across 7 systems). Weights, effect descriptions, and visual impact bars all update dynamically when the user switches scenarios — e.g., Climate's workforce displacement impact ranges from −5% under Aggressive Action to −35% under Worst Case, each with a unique narrative explanation. Every impact carries four distinct scenario texts describing how the relationship plays out under each policy configuration.
-- **Interactive policy levers** — Simulation has 5 sliders; Climate (carbon tax, renewable investment, conservation target), Transition (civic dividend, reskill budget, automation pace), and Governance (charter enforcement, assembly frequency, audit coverage) each have 3 additional lever controls that adjust projected scores in real time.
-- **Animated transitions** — CSS transitions on `.bar-fill`, `.num-lg`, `.score-projected`, `.tag`, `.cell`, and `.scenario-chart` elements provide smooth visual feedback when switching scenarios. `fadeSwitch()` and `animateValue()` utilities available in `shared.js`.
-- **Standardized footer** — All pages use `renderFooter()` from `shared.js` with consistent branding and prev/next navigation.
-- **Responsive control bar** — Tabs and scenario buttons stack into separate rows at 1200px to prevent overflow on pages with many sub-tabs (e.g., Climate with 6 tabs). Horizontal scroll on both rows at narrower widths.
-- **Single-row site nav** — All 15 nav links plus the theme toggle fit one row inside the 1000px content width (tight 6px link padding, no wrapping). Below 1080px the container is narrower than that, so the nav collapses to the hamburger menu there. Adding a nav link means re-checking that budget.
-- **Cache-busting** — All CSS/JS references include `?v=` query parameters (currently `20260813b`) to prevent stale browser caches after deployment. **You must bump this version on every deploy** — see [Deploying to Hostinger](#deploying-to-hostinger), or use the `bump-cache-version` skill (`.claude/skills/bump-cache-version/`, see [SKILLS.md](SKILLS.md)).
 
 ### Scenario system
 
@@ -265,13 +186,13 @@ No install, no build. Open any HTML file directly or serve with any static file 
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 
 ```html
-<link rel="stylesheet" href="css/style.css?v=20260711b">
-<script src="js/shared.js?v=20260711b"></script>
+<link rel="stylesheet" href="css/v3.css?v=20260816h">
+<script src="js/v3.js?v=20260816h"></script>
 ```
 
 Before deploying, do a **find-and-replace across all HTML files** in `public/layoutUpdate/` (19 as of this writing — always all identical, see `grep -oh 'v=[0-9]\{8\}[a-z]' public/layoutUpdate/index.html | head -1` to check the current value):
 
-- Find: `v=20260711b` (or whatever the current value is)
+- Find: `v=20260816h` (or whatever the current value is)
 - Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260712a`
 
 This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.
@@ -280,7 +201,17 @@ This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`,
 
 1. Log in to [hpanel.hostinger.com](https://hpanel.hostinger.com)
 2. Open **File Manager** → navigate to `public_html/`
-3. Upload the contents of `public/layoutUpdate/` (16 HTML files + `css/` + `js/` + `api/` folders) into `public_html/`
+3. Upload the contents of `public/layoutUpdate/` into `public_html/`, preserving structure:
+   - **all 23 root `.html` files**
+   - **`css/`** — `v3.css`, `v3-bridge.css`, `v3-instrument.css`, `style.css`
+   - **`js/`** — `v3.js`, `v3-data.js`, `shared.js`, `live-data.js`, `chat-widget.js`
+   - **`favicon.svg`, `robots.txt`, `sitemap.xml`, `.htaccess`**
+   - `api/` only if it changed (it holds the chat proxy; unchanged in most deploys)
+
+   Uploading the whole folder and overwriting is the simplest correct move.
+   Note that `js/v3.js`, `js/v3-data.js`, `css/v3.css`, `css/v3-bridge.css`,
+   and `css/v3-instrument.css` are **new files** — a deploy that only replaces
+   previously-existing files will leave the site unstyled.
 
 #### Step 3 — Set up AI Advisor API proxy
 

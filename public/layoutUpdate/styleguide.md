@@ -1,3 +1,8 @@
+> **Historical reference.** This is the original Feltron-inspired guide the site
+> grew out of. The current design system is **v3** — see `design-system.html`
+> (the living spec, rendered by the same CSS/JS as the product) and the
+> `design-system` skill. Where the two disagree, v3 wins.
+
 # styleguide.md — Feltron-Inspired Web + Data Visualization Guidance for an AI Design Agent
 > **Reference model:** Nicholas Felton’s *Feltron Annual Reports* (2005–2014) — dense, editorial, narrative data design.
 
