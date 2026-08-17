@@ -214,7 +214,29 @@ V3.nav=function(currentHref){
     h+='</div>';
   });
   h+='<button class="theme-btn" id="v3-theme" aria-label="Toggle theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>';
-  h+='</div></nav>';
+  /* hamburger — the mobile entry point (hover menus don't exist on touch) */
+  h+='<button class="nav-burger" id="v3-burger" aria-label="Open menu" aria-expanded="false" aria-controls="v3-sheet">'
+    +'<span></span><span></span><span></span></button>';
+  h+='</div>';
+  /* the sheet: every destination, flattened into labelled groups —
+     no hover, no nesting, one tap to anywhere */
+  h+='<div class="nav-sheet" id="v3-sheet" aria-hidden="true">';
+  NAV.forEach(function(item){
+    if(item.menu){
+      h+='<div class="ns-group"><div class="ns-head">'+item.label+'</div>';
+      item.menu.forEach(function(m){
+        h+='<a href="'+m.href+'"'+(m.href===currentHref?' aria-current="page"':'')+'>'
+          +(m.tick?'<i class="tick" style="background:'+m.tick+'"></i>':'<i class="tick" style="background:var(--ink-4)"></i>')
+          +'<span>'+m.label+'</span>'+(m.hint?'<em>'+m.hint+'</em>':'')+'</a>';
+      });
+      h+='</div>';
+    }else{
+      h+='<div class="ns-group"><a class="ns-solo" href="'+item.href+'"'
+        +(item.href===currentHref?' aria-current="page"':'')+'><span>'+item.label+'</span></a></div>';
+    }
+  });
+  h+='</div><div class="nav-scrim" id="v3-scrim"></div>';
+  h+='</nav>';
   return h;
 };
 V3.seg=function(compact){
@@ -307,6 +329,34 @@ V3.boot=function(opts){
   document.addEventListener('pointerdown',function(e){
     if(openItem&&!e.target.closest('.nav-item'))closeMenu();
   },true);
+
+  /* ── mobile sheet ── */
+  var burger=document.getElementById('v3-burger'),
+      sheet=document.getElementById('v3-sheet'),
+      scrim=document.getElementById('v3-scrim');
+  if(burger&&sheet){
+    var sheetOpen=false;
+    function setSheet(on){
+      sheetOpen=on;
+      burger.classList.toggle('on',on);
+      burger.setAttribute('aria-expanded',String(on));
+      burger.setAttribute('aria-label',on?'Close menu':'Open menu');
+      sheet.classList.toggle('open',on);
+      sheet.setAttribute('aria-hidden',String(!on));
+      scrim.classList.toggle('on',on);
+      document.body.style.overflow=on?'hidden':'';
+      if(on&&M&&!REDUCED){
+        M.animate(sheet.querySelectorAll('.ns-group'),
+          {opacity:[0,1],y:[10,0]},{delay:M.stagger(0.035),duration:.32,ease:[.22,1,.36,1]});
+      }
+    }
+    burger.addEventListener('click',function(){setSheet(!sheetOpen)});
+    scrim.addEventListener('click',function(){setSheet(false)});
+    sheet.addEventListener('click',function(e){if(e.target.closest('a'))setSheet(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&sheetOpen)setSheet(false)});
+    /* rotating past the breakpoint must never leave the sheet stranded */
+    addEventListener('resize',function(){if(sheetOpen&&innerWidth>900)setSheet(false)});
+  }
   /* press physics + a playful accent on the wordmark */
   pressPhysics();
   if(M&&!REDUCED&&M.hover){
