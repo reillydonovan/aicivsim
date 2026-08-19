@@ -378,6 +378,56 @@ svg{display:block}
 .action-card .a-meta{display:flex;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--hairline);font-family:var(--font-mono);font-size:11px;color:var(--ink-4);flex-wrap:wrap}
 .action-card .a-meta b{color:var(--ink-3);font-weight:600}
 
+
+/* ════════════════════════════════════════════════════════════════
+   AGENCY LAYER — the third epistemic class
+   The site distinguishes MEASURED (live feeds) from MODELED
+   (scenario output). Scope tiers and dependency edges are neither:
+   a person made a judgement call. That gets its own register —
+   dashed rules and a monospace tag, never a scenario colour and
+   never the solid fills the modeled treatments use, so the two
+   cannot be mistaken for each other at a glance.
+   ════════════════════════════════════════════════════════════════ */
+.authored-tag{display:inline-block;font-family:var(--font-mono);font-size:9px;
+  font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+  border:1px dashed var(--hairline-strong);border-radius:5px;padding:2px 7px;
+  margin-right:9px;vertical-align:1px;background:none}
+.epi-note{margin-top:14px;max-width:620px;font-size:13px;line-height:1.65;
+  color:var(--ink-3);border-left:2px dashed var(--hairline-strong);padding-left:16px}
+.epi-note b{color:var(--ink-2)}
+
+/* dependency block on each action card */
+.dep{margin-top:14px;padding:12px 0 0;border-top:1px dashed var(--hairline-strong);
+  font-size:12.5px;line-height:1.6;color:var(--ink-3)}
+.dep b{color:var(--ink-2)}
+.dep-claim{margin-top:7px;font-size:12px;color:var(--ink-4);line-height:1.55}
+.dep-feeds a{color:var(--accent);font-weight:600;border-bottom:1px dashed currentColor}
+.dep-feeds a:hover{border-bottom-style:solid}
+/* the admission: quieter than a claim, never styled as a value */
+.dep-none{color:var(--ink-4)}
+.dep-none b{color:var(--ink-3)}
+/* the one place a lever's real per-scenario values are shown */
+.dep-vals{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.dep-vals span{font-family:var(--font-mono);font-size:11px;color:var(--ink-4);
+  border:1px solid var(--hairline);border-radius:6px;padding:3px 8px}
+.dep-vals span.on{color:var(--ink);border-color:var(--hairline-strong);background:var(--bg-press)}
+.dep-vals b{color:inherit;font-weight:700}
+
+/* tier grouping inside the catalog grid */
+.tier-head,.tier-gap{grid-column:1/-1;margin:26px 0 2px}
+.tier-head:first-child{margin-top:0}
+.tier-head h3,.tier-gap h3{font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--ink)}
+.tier-head p,.tier-gap p{font-size:13px;color:var(--ink-3);margin-top:5px;max-width:620px;line-height:1.6}
+.tier-gap{border:1px dashed var(--hairline-strong);border-radius:var(--r);
+  padding:18px 20px;margin-top:32px}
+.tier-gap h3{font-size:15px;color:var(--ink-3)}
+
+/* jump target highlight when following a "builds toward" link */
+.action-card.flash{animation:cardFlash 1.5s ease}
+@keyframes cardFlash{0%,100%{box-shadow:none}
+  18%{box-shadow:0 0 0 2px var(--accent)}70%{box-shadow:0 0 0 2px var(--accent)}}
+@media(prefers-reduced-motion:reduce){.action-card.flash{animation:none;box-shadow:0 0 0 2px var(--accent)}}
+
 /* ── Slope chart (pathways) ── */
 .slopes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .slope-card{border:1px solid var(--hairline);border-radius:var(--r);padding:18px 20px 12px;min-width:0}
