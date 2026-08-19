@@ -661,6 +661,57 @@ var STRATEGY_CATALOG={
       worst:{adoption:'0%',topImpact:'None',avgImpact:'0%',note:'Policy infrastructure has collapsed. No new legislation is possible in the current environment.'}
     }
   },
+  /* ── AGENCY LAYER ──────────────────────────────────────────────
+     EPISTEMIC CLASS: AUTHORED.  Tier assignments and every `feeds`
+     edge below are editorial judgement — a person decided them. They
+     are neither MEASURED (live feeds) nor MODELED (scenario output),
+     and the UI must label them as such.
+
+     What the model can and cannot support:
+       · Nothing in this catalog moves the composite score. The four
+         scenarios carry hardcoded gini/trust/emis/resil trajectories;
+         simScore() reads those, not any action. No action at any tier
+         is an input to the number.
+       · A tier-4 action that maps to a model lever is CONSTITUTIVE,
+         not causal: the lever holds a different value in each
+         scenario, so the action is part of what distinguishes one
+         future from another. That claim is checkable against
+         SIM_ENGINE.scenarios. It is not a claim of effect.
+       · Tier 1–2 actions have NO model representation. Their only
+         honest relationship is political reachability — they build
+         the constituency, precedent or demand a tier-4 lever needs.
+       · feeds:null means no honest link exists. Render the admission;
+         never substitute a number.
+     ────────────────────────────────────────────────────────────── */
+  provenance:{cls:'authored',label:'Authored',
+    note:'Scope tiers and dependency edges are editorial judgement, not measurement or model output.'},
+  scopes:[
+    {tier:1,key:'individual',label:'Individual & household',
+     blurb:'What one person or household can start without anyone’s permission.'},
+    {tier:2,key:'organization',label:'Organization',
+     blurb:'What a company, school, congregation or team can adopt by internal decision.'},
+    /* tier 3 (municipal / regional) is deliberately absent: the catalog
+       contains no municipal actions, and an empty filter that returns
+       nothing is worse than an acknowledged gap. See scopeGap below. */
+    {tier:4,key:'national',label:'National & international',
+     blurb:'Requires legislation or treaty. The only tier the model represents.'}
+  ],
+  scopeGap:{tier:3,label:'Municipal & regional',
+    note:'No municipal-tier actions exist in this catalog yet. Several lower-tier actions (public transit, air-travel alternatives) are blocked at exactly this level, which is why their dependency reads as unmapped.'},
+  /* Model levers. Values are NOT stored here — they are read from
+     SIM_ENGINE.scenarios at render time, so this cannot drift. */
+  levers:{
+    div:{id:'div',label:'Civic dividend',unit:'%',
+      desc:'Share of public revenue distributed as universal civic income.'},
+    charter:{id:'charter',label:'AI charter',unit:'',
+      desc:'Whether a binding AI governance charter is in force.'},
+    reskill:{id:'reskill',label:'Reskilling investment',unit:'%',
+      desc:'Public investment in workforce transition programmes.'},
+    capex:{id:'capex',label:'Climate capex',unit:'% GDP',
+      desc:'Climate investment as a share of GDP. No action in this catalog maps to it cleanly.'},
+    transparency:{id:'transparency',label:'Institutional transparency',unit:'%',
+      desc:'Open audit, participatory budgeting, institutional accountability. No action in this catalog maps to it.'}
+  },
   categories:[
     {key:'personal',label:'Personal',color:'var(--climate)'},
     {key:'organization',label:'Organization',color:'var(--workforce)'},
@@ -668,68 +719,68 @@ var STRATEGY_CATALOG={
   ],
   actions:{
     personal:[
-      {name:'Switch to renewable energy',cost:'Low',difficulty:'Easy',co2:'-2.5t/yr',timeline:'1 month',
+      {name:'Switch to renewable energy',tier:1,feeds:'carbon-pricing',cost:'Low',difficulty:'Easy',co2:'-2.5t/yr',timeline:'1 month',
        desc:'Switch utility provider or install rooftop solar.',
        scenario:{aggressive:{status:'Subsidized',note:'Civic dividend covers 80% of switching costs.'},moderate:{status:'Incentivized',note:'Tax credits cover partial cost.'},bau:{status:'Available',note:'Market-rate, no subsidy.'},worst:{status:'Blocked',note:'Utility monopolies restrict switching.'}}},
-      {name:'Plant-based diet shift',cost:'No cost',difficulty:'Medium',co2:'-1.5t/yr',timeline:'Immediate',
+      {name:'Plant-based diet shift',tier:1,feeds:null,cost:'No cost',difficulty:'Medium',co2:'-1.5t/yr',timeline:'Immediate',
        desc:'Reduce meat consumption by 50% or more.',
        scenario:{aggressive:{status:'Cultural norm',note:'Public campaigns and institutional menus accelerate shift.'},moderate:{status:'Growing trend',note:'Awareness rising but institutional support limited.'},bau:{status:'Niche',note:'Individual choice, no systemic support.'},worst:{status:'Declining',note:'Food insecurity pushes toward cheapest calories.'}}},
-      {name:'Public transit / cycling',cost:'Saves money',difficulty:'Medium',co2:'-2.0t/yr',timeline:'1 month',
+      {name:'Public transit / cycling',tier:1,feeds:null,cost:'Saves money',difficulty:'Medium',co2:'-2.0t/yr',timeline:'1 month',
        desc:'Replace car commute with transit or cycling.',
        scenario:{aggressive:{status:'Free transit',note:'Fully funded public transit eliminates cost barrier.'},moderate:{status:'Subsidized',note:'Reduced fares and expanded routes.'},bau:{status:'Underfunded',note:'Service cuts reduce viability.'},worst:{status:'Collapsed',note:'Transit systems defunded.'}}},
-      {name:'Home energy retrofit',cost:'$5–15K',difficulty:'Hard',co2:'-3.0t/yr',timeline:'3–6 months',
+      {name:'Home energy retrofit',tier:1,feeds:'housing-as-infrastructure',cost:'$5–15K',difficulty:'Hard',co2:'-3.0t/yr',timeline:'3–6 months',
        desc:'Insulation, heat pump, smart thermostat.',
        scenario:{aggressive:{status:'Fully funded',note:'Government retrofit program covers full cost.'},moderate:{status:'Partial grants',note:'50% cost offset through grants.'},bau:{status:'Self-funded',note:'Full cost borne by homeowner.'},worst:{status:'Unaffordable',note:'No subsidies, rising material costs.'}}},
-      {name:'Reduce air travel',cost:'Saves money',difficulty:'Medium',co2:'-1.8t/yr',timeline:'Immediate',
+      {name:'Reduce air travel',tier:1,feeds:null,cost:'Saves money',difficulty:'Medium',co2:'-1.8t/yr',timeline:'Immediate',
        desc:'Replace 1–2 flights/year with alternatives.',
        scenario:{aggressive:{status:'Rail alternatives',note:'High-speed rail network provides viable substitutes.'},moderate:{status:'Some alternatives',note:'Regional rail expanding but gaps remain.'},bau:{status:'No alternatives',note:'Air travel remains dominant mode.'},worst:{status:'No alternatives',note:'Infrastructure investment has ceased.'}}},
-      {name:'Civic participation',cost:'Time only',difficulty:'Easy',co2:'Indirect',timeline:'Immediate',
+      {name:'Civic participation',tier:1,feeds:'civic-dividend-pilot',cost:'Time only',difficulty:'Easy',co2:'Indirect',timeline:'Immediate',
        desc:'Vote, attend assemblies, join civic organizations.',
        scenario:{aggressive:{status:'Embedded',note:'Participatory budgeting and citizen assemblies are mainstream.'},moderate:{status:'Growing',note:'Pilot assemblies in select regions.'},bau:{status:'Declining',note:'Voter fatigue and institutional distrust.'},worst:{status:'Suppressed',note:'Democratic participation actively discouraged.'}}},
-      {name:'Ethical investing',cost:'No cost',difficulty:'Easy',co2:'-0.5t/yr',timeline:'1 month',
+      {name:'Ethical investing',tier:1,feeds:'green-finance-regulation',cost:'No cost',difficulty:'Easy',co2:'-0.5t/yr',timeline:'1 month',
        desc:'Move funds to ESG or impact-focused portfolios.',
        scenario:{aggressive:{status:'Default option',note:'ESG is the regulatory standard for all funds.'},moderate:{status:'Available',note:'Growing options but not default.'},bau:{status:'Niche',note:'Greenwashing makes selection difficult.'},worst:{status:'Meaningless',note:'No enforcement or standardization.'}}},
-      {name:'Community organizing',cost:'Time only',difficulty:'Medium',co2:'Indirect',timeline:'Ongoing',
+      {name:'Community organizing',tier:1,feeds:'carbon-pricing',cost:'Time only',difficulty:'Medium',co2:'Indirect',timeline:'Ongoing',
        desc:'Build local coalitions for climate and equity action.',
        scenario:{aggressive:{status:'Funded',note:'Community organizing receives public funding and infrastructure.'},moderate:{status:'Supported',note:'Some grants available for civic coalitions.'},bau:{status:'Volunteer-only',note:'No institutional support.'},worst:{status:'Risky',note:'Organizing faces legal and social barriers.'}}}
     ],
     organization:[
-      {name:'Remote work policy',cost:'No cost',difficulty:'Medium',co2:'-15% fleet emissions',timeline:'3 months',
+      {name:'Remote work policy',tier:2,feeds:null,cost:'No cost',difficulty:'Medium',co2:'-15% fleet emissions',timeline:'3 months',
        desc:'Reduce commuting through hybrid/remote work.',
        scenario:{aggressive:{status:'Standard',note:'Hybrid work is the regulatory default.'},moderate:{status:'Common',note:'Most large employers offer hybrid.'},bau:{status:'Voluntary',note:'Employer discretion.'},worst:{status:'Reversed',note:'Return-to-office mandates dominate.'}}},
-      {name:'Supply chain audit',cost:'Moderate',difficulty:'Hard',co2:'-10% scope 3',timeline:'6–12 months',
+      {name:'Supply chain audit',tier:2,feeds:'green-finance-regulation',cost:'Moderate',difficulty:'Hard',co2:'-10% scope 3',timeline:'6–12 months',
        desc:'Map and reduce upstream emissions.',
        scenario:{aggressive:{status:'Mandatory',note:'Supply chain transparency required by law.'},moderate:{status:'Expected',note:'Industry standards emerging.'},bau:{status:'Optional',note:'No enforcement mechanism.'},worst:{status:'Absent',note:'No disclosure requirements.'}}},
-      {name:'Renewable procurement',cost:'Moderate',difficulty:'Medium',co2:'-40% energy emissions',timeline:'6 months',
+      {name:'Renewable procurement',tier:2,feeds:'carbon-pricing',cost:'Moderate',difficulty:'Medium',co2:'-40% energy emissions',timeline:'6 months',
        desc:'Purchase renewable energy credits or direct agreements.',
        scenario:{aggressive:{status:'Required',note:'100% renewable procurement mandate for large orgs.'},moderate:{status:'Incentivized',note:'Tax benefits for renewable procurement.'},bau:{status:'Cost-driven',note:'Only when cheaper than fossil.'},worst:{status:'Penalized',note:'Fossil subsidies make renewables uncompetitive.'}}},
-      {name:'AI governance framework',cost:'Time investment',difficulty:'Hard',co2:'Indirect',timeline:'12 months',
+      {name:'AI governance framework',tier:2,feeds:'ai-audit-mandate',cost:'Time investment',difficulty:'Hard',co2:'Indirect',timeline:'12 months',
        desc:'Establish ethics board, audit pipeline, transparency standards.',
        scenario:{aggressive:{status:'Binding charter',note:'AI charter compliance required for all systems.'},moderate:{status:'Voluntary standard',note:'Industry-led framework with partial adoption.'},bau:{status:'Absent',note:'No governance structure.'},worst:{status:'Blocked',note:'Lobbying prevents any oversight framework.'}}},
-      {name:'Living wage commitment',cost:'Increased payroll',difficulty:'Medium',co2:'Indirect',timeline:'6 months',
+      {name:'Living wage commitment',tier:2,feeds:'civic-dividend-pilot',cost:'Increased payroll',difficulty:'Medium',co2:'Indirect',timeline:'6 months',
        desc:'Ensure all workers and contractors earn a living wage.',
        scenario:{aggressive:{status:'Legislated',note:'Universal living wage is law.'},moderate:{status:'Voluntary pledge',note:'Growing corporate commitments.'},bau:{status:'Market-rate',note:'No floor beyond minimum wage.'},worst:{status:'Eroding',note:'Minimum wage frozen, real wages declining.'}}},
-      {name:'Open data pledge',cost:'No cost',difficulty:'Easy',co2:'Indirect',timeline:'3 months',
+      {name:'Open data pledge',tier:2,feeds:'ai-audit-mandate',cost:'No cost',difficulty:'Easy',co2:'Indirect',timeline:'3 months',
        desc:'Publish anonymized operational data for public benefit.',
        scenario:{aggressive:{status:'Required',note:'Open data mandated for public-facing organizations.'},moderate:{status:'Encouraged',note:'Voluntary open data initiatives growing.'},bau:{status:'Rare',note:'Data treated as competitive asset.'},worst:{status:'Absent',note:'Data hoarding accelerates.'}}}
     ],
     policy:[
-      {name:'Carbon pricing',cost:'Complex',difficulty:'Hard',co2:'-25% national emissions',timeline:'2–4 years',
+      {name:'Carbon pricing',tier:4,feeds:null,cost:'Complex',difficulty:'Hard',co2:'-25% national emissions',timeline:'2–4 years',
        desc:'Economy-wide carbon tax or cap-and-trade system.',
        scenario:{aggressive:{status:'Enacted',note:'$150/ton carbon price with border adjustments.'},moderate:{status:'Partial',note:'$50/ton, limited sector coverage.'},bau:{status:'Stalled',note:'Proposed but blocked by industry lobby.'},worst:{status:'Reversed',note:'Existing carbon policies repealed.'}}},
-      {name:'Universal reskilling',cost:'$50B+',difficulty:'Hard',co2:'Indirect',timeline:'3–5 years',
+      {name:'Universal reskilling',tier:4,feeds:'lever:reskill',cost:'$50B+',difficulty:'Hard',co2:'Indirect',timeline:'3–5 years',
        desc:'Publicly funded retraining for automation-displaced workers.',
        scenario:{aggressive:{status:'Fully funded',note:'Transition reskilling reaches 95% of displaced workers.'},moderate:{status:'Pilot phase',note:'Reskilling programs in 40% of affected regions.'},bau:{status:'Unfunded',note:'Proposed but no budget allocation.'},worst:{status:'Abandoned',note:'Training infrastructure defunded.'}}},
-      {name:'AI audit mandate',cost:'Moderate',difficulty:'Medium',co2:'Indirect',timeline:'1–2 years',
+      {name:'AI audit mandate',tier:4,feeds:'lever:charter',cost:'Moderate',difficulty:'Medium',co2:'Indirect',timeline:'1–2 years',
        desc:'Require safety and bias audits for high-risk AI systems.',
        scenario:{aggressive:{status:'Enforced',note:'96% of high-risk AI systems audited annually.'},moderate:{status:'Enacted',note:'Law passed but enforcement uneven.'},bau:{status:'Voluntary',note:'Industry self-regulation only.'},worst:{status:'Blocked',note:'Tech lobbying prevents any mandate.'}}},
-      {name:'Housing as infrastructure',cost:'$100B+',difficulty:'Hard',co2:'-5% building emissions',timeline:'5–10 years',
+      {name:'Housing as infrastructure',tier:4,feeds:null,cost:'$100B+',difficulty:'Hard',co2:'-5% building emissions',timeline:'5–10 years',
        desc:'Treat housing as public infrastructure with energy standards.',
        scenario:{aggressive:{status:'Funded',note:'National retrofit and public housing program active.'},moderate:{status:'Piloted',note:'Regional pilots in 3 metro areas.'},bau:{status:'Proposed',note:'In policy discussions but unfunded.'},worst:{status:'Abandoned',note:'Housing treated as private market only.'}}},
-      {name:'Green finance regulation',cost:'Moderate',difficulty:'Medium',co2:'-15% financial sector',timeline:'2–3 years',
+      {name:'Green finance regulation',tier:4,feeds:null,cost:'Moderate',difficulty:'Medium',co2:'-15% financial sector',timeline:'2–3 years',
        desc:'Mandate climate risk disclosure and sustainable investment.',
        scenario:{aggressive:{status:'Mandatory',note:'All financial institutions report climate risk.'},moderate:{status:'Partial',note:'Large banks comply; smaller institutions exempt.'},bau:{status:'Voluntary',note:'Industry-led disclosure, inconsistent.'},worst:{status:'Deregulated',note:'Existing disclosure rules rolled back.'}}},
-      {name:'Civic dividend pilot',cost:'$500M–3B',difficulty:'Hard',co2:'Indirect',timeline:'2–3 years',
+      {name:'Civic dividend pilot',tier:4,feeds:'lever:div',cost:'$500M–3B',difficulty:'Hard',co2:'Indirect',timeline:'2–3 years',
        desc:'Test universal civic dividend funded by AI compute rents.',
        scenario:{aggressive:{status:'Scaled',note:'Civic dividend at $192/mo reaching full population.'},moderate:{status:'Pilot',note:'$115/mo dividend in 3 pilot regions.'},bau:{status:'Concept',note:'Research published but no political support.'},worst:{status:'Rejected',note:'AI compute rents captured by private sector.'}}}
     ]
