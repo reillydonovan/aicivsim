@@ -168,6 +168,34 @@
 </div></section>
 
 <section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Provenance</h2>
+  <p class="lead">Three classes of claim, three visual registers. This is the one part of the system that is not a style preference — mislabeling a claim is a lie, so the registers differ in kind (solid / double / dashed rule), never in shade.</p></div></div>
+
+  <div class="epi-classes">
+    <div class="epi-class epi-measured"><div class="epi-k">Measured</div>
+      <h3>Someone counted it.</h3>
+      <p>Live feeds — NOAA, Our World in Data, World Bank. Solid rule, semantic green key. A failed fetch falls back to the baked-in baseline and labels itself as stale rather than silently substituting.</p></div>
+    <div class="epi-class epi-modeled"><div class="epi-k">Modeled</div>
+      <h3>The engine produced it.</h3>
+      <p>Composite scores, system indices, all projections, the five policy levers. Double rule, ink key. Rendered with the solid fills and scenario hues used everywhere else on the site.</p></div>
+    <div class="epi-class epi-authored"><div class="epi-k">Authored</div>
+      <h3>A person decided it.</h3>
+      <p>Scope tiers, dependency edges, action-to-lever mappings, narrative prose. Dashed rule, mono tag, <em>no scenario colour and no fill</em> — so an authored block can never be mistaken for a modeled one at a glance.</p></div>
+  </div>
+
+  <div class="spec" style="margin-top:26px"><div class="spec-label">the authored tag — live</div>
+    <p class="epi-note" style="margin-top:0"><span class="authored-tag">Authored</span> Every authored block carries this tag and a dashed rule. It is deliberately unstyled — no fill, no accent, no scenario hue — because it marks an absence of evidence, not a category of thing.</p>
+  </div>
+
+  <ol class="rule-list" style="margin-left:20px;margin-top:24px">
+    <li><b>Label the class, not the confidence.</b> A modeled 28 is not a measured 28 and never renders as one. Nothing infers its class from context.</li>
+    <li><b>The registers differ in kind.</b> Solid, double, dashed. A reader must never have to compare two greys to tell measured from authored.</li>
+    <li><b>Admissions are first-class content.</b> Where the model cannot support a claim, the interface states that in plain language and is styled no quieter than a claim would be. No placeholder numbers, no silent fallbacks.</li>
+    <li><b>Authored never borrows scenario colour.</b> The four hues mean "this future"; lending one to a judgement call would read as model output.</li>
+  </ol>
+</div></section>
+
+<section class="section"><div class="col">
   <div class="section-head"><div><h2 class="title-2">Components</h2>
   <p class="lead">The scenario control (live — it drives this page too), and the rule that governs it.</p></div></div>
   <div class="spec"><div class="spec-label">scenario segmented control — compact (deck) form</div>
