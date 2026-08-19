@@ -166,6 +166,23 @@ document.getElementById('action-cards').addEventListener('click',function(e){
     t.classList.add('flash');setTimeout(function(){t.classList.remove('flash')},1500);}
 });
 renderCats();renderFilter();renderActions();
+/* deep links from index.html land before the cards exist, so resolve
+   ?a=<slug> once after the first render. A query param, not a hash —
+   the hash is owned by the scenario store. */
+(function(){
+  var id=(location.search.match(/[?&]a=([a-z0-9-]+)/)||[])[1];if(!id)return;
+  /* Chrome cancels a smooth programmatic scroll started while the document
+     is still loading, and html{scroll-behavior:smooth} applies here — so
+     wait for load and scroll instantly. */
+  function jump(){
+    var t=document.getElementById(id);if(!t)return;
+    var y=t.getBoundingClientRect().top+window.pageYOffset-(window.innerHeight/2)+(t.offsetHeight/2);
+    window.scrollTo({top:Math.max(0,y),behavior:'auto'});
+    t.classList.add('flash');setTimeout(function(){t.classList.remove('flash')},1500);
+  }
+  function arm(){setTimeout(jump,120)}
+  if(document.readyState==='complete')arm();else window.addEventListener('load',arm);
+})();
 V3.scenario.onChange(function(){renderCats();renderActions()});
 </script>
 </body>

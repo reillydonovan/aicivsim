@@ -143,6 +143,20 @@
   </div>
 </section>
 
+
+<section class="section" id="ask">
+  <div class="col">
+    <div class="section-head">
+      <div>
+        <h2 class="title-2">What this page is actually asking</h2>
+        <p class="lead">Every number above describes a world; none of them is a scoreboard you can move. <b>Nothing you do changes the composite.</b> What separates the four futures is whether a handful of national levers were ever pulled &mdash; and you do not pull those directly. You make them reachable.</p>
+      </div>
+      <a class="section-link" href="strategy.html">The full catalog &rarr;</a>
+    </div>
+    <div id="ask-body"></div>
+  </div>
+</section>
+
 </main>
 
 <script src="js/shared.js?v=20260819a"></script>
@@ -288,9 +302,77 @@ var lastProj=V3.scenario.meta().proj;
 renderHero(lastProj);renderLedger(false);renderQuartet();renderStory(false);
 /* the score arrives on load */
 V3.tween(document.getElementById('score-now'),TODAY,{from:0,stiffness:120,damping:22});
+
+/* ── the closing ask ──
+   Entirely derived from STRATEGY_CATALOG: routes are tier-4 actions that
+   both carry a model lever AND have something lower feeding them. The
+   admissions are the two ways that fails. Nothing here is hand-listed, so
+   editing the catalog edits this section. */
+function renderAsk(){
+  var C=window.STRATEGY_CATALOG;if(!C)return;
+  var act=V3.scenario.get();
+  var all=[];C.categories.forEach(function(c){C.actions[c.key].forEach(function(a){all.push(a)})});
+  function sl(n){return n.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+  function tierName(t){for(var i=0;i<C.scopes.length;i++)if(C.scopes[i].tier===t)return C.scopes[i].key;return ''}
+  var t4=all.filter(function(a){return a.tier===4});
+  function feeders(a){return all.filter(function(x){return x.tier<4&&x.feeds===sl(a.name)})}
+
+  function chips(lv){
+    return '<div class="dep-vals">'+V3.SC_ORDER.map(function(sc){
+      var r=SIM_ENGINE.scenarios[sc][lv.id];
+      var v=lv.id==='charter'?(r?'yes':'no'):r+(lv.unit||'');
+      return '<span'+(sc===act?' class="on"':'')+'>'+V3.SC[sc].short+' <b>'+v+'</b></span>';
+    }).join('')+'</div>';
+  }
+  /* query param, not a hash: the hash belongs to the scenario store */
+  function step(a){return '<a class="r-step" href="strategy.html?a='+sl(a.name)+'">'+a.name+'<em>'+tierName(a.tier)+'</em></a>'}
+
+  var routes=t4.filter(function(a){return a.feeds&&feeders(a).length});
+  var noFeed=t4.filter(function(a){return a.feeds&&!feeders(a).length});
+  var noLever=t4.filter(function(a){return !a.feeds&&feeders(a).length});
+  var usedLevers=t4.filter(function(a){return a.feeds}).map(function(a){return a.feeds.replace('lever:','')});
+  var orphanLevers=Object.keys(C.levers).filter(function(k){return usedLevers.indexOf(k)<0});
+
+  var n1=all.filter(function(a){return a.tier===1}).length;
+  var n2=all.filter(function(a){return a.tier===2}).length;
+  var nRouted=routes.reduce(function(n,a){return n+feeders(a).length},0);
+
+  var h='<h3 class="ask-h">Two routes this catalog can trace end to end</h3>';
+  h+='<div class="routes">'+routes.map(function(a){
+    var lv=C.levers[a.feeds.replace('lever:','')];
+    return '<div class="route"><div class="route-chain">'
+      +feeders(a).map(step).join('<i>+</i>')
+      +'<b class="r-arrow">&rarr;</b>'+step(a)
+      +'</div><div class="route-lever"><span class="authored-tag">Authored</span>Model lever &middot; <b>'+lv.label+'</b>'
+      +chips(lv)+'</div>'
+      +'<p class="dep-claim">Doing the first two does not raise the lever. It is what makes a government pulling it politically survivable.</p></div>';
+  }).join('')+'</div>';
+
+  h+='<h3 class="ask-h">And three places the map runs out</h3><div class="admits">';
+  if(noFeed.length)h+='<div class="admit"><span class="authored-tag">Authored</span><b>'
+    +noFeed.map(function(a){return a.name}).join(', ')+'</b> carries a model lever, but nothing in the catalog feeds it. '
+    +'There is no route from anything an individual or an organization can do to this one. That is a gap in the catalog, not evidence that no route exists.</div>';
+  if(noLever.length)h+='<div class="admit"><span class="authored-tag">Authored</span>The actions most people can actually reach build toward <b>'
+    +noLever.map(function(a){return a.name}).join(', ')+'</b> &mdash; and the model represents none of them. '
+    +'This site cannot tell you what they would change. It can only tell you they are not in it.</div>';
+  if(orphanLevers.length)h+='<div class="admit"><span class="authored-tag">Authored</span><b>'
+    +orphanLevers.map(function(k){return C.levers[k].label}).join(' and ')+'</b> '+(orphanLevers.length>1?'are':'is')
+    +' set by the scenario with no corresponding action in the catalog at all. The model moves '+(orphanLevers.length>1?'them':'it')
+    +'; the catalog offers no handle on '+(orphanLevers.length>1?'them':'it')+'.</div>';
+  h+='</div>';
+
+  h+='<div class="ask-final"><p>So the ask is not a number and not a pledge. It is this:</p>'
+    +'<h3>Open the catalog at the tier you can actually reach, and pick one thing.</h3>'
+    +'<p class="ask-sub">'+n1+' actions need no one’s permission. '+n2+' more are a decision your workplace, school or congregation could make this year. '
+    +'Only '+nRouted+' of those '+(n1+n2)+' have a traced route to a lever the model represents; the rest are listed because they are real, not because this site can score them.</p>'
+    +'<a class="ask-cta" href="strategy.html">Open the action catalog &rarr;</a></div>';
+
+  document.getElementById('ask-body').innerHTML=h;
+}
+renderAsk();
 V3.scenario.onChange(function(){
   renderHero(lastProj);lastProj=V3.scenario.meta().proj;
-  renderLedger(true);renderStory(true);
+  renderLedger(true);renderStory(true);renderAsk();
   document.querySelectorAll('.q-card').forEach(function(c){
     c.setAttribute('data-active',String(c.getAttribute('data-sc')===V3.scenario.get()));
   });
