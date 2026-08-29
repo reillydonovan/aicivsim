@@ -239,6 +239,80 @@ justification for the entire tier-1→tier-4 relationship, so if it is wrong the
 agency layer's premise is wrong. It needs your attention before anything else in
 this list.
 
+### OPEN: public-epistemics review list
+
+Authored on the `public-epistemics` branch, none of it reviewed. Entries are
+written to be checkable without re-reading the page. **F** marks a
+characterisation of an outside field rather than a claim about this site —
+those are the ones where being wrong is most embarrassing and least visible.
+
+**Read these two hardest**, per your own note:
+
+1. **F · The taint-tracking distinction** (`epistemics.html`). Claims: taint
+   tracking is binary and security-motivated with the goal of *stopping* a
+   value reaching a sink; this system is graded with five levels and the goal
+   is the opposite — the value should reach the reader carrying its standing.
+   Concludes that taint labels can be invisible whereas these are useless
+   unless rendered. If that characterisation of taint analysis is wrong, the
+   paragraph an implementer is most likely to remember is the wrong one.
+2. **F · "When this pattern will not help you"** (`epistemics.html`). Three
+   limits, all mine: (a) a system with no mix of claim types gets one class and
+   the lattice does nothing; (b) propagation is defined over arithmetic, so
+   prose gets labelling without propagation; (c) no-override presumes you
+   control your own release gate. Each is stated as fact and none is tested.
+
+**The rest, by page:**
+
+3. **F · Prior art attributions** (`epistemics.html`). Denning 1976 as
+   structurally the same mechanism; W3C PROV as more expressive than five
+   ordered labels; datasheets/model cards as artefact-level rather than
+   value-level; database provenance as "the closest true relative" carrying a
+   full derivation expression where we carry one ordered label. Four
+   characterisations, none verified beyond general knowledge.
+4. **The ordering rationale** (`epistemics.html`, `shared.js`). That
+   `deliberated` sits one step above the floor because it is the only class
+   with published measured evidence of a failure mode; that `authored`
+   outranks it because it is attributable to a person; that `modeled` outranks
+   `authored` because it is reproducible. Also the junior-analyst
+   counterexample, which argues our own ordering is wrong for some adopters.
+5. **The Solopova scope limit** (`epistemics.html`). Citation verified real
+   and accurately characterised. The judgement that it is "strong support in
+   coalition and crisis modelling, weaker support for a universal claim" is
+   mine. **Carried over: ENGINE_SPEC v0.3 §7.3 and §5 lean on the same paper
+   to justify the ordering without bounding it to the paper's domain — the
+   same overclaim, in `aicivsim-engine`, deliberately not fixed here.**
+6. **The status note** (`epistemics.html`). "Specified and machine-enforceable,
+   not battle-tested," plus the specific claim that the validator is a
+   specification with fixtures rather than a component with a year of runs.
+7. **Class definitions and registers** (`shared.js` `EPISTEMIC_CLASSES`). Every
+   `short`, `who`, `standing` and `onsite` line, and the assignment of solid /
+   double / dashed / dotted / gapped to the five classes.
+8. **The adoption checklist** (`epistemics.html`). Six steps, including "you
+   probably need fewer than five classes" and the test for merging two.
+9. **Methodology framing** (`methodology.html`). The six "what this site does
+   not do" entries, "then what is it for," and the claim that a reader taking
+   the number 28 as an estimate "has taken the one thing here that carries no
+   information." Hedge scan clean; one recovery clause was cut.
+10. **Changelog entries** (`shared.js` `CHANGELOG`). Six entries — the wording
+    of each, the kind assigned, and the editorial rule that corrections render
+    at the same weight as additions.
+11. **`about.html` "Who made it"** — the self-description, and the three cards.
+    **No email is published.** The site has never carried one, so contact
+    routes through the existing GitHub link. Publishing an address is yours to
+    decide.
+
+### OPEN: structural finding — the `ai` series is decorative
+
+Not editorial. `SIM_ENGINE.scenarios[*].ai` is stored, interpolated and charted,
+and `simScore()` never reads it. On a site about AI's civilizational trajectory,
+the headline subject contributes nothing to any number. It is now disclosed
+beside the chart on `simulation.html`, on the stat tile, on `methodology.html`,
+and as a `corrected` changelog entry.
+
+**Wiring it into the score was deliberately not attempted** — that is a model
+change. The disclosure is driven by `SIM_ENGINE.metrics[].inScore`, so if the
+series is ever wired in, flipping one boolean removes every disclosure at once.
+
 ### Engine work lives in a sibling repo
 
 The provenance-layer engine — `ENGINE_SPEC.md`, `ARTIFACT_CONTRACT.md`, the run
