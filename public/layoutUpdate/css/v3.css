@@ -569,6 +569,29 @@ svg{display:block}
 @media(max-width:820px){.lattice{flex-direction:column}.lat-op{align-self:flex-start}
   .prop-row>span.lbl{flex-basis:100%}}
 
+
+/* -- METHODOLOGY -- source display + the lever ledger.
+   simScore is fetched from shared.js at runtime and printed verbatim, so
+   the page cannot misquote the code it is describing. If the fetch fails
+   the block stays empty rather than showing a stale copy. */
+.src{font-family:var(--font-mono);font-size:12px;line-height:1.75;color:var(--ink-2);
+  background:var(--bg-elev);border:1px solid var(--hairline);border-radius:var(--r);
+  padding:16px 18px;overflow-x:auto;white-space:pre;margin-top:16px}
+.src-note{font-size:12px;color:var(--ink-4);margin-top:8px;font-family:var(--font-mono)}
+.ledger-t{width:100%;border-collapse:collapse;margin-top:18px;font-size:13px}
+.ledger-t th{text-align:left;font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-4);font-weight:700;padding:0 12px 9px 0;
+  border-bottom:1px solid var(--hairline)}
+.ledger-t td{padding:11px 12px 11px 0;border-bottom:1px solid var(--hairline);
+  color:var(--ink-3);vertical-align:top}
+.ledger-t td.k{color:var(--ink);font-weight:600}
+.ledger-t td.v{font-family:var(--font-mono);font-size:12px;color:var(--ink-2)}
+.in-score{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;border-radius:5px;padding:2px 7px;white-space:nowrap}
+.in-yes{color:var(--ink);border:1px solid var(--hairline-strong)}
+.in-no{color:var(--bad);border:1px solid var(--bad)}
+@media(max-width:700px){.ledger-t{font-size:12px}.ledger-t th:nth-child(n+4),.ledger-t td:nth-child(n+4){display:none}}
+
 /* ── Slope chart (pathways) ── */
 .slopes{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .slope-card{border:1px solid var(--hairline);border-radius:var(--r);padding:18px 20px 12px;min-width:0}

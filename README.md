@@ -415,9 +415,15 @@ No install, no build. Open any HTML file directly or serve with any static file 
 
 #### Step 1 — Bump the cache version
 
-**Current token: `v=20260819a`** — 71 references across 23 HTML files plus
+**Current token: `v=20260829a`** — 74 references across 24 HTML files plus
 `js/shared.js` (whose chat-widget injector carries one). They are always all
 identical; a mismatch is a bug.
+
+> **The failure mode this prevents, so you recognise it cold.** Change
+> `shared.js` without bumping the token and the browser serves the cached
+> copy, so any newly added global throws `ReferenceError: X is not defined`
+> — e.g. `EPISTEMIC_CLASSES is not defined`. The page looks broken, the code
+> looks correct, and the fix is a token bump, not a debugging session.
 
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Methodology — what this site computes, and what it does not</title>
+<meta name="description" content="The composite score is a formula over four hardcoded number series per scenario. No policy lever changes any score. This page shows the actual code and the actual numbers.">
+<link rel="canonical" href="https://aicivsim.com/methodology.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Methodology — what this site computes, and what it does not">
+<meta property="og:description" content="The composite score is a formula over four hardcoded number series per scenario. No policy lever changes any score. The actual code and the actual numbers.">
+<meta property="og:url" content="https://aicivsim.com/methodology.html">
+<meta property="og:image" content="https://aicivsim.com/favicon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Methodology — what this site computes, and what it does not">
+<meta name="twitter:description" content="The composite is a formula over hardcoded series. No lever changes any score.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260829a">
+</head>
+<body>
+
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">Method · Methodology</span>
+  <h1 class="title-1">What this site computes, and what it does not.</h1>
+  <p class="lead">The composite score is a formula over four hardcoded number series per scenario. The number series were written by a person. No policy lever on this site changes any score, including the national policy actions in the strategy catalog. This page shows the code and the numbers.</p>
+  <p class="lead" style="color:var(--ink-4)">Nothing on the rest of this site is believable without this page. If you read one thing here, read this one.</p>
+</div></header>
+
+<main>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The entire computation</h2>
+  <p class="lead">This is <span class="num" style="font-size:13px">simScore()</span>, fetched from <span class="num" style="font-size:13px">js/shared.js</span> as you loaded this page. It is the function that produces every 0&ndash;100 score on this site.</p></div></div>
+  <div class="src" id="src-score"></div>
+  <p class="src-note" id="src-note"></p>
+  <p class="lead" style="margin-top:20px">It interpolates four stored series, weights them, adds ten points if a boolean is true, and clamps. There is no state, no iteration, no feedback between systems, and no input from anything you can click.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The numbers underneath</h2></div></div>
+  <p class="lead" id="corpus-line"></p>
+  <table class="ledger-t" id="series-t"></table>
+  <p class="lead" style="margin-top:22px" id="series-note"></p>
+  <p class="lead">A person chose these values. They were not fitted to observed data, produced by a simulation, or derived from published trajectories by a documented procedure. The shape of each curve is a judgement about how a world of that kind would go, written directly into an array.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The five levers</h2>
+  <p class="lead">Every scenario is described as a setting of the same five policy levers. Here is what each one does inside the computation above.</p></div></div>
+  <table class="ledger-t" id="lever-t"></table>
+  <p class="lead" style="margin-top:22px" id="lever-verdict"></p>
+  <p class="lead">The lever values are read at render time on the strategy, pathways and overview pages. They are read in order to be printed. Changing one would change what those pages display and would leave every score identical, because no score reads them.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Constitutive, not causal</h2></div></div>
+  <p class="lead">This is the distinction the rest of the site is built on, stated for a reader who arrived here first.</p>
+  <p class="lead">A national policy action that maps to a model lever is part of <em>what makes one scenario different from another</em>. Carbon pricing is not a thing you do to the aggressive scenario; carbon pricing existing is part of what the word &ldquo;aggressive&rdquo; refers to. The action is constitutive of the world, not causal upon it.</p>
+  <p class="lead">The practical consequence: there is no quantity anywhere on this site that answers &ldquo;how much would this action improve the score.&rdquo; The question has no referent here. A score moves when the reader selects a different scenario, which is a different set of stored arrays, which is a different authored guess about a different world.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">What this site does not do</h2>
+  <p class="lead">Each of these is a thing a reader could reasonably assume from the interface.</p></div></div>
+  <ul class="num-list">
+    <li><b>It does not forecast.</b> No output is a prediction, and no output carries a probability. The four scenarios are not weighted by likelihood, and nothing here claims one is more probable than another.</li>
+    <li><b>It does not fit anything to data.</b> The live data layer fetches current real-world values and displays them beside the model's 2026 baseline. The comparison is presented to the reader. It does not adjust the model, and a divergence between them changes no projection.</li>
+    <li><b>It is not backtested.</b> No historical period was run through it and scored. There is no accuracy figure for this site because there is no procedure under which one could be computed.</li>
+    <li><b>It has no uncertainty.</b> Every projection is a single line. There are no confidence intervals, no ensemble, no seeds, and no sensitivity analysis. Perturbing an input is not possible, because there are no inputs.</li>
+    <li><b>The cross-system feedback weights do not feed back.</b> The influence values shown between systems are authored figures rendered as a panel. No score is computed from another score.</li>
+    <li><b>The interactive levers on the system pages change the display.</b> They redraw local illustrative figures on those pages. They do not propagate, and they do not reach the composite.</li>
+  </ul>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Then what is it for</h2></div></div>
+  <p class="lead">It is a structured argument about how six systems interact. The claim is in the shape &mdash; which systems couple, what a trajectory of a given kind implies for the others, what would have to be true for a future to go one way. The digits carry none of it.</p>
+  <p class="lead">A reader who takes the number 28 from this site and uses it as an estimate has taken the one thing here that carries no information. A reader who disagrees with the shape of the business-as-usual emissions curve and can say why has used the site correctly.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">What would have to change</h2>
+  <p class="lead">For any number here to be more than illustrative, all of the following are required. None is built.</p></div></div>
+  <ul class="num-list">
+    <li><b>Values would have to carry their provenance.</b> Every number tagged with where it came from, checked mechanically rather than by intention. The class system is specified &mdash; see <a class="a" href="epistemics.html">epistemics</a> &mdash; and three of its five classes carry content today.</li>
+    <li><b>Dynamics would have to be computed from sourced rules</b> rather than stored as an array, with each rule citing a published source a third party could check.</li>
+    <li><b>Output would have to be an ensemble.</b> One trajectory reads as prophecy. The spread across seeds and model families would have to be shown as prominently as any central line.</li>
+    <li><b>Divergence would have to be measured and published</b> &mdash; including the uncomfortable result, where independent models agree and that agreement is evidence about shared training data rather than about the world.</li>
+  </ul>
+  <p class="lead" style="margin-top:22px">There is a separate project specifying that engine. It is not part of this site, it produces nothing yet, and it carries explicit kill criteria &mdash; conditions under which the correct action is to stop rather than continue. Among them: if reasoning agents and heuristic agents produce indistinguishable outcomes, and if ensemble variance across seeds swamps the difference between scenarios. Either result would mean the approach cannot distinguish futures and must not claim to.</p>
+  <p class="lead">Until that exists, the numbers on this site are what this page says they are.</p>
+</div></section>
+
+</main>
+</div>
+
+<script src="js/shared.js?v=20260829a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260829a"></script>
+<script>
+V3.boot({deck:{sys:'civilization',context:'What the numbers are',noSeg:true}});
+document.querySelector('.deck-title b').textContent='Methodology';
+document.querySelector('.deck-title i').style.background='var(--ink-3)';
+
+var SC=SIM_ENGINE.scenarios;
+var SERIES=Object.keys(SC.bau).filter(function(k){return Array.isArray(SC.bau[k])});
+var LEVERS=Object.keys(SC.bau).filter(function(k){return !Array.isArray(SC.bau[k])&&k!=='name'&&k!=='css'});
+
+/* ── simScore, printed from the actual source file ──
+   If the fetch fails the block stays empty and says so, rather than
+   showing a copy that may no longer match what the site runs. */
+fetch('js/shared.js?v=20260829a').then(function(r){return r.text()}).then(function(src){
+  var i=src.indexOf('function simScore');
+  if(i<0)throw new Error('not found');
+  var end=src.indexOf('\n}',i);
+  var fn=src.slice(i,end+2);
+  document.getElementById('src-score').textContent=fn;
+  document.getElementById('src-note').textContent=
+    'Read from js/shared.js at page load · '+fn.split('\n').length+' lines';
+}).catch(function(){
+  document.getElementById('src-note').textContent=
+    'The source could not be read from js/shared.js, so nothing is shown here. A copy pasted into this page could be out of date, which would be worse than an empty block.';
+});
+
+/* ── the stored corpus, counted from the object ── */
+(function(){
+  var n=0;
+  V3.SC_ORDER.forEach(function(sc){SERIES.forEach(function(k){n+=SC[sc][k].length})});
+  var len=SC.bau.gini.length;
+  document.getElementById('corpus-line').innerHTML=
+    'Every projection on this site is drawn from <b>'+n+' stored numbers</b>: '
+    +V3.SC_ORDER.length+' scenarios × '+SERIES.length+' series × '+len
+    +' annual values. They are written as literal arrays in <span class="num" style="font-size:13px">shared.js</span>. '
+    +'Values between the stored years are linear interpolations of the two nearest entries.';
+
+  var used=['gini','trust','emis','resil'];
+  var rows='<tr><th>Series</th><th>In the score</th>'
+    +V3.SC_ORDER.map(function(sc){return '<th>'+V3.SC[sc].short+'</th>'}).join('')+'</tr>';
+  SERIES.forEach(function(k){
+    var inScore=used.indexOf(k)>=0;
+    rows+='<tr><td class="k">'+k+'</td>'
+      +'<td><span class="in-score '+(inScore?'in-yes':'in-no')+'">'+(inScore?'yes':'no')+'</span></td>'
+      +V3.SC_ORDER.map(function(sc){
+        var a=SC[sc][k];
+        return '<td class="v">'+a[0]+' → '+a[a.length-1]+'</td>';
+      }).join('')+'</tr>';
+  });
+  document.getElementById('series-t').innerHTML=rows;
+
+  /* derived, so it stays true if a series is added or wired in */
+  var idle=SERIES.filter(function(k){return used.indexOf(k)<0});
+  document.getElementById('series-note').innerHTML=idle.length
+    ? '<b>'+idle.length+' of the '+SERIES.length+' stored series ('+idle.join(', ')
+      +') is read by no score.</b> It is charted on the system pages and it is interpolated for display, and it contributes nothing to any 0&ndash;100 figure on this site.'
+    : 'Every stored series is read by the score.';
+})();
+
+/* ── the lever ledger: which levers the score actually reads ──
+   `charter` is the only lever named in simScore(). The rest are read at
+   render time by strategy/pathways/index in order to be displayed. */
+(function(){
+  var IN_SCORE={charter:'flat +10 when true'};
+  var rows='<tr><th>Lever</th>'
+    +V3.SC_ORDER.map(function(sc){return '<th>'+V3.SC[sc].short+'</th>'}).join('')
+    +'<th>Effect on the score</th></tr>';
+  LEVERS.forEach(function(k){
+    var used=Object.prototype.hasOwnProperty.call(IN_SCORE,k);
+    rows+='<tr><td class="k">'+k+'</td>'
+      +V3.SC_ORDER.map(function(sc){
+        var v=SC[sc][k];
+        return '<td class="v">'+(v===true?'yes':v===false?'no':v)+'</td>';
+      }).join('')
+      +'<td>'+(used
+        ?'<span class="in-score in-yes">'+IN_SCORE[k]+'</span>'
+        :'<span class="in-score in-no">none</span>')+'</td></tr>';
+  });
+  document.getElementById('lever-t').innerHTML=rows;
+
+  var unused=LEVERS.filter(function(k){return !Object.prototype.hasOwnProperty.call(IN_SCORE,k)});
+  document.getElementById('lever-verdict').innerHTML=
+    '<b>'+unused.length+' of the '+LEVERS.length+' levers ('+unused.join(', ')
+    +') appear nowhere in the score computation.</b> The remaining one, <span class="num" style="font-size:13px">charter</span>, '
+    +'contributes ten points when true and nothing otherwise. It is a boolean, so it has two possible effects on any score on this site: ten, or zero.';
+})();
+</script>
+</body>
+</html>
