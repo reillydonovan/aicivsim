@@ -239,6 +239,82 @@ function exportChartData(datasets,startYear,endYear,unit,prefix){
 /* ================================================================
    CROSS-SYSTEM FEEDBACK LOOPS — scenario-aware
    ================================================================ */
+/* ════════════════════════════════════════════════════════════
+   EPISTEMIC CLASSES — the provenance lattice
+   ------------------------------------------------------------------
+   The single definition. epistemics.html, about.html and
+   design-system.html all render from this array, so the vocabulary
+   cannot drift between the pages that explain it.
+
+   ORDER IS A POLICY, NOT A FACT. `rank` encodes this project's
+   judgement that human judgement outranks machine argument. Another
+   adopter could justifiably order it differently — see epistemics.html.
+   Rank is the knob; these are our settings.
+
+   `reserved: true` means the class is specified and enforceable but
+   nothing generates it yet. Nothing may be labelled with a reserved
+   class until something real produces it.
+   ════════════════════════════════════════════════════════════ */
+var EPISTEMIC_CLASSES=[
+  {id:'unknown',rank:0,label:'Unknown',register:'no rule',
+   short:'An admitted gap.',
+   who:'Nobody. The value could not be established.',
+   standing:'The floor. Renders as an explained absence, never as a number.',
+   onsite:null},
+
+  {id:'deliberated',rank:1,label:'Deliberated',register:'dotted rule',reserved:true,
+   short:'What a language model argued, in character, under stated conditions.',
+   who:'A language model.',
+   standing:'An argument, not a finding. May be confabulation with excellent grammar.',
+   onsite:null},
+
+  {id:'authored',rank:2,label:'Authored',register:'dashed rule',
+   short:'A human judgement call.',
+   who:'A named person, who can be asked to defend it.',
+   standing:'Opinion — attributable and contestable.',
+   onsite:'Scope tiers, dependency edges, action-to-lever mappings, narrative prose.'},
+
+  {id:'modeled',rank:3,label:'Modeled',register:'double rule',
+   short:'Computed from measured inputs by cited rules.',
+   who:'The engine.',
+   standing:'Derivable and reproducible — checkable without trusting the author.',
+   onsite:'Composite scores, the six system indices, every projection to 2050.'},
+
+  {id:'measured',rank:4,label:'Measured',register:'solid rule',
+   short:'From a dataset, with a source URL and a retrieval timestamp.',
+   who:'Whoever collected it.',
+   standing:'Fact, subject to source quality.',
+   onsite:'CO\u2082, warming, renewable share, emissions and poverty — fetched live each visit.'}
+];
+
+function epiClass(id){
+  for(var i=0;i<EPISTEMIC_CLASSES.length;i++)
+    if(EPISTEMIC_CLASSES[i].id===id)return EPISTEMIC_CLASSES[i];
+  return null;
+}
+function epiRank(id){var c=epiClass(id);return c?c.rank:null}
+
+/* THE PROPAGATION RULE, in one function.
+   A derived value is tagged no stronger than the weakest of its inputs.
+   This is C9 of ARTIFACT_CONTRACT v1.1 in its smallest form, and it is
+   the whole lattice: everything else is labelling. */
+function epiWeakest(ids){
+  if(!ids||!ids.length)return null;
+  var worst=null;
+  for(var i=0;i<ids.length;i++){
+    var c=epiClass(ids[i]);
+    if(!c)return null;
+    if(worst===null||c.rank<worst.rank)worst=c;
+  }
+  return worst.id;
+}
+/* True when a declared class is legal for the given inputs. */
+function epiLegal(declared,inputIds){
+  var w=epiWeakest(inputIds);
+  if(w===null)return false;
+  return epiRank(declared)<=epiRank(w);
+}
+
 var CROSS_SYSTEM={
   climate:{
     label:'Climate',color:'var(--climate)',
@@ -1551,7 +1627,7 @@ var CMD_ITEMS=[
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260819a';
+  s.src='js/chat-widget.js?v=20260829a';
   s.defer=true;
   document.body.appendChild(s);
 })();

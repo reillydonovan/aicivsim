@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Epistemics — a provenance lattice for mixed human, model and machine output</title>
+<meta name="description" content="A portable pattern: five provenance classes, ordered, with the weakest propagating. Includes a distinct class for language-model output, positioned by measured evidence, and enforced by a validator with no override flag.">
+<link rel="canonical" href="https://aicivsim.com/epistemics.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Epistemics — a provenance lattice for mixed human, model and machine output">
+<meta property="og:description" content="Five provenance classes, ordered, with the weakest propagating. A distinct class for language-model output, positioned by measured evidence, enforced by a validator with no override flag.">
+<meta property="og:url" content="https://aicivsim.com/epistemics.html">
+<meta property="og:image" content="https://aicivsim.com/favicon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Epistemics — a provenance lattice for mixed output">
+<meta name="twitter:description" content="Five provenance classes, ordered, with the weakest propagating. Portable pattern, machine-enforced.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260829a">
+</head>
+<body>
+
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">Method · Epistemics</span>
+  <h1 class="title-1">How a reader tells what a system knows from what it generated.</h1>
+  <p class="lead">Five provenance classes, ordered, with the weakest propagating through anything derived from them. One class exists specifically for language-model output. The whole thing is enforced by a validator with no override flag, because a labelling discipline that depends on discipline does not survive a deadline.</p>
+  <p class="lead" style="color:var(--ink-4)">This page is the specification, written to be lifted. Nothing below is specific to this site except the examples.</p>
+</div></header>
+
+<main>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The problem</h2></div></div>
+  <p class="lead">A system that mixes live data, computed output, human judgement and language-model text presents all four to the reader as text on a page. They look identical. A number fetched from NOAA this morning and a number a model invented render in the same font, and the reader has no way to tell them apart except to trust the author.</p>
+  <p class="lead">That failure is getting worse, not better, because language models produce fluent, confident, well-structured prose that reads exactly like a finding. The usual response is a disclaimer at the bottom of the page, which nobody reads and which applies uniformly to content that is not uniform.</p>
+  <p class="lead">The alternative is to make provenance a property of each value, carried with it, rendered differently, and checked by a machine.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The five classes</h2>
+    <p class="lead">Each answers one question: <b>who says so?</b> The classes are rendered from a single definition in <span class="num" style="font-size:13px">shared.js</span>, so this page cannot drift from the pages that use them.</p></div></div>
+  <div class="epi-classes five" id="epi-grid"></div>
+  <p class="epi-foot" id="epi-onsite"></p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The order is a knob, not a discovery</h2></div></div>
+  <div class="lattice" id="lattice"></div>
+  <p class="lat-cap">weakest &rarr; strongest</p>
+
+  <p class="lead" style="margin-top:22px">That ordering encodes a <em>policy</em>: that human judgement outranks machine argument, and that derivability outranks assertion. It is this project's setting. It is not a fact about the world, and an adopter should expect to set it differently.</p>
+
+  <p class="lead"><b>A concrete case where our order is wrong.</b> Suppose your <span class="num" style="font-size:13px">authored</span> content is a junior analyst's first-week guess, and your <span class="num" style="font-size:13px">deliberated</span> content is a frontier model reasoning carefully over a well-specified prompt with the reasoning shown. Our order says the guess outranks the reasoning. For that system it plainly should not. The ordering is the parameter you tune; what the pattern requires is that you <em>write down the order and justify it in public</em>, not that you adopt ours.</p>
+
+  <div class="section-head" style="margin-top:34px"><div><h3 class="title-3">Why we put deliberated one step above the floor</h3></div></div>
+  <p class="lead">Because there is published, measured evidence of a specific failure mode in the domain this site models.</p>
+  <div class="ref-list">
+    <div class="ref">
+      <h4>LLMs as Strategic Actors: Behavioral Alignment, Risk Calibration, and Argumentation Framing in Geopolitical Simulations</h4>
+      <div class="cite">Solopova et al. · arXiv:2603.02128 · 2 March 2026</div>
+      <p>Evaluated six state-of-the-art models alongside human results across four real-world crisis simulation scenarios. Models approximated human decision patterns in early rounds but diverged over time. The finding that matters here: explanations across <em>all</em> models showed a strong normative-cooperative framing centred on stability, coordination and risk mitigation, with limited adversarial reasoning.</p>
+      <p><b>The scope limit, stated.</b> That is evidence about argumentative framing in geopolitical crisis simulation. It is strong support for placing <span class="num" style="font-size:12px">deliberated</span> low in coalition and crisis modelling, where defection is the central dynamic and a model that under-models defection is wrong in the direction that matters most. It is <em>weaker</em> support for a general claim that language-model output is the least trustworthy non-empty class in every domain. We have not made that general claim and this page does not rest on one.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">The rule: the weakest input wins</h2>
+    <p class="lead">A derived value is tagged no stronger than the weakest class among its inputs. That is the entire lattice — everything else is labelling. Below is the actual function this site ships, running.</p></div></div>
+
+  <div class="prop">
+    <div class="prop-row"><span class="lbl">Input A</span><span id="in-a"></span></div>
+    <div class="prop-row"><span class="lbl">Input B</span><span id="in-b"></span></div>
+    <div class="prop-row"><span class="lbl">Tagged as</span><span id="in-d"></span></div>
+    <div class="prop-out" id="prop-out"></div>
+  </div>
+
+  <div class="section-head" style="margin-top:34px"><div><h3 class="title-3">What that costs you, said plainly</h3></div></div>
+  <p class="lead">Any value downstream of language-model reasoning caps at <span class="num" style="font-size:13px">deliberated</span>, no matter how much measured data it touches. A projection built from forty years of sourced observations and one model judgement is a <span class="num" style="font-size:13px">deliberated</span> value. It does not get to be <span class="num" style="font-size:13px">modeled</span> because most of its inputs were good.</p>
+  <p class="lead"><b>That is the point of the rule, not a side effect of it.</b> If judgement entered the chain, the output carries judgement's standing. Expect a large share of your most interesting output to end up wearing a low class. A system where the propagation rule never bites is a system whose labels are decorative.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Prior art — what this borrows</h2>
+    <p class="lead">Very little here is new, and a page about provenance that obscured its own would be self-refuting. The genuinely novel part is narrow: a distinct class for language-model output, positioned by measured evidence of a specific failure mode, enforced in CI with no override. The machinery underneath is forty years old.</p></div></div>
+
+  <div class="ref-list">
+    <div class="ref">
+      <h4>Lattice models of information flow</h4>
+      <div class="cite">Denning · A Lattice Model of Secure Information Flow · 1976</div>
+      <p>Labels attached to values, propagating through computation, joining at the more restrictive label. Structurally this is the same mechanism. We changed what the labels mean and what happens at the top.</p>
+    </div>
+    <div class="ref">
+      <h4>PROV</h4>
+      <div class="cite">W3C Provenance Working Group · 2013</div>
+      <p>A full ontology for how an entity was derived, by which activity, attributed to which agent. Far more expressive than five ordered labels. Use it if you need to reconstruct a derivation; use something like this page if you need a reader to see standing at a glance.</p>
+    </div>
+    <div class="ref">
+      <h4>Disclosure artefacts</h4>
+      <div class="cite">Gebru et al., Datasheets for Datasets · Mitchell et al., Model Cards for Model Reporting</div>
+      <p>Established the obligation to ship provenance and limitations alongside an artefact. They document a system at the level of the whole; this documents it at the level of the individual value.</p>
+    </div>
+    <div class="ref">
+      <h4>Database provenance</h4>
+      <div class="cite">Why-provenance, how-provenance, semiring provenance</div>
+      <p>The closest true relative. It carries a full derivation expression per value. We carry a single ordered label instead, on purpose: a reader has to be able to see it in the layout, and a polynomial does not fit in a caption.</p>
+    </div>
+  </div>
+
+  <div class="section-head" style="margin-top:34px"><div><h3 class="title-3">So how is this different from taint tracking?</h3></div></div>
+  <p class="lead">Mechanically, barely. Both attach labels to values and join at the weaker one. The differences are purpose and terminal behaviour. Taint tracking asks a binary security question — did this value touch something untrusted — and the goal is to <em>stop</em> the value reaching a sink. This asks a graded epistemic question with five answers, and the goal is the opposite: the value <em>should</em> reach the reader, carrying its standing intact and rendered so that standing is visible. Taint failure means a leak. This failure means a reader mistakes an argument for a finding. That difference decides the design: taint labels can be invisible and usually are, whereas these labels are useless unless they are rendered, which is why each class here has a required visual register and why the register is part of the specification rather than a styling choice.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Enforced by a machine, not by discipline</h2></div></div>
+  <p class="lead">A labelling convention maintained by good intentions degrades within weeks, because the failure mode is a tired person at 2am deciding one missing field is fine. So the classes are checked mechanically.</p>
+  <p class="lead">The companion specification — <span class="num" style="font-size:13px">ARTIFACT_CONTRACT.md</span> v1.1, in a separate repository — defines a run artifact format and a ten-check validator over it. The properties that matter for adoption:</p>
+  <ul class="num-list">
+    <li><b>Refuse by default.</b> Anything the validator cannot affirmatively verify is a failure. There is no warning severity, and the data model has no severity field at all, so adding one requires a reviewed commit rather than a runtime decision.</li>
+    <li><b>No override flag.</b> None. If a check is wrong it gets changed in a commit, not bypassed on a deadline. This is the load-bearing constraint and it is the one most likely to be quietly removed by a future maintainer.</li>
+    <li><b>Bare numbers fail.</b> Every numeric value must be a typed object carrying its class, with a short, explicit, path-scoped allowlist for structural integers like counts and identifiers. A key-name allowlist is not sufficient — it admits any field called <span class="num" style="font-size:12px">count</span> anywhere in the tree, including places where a count is a real quantity carrying real provenance.</li>
+    <li><b>The propagation rule is check nine.</b> Derived values must declare their inputs; the declared class is compared against the weakest resolved input. A derived value that cannot name what it came from is a failure, not a pass.</li>
+    <li><b>Identical in every context.</b> The same binary runs locally before publication and in CI after it, so an artifact cannot pass one and fail the other. Where a check genuinely depends on environment — commit ancestry, for instance — the environment is passed in as an explicit argument rather than sensed, so the behaviour stays identical given identical inputs.</li>
+  </ul>
+  <p class="lead" style="margin-top:20px">That specification is not published yet. When it is, this section becomes a link.</p>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">When this pattern will not help you</h2>
+  <p class="lead">Three cases where the cost is real and the return is not.</p></div></div>
+  <ul class="num-list">
+    <li><b>Your system does not have a mix.</b> If everything you emit is language-model output, every value gets the same class and the lattice does no work. The pattern earns its cost only where genuinely different kinds of claim sit next to each other and look alike.</li>
+    <li><b>Your output is prose, not values.</b> Propagation is defined over composition — a derived number, computed from other numbers. Text does not compose that way. You can still <em>label</em> a block of prose, and you should, but you get the labelling and not the arithmetic, which is most of the value.</li>
+    <li><b>You do not control your own release gate.</b> The no-override rule assumes you can afford to be blocked. That is a governance precondition, not a technical one, and in an organisation where shipping is someone else's decision the flag comes back within a quarter.</li>
+  </ul>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">What it costs to adopt</h2></div></div>
+  <ul class="num-list">
+    <li><b>Every numeric value becomes an object.</b> Payload grows, and so does the friction of writing one by hand. This is the cost people underestimate.</li>
+    <li><b>You need the validator before you need it.</b> Without mechanical enforcement the labels are accurate for about a week and then quietly stop being accurate, which is worse than not having them, because now the reader trusts something that is no longer true.</li>
+    <li><b>Your best output will wear a low class.</b> There will be pressure — internal, reasonable-sounding, persistent — to reclassify. Every instance of that pressure is the rule working.</li>
+    <li><b>The class assignments are themselves authored.</b> Deciding that a given value is <span class="num" style="font-size:12px">modeled</span> rather than <span class="num" style="font-size:12px">authored</span> is a judgement call, and it needs the same review as any other editorial decision. The system labels values; it does not label itself.</li>
+  </ul>
+
+  <div class="section-head" style="margin-top:34px"><div><h3 class="title-3">If you were implementing it</h3></div></div>
+  <ul class="num-list">
+    <li><b>Enumerate your classes.</b> You probably need fewer than five. The test is whether a reader would act differently on two values in different classes; if not, merge them.</li>
+    <li><b>Fix the order and publish the reasoning.</b> This is the step that is actually hard, and the step most likely to be skipped. An unpublished ordering is an unaccountable one.</li>
+    <li><b>Make every value an object</b> carrying its class and whatever that class requires — a source URL for measured, a rule id for computed, a stated reason for a gap.</li>
+    <li><b>Write the propagation function.</b> It is about ten lines. The one on this page is the whole implementation, not a simplification of it.</li>
+    <li><b>Write the validator, and do not give it an override flag.</b> Add a test that fails if someone adds one.</li>
+    <li><b>Give every class a visual register that differs in kind</b> — solid, double, dashed, dotted — never in shade. A reader must not have to compare two greys to tell a measurement from a judgement call, and shade differences do not survive a screenshot, a projector, or a colour-blind reader.</li>
+  </ul>
+
+  <div class="status-note">
+    <b>Status, so this page does not overstate itself.</b> This system is specified and machine-enforceable. It is not battle-tested. Three of the five classes carry real content on this site today; <span class="num" style="font-size:12px">deliberated</span> is reserved and nothing generates it yet, and <span class="num" style="font-size:12px">unknown</span> exists in the specification ahead of the engine that will produce it. The validator is written as a specification with fixtures, not yet as a component with a year of runs behind it. Treat this as a design that has been thought through and mechanically checked, not as one that has survived contact with scale.
+  </div>
+</div></section>
+
+</main>
+</div>
+
+<script src="js/shared.js?v=20260829a"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260829a"></script>
+<script>
+V3.boot({deck:{sys:'civilization',context:'A portable provenance pattern',noSeg:true}});
+document.querySelector('.deck-title b').textContent='Epistemics';
+document.querySelector('.deck-title i').style.background='var(--ink-3)';
+
+/* Everything below renders from EPISTEMIC_CLASSES so this page cannot
+   drift from about.html or design-system.html. */
+var EC=EPISTEMIC_CLASSES;
+
+/* ── the five class cards ── */
+document.getElementById('epi-grid').innerHTML=EC.map(function(c){
+  return '<div class="epi-class epi-'+c.id+'">'
+    +'<div class="epi-k">'+c.label+(c.reserved?'<span class="epi-reserved">Reserved</span>':'')+'</div>'
+    +'<h3>'+c.short+'</h3>'
+    +'<p><b style="color:var(--ink-2)">Who says so:</b> '+c.who+'<br><b style="color:var(--ink-2)">Standing:</b> '+c.standing+'</p>'
+    +'</div>';
+}).join('');
+
+/* derived, so it updates itself if a class starts carrying content */
+(function(){
+  var live=EC.filter(function(c){return c.onsite});
+  var none=EC.filter(function(c){return !c.onsite});
+  document.getElementById('epi-onsite').innerHTML=
+    '<b>On this site today:</b> '+live.length+' of '+EC.length+' classes carry real content — '
+    +live.map(function(c){return '<b>'+c.label.toLowerCase()+'</b> ('+c.onsite+')'}).join(' · ')
+    +'. The other '+none.length+' ('+none.map(function(c){return c.label.toLowerCase()}).join(', ')
+    +') are specified ahead of anything that emits them, and nothing is labelled with them.';
+})();
+
+/* ── the lattice chain ── */
+document.getElementById('lattice').innerHTML=EC.map(function(c,i){
+  return (i?'<span class="lat-op">&lt;</span>':'')
+    +'<div class="lat-step"><div class="r">rank '+c.rank+'</div>'
+    +'<div class="n">'+c.label+(c.reserved?'<span class="epi-reserved">Reserved</span>':'')+'</div>'
+    +'<div class="d">'+c.register+'</div></div>';
+}).join('');
+
+/* ── the live propagation demo ── */
+(function(){
+  var a='measured', b='deliberated', d='modeled';
+  function chips(sel,cur,mount){
+    document.getElementById(mount).innerHTML=EC.map(function(c){
+      return '<button data-v="'+c.id+'" aria-pressed="'+(c.id===cur)+'">'+c.label+'</button>';
+    }).join('');
+  }
+  function render(){
+    chips(null,a,'in-a'); chips(null,b,'in-b'); chips(null,d,'in-d');
+    var weakest=epiWeakest([a,b]);
+    var ok=epiLegal(d,[a,b]);
+    var w=epiClass(weakest);
+    document.getElementById('prop-out').innerHTML=
+      'A value derived from a <b>'+epiClass(a).label.toLowerCase()+'</b> input and a <b>'
+      +epiClass(b).label.toLowerCase()+'</b> input may be tagged no stronger than <b>'
+      +w.label.toLowerCase()+'</b>.'
+      +'<br>Tagging it <b>'+epiClass(d).label.toLowerCase()+'</b> is '
+      +'<span class="prop-verdict '+(ok?'prop-ok':'prop-no')+'">'+(ok?'legal':'a validation failure')+'</span>'
+      +(ok?'':'<br><span style="color:var(--ink-4)">This is check nine of the validator. It fails the run rather than downgrading the label, because silently correcting a claim is how a system starts lying politely.</span>');
+  }
+  document.querySelector('.prop').addEventListener('click',function(e){
+    var btn=e.target.closest('button'); if(!btn)return;
+    var row=btn.parentElement.id, v=btn.getAttribute('data-v');
+    if(row==='in-a')a=v; else if(row==='in-b')b=v; else d=v;
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
