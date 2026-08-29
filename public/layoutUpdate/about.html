@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260829c">
+<link rel="stylesheet" href="css/v3.css?v=20260829d">
 </head>
 <body>
 
@@ -38,28 +38,41 @@
     <div class="chart-card"><div class="c-title" style="margin-bottom:8px">Scope</div>
       <p class="body-2" style="font-size:13.5px">Six interconnected systems — AI, climate, governance, workforce transition, civilization health, and a strategy catalog — each a 0–100 "operating system" with today's score, projections to 2050, and the feedback weights that couple it to the rest. One simulation engine underneath them all.</p></div>
     <div class="chart-card"><div class="c-title" style="margin-bottom:8px">Honesty</div>
-      <p class="body-2" style="font-size:13.5px">This is scenario analysis, not forecasting. Every claim on this site belongs to one of three classes — measured, modeled, or authored — and each is labeled where it appears. The distinction is the point; see below.</p></div>
+      <p class="body-2" style="font-size:13.5px">This is scenario analysis, not forecasting. Every claim on this site carries a provenance class, and each is labeled where it appears. What the site computes, and what it does not, is set out on <a class="a" href="methodology.html">methodology</a>.</p></div>
   </div>
 
-  <div class="epi-classes">
-    <div class="epi-class epi-measured">
-      <div class="epi-k">Measured</div>
-      <h3>Someone counted it.</h3>
-      <p>CO₂, warming, renewable share, emissions and poverty, fetched from NOAA, Our World in Data and the World Bank each time you visit. If a feed fails the page falls back to a baked-in baseline and says so. These are the only numbers on the site that are true independently of us.</p>
-    </div>
-    <div class="epi-class epi-modeled">
-      <div class="epi-k">Modeled</div>
-      <h3>The engine produced it.</h3>
-      <p>Composite scores, the 0–100 system indices, every projection to 2050, and the five policy levers. These are outputs of one simulation whose assumptions you can read and operate yourself. They are internally consistent and externally unproven — a modeled 28 is not a measured 28.</p>
-    </div>
-    <div class="epi-class epi-authored">
-      <div class="epi-k">Authored</div>
-      <h3>A person decided it.</h3>
-      <p>Scope tiers on the action catalog, the dependency edges between actions, the claim that one action corresponds to one model lever, and the narrative prose. Not measurement and not model output — editorial judgement, argued for but not derived. It wears a dashed rule and a mono tag everywhere it appears, and never a scenario colour.</p>
-    </div>
-  </div>
+  <p class="epi-foot" id="epi-summary"></p>
+  <p class="epi-foot" style="margin-top:0;border-top:0;padding-top:0">
+    The rule they exist to enforce: <b>where the model cannot support a claim, the
+    interface says so rather than filling the gap.</b> Several cards in the action
+    catalog end in an admission that nothing here can score them. That is the
+    honest answer, not a defect. The full specification &mdash; what each class
+    means, why they are ordered as they are, and how the ordering is enforced
+    &mdash; is on <a class="a" href="epistemics.html">epistemics</a>.
+  </p>
+</div></section>
 
-  <p class="epi-foot">The rule the three classes exist to enforce: <b>where the model cannot support a claim, the interface says so rather than filling the gap.</b> Several cards in the action catalog end in an admission that nothing here can score them. That is the honest answer, not a defect.</p>
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Who made it</h2></div></div>
+  <p class="lead">One person. Independent, self-funded, no institutional backing, no
+  affiliation, no grant. Built in the open, and wrong in places that have not been
+  found yet.</p>
+  <p class="lead">Corrections are the most useful thing you can send. The
+  <a class="a" href="changelog.html">changelog</a> records what changed and what
+  turned out to be wrong, with the second given the same prominence as the first.</p>
+  <div class="trio" style="margin-top:26px">
+    <div class="t-card" style="cursor:default"><h3>Code and issues</h3>
+      <p>Everything is on <a class="a" href="https://github.com/clawcode/aicivsim">GitHub</a>.
+      Open an issue for a correction, a disputed number, or a claim you think the site
+      cannot support.</p></div>
+    <div class="t-card" style="cursor:default"><h3>What is worth reporting</h3>
+      <p>A number that contradicts its source, a claim with no provenance class, or a
+      place where the interface reads as more confident than the model warrants. All
+      three are defects here.</p></div>
+    <div class="t-card" style="cursor:default"><h3>What this is not</h3>
+      <p>Not a product, not a service, and not advice. There is nothing to sign up for
+      and nothing is collected from you.</p></div>
+  </div>
 </div></section>
 
 <section class="section"><div class="col">
@@ -84,13 +97,25 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260829c"></script>
+<script src="js/shared.js?v=20260829d"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260829c"></script>
+<script src="js/v3.js?v=20260829d"></script>
 <script>
 V3.boot({deck:{sys:'civilization',context:'Scope, method, and colophon',noSeg:true}});
 document.querySelector('.deck-title b').textContent='About';
 document.querySelector('.deck-title i').style.background='var(--ink-3)';
+
+/* Three lines, derived from EPISTEMIC_CLASSES. The full treatment lives on
+   epistemics.html; duplicating it here would give it two places to drift. */
+(function(){
+  var live=EPISTEMIC_CLASSES.filter(function(c){return c.onsite});
+  document.getElementById('epi-summary').innerHTML=
+    '<b>'+EPISTEMIC_CLASSES.length+' provenance classes, ordered weakest to strongest: '
+    +EPISTEMIC_CLASSES.map(function(c){return c.label.toLowerCase()}).join(' &lt; ')+'.</b><br>'
+    +'A value derived from several inputs is tagged no stronger than the weakest of them.<br>'
+    +live.length+' of the '+EPISTEMIC_CLASSES.length
+    +' carry content on this site today; the rest are specified ahead of anything that emits them.';
+})();
 </script>
 </body>
 </html>

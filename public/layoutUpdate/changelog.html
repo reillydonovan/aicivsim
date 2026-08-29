@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Changelog — what changed, and what was wrong</title>
+<meta name="description" content="Substantive changes to what this site claims, newest first. Corrections carry the same prominence as additions.">
+<link rel="canonical" href="https://aicivsim.com/changelog.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI Civilization Simulator">
+<meta property="og:title" content="Changelog — what changed, and what was wrong">
+<meta property="og:description" content="Substantive changes to what this site claims, newest first. Corrections carry the same prominence as additions.">
+<meta property="og:url" content="https://aicivsim.com/changelog.html">
+<meta property="og:image" content="https://aicivsim.com/favicon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Changelog — what changed, and what was wrong">
+<meta name="twitter:description" content="Substantive changes to what this site claims. Corrections at equal prominence.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/v3.css?v=20260829d">
+</head>
+<body>
+
+<div id="app">
+<header class="page-hero"><div class="col">
+  <span class="eyebrow">Method · Changelog</span>
+  <h1 class="title-1">What changed, and what was wrong.</h1>
+  <p class="lead">Substantive changes to what this site <em>claims</em>, newest first. Not a commit log &mdash; an entry appears here when a reader who trusted the previous version would now be misinformed, or when something asserted here turned out to be wrong.</p>
+  <p class="lead" style="color:var(--ink-4)">Corrections are rendered at the same weight as additions. A changelog that whispers its errors and announces its features is an advertisement.</p>
+</div></header>
+
+<main>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">Entries</h2>
+  <p class="lead" id="cl-count"></p></div></div>
+  <div class="cl-filter" id="cl-filter"></div>
+  <div class="cl-list" id="cl-list"></div>
+</div></section>
+
+<section class="section"><div class="col">
+  <div class="section-head"><div><h2 class="title-2">What belongs here</h2></div></div>
+  <ul class="num-list">
+    <li><b>A claim the site did not make before</b> &mdash; new pages, new figures, a new assertion about how something works.</li>
+    <li><b>A claim that now says something different</b> &mdash; the same subject, a changed conclusion.</li>
+    <li><b>A correction</b> &mdash; the site was wrong. What it said, why it was wrong, and how long it was wrong for.</li>
+    <li><b>A retraction</b> &mdash; a claim withdrawn with nothing put in its place, because the honest answer turned out to be that this site cannot say.</li>
+  </ul>
+  <p class="lead" style="margin-top:22px">Design changes, refactors, performance work and typo fixes are not here. They are in the repository history, which is the right place for them and the wrong place to look for whether a number moved.</p>
+</div></section>
+
+</main>
+</div>
+
+<script src="js/shared.js?v=20260829d"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
+<script src="js/v3.js?v=20260829d"></script>
+<script>
+V3.boot({deck:{sys:'civilization',context:'What changed, and what was wrong',noSeg:true}});
+document.querySelector('.deck-title b').textContent='Changelog';
+document.querySelector('.deck-title i').style.background='var(--ink-3)';
+
+var KINDS=['added','changed','corrected','retracted'];
+var filter='all';
+
+/* page-local: which kind you were reading */
+V3.share.config({kind:{get:function(){return filter==='all'?null:filter},
+                       set:function(v){if(KINDS.indexOf(v)>=0)filter=v}}});
+
+function present(){
+  /* only offer a filter for kinds that exist, so no chip returns nothing */
+  var seen={};CHANGELOG.forEach(function(e){seen[e.kind]=(seen[e.kind]||0)+1});
+  return KINDS.filter(function(k){return seen[k]}).map(function(k){
+    return {k:k,n:seen[k]};
+  });
+}
+
+function renderFilter(){
+  var opts=[{k:'all',n:CHANGELOG.length}].concat(present());
+  document.getElementById('cl-filter').innerHTML=opts.map(function(o){
+    return '<button data-k="'+o.k+'" aria-pressed="'+(filter===o.k)+'">'
+      +(o.k==='all'?'All':o.k)+' · '+o.n+'</button>';
+  }).join('');
+}
+
+function renderList(){
+  var list=CHANGELOG.filter(function(e){return filter==='all'||e.kind===filter});
+  /* newest first; ties keep authored order */
+  list=list.slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0});
+  document.getElementById('cl-list').innerHTML=list.map(function(e){
+    return '<div class="cl-item"><div class="cl-head">'
+      +'<span class="cl-date">'+e.date+'</span>'
+      +'<span class="cl-kind cl-'+e.kind+'">'+e.kind+'</span></div>'
+      +'<h3>'+e.title+'</h3><p>'+e.body+'</p>'
+      +(e.where&&e.where.length
+        ?'<div class="cl-where">'+e.where.map(function(w){
+            return '<a href="'+w+'">'+w+'</a>'}).join('')+'</div>'
+        :'')
+      +'</div>';
+  }).join('');
+  V3.stagger(document.querySelectorAll('.cl-item'),12);
+}
+
+/* derived, so the summary cannot drift from the entries */
+(function(){
+  var corr=CHANGELOG.filter(function(e){return e.kind==='corrected'||e.kind==='retracted'}).length;
+  document.getElementById('cl-count').innerHTML=
+    CHANGELOG.length+' entries, '+corr+' of them '
+    +(corr===1?'a correction or retraction':'corrections or retractions')+'.';
+})();
+
+document.getElementById('cl-filter').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  filter=b.getAttribute('data-k');renderFilter();renderList();V3.share.sync();
+});
+
+V3.share.restore();
+renderFilter();renderList();
+</script>
+</body>
+</html>

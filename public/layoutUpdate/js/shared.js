@@ -1408,6 +1408,54 @@ document.addEventListener('click',function(e){
 /* ================================================================
    COMMAND PALETTE (Ctrl+K / Cmd+K)
    ================================================================ */
+/* ════════════════════════════════════════════════════════════
+   CHANGELOG — substantive changes to what this site CLAIMS.
+   ------------------------------------------------------------------
+   Not a commit log. An entry belongs here when a reader who trusted the
+   old version would now be misinformed, or when something the site
+   asserted turned out to be wrong.
+
+   kind: 'added'      a claim the site did not make before
+         'changed'    a claim that now says something different
+         'corrected'  the site was wrong and this is the fix
+         'retracted'  a claim withdrawn with nothing put in its place
+
+   Corrections are rendered at the same weight as additions, deliberately.
+   A changelog that whispers its errors and announces its features is an
+   advertisement.
+   ════════════════════════════════════════════════════════════ */
+var CHANGELOG=[
+  {date:'2026-08-29',kind:'corrected',
+   title:'The AI series was charted but read by no score',
+   body:'One of the five stored series, <b>ai</b> (\u201cAI Influence\u201d), is interpolated and charted on the simulation page and is read by no score \u2014 not the composite, not any system index. On a site about AI\u2019s civilizational trajectory, the headline subject was decorative. This was found while building the methodology page and had been true since the engine was written. It is now disclosed beside the chart and on the stat tile, and the flag that records it lives in the data so the disclosure cannot drift.',
+   where:['simulation.html','methodology.html']},
+
+  {date:'2026-08-29',kind:'added',
+   title:'Methodology: what the site computes, and what it does not',
+   body:'A page stating plainly that the composite is a formula over 880 hardcoded numbers, that four of the five policy levers appear nowhere in the score computation, and that the fifth contributes a flat ten points. It renders the scoring function from source at page load, so it cannot misquote the code it describes.',
+   where:['methodology.html']},
+
+  {date:'2026-08-29',kind:'added',
+   title:'Epistemics: the provenance classes, specified to be lifted',
+   body:'The class system written as a portable pattern rather than a description of this site \u2014 what each class means, why the ordering is what it is, what the propagation rule costs, and where the pattern does not help. A fourth class, <b>deliberated</b>, is reserved for language-model output; nothing generates it yet and nothing is labelled with it.',
+   where:['epistemics.html']},
+
+  {date:'2026-08-19',kind:'added',
+   title:'Only 4 of 14 reachable actions route to a lever the model represents',
+   body:'The homepage now closes on what the action catalog can and cannot trace. Of the fourteen actions an individual or an organization can reach, four have a route to a national lever the model represents. The rest build toward carbon pricing, housing-as-infrastructure and green finance regulation \u2014 three levers the model does not contain. This count is computed from the catalog and will change if the catalog does.',
+   where:['index.html','strategy.html']},
+
+  {date:'2026-08-19',kind:'changed',
+   title:'No action in the catalog moves the composite score',
+   body:'The action catalog previously implied that actions accumulate toward a better outcome. They do not, and the model never supported that reading. A national action that maps to a model lever is part of what <i>distinguishes</i> one scenario from another \u2014 constitutive of a world, not causal upon it. Every action card now states what it can honestly claim, and the seven actions with no route state that instead of implying one.',
+   where:['strategy.html','index.html']},
+
+  {date:'2026-08-19',kind:'added',
+   title:'A third epistemic class: authored',
+   body:'The site stated two classes, measured and modeled, while a third was already in use and undocumented. Scope tiers, dependency edges, action-to-lever mappings and narrative prose are none of the first two \u2014 they are editorial judgement. They now carry a distinct visual register and are documented wherever the split is explained.',
+   where:['about.html','design-system.html','strategy.html']}
+];
+
 var CMD_ITEMS=[
   {g:'Pages',l:'Home',d:'Overview — all 7 systems with current + projected scores',h:'index.html',icon:'🏠'},
   {g:'Pages',l:'AI',d:'AI system — alignment, safety, regulation metrics',h:'ai.html',icon:'🤖'},
@@ -1627,7 +1675,7 @@ var CMD_ITEMS=[
   var NO_WIDGET=['viz.html','explorer.html','xr.html'];
   for(var i=0;i<NO_WIDGET.length;i++){if(path.indexOf(NO_WIDGET[i])!==-1)return}
   var s=document.createElement('script');
-  s.src='js/chat-widget.js?v=20260829c';
+  s.src='js/chat-widget.js?v=20260829d';
   s.defer=true;
   document.body.appendChild(s);
 })();
