@@ -138,7 +138,10 @@ fetch('js/shared.js?v=20260829a').then(function(r){return r.text()}).then(functi
     +' annual values. They are written as literal arrays in <span class="num" style="font-size:13px">shared.js</span>. '
     +'Values between the stored years are linear interpolations of the two nearest entries.';
 
-  var used=['gini','trust','emis','resil'];
+  /* read from SIM_ENGINE.metrics.inScore — the same flag simulation.html
+     discloses from, so the two can never disagree */
+  var MET={};SIM_ENGINE.metrics.forEach(function(m){MET[m.id]=m});
+  var used=SERIES.filter(function(k){return !MET[k]||MET[k].inScore!==false});
   var rows='<tr><th>Series</th><th>In the score</th>'
     +V3.SC_ORDER.map(function(sc){return '<th>'+V3.SC[sc].short+'</th>'}).join('')+'</tr>';
   SERIES.forEach(function(k){

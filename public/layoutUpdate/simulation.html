@@ -153,7 +153,10 @@ function renderReport(quiet){
     var better=mt.dir==='lower'?d<0:mt.dir==='higher'?d>0:null;
     var cls=better==null?'flat':better?'good':'bad';
     var arrow=d>0?'▲':d<0?'▼':'—';
-    return '<div class="stat"><div class="lbl">'+mt.label+'</div>'
+    /* a series the score does not read is disclosed where its number is
+       shown, not only on the methodology page */
+    var nos=mt.inScore===false?'<span class="nos" title="Not read by any score">not scored</span>':'';
+    return '<div class="stat"><div class="lbl">'+mt.label+nos+'</div>'
       +'<div class="val">'+v.toFixed(mt.dec)+'<small>'+(mt.unit||'')+'</small></div>'
       +'<div class="delta '+cls+'">'+arrow+' '+(d>0?'+':'')+d.toFixed(mt.dec)+(mt.unit||'')+' <span class="ctx">vs 2026</span></div></div>';
   }).join('');
@@ -169,6 +172,13 @@ SIM_ENGINE.metrics.forEach(function(mt){
     label:mt.label,unit:mt.unit,dec:mt.dec,dir:mt.dir,years:YEARS,data:data,
     cursorYear:function(){return year}
   }));
+  if(mt.inScore===false){
+    var n=document.createElement('div');n.className='not-scored';
+    n.innerHTML='<b>This series is not read by any score.</b> It is stored, '
+      +'interpolated and charted here, and it contributes nothing to the '
+      +'composite or to any system index. See <a class="a" href="methodology.html">methodology</a>.';
+    card.appendChild(n);
+  }
 });
 
 function setYear(y,quiet){

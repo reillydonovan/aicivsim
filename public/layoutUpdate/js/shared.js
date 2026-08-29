@@ -689,11 +689,11 @@ var SIM_ENGINE={
       ai:[.121,.130,.144,.162,.184,.210,.239,.271,.305,.340,.376,.411,.445,.477,.507,.534,.558,.580,.599,.615,.629,.641,.651,.660,.667,.673,.678,.683,.687,.690,.693,.695,.697,.699,.701,.702,.704,.705,.706,.707,.708,.709,.710,.710]}
   },
   metrics:[
-    {id:'gini',  label:'Inequality (GINI)',  unit:'',    dec:3, dir:'lower',  baseline:.385},
-    {id:'trust', label:'Civic Trust',        unit:'',    dec:3, dir:'higher', baseline:.432},
-    {id:'emis',  label:'Emissions',          unit:' Gt', dec:1, dir:'lower',  baseline:36.3},
-    {id:'resil', label:'Resilience',         unit:'',    dec:3, dir:'higher', baseline:.355},
-    {id:'ai',    label:'AI Influence',       unit:'',    dec:3, dir:'context',baseline:.121}
+    {id:'gini',  label:'Inequality (GINI)',  unit:'',    dec:3, dir:'lower',  baseline:.385,inScore:true},
+    {id:'trust', label:'Civic Trust',        unit:'',    dec:3, dir:'higher', baseline:.432,inScore:true},
+    {id:'emis',  label:'Emissions',          unit:' Gt', dec:1, dir:'lower',  baseline:36.3,inScore:true},
+    {id:'resil', label:'Resilience',         unit:'',    dec:3, dir:'higher', baseline:.355,inScore:true},
+    {id:'ai',    label:'AI Influence',       unit:'',    dec:3, dir:'context',baseline:.121,inScore:false}
   ],
   narratives:{
     aggressive:'Under aggressive policy action \u2014 a 10% civic dividend, full AI charter oversight, and 25% climate capex \u2014 inequality drops steadily toward .258 by 2070 while civic trust nearly doubles to .784. Emissions fall from 36.3 Gt to 6.7 Gt, and resilience more than doubles.',
