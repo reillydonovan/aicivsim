@@ -17,6 +17,238 @@ Use AI to simulate, measure, and navigate civilization-scale challenges. Seven i
 
 ---
 
+## Agency layer and site epistemics — state as of 2026-08-19
+
+**Read this section first if you are returning to this project.** It covers the
+most recent body of work, the one idea that must not be lost, and every open
+item that has not had a human pass yet.
+
+### Why it exists
+
+The site diagnosed business-as-usual well and did nothing to mobilize against
+it. A visitor who is not a legislator had no path from "this is bad" to "here is
+what I do," so the page produced despair, and despair demobilizes. The agency
+layer is the response: it tags every action in `STRATEGY_CATALOG` with a scope
+tier, declares how lower tiers relate to higher ones, and closes the homepage on
+a specific ask instead of a number.
+
+### The load-bearing idea: constitutive, not causal
+
+**This is the part that must survive you forgetting everything else.**
+
+The composite score is not a function of the action catalog. `simScore()` in
+`js/shared.js` reads hardcoded per-scenario arrays — the five "policy levers"
+are *labels on pre-authored worlds*, not inputs to a computation. It follows
+that **no action at any tier moves the composite score**, and the site says so
+in plain language on `strategy.html` and `index.html`.
+
+What a tier-4 action *can* honestly claim is that it is part of what
+distinguishes one scenario from another — **constitutive of a world, not causal
+upon it**. A national action that maps to a model lever is part of what makes
+that future *that* future. It does not push a number.
+
+If you ever find yourself writing "this action improves the score by X," the
+model does not support the claim. The interface is deliberately built so that
+sentence cannot be written by accident: the only per-scenario numbers on an
+action card are the lever's values read live from `SIM_ENGINE.scenarios`, and
+they always appear alongside the sentence saying they do not move the score.
+
+An earlier framing — "tier 1–2 actions feed tier 4, which moves the model" — was
+itself a fabrication risk and was rejected for this reason. Do not reintroduce
+it.
+
+### Scope tiers
+
+Four tiers, three of them populated:
+
+| Tier | Scope | Count |
+|---|---|---|
+| 1 | Individual & household | 8 |
+| 2 | Organization | 6 |
+| 3 | Municipal & regional | **0 — disclosed, not offered** |
+| 4 | National & international | 6 |
+
+Tier 3 is empty. It is **not** a selectable filter that would return nothing;
+instead a `.tier-gap` block at the end of the catalog states the gap and
+explains that several tier-1 actions are blocked at exactly that level. See the
+open item below on its framing.
+
+The tier filter is an affordance, never pre-applied. The default option is
+`All · reachable first`, which **orders** by reachability rather than hiding
+tier 4 — hiding the only tier with a real model connection would optimize the
+honest content out of view.
+
+Tier is a separate axis from `stratStatusRank()`. Nothing reads one from the
+other; do not conflate them.
+
+### Dependency edges — 13 set, 7 null
+
+Each action declares `feeds`, and the 7 nulls are load-bearing content, not
+missing data:
+
+- **Tier 1/2 → tier 4 (11 edges):** renewable switch, community organizing and
+  renewable procurement → carbon pricing · home retrofit →
+  housing-as-infrastructure · civic participation and living wage → civic
+  dividend pilot · ethical investing and supply chain audit → green finance
+  regulation · AI governance framework and open data pledge → AI audit mandate.
+- **Tier 4 → model lever (2 edges):** universal reskilling → `reskill`, AI audit
+  mandate → `charter`.
+- **`feeds: null` (7):** plant-based diet, public transit/cycling, reduce air
+  travel, remote work policy (all blocked at the uncovered municipal tier);
+  carbon pricing, housing-as-infrastructure, green finance regulation (no model
+  lever exists). These render as a plain-language admission. **The admission is
+  a feature — do not force an edge to remove it.**
+
+### The three epistemic classes
+
+The site previously stated two classes and, as of this work, had an
+undocumented third. There are now three, stated everywhere the split is
+explained (`about.html`, `design-system.html` §Provenance):
+
+| Class | Meaning | Visual register |
+|---|---|---|
+| **Measured** | Someone counted it — live feeds (NOAA, OWID, World Bank) | Solid rule, semantic green |
+| **Modeled** | The engine produced it — composite, indices, projections | Double rule, ink |
+| **Authored** | A person decided it — tiers, edges, narrative prose | **Dashed** rule, mono tag, no fill, no scenario colour |
+
+The registers differ **in kind** (solid / double / dashed), never in shade, so a
+reader never has to compare two greys to tell a measurement from a judgement
+call. `.authored-tag` is deliberately unstyled — it marks an absence of
+evidence, not a category of thing.
+
+### The homepage closing section and its admission
+
+`index.html` ends on `#ask` — "What this page is actually asking." Previously the
+page ended on three cards routing back into more model exploration, which is the
+despair loop rather than a way out of it.
+
+The entire section is **derived from `STRATEGY_CATALOG`**, so editing the
+catalog edits the section and the two cannot drift. It computes:
+
+- **Two routes** the catalog can trace end to end (a tier-4 action that both
+  carries a model lever *and* has something lower feeding it).
+- **Three admissions** — the three ways that tracing fails: a lever with no
+  feeder (universal reskilling); feeders whose target has no lever (carbon
+  pricing, housing, green finance); and levers with no catalog action at all
+  (climate capex, institutional transparency).
+- **The ask**, with all counts derived rather than typed.
+
+The headline finding is an admission: **only 4 of the 14 reachable actions have
+a traced route to a lever the model represents.** The actions most people can
+actually take build toward three levers the model does not contain. This is
+deliberate, it is computed rather than asserted, and it will update itself if
+the catalog changes. It reads as an indictment of the catalog's coverage, which
+is correct. **Do not soften it.**
+
+### Where the code lives
+
+- `js/shared.js` — `STRATEGY_CATALOG` (the only copy; `v3-data.js` has zero
+  references to it). Holds `tier`, `feeds`, `scopes`, `scopeGap`, and `levers`
+  (labels only — values are read live from `SIM_ENGINE.scenarios` so they cannot
+  drift), plus the AGENCY LAYER header comment stating the honesty rules.
+- `strategy.html` — tier grouping, the filter, and `depLine()`, which renders
+  the four dependency shapes.
+- `index.html` — `renderAsk()`, the derived closing section.
+- `css/v3.css` — the `AGENCY LAYER`, `THE CLOSING ASK`, and
+  `THE THREE EPISTEMIC CLASSES` blocks.
+
+Verified after the data change: `pathways.html` action-diff counts are
+**identical** across all 12 scenario pairs (20 everywhere except bau↔worst at
+19). Re-verify this if you touch `STRATEGY_CATALOG`.
+
+---
+
+## Open items — none of these have had a human pass
+
+### UNVERIFIED: the `?a=<slug>` deep link on strategy.html
+
+`index.html`'s route links point at `strategy.html?a=<slug>`. A query param is
+used rather than a hash because **the hash belongs to the scenario store**
+(`V3.scenario.set` calls `history.replaceState` with `#<scenario>`). The handler
+sits at the bottom of `strategy.html`'s inline script, bound to `window.load`
+plus 120ms, because Chrome cancels a smooth programmatic scroll started while
+the document is still loading and `html { scroll-behavior: smooth }` applies.
+
+**What was confirmed:** the handler executes (the `.flash` class lands on the
+target at ~420ms), the target element resolves, and the computed offset is sane
+(6549px for a card at 7039px in a 1342px viewport).
+
+**What could not be confirmed:** whether the viewport actually moves.
+Programmatic scroll is inert under Chrome automation — `window.scrollTo` leaves
+`scrollY === 0` from *both* the isolated world and page context (tested by
+injecting a `<script>` tag so the call ran in page context), while real
+mouse-wheel input scrolls the same page fine. Working code and broken code are
+indistinguishable in that environment.
+
+**Manual reproduction — 60 seconds, needs a normal browser window:**
+
+1. `cd public/layoutUpdate && python -m http.server 8080`
+2. Open `http://localhost:8080/strategy.html?a=civic-dividend-pilot`
+3. **Expected:** the page paints at the top, then within ~200ms jumps so the
+   "Civic dividend pilot" card is vertically centred, with a 1.5s accent ring
+   flash on the card.
+4. Also test the real entry point: open `index.html`, scroll to "What this page
+   is actually asking," and click any route step (e.g. "Civic participation").
+5. **If it does not scroll:** check the console; confirm `location.search`
+   parses; confirm `document.getElementById('civic-dividend-pilot')` resolves.
+   The likeliest culprit is the 120ms delay being too short on a slow load —
+   raise it, or switch to a `requestAnimationFrame` double-tick.
+
+### OPEN: tier-3 gap block framing — your decision
+
+Only **one** version exists in the repo, the one currently shipping in
+`STRATEGY_CATALOG.scopeGap.note`:
+
+> "No municipal-tier actions exist in this catalog yet. Several lower-tier
+> actions (public transit, air-travel alternatives) are blocked at exactly this
+> level, which is why their dependency reads as unmapped."
+
+That text reads as **option A — a deliberate pointer**: it explains the gap as
+information the reader can use. No **option B — a public to-do** draft was ever
+written to a file, so there is nothing to compare it against. If you want the B
+framing (an explicit "this is unbuilt work, here is the plan"), it still needs
+drafting. **The choice is yours; the shipped text is A by default, not by
+decision.**
+
+### OPEN: editorial review of all authored content
+
+**None of the following has had your pass.** All of it carries the AUTHORED tag
+in the UI, but the tag marks it as a judgement call — it does not make the
+judgement a good one:
+
+- All 20 tier assignments
+- All 13 `feeds` edges
+- The two action→lever mappings (deciding that "universal reskilling" *is* the
+  `reskill` lever is a judgement; only the values are modeled)
+- The four dependency claim sentences in `depLine()`
+- The three scope blurbs and the tier-3 gap note
+- The `index.html` closing prose, including "Doing the first two does not raise
+  the lever. It is what makes a government pulling it politically survivable."
+- The three epistemic-class definitions on `about.html` and `design-system.html`
+
+**Review this one first.** The highest-weight, least-supported claim on the site
+is the dependency sentence shown on every tier-1/2 action card that has an edge:
+
+> "Not because it reduces emissions at scale — because it builds the
+> constituency, precedent or demand that makes that lever politically
+> reachable."
+
+That is an argument about political mechanism, not a finding, and nothing on the
+site or in the model supports it. It appears on 11 cards. It is the load-bearing
+justification for the entire tier-1→tier-4 relationship, so if it is wrong the
+agency layer's premise is wrong. It needs your attention before anything else in
+this list.
+
+### Engine work lives in a sibling repo
+
+The provenance-layer engine — `ENGINE_SPEC.md`, `ARTIFACT_CONTRACT.md`, the run
+artifact validator — lives in **`aicivsim-engine`**, a separate repository
+alongside this one. It is deliberately not part of this project's lifespan: the
+site ships regardless of whether the engine survives its Phase 0 ablation, and
+the two do not share a history. Nothing in this repo depends on it.
+
+---
+
 ## Layout Update v2 (current live site)
 
 A complete redesign built as vanilla HTML/CSS/JS with no framework dependencies.
@@ -183,19 +415,39 @@ No install, no build. Open any HTML file directly or serve with any static file 
 
 #### Step 1 — Bump the cache version
 
+**Current token: `v=20260819a`** — 71 references across 23 HTML files plus
+`js/shared.js` (whose chat-widget injector carries one). They are always all
+identical; a mismatch is a bug.
+
 Every HTML file references CSS and JS with a `?v=` query parameter, e.g.:
 
 ```html
-<link rel="stylesheet" href="css/v3.css?v=20260816h">
-<script src="js/v3.js?v=20260816h"></script>
+<link rel="stylesheet" href="css/v3.css?v=20260819a">
+<script src="js/v3.js?v=20260819a"></script>
 ```
 
-Before deploying, do a **find-and-replace across all HTML files** in `public/layoutUpdate/` (19 as of this writing — always all identical, see `grep -oh 'v=[0-9]\{8\}[a-z]' public/layoutUpdate/index.html | head -1` to check the current value):
+Check the current value and confirm there is exactly one:
 
-- Find: `v=20260816h` (or whatever the current value is)
-- Replace: `v=YYYYMMDD` + a letter suffix, e.g. `v=20260712a`
+```bash
+cd public/layoutUpdate
+grep -rho 'v=[0-9]\{8\}[a-z]' *.html js/shared.js | sort | uniq -c
+# exactly one distinct version must appear
+```
 
-This forces every browser to fetch fresh copies. Increment the letter (`a`, `b`, `c`…) for same-day deploys.
+Then find-and-replace across **all HTML files AND `js/shared.js`** — forgetting
+`shared.js` is the classic miss, because it injects `chat-widget.js` with its
+own copy of the token:
+
+```bash
+OLD=v=20260819a NEW=v=$(date +%Y%m%d)a
+sed -i "s/$OLD/$NEW/g" *.html js/shared.js
+```
+
+The new value is today's date as `YYYYMMDD` plus a letter suffix — `a` for the
+first deploy of the day, then `b`, `c`, … for same-day redeploys. This forces
+every browser and the Hostinger edge cache to fetch fresh copies.
+
+The `bump-cache-version` skill in `.claude/skills/` automates this.
 
 #### Step 2 — Upload site files
 
