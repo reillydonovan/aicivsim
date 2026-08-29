@@ -577,6 +577,15 @@ svg{display:block}
   font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-4);
   border:1px dashed var(--hairline-strong);border-radius:4px;padding:1px 5px;vertical-align:2px}
 
+.share-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);
+  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);
+  background:none;border:1px solid var(--hairline);border-radius:7px;padding:5px 10px;
+  cursor:pointer;margin-right:14px}
+.share-btn:hover{color:var(--ink-2);border-color:var(--hairline-strong)}
+.share-btn[data-state=ok]{color:var(--good);border-color:var(--good)}
+.share-btn[data-state=err]{color:var(--bad);border-color:var(--bad)}
+.share-btn .sb-ic{font-size:12px;line-height:1}
+
 /* -- METHODOLOGY -- source display + the lever ledger.
    simScore is fetched from shared.js at runtime and printed verbatim, so
    the page cannot misquote the code it is describing. If the fetch fails

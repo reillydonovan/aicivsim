@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#111112"/>
+  <rect x="0" y="0" width="1200" height="4" fill="#e8a838"/>
+
+  <text x="80" y="96" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif" font-size="26" font-weight="700"
+        letter-spacing="1.5" fill="#f2f1ed">AICIVSIM<tspan fill="#e8a838">.</tspan></text>
+
+  <text x="80" y="196" font-family="'JetBrains Mono','SF Mono',Consolas,monospace" font-size="17" font-weight="700"
+        letter-spacing="4" fill="#575550">SCENARIO</text>
+  <text x="80" y="270" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif" font-size="66" font-weight="600"
+        fill="#f2f1ed">Business as usual</text>
+  <text x="80" y="322" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="400"
+        fill="#e8a838">systemic decline</text>
+
+  <text x="80" y="432" font-family="'JetBrains Mono','SF Mono',Consolas,monospace" font-size="15" font-weight="700"
+        letter-spacing="3" fill="#575550">CIVILIZATIONAL COMPOSITE &#183; 0&#8211;100</text>
+  <rect x="80" y="462" width="800" height="14" rx="7" fill="#2a2a2d"/><rect x="432.0" y="453" width="3" height="32" fill="#575550"/><circle cx="304.0" cy="469.0" r="11" fill="#e8a838"/><circle cx="304.0" cy="469.0" r="19" fill="none" stroke="#e8a838" stroke-width="2" opacity=".45"/>
+  <text x="80" y="524" font-family="'JetBrains Mono','SF Mono',Consolas,monospace" font-size="15" fill="#83817a">today 44</text>
+  <text x="1120" y="480" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif" font-size="76" font-weight="700"
+        fill="#e8a838" text-anchor="end">28</text>
+  <text x="1120" y="516" font-family="'JetBrains Mono','SF Mono',Consolas,monospace" font-size="15" letter-spacing="2"
+        fill="#575550" text-anchor="end">IN 2050</text>
+
+  <line x1="80" y1="560" x2="1120" y2="560" stroke="#2a2a2d" stroke-width="1"/>
+  <text x="80" y="596" font-family="'JetBrains Mono','SF Mono',Consolas,monospace" font-size="15" fill="#83817a">
+    A modeled scenario, not a forecast &#183; aicivsim.com/methodology.html</text>
+</svg>

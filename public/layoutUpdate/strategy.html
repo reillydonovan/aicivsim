@@ -11,6 +11,7 @@
 <meta property="og:title" content="Strategy — Action Catalog 2026">
 <meta property="og:description" content="Action catalog - 20+ strategies across individual, institutional, and systemic levels, scored by scenario.">
 <meta property="og:url" content="https://aicivsim.com/strategy.html">
+<meta property="og:image" content="https://aicivsim.com/favicon.svg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Strategy — Action Catalog 2026">
 <meta name="twitter:description" content="Action catalog - 20+ strategies across individual, institutional, and systemic levels, scored by scenario.">
@@ -18,13 +19,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260829a">
+<link rel="stylesheet" href="css/v3.css?v=20260829c">
 </head>
 <body>
 <div id="app"></div>
-<script src="js/shared.js?v=20260829a"></script>
+<script src="js/shared.js?v=20260829c"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260829a"></script>
+<script src="js/v3.js?v=20260829c"></script>
 <script>
 V3.boot({deck:{sys:'strategy',context:'Twenty actions across three levels'}});
 V3.systemPage({
@@ -56,6 +57,9 @@ var CATS=STRATEGY_CATALOG.categories;
 var CAT_COLORS={personal:'#4ecdc4',organization:'#5da5da',policy:'#9b87f5'};
 var SCOPES=STRATEGY_CATALOG.scopes, LEVERS=STRATEGY_CATALOG.levers;
 var filter='all';
+/* page-local: which scope tier the reader had filtered to */
+V3.share.config({tier:{get:function(){return filter==='all'?null:filter},
+                       set:function(v){if(/^t[124]$/.test(v))filter=v}}});
 
 /* flatten once; category is kept only for the colour dot */
 var ALL=[];
@@ -154,7 +158,7 @@ function renderActions(){
 
 document.getElementById('cat-filter').addEventListener('click',function(e){
   var b=e.target.closest('button');if(!b)return;
-  filter=b.getAttribute('data-f');renderFilter();renderActions();
+  filter=b.getAttribute('data-f');renderFilter();renderActions();V3.share.sync();
 });
 /* jumping to the lever an action feeds must not leave it filtered out */
 document.getElementById('action-cards').addEventListener('click',function(e){
@@ -165,6 +169,7 @@ document.getElementById('action-cards').addEventListener('click',function(e){
   if(t){t.scrollIntoView({behavior:'smooth',block:'center'});
     t.classList.add('flash');setTimeout(function(){t.classList.remove('flash')},1500);}
 });
+V3.share.restore();
 renderCats();renderFilter();renderActions();
 /* deep links from index.html land before the cards exist, so resolve
    ?a=<slug> once after the first render. A query param, not a hash —

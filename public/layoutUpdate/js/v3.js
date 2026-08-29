@@ -42,6 +42,13 @@ var listeners=[];
 var current=(function(){
   var h=location.hash.replace('#','');
   if(V3.SC[h])return h;
+  /* ?sc= is an INBOUND ALIAS ONLY. Crawlers never receive a URL fragment,
+     so a share link needs the scenario in the query string for per-scenario
+     OG cards to resolve. It is read exactly once, here, on boot, and is
+     never written during a session — the hash remains the only writer of
+     scenario state. Deleting these three lines breaks nothing but sharing. */
+  var q=(location.search.match(/[?&]sc=([a-z]+)/)||[])[1];
+  if(V3.SC[q])return q;
   try{var s=localStorage.getItem('aicivsim-scenario');if(V3.SC[s])return s}catch(e){}
   return 'bau';
 })();
@@ -264,6 +271,73 @@ V3.deck=function(sysKey,context,noSeg){
        place where those names are clickable. */
     +(noSeg?'':V3.seg(true))+'</div></div>';
 };
+
+/* ════════ Share: page-local config in the query string ════════
+   The scenario lives in the hash and is not managed here (see the ?sc=
+   note above). This carries PAGE-LOCAL state — which comparison you were
+   looking at, which filter was applied — so a link reproduces the view.
+
+   Restore never scrolls. It reapplies state and lets the page render
+   where it renders. Programmatic scroll during load is unreliable across
+   browsers and could not be verified under automation, so no shareable
+   view depends on it. */
+V3.share=(function(){
+  var spec=null;
+  function params(){return new URLSearchParams(location.search)}
+  return {
+    /* spec: {key:{get:fn, set:fn}} — key becomes the query param name */
+    config:function(o){spec=o;},
+    /* read once on boot, after the page has rendered its controls */
+    restore:function(){
+      if(!spec)return;
+      var q=params();
+      Object.keys(spec).forEach(function(k){
+        var v=q.get(k);
+        if(v!==null&&typeof spec[k].set==='function')spec[k].set(v);
+      });
+    },
+    /* called by the page whenever its local state changes */
+    sync:function(){
+      if(!spec||!history.replaceState)return;
+      var q=params();
+      Object.keys(spec).forEach(function(k){
+        var v=spec[k].get();
+        if(v===null||v===undefined||v==='')q.delete(k);else q.set(k,v);
+      });
+      var qs=q.toString();
+      history.replaceState(null,'',location.pathname+(qs?'?'+qs:'')+location.hash);
+    },
+    /* the URL a reader would send someone: page-local state from the query,
+       scenario promoted OUT of the hash so a crawler can see it */
+    url:function(){
+      var q=params();
+      q.set('sc',V3.scenario.get());
+      return location.origin+location.pathname+'?'+q.toString();
+    }
+  };
+})();
+
+/* The visible affordance. Copies the URL including the current view. */
+V3.shareButton=function(){
+  return '<button class="share-btn" id="v3-share" type="button" '
+    +'aria-label="Copy a link to this view">'
+    +'<span class="sb-ic" aria-hidden="true">&#8599;</span><span class="sb-t">Copy link to this view</span></button>';
+};
+V3.wireShare=function(){
+  var b=document.getElementById('v3-share');if(!b)return;
+  b.addEventListener('click',function(){
+    var url=V3.share.url(), t=b.querySelector('.sb-t'), was=t.textContent;
+    function done(ok){
+      t.textContent=ok?'Link copied':'Copy failed \u2014 select the address bar';
+      b.setAttribute('data-state',ok?'ok':'err');
+      setTimeout(function(){t.textContent=was;b.removeAttribute('data-state')},2200);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){done(true)},function(){done(false)});
+    }else{done(false)}
+  });
+};
+
 V3.footer=function(){
   return '<footer class="v3-footer"><div class="col">'
     +'<div class="foot-grid"><div><a class="wordmark" href="index.html">AICIVSIM<em>.</em></a>'
@@ -272,7 +346,7 @@ V3.footer=function(){
     +'<div><h4>Explore</h4><a href="simulation.html">Simulation</a><a href="pathways.html">Pathways</a><a href="visualizer.html">Visualizer</a><a href="data.html">Live data</a><a href="research.html">Research</a><a href="about.html">About</a><a href="design-system.html">Design system</a></div></div>'
 
     +'<div class="foot-note"><span>AI Civilization Simulator · 2026 · grounded in live data from NOAA, Our World in Data, and the World Bank</span>'
-    +'<span><a href="design-system.html">Built on the AICIVSIM design system</a></span></div>'
+    +'<span>'+V3.shareButton()+' <a href="design-system.html">Built on the AICIVSIM design system</a></span></div>'
     +'</div></footer>';
 };
 V3.boot=function(opts){
@@ -281,6 +355,22 @@ V3.boot=function(opts){
   document.body.insertAdjacentHTML('afterbegin',
     V3.nav(here)+(opts.deck?V3.deck(opts.deck.sys,opts.deck.context,opts.deck.noSeg):''));
   document.body.insertAdjacentHTML('beforeend',V3.footer());
+  V3.wireShare();
+  /* Per-view title and description: a shared link should say which future
+     it is showing. Base values are captured once so switching scenarios
+     never compounds. */
+  (function(){
+    var baseT=document.title, d=document.querySelector('meta[name=description]');
+    var baseD=d?d.getAttribute('content'):null;
+    function apply(){
+      var m=V3.SC[V3.scenario.get()];
+      document.title=baseT.indexOf('\u2014')>0
+        ? baseT.replace(/\s\u2014\s.*$/,' \u2014 '+m.name)
+        : baseT+' \u2014 '+m.name;
+      if(d&&baseD)d.setAttribute('content',baseD+' Showing: '+m.name+'.');
+    }
+    apply();V3.scenario.onChange(apply);
+  })();
   try{if(localStorage.getItem('aicivsim-theme')==='light')document.body.classList.add('light')}catch(e){}
   document.getElementById('v3-theme').addEventListener('click',function(){
     var light=document.body.classList.toggle('light');
