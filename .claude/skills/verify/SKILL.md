@@ -54,3 +54,16 @@ Collect `page.on('console')` errors and `page.on('pageerror')` on every page.
 - Cache token invariant (after any deploy-bound change):
   `grep -rho 'v=[0-9]\{8\}[a-z]' *.html js/shared.js | sort | uniq -c`
   → exactly one distinct token.
+
+## Scroll reveal shows nothing in a background tab
+
+`V3.reveal()` is scheduled inside `requestAnimationFrame`, which browsers do
+not run in a hidden tab. Driving a page through automation without
+foregrounding it therefore reports **zero revealed elements on every page**,
+including ones that are working correctly. It looks exactly like a site-wide
+regression and is not one.
+
+Check `document.visibilityState` before trusting any reveal measurement. A
+screenshot forces a frame, so taking one and re-probing is a reliable way to
+get a real reading.
+

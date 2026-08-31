@@ -19,7 +19,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/v3.css?v=20260829d">
+<link rel="stylesheet" href="css/v3.css?v=20260831a">
 <style>
 /* page-local specimen chrome */
 .spec{border:1px solid var(--hairline);border-radius:var(--r);padding:24px;margin-top:16px}
@@ -130,6 +130,49 @@
       <li><b>Count</b> — numbers arrive via the spring integrator (stiffness 170, damping 26), never fade-swap.</li>
     </ol>
   </div>
+  <div class="spec"><div class="spec-label">The scroll stack — how content arrives</div>
+    <p class="body-2" style="margin-bottom:12px">A long page should reveal itself as you
+    travel down it. Each block arrives just before it enters view, and blocks that enter
+    together arrive in sequence rather than at once. Getting this wrong is not a
+    cosmetic failure — a page whose content is simply <em>there</em> reads as static,
+    and the scroll stops feeling like it is doing anything.</p>
+    <ol class="rule-list" style="margin-left:20px">
+      <li><b>Register every block that carries substance.</b> The reveal observer only
+        watches selectors listed in <span class="num" style="font-size:12px">REVEAL_SEL</span>
+        in <span class="num" style="font-size:12px">v3.js</span>. A new block type that is
+        not in that list never animates. The symptom is specific and worth recognising:
+        only the section heads move, and because a section head is normally the first
+        child of its <span class="num" style="font-size:12px">.col</span> they all resolve
+        to zero delay and fire together — one flat fade for the whole page.</li>
+      <li><b>Stagger by revealable peers, not by DOM position.</b> The delay index counts
+        preceding siblings that are <em>themselves</em> revealed. Counting raw children
+        made a lone block inherit an arbitrary position and gave every first-child the
+        same zero delay, so sibling lists never staggered. Lists read 0,1,2…; a
+        solitary block reads 0.</li>
+      <li><b>JS-rendered content must re-run the reveal.</b> Nodes created after boot were
+        never observed. Call <span class="num" style="font-size:12px">V3.reveal()</span> at
+        the end of the render. It is idempotent per element, so re-running on every
+        re-render is safe and never re-hides content that has already arrived.</li>
+      <li><b>Do not use <span class="num" style="font-size:12px">V3.stagger()</span> for
+        content that scrolls.</b> It fires immediately on render regardless of scroll
+        position, so a list below the fold plays its whole animation while the reader is
+        still at the top and is motionless by the time they arrive. It is for content
+        that changes <em>in place</em> — a scenario switch redrawing values already on
+        screen. Scroll arrival is <span class="num" style="font-size:12px">V3.reveal()</span>;
+        in-place change is <span class="num" style="font-size:12px">V3.stagger()</span>.</li>
+      <li><b>Reveal is one-shot and never reverses.</b> Content that has arrived stays
+        arrived. Scrolling back up must not re-hide or replay it.</li>
+      <li><b>Reduced motion removes the animation, never the content.</b> Under
+        <span class="num" style="font-size:12px">prefers-reduced-motion</span> the whole
+        system is skipped and every block is visible from the start.</li>
+    </ol>
+    <p class="body-2" style="margin-top:14px;color:var(--ink-4)">Verification note: the
+    reveal is scheduled inside <span class="num" style="font-size:12px">requestAnimationFrame</span>,
+    which browsers do not run in a background tab. A hidden tab therefore shows zero
+    revealed elements and looks broken. Check it in a foreground window, or the reading
+    is meaningless.</p>
+  </div>
+
   <div class="spec"><div class="spec-label">Live demos</div>
     <div class="demo-row">
       <button class="motion-demo-btn" id="demo-press">Press me — squish &amp; overshoot</button>
@@ -239,9 +282,9 @@
 </main>
 </div>
 
-<script src="js/shared.js?v=20260829d"></script>
+<script src="js/shared.js?v=20260831a"></script>
 <script src="https://cdn.jsdelivr.net/npm/motion@12.23.26/dist/motion.js"></script>
-<script src="js/v3.js?v=20260829d"></script>
+<script src="js/v3.js?v=20260831a"></script>
 <script>
 V3.boot({deck:{sys:'civilization',context:'Tokens · type · motion · dataviz · voice',noSeg:true}});
 document.querySelector('.deck-title b').textContent='Design system';
@@ -250,7 +293,7 @@ document.querySelector('.deck-title i').style.background='var(--accent)';
 /* live dataviz specimens — real site data, real kit calls */
 var years=[];for(var y=2026;y<=2050;y++)years.push(y);
 </script>
-<script src="js/v3-data.js?v=20260829d"></script>
+<script src="js/v3-data.js?v=20260831a"></script>
 <script>
 var meta=V3DATA.climate.metrics.filter(function(m){return m.id==='temp'})[0];
 var spec={label:'Trajectory — temperature rise',unit:'°C',prefix:'+',dec:2,dir:'lower',

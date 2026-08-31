@@ -133,14 +133,44 @@ V3.stagger=function(nodes,perDelay){
    Only elements captured at call time; later re-renders never re-hide.
    With motion.dev present, entrances are true springs via inView;
    the CSS .pre path is the no-Motion fallback. */
-var REVEAL_SEL='.section-head,.stat,.chart-card,.t-card,.q-card,.impact-row,.spine-item,.land-row,.ledger-row,.lever,.action-card,.slope-card,.diff-row,.hero-stats,.narrative,.lever-delta';
+/* Every block that should arrive on scroll rather than be there already.
+   A page whose substance is NOT in this list has no scroll stack: only its
+   section heads animate, and because a section head is normally child 0 of
+   its .col they all resolve to delay 0 and fire together, which reads as
+   one flat fade rather than a sequence. Adding a new block type to a page
+   means adding it here. */
+var REVEAL_SEL=[
+  /* shared chrome and the original dashboard vocabulary */
+  '.section-head','.stat','.chart-card','.t-card','.q-card','.impact-row',
+  '.spine-item','.land-row','.ledger-row','.lever','.action-card',
+  '.slope-card','.diff-row','.hero-stats','.narrative','.lever-delta',
+  /* agency layer (strategy, index closing ask) */
+  '.tier-head','.tier-gap','.route','.admit','.ask-final',
+  /* method pages (epistemics, methodology, changelog) */
+  '.epi-class','.epi-foot','.lat-step','.ref','.num-list li','.cl-item',
+  '.prop','.src','.status-note','.ledger-t'
+].join(',');
+
+/* Position among siblings that are THEMSELVES revealed. Using the raw DOM
+   index made a lone block inherit whatever position it happened to sit at,
+   and gave every first-child the same zero delay — so sibling lists never
+   staggered. Counting peers means a list reads 0,1,2… and a solitary block
+   reads 0. */
+function revealIndex(el){
+  var sibs=el.parentNode?el.parentNode.children:[],n=0;
+  for(var i=0;i<sibs.length;i++){
+    if(sibs[i]===el)return n;
+    if(sibs[i].matches&&sibs[i].matches(REVEAL_SEL))n++;
+  }
+  return 0;
+}
 V3.reveal=function(){
   if(REDUCED)return;
   var els=document.querySelectorAll(REVEAL_SEL);
   if(M){
     els.forEach(function(el){
       if(el.__rv)return;el.__rv=1;
-      var idx=Array.prototype.indexOf.call(el.parentNode.children,el);
+      var idx=revealIndex(el);
       el.style.opacity='0';
       var stop=M.inView(el,function(){
         stop();
@@ -158,7 +188,7 @@ V3.reveal=function(){
   els.forEach(function(el){
     if(el.classList.contains('pre'))return;
     el.classList.add('pre');
-    var idx=Array.prototype.indexOf.call(el.parentNode.children,el);
+    var idx=revealIndex(el);
     el.style.setProperty('--rv-delay',Math.min(280,idx*55)+'ms');
     io.observe(el);
   });
